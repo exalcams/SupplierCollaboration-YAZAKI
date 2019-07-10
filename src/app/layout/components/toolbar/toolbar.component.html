@@ -1,0 +1,143 @@
+<!-- <mat-toolbar class="p-0 mat-elevation-z1"> -->
+
+<div fxFlex fxFill fxLayout="row" fxLayoutAlign="start center">
+    <div fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
+
+        <button mat-icon-button class="navbar-toggle-button" *ngIf="!hiddenNavbar && !rightNavbar"
+            (click)="toggleSidebarOpen('navbar')" fxHide.gt-md>
+            <img style="height:20px" src="assets/images/dashboard/menu-copy.png">
+        </button>
+
+        <div class="toolbar-separator" *ngIf="!hiddenNavbar && !rightNavbar" fxHide.gt-md></div>
+
+        <div fxLayout="row" fxLayoutAlign="start center" *ngIf="horizontalNavbar">
+            <div class="logo ml-16">
+                <img class="logo-icon" src="assets/images/logos/fuse.svg">
+            </div>
+        </div>
+
+        <div class="px-8 px-md-16">
+            <div fxFlex style="margin-left: 35px">
+                <div fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-xs="row"
+                    fxLayoutAlign.gt-xs="space-between center">
+                    <div class="logo my-12 m-sm-0" fxLayout="row" fxLayoutAlign="start center">
+                        <span
+                            style="color: white;font-family: Roboto;margin-left: -21px;font-size: 17px;border-bottom: 1px solid rgba(255, 255, 255, 0.6)">Supplier
+                            Success Platform </span>
+                        <!-- <input class="searchBar" id="search" #filter placeholder="Search">
+                        <label style="margin-left:-30px;margin-top:6px" for="search" class="mr-8">
+                            <mat-icon style="color: rgba(265, 265, 265, 0.5);font-size: 16px;" class="secondary-text">
+                                search</mat-icon>
+                        </label> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="" style="margin-right: 20px;" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
+
+        <!-- <button mat-button fxHide fxShow.gt-xs class="language-button" [matMenuTriggerFor]="languageMenu">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <mat-icon [matBadge]="NotificationCount" matBadgeColor="accent">notifications_active</mat-icon>
+                </div>
+               
+            </button> -->
+        <span class="username mr-12" style="color:white;font-size:15px" fxHide
+            fxShow.gt-sm>{{CurrentLoggedInUser}}</span>
+        <div class="borderRight">
+            <img style="height: 14px;margin-left: 17px;margin-top: 2px;" src="assets/images/dashboard/man-user.png">
+        </div>
+        <mat-menu #languageMenu="matMenu" [overlapTrigger]="false">
+            <!-- <mat-list role="list">
+                            <mat-list-item role="listitem" style="word-spacing: normal;" *ngFor="let alert of AllAlertsByUserID"
+                                (click)="UpdateAlert(alert)"> <span>{{alert.AlertMessage}}</span></mat-list-item>
+                        </mat-list> -->
+
+            <button mat-menu-item *ngFor="let notif of AllNotificationByUserID" class="notificationMenuItem"
+                style="width:75vw" (click)="UpdateNotification(notif)">
+                <span>{{notif.Message}}</span>
+                <!-- <span fxLayout="row">
+                               
+                            </span> -->
+            </button>
+        </mat-menu>
+
+        <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+            <div class="borderRight" fxLayout="row" fxLayoutAlign="center center">
+                <!-- <img class="avatar mr-0 mr-sm-16" [src]="CurrentLoggedInUserProfile"> -->
+                <!-- <span class="username mr-12" fxHide fxShow.gt-sm>{{CurrentLoggedInUser}}</span> -->
+                <!-- <mat-icon class="s-16" fxHide.xs>keyboard_arrow_down</mat-icon> -->
+                <img style="height: 14px;margin-left: 17px" src="assets/images/dashboard/power.png">
+            </div>
+        </button>
+        <!-- <div>
+            <img style="height: 60px;margin-bottom: -4px" src="/assets/images/logos/Exalca_Latest_Logo.png">
+        </div> -->
+        <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
+
+            <button mat-menu-item (click)="ChangePasswordClick()">
+                <mat-icon>account_circle</mat-icon>
+                <span>Change Password</span>
+            </button>
+
+            <!-- <button mat-menu-item class="">
+                    <mat-icon>mail</mat-icon>
+                    <span>Inbox</span>
+                </button> -->
+
+            <button mat-menu-item class="" (click)="logOutClick()">
+                <mat-icon>exit_to_app</mat-icon>
+                <span>Logout</span>
+            </button>
+
+        </mat-menu>
+
+        <!-- <div class="toolbar-separator"></div>
+
+            <fuse-search-bar (input)="search($event)"></fuse-search-bar>
+
+            <div class="toolbar-separator"></div>
+
+            <button mat-button fxHide fxShow.gt-xs
+                    class="language-button"
+                    [matMenuTriggerFor]="languageMenu">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                    <img class="flag mr-8" [src]="'assets/images/flags/'+selectedLanguage.flag+'.png'">
+                    <span class="iso text-uppercase">{{selectedLanguage.id}}</span>
+                </div>
+            </button>
+
+            <mat-menu #languageMenu="matMenu" [overlapTrigger]="false">
+
+                <button mat-menu-item *ngFor="let lang of languages" (click)="setLanguage(lang)">
+                    <span fxLayout="row" fxLayoutAlign="start center">
+                        <img class="flag mr-16" [src]="'assets/images/flags/'+lang.flag+'.png'">
+                        <span class="iso">{{lang.title}}</span>
+                    </span>
+                </button>
+
+            </mat-menu>
+
+            <div class="toolbar-separator" fxHide fxShow.gt-xs></div>
+
+            <button mat-icon-button
+                    class="quick-panel-toggle-button"
+                    (click)="toggleSidebarOpen('quickPanel')"
+                    aria-label="Toggle quick panel">
+                <mat-icon class="secondary-text">format_list_bulleted</mat-icon>
+            </button>
+
+            <div class="toolbar-separator" *ngIf="!hiddenNavbar && rightNavbar" fxHide fxShow.gt-xs></div>
+
+            <button mat-icon-button class="navbar-toggle-button"
+                    *ngIf="!hiddenNavbar && rightNavbar" (click)="toggleSidebarOpen('navbar')" fxHide.gt-md>
+                <mat-icon class="secondary-text">menu</mat-icon>
+            </button> -->
+
+    </div>
+
+</div>
+
+<!-- </mat-toolbar> -->

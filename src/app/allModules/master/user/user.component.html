@@ -1,0 +1,18 @@
+<div id="chat" class="page-layout carded fullwidth inner-scroll">
+  <div class="top-bg" style="background: #1b56ca"></div>
+  <div class="center">
+      <div class="content-card">
+          <mat-sidenav-container>
+              <mat-sidenav class="sidenav" position="start" opened="true" mode="side" fuseMatSidenavHelper="chat-left-sidenav"
+                  matIsLockedOpen="gt-md">
+                  <user-side-bar [AllUsers]="AllUsers" (UserSelectionChanged)="OnUserSelectionChanged($event)">
+                  </user-side-bar>
+              </mat-sidenav>
+              <user-main-content [currentSelectedUser]="SelectedUser" (SaveSucceed)='RefreshAllUsers($event)'
+                  (ShowProgressBarEvent)="OnShowProgressBarEvent($event)">
+              </user-main-content>
+          </mat-sidenav-container>
+          <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion" color="accent" mode="indeterminate"></mat-progress-spinner>
+      </div>
+  </div>
+</div>

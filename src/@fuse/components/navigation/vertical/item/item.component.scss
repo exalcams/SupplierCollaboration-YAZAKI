@@ -1,0 +1,19 @@
+:host {
+
+    .folded:not(.unfolded) & {
+
+        .nav-link {
+
+            > .nav-link-title,
+            > .nav-link-badge {
+                opacity: 0;
+                transition: opacity 200ms ease;
+            }
+        }
+    }
+
+    .borderRight{
+        border-left: 5px solid #1b56ca;
+    }
+}
+

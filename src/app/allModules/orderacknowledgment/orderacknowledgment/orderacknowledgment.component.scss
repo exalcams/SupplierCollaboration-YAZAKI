@@ -1,0 +1,104 @@
+@import "src/@fuse/scss/fuse";
+$icon-small-size: 16px;
+#chat {
+
+    .center {
+        padding: 32px !important;
+        max-width: 1400px;
+        margin: 0 auto;
+
+        @include media-breakpoint-down(md) {
+            padding: 0 !important;
+        }
+
+    }
+}
+// mat-card{
+//     border-radius: 20px;
+// }
+.sub-Title{
+    margin-left: -24px;
+    background-color: #f7f9ff;
+    border-radius: 26px;
+    padding: 6px;
+    font-family: Ubuntu;
+    padding-left: 40px;
+    padding-right: 20px;
+    color: #4a77fb;
+}
+.mat-form-field-outline-gap {
+    border: 1px solid #1b56ca;
+    border-radius: 1e-6px;
+}
+table {
+    width: 100%;
+    th{
+      background: #082f7d;
+      color: white;
+      //font-family: Ubuntu;
+      padding-left: 25px;
+      border-right: 1px solid #e0e0e0
+    }
+    td{
+        padding-left: 15px;
+        border-right: 1px solid #1b56ca
+    }
+  }
+  .mat-table-sticky {
+    border-left: 1px solid #1b56ca;
+  }
+//   .mat-form-field-wrapper{
+//       padding-bottom: 0px !important;
+//   }
+.mat-form-field-appearance-outline .mat-form-field-outline-thick{
+  color: blue !important;
+}
+ ::ng-deep .mat-form-field-flex > .mat-form-field-infix { padding: 0.002em 0px !important;}
+ // ::ng-deep .mat-form-field-flex > .mat-form-field-mat-datepicker { padding: 0.002em 0px !important;}
+::ng-deep .mat-form-field-label-wrapper { top: -1.0em; }
+
+::ng-deep .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+   transform: translateY(-0.5em) scale(.75);
+   // width: 133.33333%;
+}
+.mat-column-select {
+  overflow: initial;
+}
+
+.mat-form-field-appearance-outline {
+  .mat-form-field-outline {
+    color: #1b56ca !important;
+  }
+}
+.mat-table{
+  border: 1px solid #082f7d
+}
+.divclass{
+  margin-top: 25px;
+  margin-left: 15px
+}
+.Relevantclass{
+  margin-top: 10px;
+}
+.mat-form-field-suffix .mat-icon-button {
+  width: 2.5em;
+  height: 1.5em !important;
+}
+.Title{
+    font-size:14px;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: roboto;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+}
+.borderRight{
+    border-left: 1px solid white;
+    opacity: 0.4; 
+    border-radius: 1px;
+}
+.layoutclass{
+  margin-top: -32px;
+  margin-bottom: 40px;
+  }
+  .img-style{
+    height:45px
+}

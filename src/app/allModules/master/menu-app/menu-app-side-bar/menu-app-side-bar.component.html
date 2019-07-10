@@ -1,0 +1,46 @@
+<div class="sidenav-header">
+  <mat-toolbar>
+      <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
+              <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                  <mat-icon>search</mat-icon>
+                  <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
+              </div>
+          </div>
+          <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+                  <button class="mat-mini-fab mat-accent" (click)="clearMenuApp()">
+                      <span class="mat-button-wrapper">
+                          <mat-icon>add_circle_outline</mat-icon>
+                      </span>
+                  </button>
+              </div>
+      </mat-toolbar-row>
+  </mat-toolbar>
+</div>
+<div class="sidenav-content" fusePerfectScrollbar fxFlex>
+  <div *fuseIfOnDom [@animateStagger]="{value:'50'}">
+      <div class="chat-list" fxLayout="column">
+          <!-- <div matSubheader style="background-color:#039be5">
+              Apps
+          </div> -->
+          <button mat-button class="contact" *ngFor="let ap of AllMenuApps | filter: searchText" (click)="loadSelectedMenuApp(ap)"
+              ngClass="{'unread':contact.unread}" [@animate]="{value:'*',params:{y:'100%'}}" [style.background-color]="selectID==ap.AppID?'lightgrey':'white'">
+              <div fxLayout="row" fxLayoutAlign="start center">
+                  <div fxLayout="row" fxFlex>
+                      <div class="" fxFlex fxLayout="column" fxLayoutAlign="center start">
+                          <div class="contact-name">{{ap.AppName}}</div>
+                      </div>
+                      <div fxLayout="column" fxLayoutAlign="center end">
+                          <div class="contact-last-message-time">
+                              {{ap.CreatedOn | date}}
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </button>
+      </div>
+      <div *ngIf="(AllMenuApps | filter: searchText).length === 0" class="no-results-message">
+          No results..
+      </div>
+  </div>
+</div>

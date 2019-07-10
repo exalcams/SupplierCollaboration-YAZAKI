@@ -1,0 +1,67 @@
+
+<!-- <div class="navbar-top" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
+
+    <div class="logo">
+        <img class="logo-icon" src="assets/images/logos/ExalcaLogoWhite.png">
+    </div>
+
+    <div class="buttons">
+
+        <button mat-icon-button class="toggle-sidebar-folded" (click)="toggleSidebarFolded()" fxHide.lt-lg>
+            <mat-icon class="secondary-text">menu</mat-icon>
+        </button>
+
+        <button mat-icon-button class="toggle-sidebar-opened" (click)="toggleSidebarOpened()" fxHide.gt-md>
+            <mat-icon class="secondary-text">arrow_back</mat-icon>
+        </button>
+
+    </div>
+
+</div> -->
+<div class="navbar-top" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
+
+    <div class="logo">
+            <img class="logo-icon" style="height: 34px; width: 34px" src="assets/images/logos/ExalcaLogo_arrow.png">
+            <strong class="logo-text secondary-text" style="font-size: 25px;margin-left: 17px;color: white !important">exalca</strong>
+            
+    <!-- <span style="color: white;margin-left: 25px">Applications</span> -->
+        <!-- <img class="logo-icon" src="assets/images/logos/ExalcaLogoWhite.png"> -->
+        <!-- <span class="logo-text secondary-text">FUSE</span>
+        <span class="logo-text secondary-text">Exalca</span> -->
+    </div>
+
+
+    <div class="buttons">
+
+        <button mat-icon-button class="toggle-sidebar-folded" (click)="toggleSidebarFolded()" fxHide.lt-lg>
+            <!-- <img *ngIf="isShowIcon" style="height:20px" src="assets/images/dashboard/double_back.png"> -->
+            <img  style="height:20px" src="assets/images/dashboard/menu-copy.png">
+        </button>
+
+        <button mat-icon-button class="toggle-sidebar-opened" (click)="toggleSidebarOpened()" fxHide.gt-md>
+            <!-- <mat-icon class="secondary-text">arrow_back</mat-icon> -->
+            <img style="height:20px" src="assets/images/dashboard/double_back.png">
+        </button>
+
+    </div>
+
+</div>
+<div class="navbar-scroll-container" [ngClass]="fuseConfig.layout.navbar.primaryBackground" fusePerfectScrollbar
+    [fusePerfectScrollbarOptions]="{suppressScrollX: true}">
+
+    <!-- <div class="user" fxLayout="column" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
+
+        <div class="h3 username">{{CurrentLoggedInUser}}</div>
+        <div class="h5 email hint-text mt-8">{{CurrentLoggedInUserEmailAddress}}</div>
+        <div class="avatar-container" [ngClass]="fuseConfig.layout.navbar.primaryBackground">
+            <img class="avatar" src="assets/images/avatars/Velazquez.jpg">
+            <img class="avatar" [src]="CurrentLoggedInUserProfile">
+        </div>
+
+    </div> -->
+
+    <div class="navbar-content">
+        <fuse-navigation style="margin-top: -50px;" layout="vertical"></fuse-navigation>
+    </div>
+
+</div>

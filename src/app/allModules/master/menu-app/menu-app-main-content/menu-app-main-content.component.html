@@ -1,0 +1,26 @@
+<form class="mat-card mat-elevation-z4 p-24" autocomplete="off" fxLayout="column" fxLayoutAlign="start"
+    fxFlex="1 0 auto" name="form" [formGroup]="menuAppMainFormGroup">
+
+    <div class="h2 mb-24">{{menuApp.AppID?'Update':'Create'}} App</div>
+    <div fxLayout="row wrap" fxLayoutAlign="start" fxFlex="1 0 auto">
+        <mat-form-field fxFlex="100">
+            <input matInput placeholder="App Name" formControlName="appName">
+            <mat-error
+                *ngIf="menuAppMainFormGroup.get('appName').touched && menuAppMainFormGroup.get('appName').hasError('required')">
+                App Name required</mat-error>
+        </mat-form-field>
+    </div>
+    <div fxLayout="row wrap" fxLayoutAlign="end">
+        <button mat-raised-button type="button" (click)="ResetControl()" *ngIf="!menuApp.AppID"
+            style="margin-right:10px">
+            Clear
+        </button>
+        <button mat-raised-button color="warn" type="button" (click)="DeleteClicked()" *ngIf="menuApp.AppID"
+            style="margin-right:10px">
+            Delete
+        </button>
+        <button mat-raised-button color="accent" type="button" (click)="SaveClicked()">
+            {{menuApp.AppID?'Update':'Create'}}
+        </button>
+    </div>
+</form>

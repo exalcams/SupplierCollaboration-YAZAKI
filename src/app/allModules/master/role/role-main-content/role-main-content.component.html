@@ -1,0 +1,39 @@
+<form class="mat-card mat-elevation-z4 p-24" autocomplete="off" fxLayout="column" fxLayoutAlign="start"
+  fxFlex="1 0 auto" name="form" [formGroup]="roleMainFormGroup">
+  <div class="h2 mb-24">{{role.RoleID?'Update':'Create'}} Role</div>
+  <div fxLayout="row" fxLayoutAlign="start">
+    <mat-form-field class="p-12" fxFlex="100">
+      <input matInput placeholder="Role Name" formControlName="roleName">
+      <mat-error
+        *ngIf="roleMainFormGroup.get('roleName').touched && roleMainFormGroup.get('roleName').hasError('required')">Role
+        Name required</mat-error>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" *ngIf="roleMainFormGroup.get('roleName').value!=='Administrator'">
+    <mat-form-field class="p-12" fxFlex="100">
+      <mat-select placeholder="App Name" formControlName="appIDList" multiple (selectionChange)="OnAppNameChanged()">
+        <mat-option *ngFor="let mp of AllMenuApps" [value]="mp.AppID">{{mp.AppName}}</mat-option>
+      </mat-select>
+      <mat-error
+        *ngIf="roleMainFormGroup.get('appIDList').touched && roleMainFormGroup.get('appIDList').hasError('required')">
+        App Name required</mat-error>
+    </mat-form-field>
+    <!-- <mat-error *ngIf="roleMainFormGroup.get('appIDList').touched && roleMainFormGroup.get('appIDList').hasError('appIDRequired')">App
+        Name required</mat-error>
+    </mat-form-field> -->
+  </div>
+  <div fxLayout="row" fxLayoutAlign="end">
+    <button mat-raised-button type="button" (click)="ResetControl()" *ngIf="!role.RoleID" style="margin-right:10px">
+      Clear
+    </button>
+    <button mat-raised-button color="warn" type="button" (click)="DeleteClicked()" *ngIf="role.RoleID"
+      [disabled]="roleMainFormGroup.get('roleName').value==='Administrator'"
+      style="margin-right:10px">
+      Delete
+    </button>
+    <button mat-raised-button color="accent" type="button" (click)="SaveClicked()"
+      [disabled]="roleMainFormGroup.get('roleName').value==='Administrator'">
+      {{role.RoleID?'Update':'Create'}}
+    </button>
+  </div>
+</form>
