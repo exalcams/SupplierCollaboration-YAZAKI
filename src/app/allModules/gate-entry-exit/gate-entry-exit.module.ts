@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ShipmentnotificationComponent } from './shipmentnotification/shipmentnotification.component';
 import { Routes, RouterModule } from '@angular/router';
 import {
     MatButtonModule,
@@ -22,19 +21,21 @@ import {
     MatCheckboxModule,
     MatDatepickerModule
 } from '@angular/material';
-import { FuseSharedModule } from '@fuse/shared.module';
 import { FileUploadModule } from 'ng2-file-upload';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { FuseSharedModule } from '@fuse/shared.module';
 
-const shipmentNotification: Routes = [
+import { GateEntryComponent } from './gate-entry/gate-entry.component';
+
+const gateEntry_Exit_Route: Routes = [
     {
-        path: 'shipment',
-        component: ShipmentnotificationComponent
+        path: 'gateentry',
+        component: GateEntryComponent
     }
 ];
 
 @NgModule({
-    declarations: [ShipmentnotificationComponent],
+    declarations: [GateEntryComponent],
     imports: [
         CommonModule,
         MatButtonModule,
@@ -58,7 +59,7 @@ const shipmentNotification: Routes = [
         MatDialogModule,
         MatChipsModule,
         MatTooltipModule,
-        RouterModule.forChild(shipmentNotification)
+        RouterModule.forChild(gateEntry_Exit_Route)
     ]
 })
-export class OrderfulfillmentModule {}
+export class GateEntryExitModule {}

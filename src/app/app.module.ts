@@ -19,7 +19,7 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { NotificationSnackBarComponent } from './notifications/notification-snack-bar/notification-snack-bar.component';
 import { DatePipe } from '@angular/common';
 import { NotificationDialogComponent } from './notifications/notification-dialog/notification-dialog.component';
-
+// import { GateEntryExitModule } from './allModules/gate-entry-exit/gate-entry-exit.module';
 
 const appRoutes: Routes = [
     {
@@ -29,6 +29,10 @@ const appRoutes: Routes = [
     {
         path: 'dashboard',
         loadChildren: './allModules/pages/dashboard/dashboard.module#DashboardModule'
+    },
+    {
+        path: 'gateTransaction',
+        loadChildren: './allModules/gate-entry-exit/gate-entry-exit.module#GateEntryExitModule'
     },
     {
         path: 'master',
@@ -49,11 +53,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        NotificationSnackBarComponent,
-        NotificationDialogComponent,
-    ],
+    declarations: [AppComponent, NotificationSnackBarComponent, NotificationDialogComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -78,19 +78,13 @@ const appRoutes: Routes = [
         FuseSharedModule,
         FuseSidebarModule,
         FuseThemeOptionsModule,
+        // GateEntryExitModule
 
         // App modules
-        LayoutModule,
+        LayoutModule
     ],
-    providers: [
-        DatePipe
-    ],
-    bootstrap: [
-        AppComponent
-    ],
-    entryComponents: [
-        NotificationDialogComponent
-    ]
+    providers: [DatePipe],
+    bootstrap: [AppComponent],
+    entryComponents: [NotificationDialogComponent]
 })
-export class AppModule {
-}
+export class AppModule {}

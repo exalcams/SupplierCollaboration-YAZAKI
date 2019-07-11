@@ -1,17 +1,13 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { fuseAnimations } from '@fuse/animations';
 
 @Component({
-    selector: 'app-shipmentnotification',
-    templateUrl: './shipmentnotification.component.html',
-    styleUrls: ['./shipmentnotification.component.scss']
-    // encapsulation: ViewEncapsulation.None,
-    // animations: fuseAnimations
+    selector: 'app-gate-entry',
+    templateUrl: './gate-entry.component.html',
+    styleUrls: ['./gate-entry.component.scss']
 })
-export class ShipmentnotificationComponent implements OnInit {
+export class GateEntryComponent implements OnInit {
     displayedColumns: string[] = [
         'no',
         'materialDescription',
@@ -36,7 +32,7 @@ export class ShipmentnotificationComponent implements OnInit {
 
     constructor() {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.dataSource = new MatTableDataSource(ELEMENT_DATA);
         this.dataSourse1 = new MatTableDataSource();
         this.dataSourse2 = new MatTableDataSource(ELEMENT_DATA2);
@@ -47,15 +43,13 @@ export class ShipmentnotificationComponent implements OnInit {
         this.checkboxLabel();
         console.log(this.dataSourse1);
     }
-    // click(){
-    //   alert("hi");
-    // }
-    isAllSelected() {
+
+    isAllSelected(): boolean {
         const numSelected = this.selection.selected.length;
         const numRows = this.dataSource.data.length;
         return numSelected === numRows;
     }
-    masterToggle() {
+    masterToggle(): void {
         this.isAllSelected() ? this.selection.clear() : this.dataSource.data.forEach(row => this.selection.select(row));
     }
     /** The label for the checkbox on the passed row */
@@ -65,6 +59,8 @@ export class ShipmentnotificationComponent implements OnInit {
         }
         return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.no + 1}`;
     }
+
+    DeleteConfiguration(): void {}
 }
 
 export interface Shipment {
