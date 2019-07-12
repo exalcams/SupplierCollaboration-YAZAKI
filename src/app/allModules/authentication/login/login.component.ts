@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
     children: FuseNavigation[] = [];
     subChildren: FuseNavigation[] = [];
     subChildren1: FuseNavigation[] = [];
+    subChildren2: FuseNavigation[] = [];
     private _unsubscribeAll: Subject<any>;
     message = 'Snack Bar opened.';
     actionButtonLabel = 'Retry';
@@ -161,56 +162,55 @@ export class LoginComponent implements OnInit {
             });
         }
         if (true) {
-            this.children.push(
+            this.subChildren2.push(
                 {
-                    id: 'prvendor',
-                    title: 'PR Screen (Vendor)',
-                    translate: 'NAV.SAMPLE.TITLE',
+                    id: 'creation',
+                    title: 'Creation',
                     type: 'item',
-                    icon: 'orderIcon',
-                    isSvgIcon: true,
-                    url: '/pages/prvendor',
+                    url: '/rfq/creation',
                 }
             );
         }
         if (true) {
-            this.children.push(
+            this.subChildren2.push(
                 {
-                    id: 'rfq',
-                    title: 'RFQ Screen',
-                    translate: 'NAV.SAMPLE.TITLE',
+                    id: 'publish',
+                    title: 'Publish & Invite',
                     type: 'item',
-                    icon: 'orderIcon',
-                    isSvgIcon: true,
-                    url: '/pages/rfq',
+                    url: '/rfq/publish',
                 }
             );
         }
         if (true) {
-            this.children.push(
+            this.subChildren2.push(
                 {
-                    id: 'supplierInvite',
-                    title: 'Supplier Invite',
-                    translate: 'NAV.SAMPLE.TITLE',
+                    id: 'evaluation',
+                    title: 'Evaluation',
                     type: 'item',
-                    icon: 'orderIcon',
-                    isSvgIcon: true,
-                    url: '/pages/supplierInvite',
+                    url: '/rfq/evaluation',
                 }
             );
         }
         if (true) {
-            this.children.push(
+            this.subChildren2.push(
                 {
-                    id: 'vendorcomparison',
-                    title: 'Vendor comparison',
-                    translate: 'NAV.SAMPLE.TITLE',
+                    id: 'awarded',
+                    title: 'Awarded',
                     type: 'item',
-                    icon: 'orderIcon',
-                    isSvgIcon: true,
-                    url: '/pages/vendorcomparison',
+                    url: '/rfq/awarded',
                 }
             );
+        }
+        if (true) {
+            this.children.push({
+                id: 'rfq',
+                title: 'RFQ',
+                // translate: 'NAV.DASHBOARDS',
+                type: 'collapsable',
+                // icon: 'orderIcon',
+                isSvgIcon: true,
+                children: this.subChildren2
+            });
         }
         if (this.MenuItems.indexOf('PaymentReportPO') >= 0) {
             this.subChildren1.push(

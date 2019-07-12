@@ -27,7 +27,7 @@ const appRoutes: Routes = [
         loadChildren: './allModules/authentication/authentication.module#AuthenticationModule'
     },
     {
-        path: 'pages',
+        path: 'rfq',
         loadChildren: './allModules/pages/pages.module#PagesModule'
     },
     {
