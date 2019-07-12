@@ -47,20 +47,14 @@ import {
     FuseMaterialColorPickerModule,
     FuseWidgetModule
 } from '@fuse/components';
-
-
-
-import { FuseSharedModule } from '@fuse/shared.module';
-
-
-
 import { FormsModule } from '@angular/forms';
 import { PRScreenVendorComponent } from './prscreen-vendor/prscreen-vendor.component';
 import { RFQScreenComponent } from './rfqscreen/rfqscreen.component';
 import { VendorComparisonComponent } from './vendor-comparison/vendor-comparison.component';
 import { SupplierInviteScreenComponent } from './supplier-invite-screen/supplier-invite-screen.component';
+import { FuseSharedModule } from '@fuse/shared.module';
 
-const routes: Routes  = [
+const routes: Routes = [
     {
         path: 'prvendor',
         component: PRScreenVendorComponent,
