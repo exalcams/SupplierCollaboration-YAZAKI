@@ -168,6 +168,32 @@
                   </mat-form-field>
                 </div>
               </div>
+              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column"
+                fxLayoutGap.lt-md="0px">
+
+                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
+                  <span style="font-size: 13px;">Currency</span>
+                </div>
+                <div fxFlex="35" fxLayoutAlign="start center">
+                  <mat-form-field style="max-width: 110px;" appearance="outline">
+                    <input matInput>
+                  </mat-form-field>
+                </div>
+
+                <div fxFlex="5" class="pt-8 pr-8" fxLayoutAlign="end start">
+                  <span style="font-size: 13px;text-align: right">Plant+GST</span>
+                </div>
+                <div fxFlex="10" fxLayoutAlign="start center">
+                  <mat-form-field style="max-width: 90px" appearance="outline">
+                    <input matInput placeholder="0:000">
+                  </mat-form-field>
+                </div>
+                <div fxFlex="15" class="text" fxLayoutAlign="start start">
+                  <mat-form-field style="max-width: 150px;margin-left: -6px" appearance="outline">
+                    <input matInput placeholder="">
+                  </mat-form-field>
+                </div>
+              </div>
               <div class="input-row" style="margin-top: -10px;" fxLayout="row" fxLayout.lt-md="column"
                 fxLayoutGap.lt-md="0px">
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
@@ -208,7 +234,11 @@
 
                   <ng-container matColumnDef="Remarks">
                     <th mat-header-cell *matHeaderCellDef>Remarks </th>
-                    <td mat-cell *matCellDef="let element"> {{element.Remarks}} </td>
+                    <td mat-cell *matCellDef="let element">
+                      <mat-form-field class="example-full-width">
+                        <input matInput>
+                      </mat-form-field>
+                    </td>
                   </ng-container>
 
                   <ng-container matColumnDef="Item">

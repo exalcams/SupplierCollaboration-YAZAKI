@@ -102,6 +102,22 @@ table {
   .img-style{
     height:45px
 }
-.mat-form-field-appearance-legacy .mat-form-field-underline{
-  height: 0px !important;
-}
+
+table {
+    width: 100%;
+    th{
+      background: #082f7d;
+      color: white;
+      //font-family: Ubuntu;
+      // padding-left: 25px;
+      padding: 10px;
+      border-right: 1px solid #e0e0e0
+    }
+    td{
+        padding-left: 15px;
+        border-right: 1px solid #1b56ca
+    }
+    tr{
+      height: 40px;
+    }
+  }

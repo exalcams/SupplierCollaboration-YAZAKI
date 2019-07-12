@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
     MenuItems: string[];
     children: FuseNavigation[] = [];
     subChildren: FuseNavigation[] = [];
+    subChildren1: FuseNavigation[] = [];
     private _unsubscribeAll: Subject<any>;
     message = 'Snack Bar opened.';
     actionButtonLabel = 'Retry';
@@ -183,18 +184,6 @@ export class LoginComponent implements OnInit {
                 url: '/master/user'
             });
         }
-
-        if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 || this.MenuItems.indexOf('User') >= 0) {
-            this.children.push({
-                id: 'master',
-                title: 'Master',
-                // translate: 'NAV.DASHBOARDS',
-                type: 'collapsable',
-                // icon: 'orderIcon',
-                isSvgIcon: true,
-                children: this.subChildren
-            });
-        }
         if (true) {
             this.children.push(
                 {
@@ -246,6 +235,59 @@ export class LoginComponent implements OnInit {
                     url: '/pages/vendorcomparison',
                 }
             );
+        }
+        if (this.MenuItems.indexOf('PaymentReportPO') >= 0) {
+            this.subChildren1.push(
+                {
+                    id: 'paymentReportPO',
+                    title: 'PO',
+                    type: 'item',
+                    url: '/paymentReport/po'
+                },
+            );
+        }
+        if (this.MenuItems.indexOf('PaymentReportInvoice') >= 0) {
+            this.subChildren1.push(
+                {
+                    id: 'paymentReportInvoice',
+                    title: 'Invoice',
+                    type: 'item',
+                    url: '/paymentReport/invoice'
+                },
+            );
+        }
+        if (this.MenuItems.indexOf('PaymentReportReference') >= 0) {
+            this.subChildren1.push(
+                {
+                    id: 'paymentReportReference',
+                    title: 'Reference',
+                    type: 'item',
+                    url: '/paymentReport/reference'
+                }
+            );
+        }
+        if (this.MenuItems.indexOf('PaymentReportPO') >= 0 || this.MenuItems.indexOf('PaymentReportInvoice') >= 0 || this.MenuItems.indexOf('PaymentReportReference') >= 0) {
+            this.children.push({
+                id: 'paymentReport',
+                title: 'Payment Report',
+                // translate: 'NAV.DASHBOARDS',
+                type: 'collapsable',
+                //icon: 'orderIcon',
+                isSvgIcon: true,
+                children: this.subChildren1
+            }
+            );
+        }
+        if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 || this.MenuItems.indexOf('User') >= 0) {
+            this.children.push({
+                id: 'master',
+                title: 'Master',
+                // translate: 'NAV.DASHBOARDS',
+                type: 'collapsable',
+                // icon: 'orderIcon',
+                isSvgIcon: true,
+                children: this.subChildren
+            });
         }
         this.navigation.push({
             id: 'applications',

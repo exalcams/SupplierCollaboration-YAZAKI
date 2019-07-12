@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MatIconRegistry, MatSnackBar } from '@angular/material';
+import { MatIconRegistry, MatSnackBar, MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { AuthenticationDetails } from 'app/models/master';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,14 +13,21 @@ import { AuthenticationDetails } from 'app/models/master';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+
+  displayedColumns: string[] = ['select','PO', 'PurchaseOrder', 'Item', 'PODate', 'Material', 'Description', 'POQuantity', 'OrderUnit', 'QAStatus', 'ASNStatus', 'Attechment'];
+  displayedColumns1: string[] = ['DraftID', 'ServiceEnterSheetID', 'PurchaseOrder', 'Amount'];
+  dataSource: MatTableDataSource<OrderFullfillment>;
+  dataSource1: MatTableDataSource<PreviousRequests>;
+  selection: SelectionModel<OrderFullfillment>;
   authenticationDetails: AuthenticationDetails;
   MenuItems: string[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   public isVisible: boolean;
+  selected1 = 'option1';
   // private LinItemList: LineItems[];
   public OrderList: Orders[];
-  displayedColumns: string[] = ['Description', 'Quantity', 'Rate'];
-  displayedColumns1: string[] = ['Description', 'Quantity', 'Status'];
+  // displayedColumns: string[] = ['Description', 'Quantity', 'Rate'];
+  // displayedColumns1: string[] = ['Description', 'Quantity', 'Status'];
   widget5: any = {};
   selected = 'Month';
   constructor(private _router: Router, matIconRegistry: MatIconRegistry, sanitizer: DomSanitizer, public snackBar: MatSnackBar) {
@@ -28,7 +36,7 @@ export class DashboardComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
 
     this.widget5 = {
-      
+
       data: {
         labels: ['0', '10', '20', '30', '40', '50', '60', '70'],
         datasets: [
@@ -40,7 +48,7 @@ export class DashboardComponent implements OnInit {
             lineTension: 0.4,
             borderColor: ['#2979ff'],
             // pointBorderColor: "#71a5e2",
-            pointRadius:1,
+            pointRadius: 1,
             // pointHoverRadius: 7,
             // pointBorderWidth: 5,
             // pointBorderColor: '#ffffff',
@@ -50,7 +58,7 @@ export class DashboardComponent implements OnInit {
           {
             type: 'line',
             label: '',
-            data: [20, 70, 27,38 , 22, 65, 22, 19],
+            data: [20, 70, 27, 38, 22, 65, 22, 19],
             fill: false,
             lineTension: 0.4,
             borderColor: ['#e32049'],
@@ -99,6 +107,12 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     // Retrive authorizationData
+    this.dataSource = new MatTableDataSource(ELEMENT_DATA);
+    this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
+    this.selection = new SelectionModel(true, []);
+    this.isAllSelected();
+    this.masterToggle();
+    this.checkboxLabel();
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
@@ -134,96 +148,7 @@ export class DashboardComponent implements OnInit {
         ]
       }
     ];
-    // this.LinItemList = [
-    //   { ItemID: 1, Description: 'Carrier 1.5 Ton 3 star (2018) Split AC (Copper,White)', Quantity: 1, Rate: 24, Status: 'In Production' },
-    //   { ItemID: 2, Description: 'VGaurd VG 400 AE 10 Stabilizer (White)', Quantity: 1, Rate: 24, Status: 'Ready to be packed' }
-    // ]
   }
-
-  //   widget5: {
-  //     chartType: 'line',
-  //     datasets : {
-  //                 data : [190, 300, 340, 220, 290, 390, 250, 380, 410, 380, 320, 290],
-  //                 fill : 'start'
-  //             // {
-  //             //     data : [2200, 2900, 3900, 2500, 3800, 3200, 2900, 1900, 3000, 3400, 4100, 3800],
-  //             //     fill : 'start'
-  //             // }
-
-  //     },
-  //     labels   : ['12am', '2am', '4am', '6am', '8am', '10am', '12pm', '2pm', '4pm', '6pm', '8pm', '10pm'],
-  //     colors   : [
-  //         {
-  //             borderColor              : '#3949ab',
-  //             backgroundColor          : '#3949ab',
-  //             pointBackgroundColor     : '#3949ab',
-  //             pointHoverBackgroundColor: '#3949ab',
-  //             pointBorderColor         : '#ffffff',
-  //             pointHoverBorderColor    : '#ffffff'
-  //         },
-  //         {
-  //             borderColor              : 'rgba(30, 136, 229, 0.87)',
-  //             backgroundColor          : 'rgba(30, 136, 229, 0.87)',
-  //             pointBackgroundColor     : 'rgba(30, 136, 229, 0.87)',
-  //             pointHoverBackgroundColor: 'rgba(30, 136, 229, 0.87)',
-  //             pointBorderColor         : '#ffffff',
-  //             pointHoverBorderColor    : '#ffffff'
-  //         }
-  //     ],
-  //     options  : {
-  //         spanGaps           : false,
-  //         legend             : {
-  //             display: false
-  //         },
-  //         maintainAspectRatio: false,
-  //         tooltips           : {
-  //             position : 'nearest',
-  //             mode     : 'index',
-  //             intersect: false
-  //         },
-  //         layout             : {
-  //             padding: {
-  //                 left : 24,
-  //                 right: 32
-  //             }
-  //         },
-  //         elements           : {
-  //             point: {
-  //                 radius          : 4,
-  //                 borderWidth     : 2,
-  //                 hoverRadius     : 4,
-  //                 hoverBorderWidth: 2
-  //             }
-  //         },
-  //         scales             : {
-  //             xAxes: [
-  //                 {
-  //                     gridLines: {
-  //                         display: false
-  //                     },
-  //                     ticks    : {
-  //                         fontColor: 'rgba(0,0,0,0.54)'
-  //                     }
-  //                 }
-  //             ],
-  //             yAxes: [
-  //                 {
-  //                     gridLines: {
-  //                         tickMarkLength: 16
-  //                     },
-  //                     ticks    : {
-  //                         stepSize: 1000
-  //                     }
-  //                 }
-  //             ]
-  //         },
-  //         plugins            : {
-  //             filler: {
-  //                 propagate: false
-  //             }
-  //         }
-  //     }
-  // }
 
   ChangeVisibleStatus(SelectedOrder: Orders): void {
     SelectedOrder.IsVisible = !SelectedOrder.IsVisible;
@@ -243,8 +168,24 @@ export class DashboardComponent implements OnInit {
     //    this.selected;
     // else
     // this.forecasts = this.cacheForecasts.filter((item) => item.summary == filterVal); 
-}
-
+  }
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: OrderFullfillment): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.POQuantity + 1}`;
+  }
 }
 
 export class LineItems {
@@ -264,3 +205,35 @@ export class Orders {
   IsVisible?: boolean;
   LineItemsList?: LineItems[];
 }
+export interface OrderFullfillment {
+  PO: string;
+  PurchaseOrder: string;
+  Item: string;
+  PODate: string;
+  Material: string;
+  Description: string;
+  POQuantity: number;
+  OrderUnit: string;
+  QAStatus: string;
+  ASNStatus: string;
+  Attechment: string;
+  select: boolean;
+}
+export interface PreviousRequests {
+  DraftID: number;
+  ServiceEnterSheetID: string;
+  PurchaseOrder: string;
+  Amount: string;
+}
+const ELEMENT_DATA: OrderFullfillment[] = [
+  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '',select:false },
+  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '',select:false },
+  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '',select:false },
+  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '',select:false },
+  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '',select:false },
+  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '',select:false },
+  
+];
+const ELEMENT_DATA1: PreviousRequests[] = [
+  { DraftID: 102654, PurchaseOrder: '8001002118', ServiceEnterSheetID: '10', Amount: '25411.00' }
+];
