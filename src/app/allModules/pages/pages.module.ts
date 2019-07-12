@@ -56,19 +56,19 @@ import { FuseSharedModule } from '@fuse/shared.module';
 
 const routes: Routes = [
     {
-        path: 'prvendor',
+        path: 'creation',
         component: PRScreenVendorComponent,
     },
     {
-        path: 'rfq',
+        path: 'publish',
         component: RFQScreenComponent
     },
     {
-        path: 'supplierInvite',
+        path: 'evaluation',
         component: SupplierInviteScreenComponent
     },
     {
-        path: 'vendorcomparison',
+        path: 'awarded',
         component: VendorComparisonComponent
     },
     {

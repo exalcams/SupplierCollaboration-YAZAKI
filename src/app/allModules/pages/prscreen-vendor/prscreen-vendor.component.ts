@@ -6,8 +6,8 @@ import { fuseAnimations } from '@fuse/animations';
   selector: 'app-prscreen-vendor',
   templateUrl: './prscreen-vendor.component.html',
   styleUrls: ['./prscreen-vendor.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  animations: fuseAnimations
+  // encapsulation: ViewEncapsulation.None,
+  // animations: fuseAnimations
 })
 export class PRScreenVendorComponent implements OnInit {
   PRClassList: PRClass[] = [];
