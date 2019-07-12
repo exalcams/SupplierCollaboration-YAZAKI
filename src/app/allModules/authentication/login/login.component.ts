@@ -137,123 +137,127 @@ export class LoginComponent implements OnInit {
                 url: '/order/shipment'
             });
         }
-    if (this.MenuItems.indexOf('GateTransaction') >= 0) {
-      this.children.push({
-        id: 'gateEntry',
-        title: 'Gate Entry',
-        translate: 'NAV.SAMPLE.TITLE',
-        type: 'item',
-        icon: 'shipment',
-        isSvgIcon: true,
-        url: '/gateTransaction/gateentry'
-      });
-    }
-    if (this.MenuItems.indexOf('OrderAcknowledgment') >= 0) {
-      this.children.push({
-        id: 'orderAcknowledgment',
-        title: 'Order Acknowledgment',
-        translate: 'NAV.SAMPLE.TITLE',
-        type: 'item',
-        icon: 'orderIcon',
-        isSvgIcon: true,
-        url: '/orderacknowledgment/acknowledgment'
-      });
-    }
-    if (this.MenuItems.indexOf('App') >= 0) {
-      this.subChildren.push({
-        id: 'menuapp',
-        title: 'App',
-        type: 'item',
-        url: '/master/menuApp'
-      });
-    }
-    if (this.MenuItems.indexOf('Role') >= 0) {
-      this.subChildren.push({
-        id: 'role',
-        title: 'Role',
-        type: 'item',
-        url: '/master/role'
-      });
-    }
-    if (this.MenuItems.indexOf('User') >= 0) {
-      this.subChildren.push({
-        id: 'user',
-        title: 'User',
-        type: 'item',
-        url: '/master/user'
-      });
-    }
-    if (true) {
-      this.children.push(
-        {
-          id: 'prvendor',
-          title: 'PR Screen (Vendor)',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'orderIcon',
-          isSvgIcon: true,
-          url: '/pages/prvendor',
+        if (this.MenuItems.indexOf('GateTransaction') >= 0) {
+            this.children.push({
+                id: 'gateEntry',
+                title: 'Gate Entry',
+                translate: 'NAV.SAMPLE.TITLE',
+                type: 'item',
+                icon: 'shipment',
+                isSvgIcon: true,
+                url: '/gateTransaction/gateentry'
+            });
         }
-      );
-    }
-    if (true) {
-      this.children.push(
-        {
-          id: 'rfq',
-          title: 'RFQ Screen',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'orderIcon',
-          isSvgIcon: true,
-          url: '/pages/rfq',
+        if (this.MenuItems.indexOf('OrderAcknowledgment') >= 0) {
+            this.children.push({
+                id: 'orderAcknowledgment',
+                title: 'Order Acknowledgment',
+                translate: 'NAV.SAMPLE.TITLE',
+                type: 'item',
+                icon: 'orderIcon',
+                isSvgIcon: true,
+                url: '/orderacknowledgment/acknowledgment'
+            });
         }
-      );
-    }
-    if (true) {
-      this.children.push(
-        {
-          id: 'supplierInvite',
-          title: 'Supplier Invite',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'orderIcon',
-          isSvgIcon: true,
-          url: '/pages/supplierInvite',
+        if (this.MenuItems.indexOf('App') >= 0) {
+            this.subChildren.push({
+                id: 'menuapp',
+                title: 'App',
+                type: 'item',
+                url: '/master/menuApp'
+            });
         }
-      );
-    }
-    if (true) {
-      this.children.push(
-        {
-          id: 'vendorcomparison',
-          title: 'Vendor comparison',
-          translate: 'NAV.SAMPLE.TITLE',
-          type: 'item',
-          icon: 'orderIcon',
-          isSvgIcon: true,
-          url: '/pages/vendorcomparison',
+        if (this.MenuItems.indexOf('Role') >= 0) {
+            this.subChildren.push({
+                id: 'role',
+                title: 'Role',
+                type: 'item',
+                url: '/master/role'
+            });
         }
-      );
+        if (this.MenuItems.indexOf('User') >= 0) {
+            this.subChildren.push({
+                id: 'user',
+                title: 'User',
+                type: 'item',
+                url: '/master/user'
+            });
+        }
+
+        if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 || this.MenuItems.indexOf('User') >= 0) {
+            this.children.push({
+                id: 'master',
+                title: 'Master',
+                // translate: 'NAV.DASHBOARDS',
+                type: 'collapsable',
+                // icon: 'orderIcon',
+                isSvgIcon: true,
+                children: this.subChildren
+            });
+        }
+        if (true) {
+            this.children.push(
+                {
+                    id: 'prvendor',
+                    title: 'PR Screen (Vendor)',
+                    translate: 'NAV.SAMPLE.TITLE',
+                    type: 'item',
+                    icon: 'orderIcon',
+                    isSvgIcon: true,
+                    url: '/pages/prvendor',
+                }
+            );
+        }
+        if (true) {
+            this.children.push(
+                {
+                    id: 'rfq',
+                    title: 'RFQ Screen',
+                    translate: 'NAV.SAMPLE.TITLE',
+                    type: 'item',
+                    icon: 'orderIcon',
+                    isSvgIcon: true,
+                    url: '/pages/rfq',
+                }
+            );
+        }
+        if (true) {
+            this.children.push(
+                {
+                    id: 'supplierInvite',
+                    title: 'Supplier Invite',
+                    translate: 'NAV.SAMPLE.TITLE',
+                    type: 'item',
+                    icon: 'orderIcon',
+                    isSvgIcon: true,
+                    url: '/pages/supplierInvite',
+                }
+            );
+        }
+        if (true) {
+            this.children.push(
+                {
+                    id: 'vendorcomparison',
+                    title: 'Vendor comparison',
+                    translate: 'NAV.SAMPLE.TITLE',
+                    type: 'item',
+                    icon: 'orderIcon',
+                    isSvgIcon: true,
+                    url: '/pages/vendorcomparison',
+                }
+            );
+        }
+        this.navigation.push({
+            id: 'applications',
+            // title: '',
+            title: '',
+            translate: 'NAV.APPLICATIONS',
+            type: 'group',
+            children: this.children
+        });
+        // Saving local Storage
+        localStorage.setItem('menuItemsData', JSON.stringify(this.navigation));
+        // Update the service in order to update menu
+        this._menuUpdationService.PushNewMenus(this.navigation);
     }
-    if (this.MenuItems.indexOf('App') >= 0) {
-      this.subChildren.push(
-        {
-          id: 'menuapp',
-          title: 'App',
-          type: 'item',
-          url: '/master/menuApp'
-        },
-      );
-    }
-    if (this.MenuItems.indexOf('Role') >= 0) {
-      this.subChildren.push(
-        {
-          id: 'role',
-          title: 'Role',
-          type: 'item',
-          url: '/master/role'
-        },
-      );
-    }
-  }
 }
