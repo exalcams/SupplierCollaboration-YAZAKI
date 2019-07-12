@@ -14,7 +14,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 })
 export class DashboardComponent implements OnInit {
 
-  displayedColumns: string[] = ['select','PO', 'PurchaseOrder', 'Item', 'PODate', 'Material', 'Description', 'POQuantity', 'OrderUnit', 'QAStatus', 'ASNStatus', 'Attechment'];
+  displayedColumns: string[] = ['select', 'PO', 'PurchaseOrder', 'Item', 'PODate', 'Material', 'Description', 'POQuantity', 'OrderUnit', 'QAStatus', 'ASNStatus', 'Attechment'];
   displayedColumns1: string[] = ['DraftID', 'ServiceEnterSheetID', 'PurchaseOrder', 'Amount'];
   dataSource: MatTableDataSource<OrderFullfillment>;
   dataSource1: MatTableDataSource<PreviousRequests>;
@@ -186,6 +186,10 @@ export class DashboardComponent implements OnInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.POQuantity + 1}`;
   }
+  PurchaseOrder() {
+    this._router.navigate(['/dashboard/purchaseOrderDetails']);
+  }
+  // router.navigate(['/dashboard/purchaseOrderDetails']);
 }
 
 export class LineItems {
@@ -226,13 +230,13 @@ export interface PreviousRequests {
   Amount: string;
 }
 const ELEMENT_DATA: OrderFullfillment[] = [
-  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '',select:false },
-  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '',select:false },
-  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '',select:false },
-  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '',select:false },
-  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '',select:false },
-  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '',select:false },
-  
+  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '', select: false },
+  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '', select: false },
+  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '', select: false },
+  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '', select: false },
+  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '', select: false },
+  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '', select: false },
+
 ];
 const ELEMENT_DATA1: PreviousRequests[] = [
   { DraftID: 102654, PurchaseOrder: '8001002118', ServiceEnterSheetID: '10', Amount: '25411.00' }
