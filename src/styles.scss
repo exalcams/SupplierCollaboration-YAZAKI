@@ -63,3 +63,9 @@
   .mat-form-field-appearance-outline .mat-form-field-outline{
     top: 0.4em !important;
   }
+  .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #acacac !important;
+  }
+  .mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #3cb878 !important;
+  }

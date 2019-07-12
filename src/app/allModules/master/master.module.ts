@@ -21,18 +21,18 @@ import { MenuAppSideBarComponent } from './menu-app/menu-app-side-bar/menu-app-s
 import { MenuAppMainContentComponent } from './menu-app/menu-app-main-content/menu-app-main-content.component';
 
 const menuRoutes: Routes = [
-    {
-        path: 'menuApp',
-        component: MenuAppComponent,
-    },
-    {
-        path: 'role',
-        component: RoleComponent,
-    },
-    {
-        path: 'user',
-        component: UserComponent,
-    },
+        {
+            path: 'menuApp',
+            component: MenuAppComponent,
+        },
+        {
+            path: 'role',
+            component: RoleComponent,
+        },
+        {
+            path: 'user',
+            component: UserComponent,
+        },
 ];
 @NgModule({
     declarations: [
