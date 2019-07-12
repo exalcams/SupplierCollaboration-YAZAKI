@@ -147,22 +147,12 @@
               <div class="h3">
                 <mat-card-title> <strong>Key-Order-Fulfillment-Metrics </strong></mat-card-title>
               </div>
-              <!-- <div fxFlex fxLayout style="margin-right: 9px; margin-top:-20px" fxLayoutAlign="end end">
-                <mat-form-field>
-                  <mat-select [(value)]="selected">
-                    <mat-option value="Month">Month</mat-option>
-                    <mat-option value="Year">Year</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div> -->
               <div fxFlex fxLayout style="margin-right: 9px;margin-bottom: 8px;" fxLayoutAlign="end end">
                 <select class="dropdownstyle" (change)="filterForeCasts($event.target.value)">
                   <option value="Month">Month</option>
                   <option value="Year">Year</option>
                 </select>
               </div>
-
-              <!-- <mat-card-title> Key-Order-Fulfillment-Metrics </mat-card-title> -->
             </mat-card-header>
             <mat-divider class="divider" [inset]="true"></mat-divider>
             <div *ngIf="selected === 'Month'">
@@ -298,6 +288,204 @@
     </div>
 
     <div fxFlex>
+      <div style="margin-top: 40px" fxLayout fxLayout.xs="column" fxLayout.sm="column" fxLayoutGap="20px"
+        fxLayoutGap.xs="20px">
+        <div fxFlex=75% fxFlex.ls="69">
+          <mat-card style="margin-bottom: 20px">
+            <mat-card-header>
+              <mat-card-title style="margin-left: 10px;margin-top:-5px"><strong>Order Fullfillment Status</strong>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-divider class="divider" [inset]="true"></mat-divider>
+            <mat-card-content>
+              <div style="text-align: start;margin-top: 10px;margin-bottom: -12px">
+                <mat-icon matTooltip="ePurchase Order Download">arrow_downward</mat-icon>
+                <mat-icon matTooltip="Purchase Order Look Up"
+                  (click)="router.navigate(['/dashboard/purchaseOrderDetails']);">arrow_upward</mat-icon>
+                <mat-icon matTooltip="Order Acknowledgement">check</mat-icon>
+                <mat-icon matTooltip="Create Advance Shipment Notification">notifications</mat-icon>
+                <mat-icon matTooltip="Inspection Check">local_grocery_store</mat-icon>
+                <mat-icon matTooltip="Expediting Event">access_time</mat-icon>
+                <mat-icon matTooltip="Export Excel">insert_drive_file</mat-icon>
+              </div>
+              <div style="text-align: end;margin-top: -25px">
+                <mat-icon matTooltip="Invoice Upload">cloud_upload</mat-icon>
+                <mat-icon matTooltip="DisPute Management">select_all</mat-icon>
+                <mat-icon matTooltip="Expand All">collections_bookmark</mat-icon>
+              </div>
+              <table style="margin-top: 10px;" mat-table [dataSource]="dataSource">
+
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef>Select
+                    <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
+                                                [checked]="selection.hasValue() && isAllSelected()"
+                                                [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                  </mat-checkbox> -->
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="PO">
+                  <th mat-header-cell *matHeaderCellDef>PO</th>
+                  <td mat-cell *matCellDef="let element">{{element.PO}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="PurchaseOrder">
+                  <th mat-header-cell *matHeaderCellDef>Purchase Order</th>
+                  <td mat-cell *matCellDef="let element"> {{element.PurchaseOrder}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Item">
+                  <th mat-header-cell *matHeaderCellDef>Item</th>
+                  <td mat-cell *matCellDef="let element"> {{element.Item}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="PODate">
+                  <th mat-header-cell *matHeaderCellDef>PO Date</th>
+                  <td mat-cell *matCellDef="let element"> {{element.PODate}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Material">
+                  <th mat-header-cell *matHeaderCellDef>Material</th>
+                  <td mat-cell *matCellDef="let element"> {{element.Material}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Description">
+                  <th mat-header-cell *matHeaderCellDef>Description</th>
+                  <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="POQuantity">
+                  <th mat-header-cell *matHeaderCellDef>PO Quantity</th>
+                  <td mat-cell *matCellDef="let element"> {{element.POQuantity}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="OrderUnit">
+                  <th mat-header-cell *matHeaderCellDef>Order Unit </th>
+                  <td mat-cell *matCellDef="let element"> {{element.OrderUnit}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="QAStatus">
+                  <th mat-header-cell *matHeaderCellDef>QA Status </th>
+                  <td mat-cell *matCellDef="let element"> {{element.QAStatus}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ASNStatus">
+                  <th mat-header-cell *matHeaderCellDef>ASN Status </th>
+                  <td mat-cell *matCellDef="let element"> {{element.ASNStatus}} </td>
+                </ng-container>
+                <ng-container matColumnDef="Attechment">
+                  <th mat-header-cell *matHeaderCellDef>Attechment</th>
+                  <td mat-cell *matCellDef="let element"> <mat-icon>attach_file</mat-icon> </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>Select
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <mat-checkbox style="margin-left: 15px" (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                  </mat-checkbox>
+                </td>
+              </ng-container> -->
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div fxFlex=32% fxFlex.ls="32">
+          <div>
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title style="margin-left: 10px;margin-top:-5px"><strong>My Notifications</strong>
+                </mat-card-title>
+              </mat-card-header>
+              <mat-divider class="divider" [inset]="true"></mat-divider>
+              <div>
+                <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
+                  <div>
+                    <div class="pt-8 pr-8" fxLayoutAlign="end start">
+                      Total Po Document - 243
+                    </div>
+                    <div class="pt-8 pr-8" fxLayoutAlign="end start">
+                      Open Po Document - 83
+                    </div>
+                    <div class="pt-8 pr-8" fxLayoutAlign="end start">
+                      In Transit - 20
+                    </div>
+                    <div class="pt-8 pr-8" fxLayoutAlign="end start">
+                      ASN Pending - 45
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card>
+          </div>
+          <div style="margin-top: 15px">
+            <mat-card style="margin-top: -5px;margin-bottom: 20px">
+              <mat-card-header>
+                <mat-card-title style="margin-left: 10px;margin-top:-5px"><strong>My Previous Requests</strong>
+                </mat-card-title>
+              </mat-card-header>
+              <mat-divider class="divider" [inset]="true"></mat-divider>
+              <div>
+                <mat-form-field style="width: 80%;margin-left: -10px">
+                  <!-- <mat-label style="color: hsl(220, 76%, 45%)">Select</mat-label> -->
+                  <mat-select style="height: 25px" [(value)]="selected1">
+                    <mat-option value="option1">Advance Shipment Notification Requests</mat-option>
+                    <mat-option value="option2">Joint Measurement Sheet Requests</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field style="width: 80px;margin-left: -10px;margin-top: -20px">
+                  <mat-label style="color: #1b56ca">Select</mat-label>
+                  <mat-select style="height: 25px">
+                    <!-- <mat-option>None</mat-option> -->
+                    <mat-option value="option1">Drafted</mat-option>
+                    <mat-option value="option2">Previous</mat-option>
+                    <mat-option value="option3">Rejected</mat-option>
+                    <mat-option value="option1">SentBack</mat-option>
+                    <mat-option value="option2">Deleted</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <table style="margin-top: 10px" mat-table [dataSource]="dataSource1">
+                <ng-container matColumnDef="DraftID">
+                  <th mat-header-cell *matHeaderCellDef>Draft ID</th>
+                  <td mat-cell *matCellDef="let element"> {{element.DraftID}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ServiceEnterSheetID">
+                  <th mat-header-cell *matHeaderCellDef>Service Enter SheetID</th>
+                  <td mat-cell *matCellDef="let element"> {{element.ServiceEnterSheetID}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="PurchaseOrder">
+                  <th mat-header-cell *matHeaderCellDef>Purchase Order</th>
+                  <td mat-cell *matCellDef="let element"> {{element.PurchaseOrder}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Amount">
+                  <th mat-header-cell *matHeaderCellDef> Amount</th>
+                  <td mat-cell *matCellDef="let element"> {{element.Amount}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns1"></tr>
+              </table>
+            </mat-card>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- <div fxFlex>
       <div fxFlex style="margin-top: 10px;margin-bottom: 20px;" fxLayout fxLayout.xs="column" fxLayout.sm="column"
         fxLayoutAlign="center" fxLayoutGap="20px" fxLayoutGap.xs="20px">
         <mat-card fxFlex>
@@ -352,7 +540,7 @@
           </mat-card-content>
         </mat-card>
       </div>
-    </div>
+    </div> -->
 
   </div>
 </div>
