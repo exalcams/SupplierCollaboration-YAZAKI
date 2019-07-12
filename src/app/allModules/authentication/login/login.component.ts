@@ -160,30 +160,6 @@ export class LoginComponent implements OnInit {
                 url: '/orderacknowledgment/acknowledgment'
             });
         }
-        if (this.MenuItems.indexOf('App') >= 0) {
-            this.subChildren.push({
-                id: 'menuapp',
-                title: 'App',
-                type: 'item',
-                url: '/master/menuApp'
-            });
-        }
-        if (this.MenuItems.indexOf('Role') >= 0) {
-            this.subChildren.push({
-                id: 'role',
-                title: 'Role',
-                type: 'item',
-                url: '/master/role'
-            });
-        }
-        if (this.MenuItems.indexOf('User') >= 0) {
-            this.subChildren.push({
-                id: 'user',
-                title: 'User',
-                type: 'item',
-                url: '/master/user'
-            });
-        }
         if (true) {
             this.children.push(
                 {
@@ -277,6 +253,30 @@ export class LoginComponent implements OnInit {
                 children: this.subChildren1
             }
             );
+        }
+        if (this.MenuItems.indexOf('App') >= 0) {
+            this.subChildren.push({
+                id: 'menuapp',
+                title: 'App',
+                type: 'item',
+                url: '/master/menuApp'
+            });
+        }
+        if (this.MenuItems.indexOf('Role') >= 0) {
+            this.subChildren.push({
+                id: 'role',
+                title: 'Role',
+                type: 'item',
+                url: '/master/role'
+            });
+        }
+        if (this.MenuItems.indexOf('User') >= 0) {
+            this.subChildren.push({
+                id: 'user',
+                title: 'User',
+                type: 'item',
+                url: '/master/user'
+            });
         }
         if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 || this.MenuItems.indexOf('User') >= 0) {
             this.children.push({

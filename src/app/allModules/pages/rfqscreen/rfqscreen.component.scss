@@ -10,8 +10,11 @@
 .borderRightClass {
   border-right: 1px solid #dce1e9;
 }
+.fullHeight{
+  height: 90%;
+}
 .roundedBorder {
-  border-radius: 10px;
+  border-radius: 10px !important;
 }
 table {
   width: 100%;
