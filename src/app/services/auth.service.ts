@@ -4,6 +4,7 @@ import { map, catchError } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Guid } from 'guid-typescript';
 import { ChangePassword, ForgotPassword, EMailModel } from 'app/models/master';
+import { environment } from 'environments/environment';
 
 
 @Injectable({
@@ -13,11 +14,8 @@ export class AuthService {
   baseAddress: string;
   clientId: string;
   constructor(private _httpClient: HttpClient) {
-    // this.baseAddress = 'http://localhost:64339/';
-    // this.baseAddress = 'http://192.168.0.25:64339/v1/';
-   // this.baseAddress = 'http://192.168.0.25:8059/v1/';
-    this.baseAddress = 'http://localhost:6556/';
-    this.clientId = 'ngAuthApp';
+    this.baseAddress = environment.baseAddress;
+    this.clientId = environment.clientId;
   }
 
   // Error Handler
