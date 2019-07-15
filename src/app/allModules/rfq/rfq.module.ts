@@ -49,33 +49,37 @@ import {
 } from '@fuse/components';
 import { FormsModule } from '@angular/forms';
 import { FuseSharedModule } from '@fuse/shared.module';
+import { CreationComponent } from './creation/creation.component';
+import { PublishComponent } from './publish/publish.component';
+import { EvaluationComponent } from './evaluation/evaluation.component';
+import { AwardedComponent } from './awarded/awarded.component';
 
-// const routes: Routes = [
-//     {
-//         path: 'creation',
-//         component: PRScreenVendorComponent,
-//     },
-//     {
-//         path: 'publish',
-//         component: RFQScreenComponent
-//     },
-//     {
-//         path: 'evaluation',
-//         component: SupplierInviteScreenComponent
-//     },
-//     {
-//         path: 'awarded',
-//         component: VendorComparisonComponent
-//     },
-//     {
-//         path: '**',
-//         redirectTo: '/auth/login'
-//     }
-// ];
+const routes: Routes = [
+    {
+        path: 'creation',
+        component: CreationComponent,
+    },
+    {
+        path: 'publish',
+        component: PublishComponent
+    },
+    {
+        path: 'evaluation',
+        component: EvaluationComponent
+    },
+    {
+        path: 'awarded',
+        component: AwardedComponent
+    },
+    {
+        path: '**',
+        redirectTo: '/auth/login'
+    }
+];
 
 @NgModule({
     imports: [
-        // RouterModule.forChild(routes),
+        RouterModule.forChild(routes),
         // HttpClientModule,
         // TranslateModule,
         MatFormFieldModule,
@@ -126,9 +130,9 @@ import { FuseSharedModule } from '@fuse/shared.module';
 
         FormsModule,
     ],
-    declarations: [],
+    declarations: [CreationComponent, PublishComponent, EvaluationComponent, AwardedComponent],
     providers: [],
     entryComponents: [
     ]
 })
-export class PagesModule { }
+export class RFQModule { }

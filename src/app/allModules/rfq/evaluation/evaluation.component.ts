@@ -3,11 +3,11 @@ import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
-  selector: 'app-supplier-invite-screen',
-  templateUrl: './supplier-invite-screen.component.html',
-  styleUrls: ['./supplier-invite-screen.component.scss']
+  selector: 'evaluation',
+  templateUrl: './evaluation.component.html',
+  styleUrls: ['./evaluation.component.scss']
 })
-export class SupplierInviteScreenComponent implements OnInit {
+export class EvaluationComponent implements OnInit {
 
   SupplierInviteClassList: SupplierInviteClass[] = [];
   displayedColumns: string[] = ['select', 'VendorName', 'GSTNumber', 'VendorType', 'City'];

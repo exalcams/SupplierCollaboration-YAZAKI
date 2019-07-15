@@ -3,13 +3,13 @@ import { MatTableDataSource } from '@angular/material';
 import { fuseAnimations } from '@fuse/animations';
 
 @Component({
-  selector: 'app-prscreen-vendor',
-  templateUrl: './prscreen-vendor.component.html',
-  styleUrls: ['./prscreen-vendor.component.scss'],
+  selector: 'creation',
+  templateUrl: './creation.component.html',
+  styleUrls: ['./creation.component.scss'],
   // encapsulation: ViewEncapsulation.None,
   // animations: fuseAnimations
 })
-export class PRScreenVendorComponent implements OnInit {
+export class CreationComponent implements OnInit {
   PRClassList: PRClass[] = [];
   displayedColumns: string[] = ['Item', 'MaterialDescription', 'OrderQuantity', 'DelayDays', 'UOM', 'Price', 'SupplierPartNo', 'Schedule', 'Attachment', 'Forms', 'TechRating'];
   dataSource: MatTableDataSource<PRClass>;

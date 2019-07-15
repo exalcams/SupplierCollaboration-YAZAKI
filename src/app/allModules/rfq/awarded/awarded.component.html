@@ -112,87 +112,53 @@
       </div>
     </div>
     <div fxFlex class="mt-20">
-      <mat-card class="roundedBorder fullHeight my-12 mx-24">
-        <!-- <mat-card-header>
-          <mat-card-title>
-            <div fxLayout="row">
-              <div fxFlex class="borderRightClass">
-                Hi
-              </div>
-              <div fxFlex>
-                Hello
-              </div>
-            </div>
-          </mat-card-title>
-        </mat-card-header> -->
+      <mat-card class="my-12 fullHeight">
         <mat-card-content>
           <div fxLayout="row">
             <div fxFlex="60">
               <mat-radio-group aria-label="Select an option">
-                <mat-radio-button value="1" class="borderRightClass mr-24 pr-24">Yet to convert RFQ</mat-radio-button>
-                <mat-radio-button value="2" class="borderRightClass mr-24 pr-24">In Progress</mat-radio-button>
-                <mat-radio-button value="1" class="borderRightClass mr-24 pr-24">Completed</mat-radio-button>
-                <mat-radio-button value="2" class="borderRightClass mr-24 pr-24">All</mat-radio-button>
+                <mat-radio-button value="1" class="mr-24 pr-24 borderRightClass">By Material</mat-radio-button>
+                <mat-radio-button value="2" class="mr-24 pr-24 borderRightClass">By Vendor</mat-radio-button>
+                <mat-radio-button value="1" class="mr-24 pr-24">By Technical Rationg</mat-radio-button>
               </mat-radio-group>
             </div>
             <div fxFlex="40" align="end" class="pb-8">
-              <button class="SaveBtnClass" mat-raised-button>
-                Publish RFQ
-              </button>
             </div>
           </div>
-          <mat-divider></mat-divider>
+          <!-- <mat-divider></mat-divider> -->
           <div fxLayout="row" class="mt-24">
             <table mat-table [dataSource]="dataSource">
 
-              <ng-container matColumnDef="PurchaseRequirement">
-                <th mat-header-cell *matHeaderCellDef>Purchase Requirement</th>
-                <td mat-cell *matCellDef="let element">{{element.PurchaseRequirement}}</td>
+              <ng-container matColumnDef="VendorName">
+                <th mat-header-cell *matHeaderCellDef>Vendor name & Vendor code</th>
+                <td mat-cell *matCellDef="let element">{{element.VendorName }} ({{element.VendorCode}})</td>
               </ng-container>
 
-              <ng-container matColumnDef="PurchaseDate">
-                <th mat-header-cell *matHeaderCellDef>Purchase Date</th>
-                <td mat-cell *matCellDef="let element"> {{element.PurchaseDate}} </td>
+              <ng-container matColumnDef="ItemDescription">
+                <th mat-header-cell *matHeaderCellDef>Item Description</th>
+                <td mat-cell *matCellDef="let element"> {{element.ItemDescription}} </td>
               </ng-container>
 
-              <ng-container matColumnDef="PurchaseOrganization">
-                <th mat-header-cell *matHeaderCellDef>PurchaseOrganization</th>
-                <td mat-cell *matCellDef="let element"> {{element.PurchaseOrganization}} </td>
+              <ng-container matColumnDef="Quantity">
+                <th mat-header-cell *matHeaderCellDef>Quantity</th>
+                <td mat-cell *matCellDef="let element"> {{element.Quantity}} </td>
               </ng-container>
 
-              <ng-container matColumnDef="PurchaseGroup">
-                <th mat-header-cell *matHeaderCellDef>Purchase Group</th>
-                <td mat-cell *matCellDef="let element"> {{element.PurchaseGroup}} </td>
+              <ng-container matColumnDef="UOM">
+                <th mat-header-cell *matHeaderCellDef>UOM</th>
+                <td mat-cell *matCellDef="let element"> {{element.UOM}} </td>
               </ng-container>
 
-              <ng-container matColumnDef="CompanyCode">
-                <th mat-header-cell *matHeaderCellDef>Company Code</th>
-                <td mat-cell *matCellDef="let element"> {{element.CompanyCode}} </td>
+              <ng-container matColumnDef="DelayDays">
+                <th mat-header-cell *matHeaderCellDef>Delay Days</th>
+                <td mat-cell *matCellDef="let element"> {{element.DelayDays}} </td>
               </ng-container>
 
-              <ng-container matColumnDef="Buyer">
-                <th mat-header-cell *matHeaderCellDef>Buyer</th>
-                <td mat-cell *matCellDef="let element"> {{element.Buyer}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Station">
-                <th mat-header-cell *matHeaderCellDef>Station</th>
-                <td mat-cell *matCellDef="let element"> {{element.Station}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Publishing">
-                <th mat-header-cell *matHeaderCellDef>Publishing</th>
-                <td mat-cell *matCellDef="let element"> {{element.Publishing}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Response">
-                <th mat-header-cell *matHeaderCellDef>Response</th>
-                <td mat-cell *matCellDef="let element"> {{element.Response}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Award">
-                <th mat-header-cell *matHeaderCellDef>Award</th>
-                <td mat-cell *matCellDef="let element"> {{element.Award}} </td>
+              <ng-container matColumnDef="BestFor">
+                <th mat-header-cell *matHeaderCellDef>BestFor</th>
+                <td mat-cell *matCellDef="let element">
+                  <img matTooltip="import_file" src="assets/images/{{element.BestFor}}.png">
+                </td>
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

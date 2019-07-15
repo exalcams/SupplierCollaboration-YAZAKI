@@ -3,13 +3,13 @@ import { MatTableDataSource } from '@angular/material';
 import { fuseAnimations } from '@fuse/animations';
 
 @Component({
-  selector: 'app-vendor-comparison',
-  templateUrl: './vendor-comparison.component.html',
-  styleUrls: ['./vendor-comparison.component.scss'],
+  selector: 'awarded',
+  templateUrl: './awarded.component.html',
+  styleUrls: ['./awarded.component.scss'],
   encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
-export class VendorComparisonComponent implements OnInit {
+export class AwardedComponent implements OnInit {
 
   VendorComparsionClassList: VendorComparsionClass[] = [];
   displayedColumns: string[] = ['VendorName', 'ItemDescription', 'Quantity', 'UOM', 'DelayDays', 'BestFor'];

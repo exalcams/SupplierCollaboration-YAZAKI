@@ -28,7 +28,7 @@ const appRoutes: Routes = [
     },
     {
         path: 'rfq',
-        loadChildren: './allModules/pages/pages.module#PagesModule'
+        loadChildren: './allModules/rfq/rfq.module#RFQModule'
     },
     {
         path: 'dashboard',
@@ -89,7 +89,7 @@ const appRoutes: Routes = [
         // GateEntryExitModule
 
         // App modules
-        LayoutModule
+        LayoutModule,
     ],
     providers: [DatePipe],
     bootstrap: [AppComponent],
