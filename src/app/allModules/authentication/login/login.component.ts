@@ -248,7 +248,7 @@ export class LoginComponent implements OnInit {
                 title: 'Payment Report',
                 // translate: 'NAV.DASHBOARDS',
                 type: 'collapsable',
-                //icon: 'orderIcon',
+                // icon: 'orderIcon',
                 isSvgIcon: true,
                 children: this.subChildren1
             }

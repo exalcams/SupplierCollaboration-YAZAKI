@@ -5,7 +5,7 @@
   <!-- CENTER  margin-top: 20px;-->
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
     <!-- #region Dashboard -->
-    <div style="background-color:#1b56ca" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
+    <div style="background-color:#1b56ca;" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
       <div fxLayout class="layoutclass">
         <div fxFlex fxLayout="column">
           <div fxFlex>
@@ -116,11 +116,16 @@
     </div>
     <!-- #endregion -->
     <div fxFlex>
-      <mat-card fxLayout>
+      <mat-card fxLayout style="padding-left:0px">
         <!-- #region Sidebar -->
         <div fxFlex="15">
-          <div style="margin-top: 25px;">
-            <mat-form-field style="width: 200px;margin-left: -10px">
+          <mat-card-header>
+            <mat-card-title><strong>Gate Entry</strong>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-divider></mat-divider>
+          <div style="padding:15px 0px 0px 10px">
+            <mat-form-field style="width: 200px">
               <mat-label style="color: #1b56ca">Select</mat-label>
               <mat-select style="height: 25px">
                 <mat-option value="option1">Saved as Draft Request</mat-option>
@@ -131,54 +136,46 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div style="border-bottom: 1px solid #48c22b;border-top: 1px solid #48c22b;" class="borderRightSide">
+          <div class="borderRightSide">
             <div style="margin-top: 5px;" class="round1">
             </div>
-            <div>
-              <span style="color: #4a77fb;font-size: 18px">#254786984</span>
-            </div>
-            <div style="font-size: 11px;margin-bottom: 5px">
-              <span style="margin-right: 10px">03/062019</span>
-              <span>6:35PM</span>
+            <div style="padding: 5px">
+              <div class="h3">#254786984</div>
+              <div>
+                <span class="h6">03/06/2019</span>
+                <span class="h6">, 6:35PM</span>
+              </div>
             </div>
           </div>
           <div style="margin-top: 25px;">
             <div class="round2">
             </div>
-            <div>
-              <span style="color: #4a77fb;font-size: 18px">#254786984</span>
-            </div>
-            <div style="font-size: 11px">
-              <span style="margin-right: 10px">03/062019</span>
-              <span>6:35PM</span>
+            <div style="padding: 5px">
+              <div class="h3">#254786984</div>
+              <div>
+                <span class="h6">03/06/2019</span>
+                <span class="h6">, 6:35PM</span>
+              </div>
             </div>
           </div>
           <div style="margin-top: 25px;">
             <div class="round3">
             </div>
-            <div>
-              <span style="color: #4a77fb;font-size: 18px">#254786984</span>
-            </div>
-            <div style="font-size: 11px">
-              <span style="margin-right: 10px">03/062019</span>
-              <span>6:35PM</span>
+            <div style="padding: 5px">
+              <div class="h3">#254786984</div>
+              <div>
+                <span class="h6">03/06/2019</span>
+                <span class="h6">, 6:35PM</span>
+              </div>
             </div>
           </div>
         </div>
         <!-- #endregion -->
         <!-- #region Main body -->
         <div class="borderRight1"></div>
-        <div fxFlex="85" style="margin-left: 25px">
-          <mat-card-header>
-            <mat-card-title fxFlex style="margin-left: -150px"><strong>Gate Entry</strong>
-            </mat-card-title>
-          </mat-card-header>
-          <mat-divider style="margin-left: -25px" [inset]="true"></mat-divider>
+        <div fxFlex="85" style="margin: 50px 0px 0px 20px">
           <mat-card-content>
             <div>
-              <div style="margin-top: 15px;margin-bottom: 15px">
-                <strong class="sub-Title">Header Details</strong>
-              </div>
               <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px" style="margin-bottom: 10px">
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                   <span style="font-size: 13px;">Register Type</span>
