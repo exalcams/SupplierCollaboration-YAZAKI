@@ -3,13 +3,13 @@ import { MatTableDataSource } from '@angular/material';
 import { fuseAnimations } from '@fuse/animations';
 
 @Component({
-  selector: 'app-rfqscreen',
-  templateUrl: './rfqscreen.component.html',
-  styleUrls: ['./rfqscreen.component.scss'],
+  selector: 'publish',
+  templateUrl: './publish.component.html',
+  styleUrls: ['./publish.component.scss'],
   encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
-export class RFQScreenComponent implements OnInit {
+export class PublishComponent implements OnInit {
   RFQClassList: RFQClass[] = [];
   displayedColumns: string[] = ['PurchaseRequirement', 'PurchaseDate', 'PurchaseOrganization', 'PurchaseGroup', 'CompanyCode', 'Buyer', 'Station', 'Publishing', 'Response', 'Award'];
   dataSource: MatTableDataSource<RFQClass>;

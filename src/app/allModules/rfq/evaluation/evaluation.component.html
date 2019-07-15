@@ -112,7 +112,7 @@
       </div>
     </div>
     <div fxFlex class="mt-20">
-      <mat-card class="my-12 mx-24">
+      <mat-card class="my-12">
         <!-- <mat-card-header>
             <mat-card-title>
               <div fxLayout="row">
@@ -141,15 +141,15 @@
             </div>
           </div>
           <mat-divider></mat-divider>
-          <div fxLayout="row" class="mt-24">
-            <div fxFlex="60" class="mr-8">
+          <div fxLayout="row">
+            <div fxFlex="60" class="mr-8 mt-24">
               <table mat-table [dataSource]="dataSource">
                 <ng-container matColumnDef="select">
                   <th mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                    <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
                       [checked]="selection.hasValue() && isAllSelected()"
                       [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-                    </mat-checkbox>
+                    </mat-checkbox> -->
 
                   </th>
                   <td mat-cell *matCellDef="let row">
@@ -183,7 +183,7 @@
               </table>
             </div>
             <div fxFlex="40" class="borderLeftClass pl-12">
-              <div fxLayout class="my-4">
+              <div fxLayout class="my-4 mt-24">
                 <div fxFlex>
                   <div class="pt-8 pr-8">
                     <span style="font-size: 13px;">Vendor ID</span>
