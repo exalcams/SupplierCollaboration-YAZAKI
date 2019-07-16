@@ -67,7 +67,7 @@ select option {
     
 }
 table {
-    width: 100%;
+    width: 100%; 
     th{
       background: #082f7d;
       color: white;
@@ -78,9 +78,13 @@ table {
     }
     td{
         padding-left: 15px;
-        border-right: 1px solid #1b56ca
+        border-right: 1px solid #1b56ca;
+        padding: 5px;
     }
     tr{
       height: 40px;
     }
+  }
+  .divider{
+    margin-top: -60px;
   }
