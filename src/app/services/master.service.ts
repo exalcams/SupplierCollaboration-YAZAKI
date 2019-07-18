@@ -4,7 +4,8 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithApp, UserWithRole, UserNotification } from 'app/models/master';
+import { MenuApp, RoleWithApp, UserWithRole, UserNotification, UserPreference } from 'app/models/master';
+import { Guid } from 'guid-typescript';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +15,13 @@ export class MasterService {
   baseAddress: string;
   NotificationEvent: Subject<any>;
 
-    GetNotification(): Observable<any> {
-        return this.NotificationEvent.asObservable();
-    }
+  GetNotification(): Observable<any> {
+    return this.NotificationEvent.asObservable();
+  }
 
-    TriggerNotification(eventName: string): void {
-        this.NotificationEvent.next(eventName);
-    }
+  TriggerNotification(eventName: string): void {
+    this.NotificationEvent.next(eventName);
+  }
 
   constructor(private _httpClient: HttpClient, private _authService: AuthService) {
     this.baseAddress = _authService.baseAddress;
@@ -184,6 +185,49 @@ export class MasterService {
   DeleteUser(user: UserWithRole): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteUser`,
       user,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  // UserPreference
+
+  CreateUserPreference(role: UserPreference): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateUserPreference`,
+      role,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      });
+  }
+
+  GetAllUserPreferences(): Observable<UserPreference[] | string> {
+    return this._httpClient.get<UserPreference[]>(`${this.baseAddress}api/Master/GetAllUserPrefercences`)
+      .pipe(catchError(this.errorHandler));
+  }
+  GetUserPreferenceByUserID(UserID: Guid): Observable<UserPreference| string> {
+    return this._httpClient.get<UserPreference>(`${this.baseAddress}api/Master/GetUserPreferenceByUserID?UserID=${UserID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateUserPreference(role: UserPreference): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateUserPreference`,
+      role,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DeleteUserPreference(role: UserPreference): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteUserPreference`,
+      role,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'

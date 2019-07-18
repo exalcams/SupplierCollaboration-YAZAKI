@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'app-payment-report-reference',
@@ -8,11 +9,12 @@ import { MatTableDataSource } from '@angular/material';
   styleUrls: ['./payment-report-reference.component.scss']
 })
 export class PaymentReportReferenceComponent implements OnInit {
+  BGClassName: any;
 
   displayedColumns: string[] = ['select', 'PurchasingDocument', 'DocumentDate', 'Reference', 'Amount', 'ClearingDocument', 'PostingDate', 'Currency', 'PaymentDocumentNo', 'PaymentDate', 'AmountPaid'];
   dataSource: MatTableDataSource<PaymentReportReference>;
   selection: SelectionModel<PaymentReportReference>;
-  constructor() { }
+  constructor(private _fuseConfigService: FuseConfigService) { }
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource(ELEMENT_DATA);
@@ -20,6 +22,11 @@ export class PaymentReportReferenceComponent implements OnInit {
     this.isAllSelected();
     this.masterToggle();
     this.checkboxLabel();
+    this._fuseConfigService.config
+    // .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((config) => {
+      this.BGClassName = config;
+    });
   }
   isAllSelected() {
     const numSelected = this.selection.selected.length;

@@ -70,6 +70,17 @@ export class UserNotification {
     CreatedOn: Date;
     ModifiedOn?: Date;
 }
-
+export class UserPreference {
+    ID: number;
+    UserID: Guid;
+    NavbarPrimaryBackground: string;
+    NavbarSecondaryBackground: string;
+    ToolbarBackground: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
 
 

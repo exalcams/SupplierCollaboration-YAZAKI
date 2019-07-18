@@ -8,7 +8,7 @@ import {
 } from '@angular/material';
 
 import { FuseSharedModule } from '@fuse/shared.module';
-import { FuseProgressBarModule } from '@fuse/components';
+import { FuseProgressBarModule, FuseMaterialColorPickerModule } from '@fuse/components';
 import { FileUploadModule } from 'ng2-file-upload';
 import { MenuAppComponent } from './menu-app/menu-app.component';
 import { RoleComponent } from './role/role.component';
@@ -19,6 +19,7 @@ import { RoleSideBarComponent } from './role/role-side-bar/role-side-bar.compone
 import { RoleMainContentComponent } from './role/role-main-content/role-main-content.component';
 import { MenuAppSideBarComponent } from './menu-app/menu-app-side-bar/menu-app-side-bar.component';
 import { MenuAppMainContentComponent } from './menu-app/menu-app-main-content/menu-app-main-content.component';
+import { UserPreferenceComponent } from './user-preference/user-preference.component';
 
 const menuRoutes: Routes = [
         {
@@ -33,6 +34,10 @@ const menuRoutes: Routes = [
             path: 'user',
             component: UserComponent,
         },
+        {
+            path: 'userPreference',
+            component: UserPreferenceComponent,
+        },
 ];
 @NgModule({
     declarations: [
@@ -45,6 +50,7 @@ const menuRoutes: Routes = [
        MenuAppComponent,
        MenuAppSideBarComponent,
        MenuAppMainContentComponent,
+       UserPreferenceComponent,
     ],
     imports: [
         MatButtonModule,
@@ -61,6 +67,7 @@ const menuRoutes: Routes = [
         MatSidenavModule,
         MatToolbarModule,
         FuseSharedModule,
+        FuseMaterialColorPickerModule,
         FileUploadModule,
         RouterModule.forChild(menuRoutes)
     ],

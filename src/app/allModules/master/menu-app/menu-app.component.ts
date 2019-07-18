@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { MenuApp, AuthenticationDetails } from 'app/models/master';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'menu-app',
@@ -15,12 +16,16 @@ import { MenuApp, AuthenticationDetails } from 'app/models/master';
   animations: fuseAnimations
 })
 export class MenuAppComponent implements OnInit {
+  BGClassName: any;
   AllMenuApps: MenuApp[] = [];
   SelectedMenuApp: MenuApp;
     authenticationDetails: AuthenticationDetails;
     notificationSnackBarComponent: NotificationSnackBarComponent;
     IsProgressBarVisibile: boolean;
-  constructor(private _masterService: MasterService, private _router: Router, public snackBar: MatSnackBar) {
+  constructor(private _fuseConfigService: FuseConfigService,
+    private _masterService: MasterService, 
+    private _router: Router, 
+    public snackBar: MatSnackBar) {
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.IsProgressBarVisibile = true;
@@ -35,6 +40,11 @@ export class MenuAppComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
+    this._fuseConfigService.config
+    // .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((config) => {
+        this.BGClassName = config;
+    });
 
   }
   GetAllMenuApps(): void {

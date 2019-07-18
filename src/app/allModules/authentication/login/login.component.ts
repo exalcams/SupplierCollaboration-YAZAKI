@@ -13,7 +13,9 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigation } from '@fuse/types';
 import { MenuUpdataionService } from 'app/services/menu-update.service';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, UserPreference } from 'app/models/master';
+import { Guid } from 'guid-typescript';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'login',
@@ -22,7 +24,7 @@ import { AuthenticationDetails } from 'app/models/master';
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
     loginForm: FormGroup;
     navigation: FuseNavigation[] = [];
     authenticationDetails: AuthenticationDetails;
@@ -41,6 +43,7 @@ export class LoginComponent implements OnInit {
     addExtraClass: false;
     notificationSnackBarComponent: NotificationSnackBarComponent;
     IsProgressBarVisibile: boolean;
+    fuseConfig: any;
 
     constructor(
         private _fuseNavigationService: FuseNavigationService,
@@ -69,7 +72,7 @@ export class LoginComponent implements OnInit {
                 }
             }
         };
-
+        this._unsubscribeAll = new Subject();
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
         this.IsProgressBarVisibile = false;
     }
@@ -80,12 +83,34 @@ export class LoginComponent implements OnInit {
             password: ['', Validators.required]
         });
     }
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
+
+    }
 
     LoginClicked(): void {
         if (this.loginForm.valid) {
             this.IsProgressBarVisibile = true;
             this._authService.login(this.loginForm.get('userName').value, this.loginForm.get('password').value).subscribe(
                 data => {
+                    this._authService.GetUserPreferenceByUserID(data.userID as Guid).subscribe(
+                        (data1) => {
+                            let userPre = data1 as UserPreference;
+                            if (!userPre) {
+                                userPre = new UserPreference();
+                                userPre.NavbarPrimaryBackground = 'fuse-navy-700';
+                                userPre.NavbarSecondaryBackground = 'fuse-navy-700';
+                                userPre.ToolbarBackground = 'blue-800';
+                            }
+                            localStorage.setItem('userPreferenceData', JSON.stringify(userPre));
+                            this.UpdateUserPreference();
+                        },
+                        (err1) => {
+                            console.error(err1);
+                        }
+                    );
                     this.IsProgressBarVisibile = false;
                     localStorage.setItem('authorizationData', JSON.stringify(data));
                     this.UpdateMenu();
@@ -107,6 +132,44 @@ export class LoginComponent implements OnInit {
                 abstractControl.markAsDirty();
             });
         }
+    }
+
+    UpdateUserPreference(): void {
+        this._fuseConfigService.config
+            //   .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((config) => {
+
+                this.fuseConfig = config;
+                // Retrive user preference from Local Storage    
+                const userPre = localStorage.getItem('userPreferenceData');
+                if (userPre) {
+                    const userPrefercence: UserPreference = JSON.parse(userPre) as UserPreference;
+                    if (userPrefercence.NavbarPrimaryBackground && userPrefercence.NavbarPrimaryBackground !== '-') {
+                        this.fuseConfig.layout.navbar.primaryBackground = userPrefercence.NavbarPrimaryBackground;
+                    } else {
+                        this.fuseConfig.layout.navbar.primaryBackground = 'fuse-navy-700';
+                    }
+                    if (userPrefercence.NavbarSecondaryBackground && userPrefercence.NavbarSecondaryBackground !== '-') {
+                        this.fuseConfig.layout.navbar.secondaryBackground = userPrefercence.NavbarSecondaryBackground;
+                    } else {
+                        this.fuseConfig.layout.navbar.secondaryBackground = 'fuse-navy-700';
+                    }
+                    if (userPrefercence.ToolbarBackground && userPrefercence.ToolbarBackground !== '-') {
+                        this.fuseConfig.layout.toolbar.background = userPrefercence.ToolbarBackground;
+                        this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+                    } else {
+                        this.fuseConfig.layout.toolbar.background = 'blue-800';
+                        this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+                    }
+                } else {
+                    this.fuseConfig.layout.navbar.primaryBackground = 'fuse-navy-700';
+                    this.fuseConfig.layout.navbar.secondaryBackground = 'fuse-navy-700';
+                    this.fuseConfig.layout.toolbar.background = 'blue-800';
+                    this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+                }
+
+            });
+        this._fuseConfigService.config = this.fuseConfig;
     }
 
     UpdateMenu(): void {
@@ -278,7 +341,15 @@ export class LoginComponent implements OnInit {
                 url: '/master/user'
             });
         }
-        if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 || this.MenuItems.indexOf('User') >= 0) {
+        if (this.MenuItems.indexOf('UserPreference') >= 0) {
+            this.subChildren.push({
+                id: 'user',
+                title: 'Preference',
+                type: 'item',
+                url: '/master/userPreference'
+            });
+        }
+        if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 || this.MenuItems.indexOf('User') >= 0 || this.MenuItems.indexOf('UserPreference')) {
             this.children.push({
                 id: 'master',
                 title: 'Master',
