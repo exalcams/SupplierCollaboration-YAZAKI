@@ -142,9 +142,9 @@ export class ToolbarComponent implements OnInit, OnDestroy, OnChanges {
         // Getting Notification
         this.GetAllNotificationByUserID();
 
-        this.SetIntervalID = setInterval(() => {
-            this.GetAllNotificationByUserID();
-        }, 10000);
+        // this.SetIntervalID = setInterval(() => {
+        //     this.GetAllNotificationByUserID();
+        // }, 10000);
         this._masterService.GetNotification().subscribe(
             (data) => {
                 this.GetAllNotificationByUserID();
@@ -239,6 +239,7 @@ export class ToolbarComponent implements OnInit, OnDestroy, OnChanges {
             (data) => {
                 localStorage.removeItem('authorizationData');
                 localStorage.removeItem('menuItemsData');
+                localStorage.removeItem('userPreferenceData');
                 this._compiler.clearCache();
                 this._router.navigate(['auth/login']);
                 this.notificationSnackBarComponent.openSnackBar('Signed out successfully', SnackBarStatus.success);

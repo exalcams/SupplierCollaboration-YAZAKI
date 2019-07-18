@@ -17,6 +17,7 @@ import { locale as navigationTurkish } from 'app/navigation/i18n/tr';
 import { MenuUpdataionService } from './services/menu-update.service';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
+import { UserPreference } from './models/master';
 
 @Component({
     selector: 'app',
@@ -156,6 +157,11 @@ export class AppComponent implements OnInit, OnDestroy {
                 this.document.body.classList.add(this.fuseConfig.colorTheme);
             });
 
+        this.UpdateMenus();
+        this.UpdateUserPreference();
+    }
+
+    UpdateMenus(): void {
         // Retrive menu items from Local Storage    
         const menuItems = localStorage.getItem('menuItemsData');
         if (menuItems) {
@@ -176,6 +182,43 @@ export class AppComponent implements OnInit, OnDestroy {
         );
     }
 
+    UpdateUserPreference(): void {
+        this._fuseConfigService.config
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((config) => {
+
+                this.fuseConfig = config;
+                // Retrive user preference from Local Storage    
+                const userPre = localStorage.getItem('userPreferenceData');
+                if (userPre) {
+                    const userPrefercence: UserPreference = JSON.parse(userPre) as UserPreference;
+                    if (userPrefercence.NavbarPrimaryBackground && userPrefercence.NavbarPrimaryBackground !== '-') {
+                        this.fuseConfig.layout.navbar.primaryBackground = userPrefercence.NavbarPrimaryBackground;
+                    } else {
+                        this.fuseConfig.layout.navbar.primaryBackground = 'fuse-navy-700';
+                    }
+                    if (userPrefercence.NavbarSecondaryBackground && userPrefercence.NavbarSecondaryBackground !== '-') {
+                        this.fuseConfig.layout.navbar.secondaryBackground = userPrefercence.NavbarSecondaryBackground;
+                    } else {
+                        this.fuseConfig.layout.navbar.secondaryBackground = 'fuse-navy-700';
+                    }
+                    if (userPrefercence.ToolbarBackground && userPrefercence.ToolbarBackground !== '-') {
+                        this.fuseConfig.layout.toolbar.background = userPrefercence.ToolbarBackground;
+                        this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+                    } else {
+                        this.fuseConfig.layout.toolbar.background = 'blue-800';
+                        this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+                    }
+                } else {
+                    this.fuseConfig.layout.navbar.primaryBackground = 'fuse-navy-700';
+                    this.fuseConfig.layout.navbar.secondaryBackground = 'fuse-navy-700';
+                    this.fuseConfig.layout.toolbar.background = 'blue-800';
+                    this.fuseConfig.layout.toolbar.customBackgroundColor = true;
+                }
+
+            });
+        this._fuseConfigService.config = this.fuseConfig;
+    }
     /**
      * On destroy
      */

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'evaluation',
@@ -10,11 +11,12 @@ import { SelectionModel } from '@angular/cdk/collections';
 export class EvaluationComponent implements OnInit {
 
   SupplierInviteClassList: SupplierInviteClass[] = [];
+  BGClassName: any;
   displayedColumns: string[] = ['select', 'VendorName', 'GSTNumber', 'VendorType', 'City'];
   dataSource: MatTableDataSource<SupplierInviteClass>;
   selection = new SelectionModel<SupplierInviteClass>(true, []);
 
-  constructor() { }
+  constructor(private _fuseConfigService: FuseConfigService) { }
 
   ngOnInit(): void {
     this.SupplierInviteClassList = [
@@ -29,6 +31,11 @@ export class EvaluationComponent implements OnInit {
     this.isAllSelected();
     this.masterToggle();
     this.checkboxLabel();
+    this._fuseConfigService.config
+    // .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((config) => {
+      this.BGClassName = config;
+    });
   }
 
   isAllSelected(): boolean {

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { fuseAnimations } from '@fuse/animations';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'awarded',
@@ -10,12 +11,12 @@ import { fuseAnimations } from '@fuse/animations';
   animations: fuseAnimations
 })
 export class AwardedComponent implements OnInit {
-
+  BGClassName: any;
   VendorComparsionClassList: VendorComparsionClass[] = [];
   displayedColumns: string[] = ['VendorName', 'ItemDescription', 'Quantity', 'UOM', 'DelayDays', 'BestFor'];
   dataSource: MatTableDataSource<VendorComparsionClass>;
 
-  constructor() { }
+  constructor(private _fuseConfigService: FuseConfigService) { }
 
   ngOnInit(): void {
     this.VendorComparsionClassList = [
@@ -33,6 +34,11 @@ export class AwardedComponent implements OnInit {
       }
     ];
     this.dataSource = new MatTableDataSource(this.VendorComparsionClassList);
+    this._fuseConfigService.config
+    // .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((config) => {
+      this.BGClassName = config;
+    });
   }
 
 }

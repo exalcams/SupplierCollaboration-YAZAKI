@@ -1,12 +1,12 @@
 <div id="chat" class=" page-layout carded fullwidth" fusePerfectScrollbar>
 
   <!-- TOP BACKGROUND -->
-  <div class="top-bg" style="background-color:#1b56ca"></div>
+  <div class="top-bg" [ngClass]="BGClassName?.layout?.toolbar?.background"></div>
   <!-- / TOP BACKGROUND -->
 
   <!-- CENTER  margin-top: 20px;-->
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
-    <div style="background-color:#1b56ca" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
+    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
       <div fxLayout class="layoutclass">
         <div fxFlex fxLayout="column">
           <div fxFlex>

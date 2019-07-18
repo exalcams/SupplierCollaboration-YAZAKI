@@ -6,6 +6,7 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { MatSnackBar } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { AuthenticationDetails, RoleWithApp } from 'app/models/master';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'role',
@@ -15,13 +16,16 @@ import { AuthenticationDetails, RoleWithApp } from 'app/models/master';
   animations: fuseAnimations
 })
 export class RoleComponent implements OnInit {
-
+  BGClassName: any;
   AllRoles: RoleWithApp[] = [];
   SelectedRole: RoleWithApp;
   authenticationDetails: AuthenticationDetails;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
-  constructor(private _masterService: MasterService, private _router: Router, public snackBar: MatSnackBar) {
+  constructor(private _fuseConfigService: FuseConfigService,
+    private _masterService: MasterService, 
+    private _router: Router, 
+    public snackBar: MatSnackBar) {
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.IsProgressBarVisibile = true;
@@ -37,7 +41,11 @@ export class RoleComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
-
+    this._fuseConfigService.config
+    // .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((config) => {
+        this.BGClassName = config;
+    });
   }
   GetAllRoles(): void {
     this._masterService.GetAllRoles().subscribe(

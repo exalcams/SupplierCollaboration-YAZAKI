@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { fuseAnimations } from '@fuse/animations';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'creation',
@@ -11,9 +12,10 @@ import { fuseAnimations } from '@fuse/animations';
 })
 export class CreationComponent implements OnInit {
   PRClassList: PRClass[] = [];
+  BGClassName: any;
   displayedColumns: string[] = ['Item', 'MaterialDescription', 'OrderQuantity', 'DelayDays', 'UOM', 'Price', 'SupplierPartNo', 'Schedule', 'Attachment', 'Forms', 'TechRating'];
   dataSource: MatTableDataSource<PRClass>;
-  constructor() { }
+  constructor(private _fuseConfigService: FuseConfigService) { }
 
   ngOnInit(): void {
     this.PRClassList = [
@@ -27,6 +29,11 @@ export class CreationComponent implements OnInit {
       }
     ];
     this.dataSource = new MatTableDataSource(this.PRClassList);
+    this._fuseConfigService.config
+      // .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config) => {
+        this.BGClassName = config;
+      });
   }
 
 }

@@ -3,6 +3,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { fuseAnimations } from '@fuse/animations';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
     selector: 'app-shipmentnotification',
@@ -12,6 +13,7 @@ import { fuseAnimations } from '@fuse/animations';
     // animations: fuseAnimations
 })
 export class ShipmentnotificationComponent implements OnInit {
+    BGClassName: any;
     displayedColumns: string[] = [
         'no',
         'materialDescription',
@@ -35,7 +37,7 @@ export class ShipmentnotificationComponent implements OnInit {
     selection: SelectionModel<Shipment>;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor() {}
+    constructor(private _fuseConfigService: FuseConfigService) { }
 
     ngOnInit() {
         this.dataSource = new MatTableDataSource(ELEMENT_DATA);
@@ -51,6 +53,11 @@ export class ShipmentnotificationComponent implements OnInit {
         this.masterToggle();
         this.checkboxLabel();
         console.log(this.dataSourse1);
+        this._fuseConfigService.config
+            // .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((config) => {
+                this.BGClassName = config;
+            });
     }
     // click(){
     //   alert("hi");

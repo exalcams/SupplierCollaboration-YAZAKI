@@ -6,6 +6,7 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { AuthenticationDetails } from 'app/models/master';
 import { SelectionModel } from '@angular/cdk/collections';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +14,7 @@ import { SelectionModel } from '@angular/cdk/collections';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-
+  BGClassName: any;
   displayedColumns: string[] = ['select', 'PO', 'PurchaseOrder', 'Item', 'PODate', 'Material', 'Description', 'POQuantity', 'OrderUnit', 'QAStatus', 'ASNStatus', 'Attechment'];
   displayedColumns1: string[] = ['DraftID', 'ServiceEnterSheetID', 'PurchaseOrder', 'Amount'];
   dataSource: MatTableDataSource<OrderFullfillment>;
@@ -31,7 +32,11 @@ export class DashboardComponent implements OnInit {
   widget5: any = {};
   selected = 'Month';
   @ViewChild(MatSort) sort: MatSort;
-  constructor(private _router: Router, matIconRegistry: MatIconRegistry, sanitizer: DomSanitizer, public snackBar: MatSnackBar) {
+  constructor(private _fuseConfigService: FuseConfigService,
+    private _router: Router,
+    matIconRegistry: MatIconRegistry,
+    sanitizer: DomSanitizer,
+    public snackBar: MatSnackBar) {
     matIconRegistry.addSvgIcon('pdficon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/dashboard/pdf.svg'));
     matIconRegistry.addSvgIcon('questionmarkicon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/dashboard/noun-help-922772.svg'));
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
@@ -116,6 +121,11 @@ export class DashboardComponent implements OnInit {
     this.isAllSelected();
     this.masterToggle();
     this.checkboxLabel();
+    this._fuseConfigService.config
+      // .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config) => {
+        this.BGClassName = config;
+      });
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;

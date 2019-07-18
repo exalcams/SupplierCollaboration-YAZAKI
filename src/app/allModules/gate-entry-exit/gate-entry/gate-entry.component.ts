@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
     selector: 'app-gate-entry',
@@ -8,6 +9,7 @@ import { SelectionModel } from '@angular/cdk/collections';
     styleUrls: ['./gate-entry.component.scss']
 })
 export class GateEntryComponent implements OnInit {
+    BGClassName: any;
     displayedColumns: string[] = [
         'no',
         'materialDescription',
@@ -30,7 +32,7 @@ export class GateEntryComponent implements OnInit {
     dataSourse3: MatTableDataSource<AttachmentDetails>;
     selection: SelectionModel<Shipment>;
 
-    constructor() {}
+    constructor(private _fuseConfigService: FuseConfigService) { }
 
     ngOnInit(): void {
         this.dataSource = new MatTableDataSource(ELEMENT_DATA);
@@ -42,6 +44,11 @@ export class GateEntryComponent implements OnInit {
         this.masterToggle();
         this.checkboxLabel();
         console.log(this.dataSourse1);
+        this._fuseConfigService.config
+            // .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((config) => {
+                this.BGClassName = config;
+            });
     }
 
     isAllSelected(): boolean {
@@ -60,7 +67,7 @@ export class GateEntryComponent implements OnInit {
         return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.no + 1}`;
     }
 
-    DeleteConfiguration(): void {}
+    DeleteConfiguration(): void { }
 }
 
 export interface Shipment {
