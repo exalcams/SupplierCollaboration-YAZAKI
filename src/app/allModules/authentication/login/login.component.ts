@@ -248,7 +248,7 @@ export class LoginComponent implements OnInit {
                 title: 'Payment Report',
                 // translate: 'NAV.DASHBOARDS',
                 type: 'collapsable',
-                // icon: 'orderIcon',
+                icon: 'paymentReport',
                 isSvgIcon: true,
                 children: this.subChildren1
             }
@@ -284,7 +284,7 @@ export class LoginComponent implements OnInit {
                 title: 'Master',
                 // translate: 'NAV.DASHBOARDS',
                 type: 'collapsable',
-                // icon: 'orderIcon',
+                icon: 'master',
                 isSvgIcon: true,
                 children: this.subChildren
             });

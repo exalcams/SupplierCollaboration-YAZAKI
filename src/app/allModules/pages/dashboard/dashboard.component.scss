@@ -73,13 +73,16 @@ table {
       color: white;
       //font-family: Ubuntu;
       // padding-left: 25px;
-      padding: 10px;
-      border-right: 1px solid #e0e0e0
+      padding: 2px;
+      border-right: 1px solid #e0e0e0;
+      font-size: 10px;
+      
     }
     td{
         padding-left: 15px;
         border-right: 1px solid #1b56ca;
         padding: 5px;
+        font-size: 10px;
     }
     tr{
       height: 40px;
@@ -87,4 +90,7 @@ table {
   }
   .divider{
     margin-top: -60px;
+  }
+  .mat-table{
+    border: 1px solid #082f7d
   }

@@ -213,14 +213,13 @@
                 </div>
               </div>
               <div>
-                <table style="margin-top: 35px" mat-table [dataSource]="dataSource">
+                <table style="margin-top: 35px" mat-table [dataSource]="dataSource" matSort>
 
                   <ng-container matColumnDef="select">
                     <th mat-header-cell *matHeaderCellDef>
                       <mat-checkbox (change)="$event ? masterToggle() : null"
                         [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"
-                        style="margin-left: -10px">
+                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()" style="margin-left: -18px;">
                       </mat-checkbox>
                       Select
                       <!-- Select All/Deselect All -->
@@ -232,8 +231,8 @@
                     </td>
                   </ng-container>
 
-                  <ng-container matColumnDef="Remarks">
-                    <th mat-header-cell *matHeaderCellDef>Remarks </th>
+                  <ng-container matColumnDef="Remarks" >
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Remarks </th>
                     <td mat-cell *matCellDef="let element">
                       <mat-form-field class="example-full-width">
                         <input matInput>
@@ -241,23 +240,23 @@
                     </td>
                   </ng-container>
 
-                  <ng-container matColumnDef="Item">
-                    <th mat-header-cell *matHeaderCellDef>Item</th>
+                  <ng-container matColumnDef="Item" >
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Item</th>
                     <td mat-cell *matCellDef="let element"> {{element.Item}} </td>
                   </ng-container>
 
-                  <ng-container matColumnDef="PurchaseOrderQuantity">
-                    <th mat-header-cell *matHeaderCellDef>Purchase Order Quantity</th>
+                  <ng-container matColumnDef="PurchaseOrderQuantity" >
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Purchase Order Quantity</th>
                     <td mat-cell *matCellDef="let element"> {{element.PurchaseOrderQuantity}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="UnitOfMeasurement">
-                    <th mat-header-cell *matHeaderCellDef>Unit Of Measurement </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Unit Of Measurement </th>
                     <td mat-cell *matCellDef="let element"> {{element.UnitOfMeasurement}} </td>
                   </ng-container>
 
-                  <ng-container matColumnDef="NetPrice">
-                    <th mat-header-cell *matHeaderCellDef>Net Price</th>
+                  <ng-container matColumnDef="NetPrice" >
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Net Price</th>
                     <td mat-cell *matCellDef="let element"> {{element.NetPrice}} </td>
                   </ng-container>
 
@@ -302,24 +301,24 @@
                   <!-- <div style="margin-top: 10px;">
                         <strong>Uploaded Files</strong>
                       </div> -->
-                  <table style="margin-top: 10px" mat-table [dataSource]="dataSource1">
+                  <table style="margin-top: 10px" mat-table [dataSource]="dataSource1" matSort>
                     <ng-container matColumnDef="AttachmentNumber">
-                      <th mat-header-cell *matHeaderCellDef>Attachment Number</th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Attachment Number</th>
                       <td mat-cell *matCellDef="let element"> {{element.AttachmentNumber}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="AttachmentName">
-                      <th mat-header-cell *matHeaderCellDef>Attachment Name</th>
+                    <ng-container matColumnDef="AttachmentName" >
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Attachment Name</th>
                       <td mat-cell *matCellDef="let element"> {{element.AttachmentName}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="DocumentType">
-                      <th mat-header-cell *matHeaderCellDef>Document Type</th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Document Type</th>
                       <td mat-cell *matCellDef="let element"> {{element.DocumentType}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="Delete">
-                      <th mat-header-cell *matHeaderCellDef> Delete</th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Delete</th>
                       <td mat-cell *matCellDef="let row" (click)="DeleteConfiguration(row)">
                         <mat-icon aria-label="file_download">delete</mat-icon>
                       </td>
@@ -375,27 +374,14 @@
                       <mat-form-field style="max-width: 140px;" appearance="outline">
                         <input matInput #fileInput>
                       </mat-form-field>
-                      <input hidden type="file" #fileInput />
+                      <!-- <input hidden type="file" #fileInput />
                       <button mat-raised-button style="background-color: #1b56ca;margin-top: -21px;margin-left: 20px"
                         (click)="fileInput.click()">
                         <mat-icon style="color: white;margin-left: -25px;font-size: 18px;margin-top: 5px">attach_file
                         </mat-icon> <span style="color: white">Attach</span>
-                      </button>
+                      </button> -->
                     </div>
                   </div>
-                  <!-- <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
-                          <div fxFlex="20" class="pt-8" fxLayoutAlign="start start">
-                          </div>
-                          <div fxFlex="30" fxLayoutAlign="start center">
-                            <input hidden type="file" #fileInput />
-                            <button mat-raised-button
-                              style="background-color: #1b56ca;border-radius: 5px;margin-top: -21px;margin-left: 160px;"
-                              (click)="fileInput.click()">
-                              <mat-icon style="color: white">attach_file</mat-icon> <span
-                                style="color: white">Attach</span>
-                            </button>
-                          </div>
-                        </div> -->
                 </div>
               </div>
             </div>

@@ -20,6 +20,7 @@ import {
     MatTableModule,
     MatChipsModule,
     MatCheckboxModule,
+    MatSortModule,
     MatDatepickerModule
 } from '@angular/material';
 import { FuseSharedModule } from '@fuse/shared.module';
@@ -54,6 +55,7 @@ const shipmentNotification: Routes = [
         FuseSharedModule,
         FileUploadModule,
         MatTableModule,
+        MatSortModule,
         MatDatepickerModule,
         MatDialogModule,
         MatChipsModule,

@@ -185,8 +185,7 @@
         <div fxFlex="85" style="margin-left: 25px">
           <mat-card-header >
             <mat-card-title fxFlex style="margin-left: -150px">
-              <strong>Advance Shipment
-                Notification</strong>
+              <strong>Advance Shipment Notification</strong>
             </mat-card-title>
           </mat-card-header>
           <mat-divider ></mat-divider>
@@ -202,7 +201,7 @@
                   <span style="font-size: 13px;">Purchase Order</span>
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-form-field style="max-width: 150px;"   >
+                  <mat-form-field appearance="outline" style="max-width: 150px;"   >
                     <input matInput>
                   </mat-form-field>
                 </div>
@@ -401,13 +400,9 @@
                     <strong class="sub-Title">Item-Detail</strong>
                   </div>
                   <div fxFlex="56" style="text-align: end">
-                    <!-- <span style="margin-left: 55px"> -->
                     <mat-form-field style="max-width: 140px;margin-left:  230px;" appearance="outline">
                       <input matInput #fileInput>
                     </mat-form-field>
-                    <!-- <mat-file-upload [file]="file" style="max-width: 140px;margin-left:  230px;" appearance="outline">
-                        <input hidden matInput #fileInput>
-                      </mat-file-upload> -->
                     <input hidden type="file" #fileInput />
                     <button mat-raised-button style="background-color: #1b56ca;margin-left: 20px;height: 30px;" (click)="fileInput.click()">
                       <span style="color: white">
@@ -416,80 +411,64 @@
                     </button>
                     <!-- </span> -->
                     <div class="icon-style">
-                      <img class="m-8" matTooltip="import_file" src="assets/images/dashboard/import.png">
-                      <img class="m-8" matTooltip="import_file" src="assets/images/dashboard/export.png">
-                      <img class="m-8" matTooltip="import_file" src="assets/images/dashboard/select.png">
-                      <img class="m-8" matTooltip="import_file" src="assets/images/dashboard/Unselect.png">
-                      <img class="m-8" matTooltip="import_file" src="assets/images/dashboard/copy_to_all.png">
-                      <img class="m-8" matTooltip="import_file" src="assets/images/dashboard/resize.png">
+                      <img class="m-8" matTooltip="Import_file" src="assets/images/dashboard/import.png">
+                      <img class="m-8" matTooltip="Export_file" src="assets/images/dashboard/export.png">
+                      <img class="m-8" matTooltip="SelectAll" src="assets/images/dashboard/select.png">
+                      <img class="m-8" matTooltip="Unselect" src="assets/images/dashboard/Unselect.png">
+                      <img class="m-8" matTooltip="Copy_To_All" src="assets/images/dashboard/copy_to_all.png">
+                      <img class="m-8" matTooltip="Resize" src="assets/images/dashboard/resize.png">
                     </div>
                   </div>
                 </div>
-                <!-- <strong class="sub-Title">Item-Detail</strong>
-                  <span>
-                    <mat-form-field style="max-width: 140px;margin-left:  170px;" appearance="outline">
-                      <input matInput #fileInput>
-                    </mat-form-field>
-                    <input hidden type="file" #fileInput />
-                    <button mat-raised-button
-                      style="background-color: #1b56ca;border-radius: 5px;margin-top: -21px;margin-left: 20px;"
-                      (click)="fileInput.click()"> <span style="color: white">Browser</span></button>
-                  </span>
-                  <span style="margin-left: 10px;"><mat-icon matTooltip="import_file">insert_drive_file</mat-icon></span>
-                  <span style="margin-left: 10px;"><mat-icon matTooltip="Export_file">file_copy</mat-icon></span>
-                  <span style="margin-left: 10px;"><mat-icon matTooltip="SelectAll">select_all</mat-icon></span>
-                  <span style="margin-left: 10px;"><mat-icon matTooltip="UnSelected">tab_unselected</mat-icon></span>
-                  <span style="margin-left: 10px;"><mat-icon matTooltip="down_select">arrow_drop_down</mat-icon></span>
-                  <span style="margin-left: 10px;"><mat-icon matTooltip="forword_select">fast_forward</mat-icon></span> -->
               </div>
-              <table mat-table [dataSource]="dataSource">
+              <table mat-table [dataSource]="dataSource" matSort>
                 <ng-container matColumnDef="no">
-                  <th mat-header-cell *matHeaderCellDef></th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
                   <td mat-cell *matCellDef="let element">{{element.no}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="materialDescription">
-                  <th mat-header-cell *matHeaderCellDef>Material Description </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Material Description </th>
                   <td mat-cell *matCellDef="let element"> {{element.materialDescription}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="orderQuantity">
-                  <th mat-header-cell *matHeaderCellDef>order Qty</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>order Qty</th>
                   <td mat-cell *matCellDef="let element"> {{element.orderQuantity}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="unit">
-                  <th mat-header-cell *matHeaderCellDef>Unit</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Unit</th>
                   <td mat-cell *matCellDef="let element"> {{element.unit}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="plant">
-                  <th mat-header-cell *matHeaderCellDef>Plant </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Plant </th>
                   <td mat-cell *matCellDef="let element"> {{element.plant}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="vendor">
-                  <th mat-header-cell *matHeaderCellDef>Vendor</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Vendor</th>
                   <td mat-cell *matCellDef="let element"> {{element.vendor}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="poNumber">
-                  <th mat-header-cell *matHeaderCellDef>PoNumber</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>PoNumber</th>
                   <td mat-cell *matCellDef="let element"> {{element.poNumber}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="currency">
-                  <th mat-header-cell *matHeaderCellDef>Currency </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Currency </th>
                   <td mat-cell *matCellDef="let element"> {{element.currency}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="details">
-                  <th mat-header-cell *matHeaderCellDef>Details </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Details </th>
                   <td mat-cell *matCellDef="let element"> {{element.details}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="batch">
-                  <th mat-header-cell *matHeaderCellDef>Batch </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Batch </th>
                   <td mat-cell *matCellDef="let element"> {{element.batch}} </td>
                 </ng-container>
 
@@ -612,52 +591,52 @@
                 <strong class="sub-Title">Package-Details</strong>
               </div>
               <!-- <div *ngIf="!dataSourse1.data.push()">No past invoices found!</div> -->
-              <table style="margin-top: 35px" mat-table [dataSource]="dataSourse1">
+              <table style="margin-top: 35px" mat-table [dataSource]="dataSourse1" matSort>
 
                 <ng-container matColumnDef="no" sticky>
-                  <th mat-header-cell *matHeaderCellDef>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     <mat-icon matSuffix style="font-size: 17px">filter_none</mat-icon>
                   </th>
                   <td mat-cell *matCellDef="let element"></td>
                 </ng-container>
 
                 <ng-container matColumnDef="packageID">
-                  <th mat-header-cell *matHeaderCellDef>Package ID </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Package ID </th>
                   <td mat-cell *matCellDef="let element"> {{element.packageID}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="packageType">
-                  <th mat-header-cell *matHeaderCellDef>Package Typey</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Package Type</th>
                   <td mat-cell *matCellDef="let element"> {{element.packageType}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="referenceNo">
-                  <th mat-header-cell *matHeaderCellDef>Reference No</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Reference No</th>
                   <td mat-cell *matCellDef="let element"> {{element.referenceNo}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="dimension">
-                  <th mat-header-cell *matHeaderCellDef>Dimension </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Dimension </th>
                   <td mat-cell *matCellDef="let element"> {{element.dimension}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="grossWt">
-                  <th mat-header-cell *matHeaderCellDef>Gross.Wt</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Gross.Wt</th>
                   <td mat-cell *matCellDef="let element"> {{element.grossWt}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="volume">
-                  <th mat-header-cell *matHeaderCellDef>Volume</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Volume</th>
                   <td mat-cell *matCellDef="let element"> {{element.volume}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="volumeUnit">
-                  <th mat-header-cell *matHeaderCellDef>Volume Unit </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Volume Unit </th>
                   <td mat-cell *matCellDef="let element"> {{element.volumeUnit}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="grosss">
-                  <th mat-header-cell *matHeaderCellDef>grosss </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>grosss </th>
                   <td mat-cell *matCellDef="let element"> {{element.grosss}} </td>
                 </ng-container>
 
@@ -675,7 +654,7 @@
                 <span style="margin-left: 10px;">The table does not contain any data</span>
               </div>
             </div>
-            <div>
+            <!-- <div>
               <div style="margin-top: 25px">
                 <strong class="sub-Title">Vendor Invoice</strong>
               </div>
@@ -778,13 +757,11 @@
                       <button style="margin-left: 15px" mat-mini-fab color="warn">
                         <mat-icon>cancel</mat-icon>
                       </button>
-                      <!-- <button mat-raised-button color="accent"><mat-icon>add</mat-icon></button>
-                        <button mat-raised-button color="warn"><mat-icon>cancel</mat-icon></button> -->
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div>
               <div style="margin-top: 15px">
                 <strong class="sub-Title">Attachments</strong>
@@ -797,19 +774,19 @@
                   <!-- <div style="margin-top: 10px;">
                       <strong>Uploaded Files</strong>
                     </div> -->
-                  <table style="margin-top: 10px" mat-table [dataSource]="dataSourse3">
+                  <table style="margin-top: 10px" mat-table [dataSource]="dataSourse3" matSort>
                     <ng-container matColumnDef="AttachmentNumber">
-                      <th mat-header-cell *matHeaderCellDef>Attachment Number</th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Attachment Number</th>
                       <td mat-cell *matCellDef="let element"> {{element.AttachmentNumber}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="AttachmentName">
-                      <th mat-header-cell *matHeaderCellDef>Attachment Name</th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Attachment Name</th>
                       <td mat-cell *matCellDef="let element"> {{element.AttachmentName}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="DocumentType">
-                      <th mat-header-cell *matHeaderCellDef>Document Type</th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Document Type</th>
                       <td mat-cell *matCellDef="let element"> {{element.DocumentType}} </td>
                     </ng-container>
 
@@ -867,11 +844,11 @@
                       <mat-form-field style="max-width: 140px;" appearance="outline">
                         <input matInput #fileInput>
                       </mat-form-field>
-                      <input hidden type="file" #fileInput />
+                      <!-- <input hidden type="file" #fileInput />
                       <button mat-raised-button style="background-color: #1b56ca;margin-top: -21px;margin-left: 20px" (click)="fileInput.click()">
                         <mat-icon style="color: white;margin-left: -25px;font-size: 18px;margin-top: 5px">attach_file
                         </mat-icon> <span style="color: white">Attach</span>
-                      </button>
+                      </button> -->
                     </div>
                   </div>
                   <!-- <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">

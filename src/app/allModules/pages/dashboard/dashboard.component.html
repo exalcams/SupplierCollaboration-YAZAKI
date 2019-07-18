@@ -288,9 +288,9 @@
     </div>
 
     <div fxFlex>
-      <div style="margin-top: 40px" fxLayout fxLayout.xs="column" fxLayout.sm="column" fxLayoutGap="20px"
+      <div style="margin-top: 10px" fxLayout fxLayout.xs="column" fxLayout.sm="column" fxLayoutGap="20px"
         fxLayoutGap.xs="20px">
-        <div fxFlex=75% fxFlex.ls="69">
+        <div fxFlex=80% fxFlex.ls="80">
           <mat-card style="margin-bottom: 20px">
             <mat-card-header>
               <mat-card-title style="margin-left: 10px;margin-top:-5px"><strong>Order Fullfillment Status</strong>
@@ -298,28 +298,47 @@
             </mat-card-header>
             <mat-divider></mat-divider>
             <mat-card-content>
-              <div style="text-align: start;margin-top: 10px;margin-bottom: -12px">
-                <mat-icon matTooltip="ePurchase Order Download">arrow_downward</mat-icon>
+              <div style="text-align: start;margin-top: 10px;margin-bottom: -12px;background-color: #eaf2ff; ">
+                <img class="m-8" style="height: 20px" matTooltip="ePurchase Order Download"
+                  src="assets/images/dashboard/po-download.png">
+                <img class="m-8" style="height: 20px" matTooltip="Purchase Order Look Up" (click)="PurchaseOrder()"
+                  src="assets/images/dashboard/po-lookup.png">
+                <img class="m-8" style="height: 20px" matTooltip="Order Acknowledgement"
+                  src="assets/images/dashboard/order-acknowledgement.png">
+                <img class="m-8" style="height: 20px" matTooltip="Create Advance Shipment Notification"
+                  src="assets/images/dashboard/create-asn.png">
+                <img class="m-8" style="height: 20px" matTooltip="Inspection Check"
+                  src="assets/images/dashboard/inspection-check.png">
+                <img class="m-8" style="height: 20px" matTooltip="Expediting Event"
+                  src="assets/images/dashboard/expediting-event.png">
+                <img class="m-8" style="height: 20px" matTooltip="Export Excel" src="assets/images/dashboard/excel.png">
+
+                <!-- <mat-icon matTooltip="ePurchase Order Download">arrow_downward</mat-icon>
                 <mat-icon matTooltip="Purchase Order Look Up" (click)="PurchaseOrder()">arrow_upward</mat-icon>
                 <mat-icon matTooltip="Order Acknowledgement">check</mat-icon>
                 <mat-icon matTooltip="Create Advance Shipment Notification">notifications</mat-icon>
                 <mat-icon matTooltip="Inspection Check">local_grocery_store</mat-icon>
                 <mat-icon matTooltip="Expediting Event">access_time</mat-icon>
-                <mat-icon matTooltip="Export Excel">insert_drive_file</mat-icon>
+                <mat-icon matTooltip="Export Excel">insert_drive_file</mat-icon> -->
               </div>
-              <div style="text-align: end;margin-top: -25px">
-                <mat-icon matTooltip="Invoice Upload">cloud_upload</mat-icon>
+              <div style="text-align: end;margin-top: -40px;background-color: #eaf2ff;">
+                <img class="m-8" style="height: 20px" matTooltip="Invoice Upload"
+                  src="assets/images/dashboard/ivoice-upload.png">
+                <img class="m-8" style="height: 20px" matTooltip="DisPute Management"
+                  src="assets/images/dashboard/dispute-management.png">
+                <img class="m-8" style="height: 20px" matTooltip="Expand All" src="assets/images/dashboard/resize.png">
+                <!-- <mat-icon matTooltip="Invoice Upload">cloud_upload</mat-icon>
                 <mat-icon matTooltip="DisPute Management">select_all</mat-icon>
-                <mat-icon matTooltip="Expand All">collections_bookmark</mat-icon>
+                <mat-icon matTooltip="Expand All">collections_bookmark</mat-icon> -->
               </div>
-              <table style="margin-top: 10px;" mat-table [dataSource]="dataSource">
+              <table style="margin-top: 10px;" mat-table [dataSource]="dataSource" matSort>
 
                 <ng-container matColumnDef="select">
-                  <th mat-header-cell *matHeaderCellDef>Select
-                    <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
-                                                [checked]="selection.hasValue() && isAllSelected()"
-                                                [indeterminate]="selection.hasValue() && !isAllSelected()">
-                                  </mat-checkbox> -->
+                  <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
                   </th>
                   <td mat-cell *matCellDef="let row">
                     <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
@@ -328,56 +347,58 @@
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="PO">
-                  <th mat-header-cell *matHeaderCellDef>PO</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>PO</th>
                   <td mat-cell *matCellDef="let element">{{element.PO}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="PurchaseOrder">
-                  <th mat-header-cell *matHeaderCellDef>Purchase Order</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Purchase Order</th>
                   <td mat-cell *matCellDef="let element"> {{element.PurchaseOrder}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Item">
-                  <th mat-header-cell *matHeaderCellDef>Item</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Item</th>
                   <td mat-cell *matCellDef="let element"> {{element.Item}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="PODate">
-                  <th mat-header-cell *matHeaderCellDef>PO Date</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>PO Date</th>
                   <td mat-cell *matCellDef="let element"> {{element.PODate}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Material">
-                  <th mat-header-cell *matHeaderCellDef>Material</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Material</th>
                   <td mat-cell *matCellDef="let element"> {{element.Material}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Description">
-                  <th mat-header-cell *matHeaderCellDef>Description</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
                   <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="POQuantity">
-                  <th mat-header-cell *matHeaderCellDef>PO Quantity</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>POQty</th>
                   <td mat-cell *matCellDef="let element"> {{element.POQuantity}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="OrderUnit">
-                  <th mat-header-cell *matHeaderCellDef>Order Unit </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Order Unit </th>
                   <td mat-cell *matCellDef="let element"> {{element.OrderUnit}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="QAStatus">
-                  <th mat-header-cell *matHeaderCellDef>QA Status </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>QA Status </th>
                   <td mat-cell *matCellDef="let element"> {{element.QAStatus}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="ASNStatus">
-                  <th mat-header-cell *matHeaderCellDef>ASN Status </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>ASN Status </th>
                   <td mat-cell *matCellDef="let element"> {{element.ASNStatus}} </td>
                 </ng-container>
                 <ng-container matColumnDef="Attechment">
-                  <th mat-header-cell *matHeaderCellDef>Attechment</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-icon>attach_file</mat-icon>
+                  </th>
                   <td mat-cell *matCellDef="let element">
                     <mat-icon>attach_file</mat-icon>
                   </td>
@@ -399,7 +420,7 @@
             </mat-card-content>
           </mat-card>
         </div>
-        <div fxFlex=32% fxFlex.ls="32">
+        <div fxFlex=30% fxFlex.ls="30">
           <div>
             <mat-card>
               <mat-card-header>
@@ -456,24 +477,24 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <table style="margin-top: 10px" mat-table [dataSource]="dataSource1">
+              <table style="margin-top: 10px" mat-table [dataSource]="dataSource1" matSort>
                 <ng-container matColumnDef="DraftID">
-                  <th mat-header-cell *matHeaderCellDef>Draft ID</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>DraftID</th>
                   <td mat-cell *matCellDef="let element"> {{element.DraftID}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="ServiceEnterSheetID">
-                  <th mat-header-cell *matHeaderCellDef>Service Enter SheetID</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>SheetID</th>
                   <td mat-cell *matCellDef="let element"> {{element.ServiceEnterSheetID}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="PurchaseOrder">
-                  <th mat-header-cell *matHeaderCellDef>Purchase Order</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>PO</th>
                   <td mat-cell *matCellDef="let element"> {{element.PurchaseOrder}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Amount">
-                  <th mat-header-cell *matHeaderCellDef> Amount</th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount</th>
                   <td mat-cell *matCellDef="let element"> {{element.Amount}} </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
