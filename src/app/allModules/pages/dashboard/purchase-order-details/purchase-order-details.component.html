@@ -231,7 +231,194 @@
                   </table>
                 </mat-card>
                 <mat-card style="margin-left: 15px;" fxFlex="50">
-                  <div>
+                  <mat-tab-group dynamicHeight="true">
+                    <mat-tab matTooltip="Schedules" label="Schedules">
+                      <div class="p-24">
+                        <table style="margin-top: 10px;" mat-table [dataSource]="dataSource1">
+                          <ng-container matColumnDef="Item">
+                            <th mat-header-cell *matHeaderCellDef>Item</th>
+                            <td mat-cell *matCellDef="let element">{{element.Item}}</td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="ScheduleLine">
+                            <th mat-header-cell *matHeaderCellDef>Schedule Line</th>
+                            <td mat-cell *matCellDef="let element"> {{element.ScheduleLine}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="Description">
+                            <th mat-header-cell *matHeaderCellDef>Description</th>
+                            <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="DeliveryDate">
+                            <th mat-header-cell *matHeaderCellDef>Delivery Date</th>
+                            <td mat-cell *matCellDef="let element"> {{element.DeliveryDate}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="ScheduleQuantity">
+                            <th mat-header-cell *matHeaderCellDef>Schedule Quantity</th>
+                            <td mat-cell *matCellDef="let element"> {{element.ScheduleQuantity}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="UOM">
+                            <th mat-header-cell *matHeaderCellDef>UOM</th>
+                            <td mat-cell *matCellDef="let element"> {{element.UOM}} </td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+                        </table>
+                      </div>
+                    </mat-tab>
+                    <mat-tab matTooltip="Advance Shipment Notification" label="ASN">
+                      <div class="p-24">
+                        <table style="margin-top: 10px;" mat-table [dataSource]="dataSource1">
+                          <ng-container matColumnDef="Item">
+                            <th mat-header-cell *matHeaderCellDef>Item</th>
+                            <td mat-cell *matCellDef="let element">{{element.Item}}</td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="ScheduleLine">
+                            <th mat-header-cell *matHeaderCellDef>Schedule Line</th>
+                            <td mat-cell *matCellDef="let element"> {{element.ScheduleLine}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="Description">
+                            <th mat-header-cell *matHeaderCellDef>Description</th>
+                            <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="DeliveryDate">
+                            <th mat-header-cell *matHeaderCellDef>Delivery Date</th>
+                            <td mat-cell *matCellDef="let element"> {{element.DeliveryDate}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="ScheduleQuantity">
+                            <th mat-header-cell *matHeaderCellDef>Schedule Quantity</th>
+                            <td mat-cell *matCellDef="let element"> {{element.ScheduleQuantity}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="UOM">
+                            <th mat-header-cell *matHeaderCellDef>UOM</th>
+                            <td mat-cell *matCellDef="let element"> {{element.UOM}} </td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+                        </table>
+                      </div>
+                    </mat-tab>
+                    <mat-tab matTooltip="Goods Reciept Note" label="GRT">
+                      <div class="p-24">
+                        <table style="margin-top: 10px;" mat-table [dataSource]="dataSource1">
+                          <ng-container matColumnDef="Item">
+                            <th mat-header-cell *matHeaderCellDef>Item</th>
+                            <td mat-cell *matCellDef="let element">{{element.Item}}</td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="ScheduleLine">
+                            <th mat-header-cell *matHeaderCellDef>Schedule Line</th>
+                            <td mat-cell *matCellDef="let element"> {{element.ScheduleLine}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="Description">
+                            <th mat-header-cell *matHeaderCellDef>Description</th>
+                            <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="DeliveryDate">
+                            <th mat-header-cell *matHeaderCellDef>Delivery Date</th>
+                            <td mat-cell *matCellDef="let element"> {{element.DeliveryDate}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="ScheduleQuantity">
+                            <th mat-header-cell *matHeaderCellDef>Schedule Quantity</th>
+                            <td mat-cell *matCellDef="let element"> {{element.ScheduleQuantity}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="UOM">
+                            <th mat-header-cell *matHeaderCellDef>UOM</th>
+                            <td mat-cell *matCellDef="let element"> {{element.UOM}} </td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+                        </table>
+                      </div>
+                    </mat-tab>
+                    <mat-tab matTooltip="Quentity Rejection" label="QR">
+                      <div class="p-24">
+                        <table style="margin-top: 10px;" mat-table [dataSource]="dataSource1">
+                          <ng-container matColumnDef="Item">
+                            <th mat-header-cell *matHeaderCellDef>Item</th>
+                            <td mat-cell *matCellDef="let element">{{element.Item}}</td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="ScheduleLine">
+                            <th mat-header-cell *matHeaderCellDef>Schedule Line</th>
+                            <td mat-cell *matCellDef="let element"> {{element.ScheduleLine}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="Description">
+                            <th mat-header-cell *matHeaderCellDef>Description</th>
+                            <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="DeliveryDate">
+                            <th mat-header-cell *matHeaderCellDef>Delivery Date</th>
+                            <td mat-cell *matCellDef="let element"> {{element.DeliveryDate}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="ScheduleQuantity">
+                            <th mat-header-cell *matHeaderCellDef>Schedule Quantity</th>
+                            <td mat-cell *matCellDef="let element"> {{element.ScheduleQuantity}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="UOM">
+                            <th mat-header-cell *matHeaderCellDef>UOM</th>
+                            <td mat-cell *matCellDef="let element"> {{element.UOM}} </td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+                        </table>
+                      </div>
+                    </mat-tab>
+                    <mat-tab matTooltip="PO Wise Advance" label="POWA">
+                      <div class="p-24">
+                        <table style="margin-top: 10px;" mat-table [dataSource]="dataSource1">
+                          <ng-container matColumnDef="Item">
+                            <th mat-header-cell *matHeaderCellDef>Item</th>
+                            <td mat-cell *matCellDef="let element">{{element.Item}}</td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="ScheduleLine">
+                            <th mat-header-cell *matHeaderCellDef>Schedule Line</th>
+                            <td mat-cell *matCellDef="let element"> {{element.ScheduleLine}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="Description">
+                            <th mat-header-cell *matHeaderCellDef>Description</th>
+                            <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="DeliveryDate">
+                            <th mat-header-cell *matHeaderCellDef>Delivery Date</th>
+                            <td mat-cell *matCellDef="let element"> {{element.DeliveryDate}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="ScheduleQuantity">
+                            <th mat-header-cell *matHeaderCellDef>Schedule Quantity</th>
+                            <td mat-cell *matCellDef="let element"> {{element.ScheduleQuantity}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="UOM">
+                            <th mat-header-cell *matHeaderCellDef>UOM</th>
+                            <td mat-cell *matCellDef="let element"> {{element.UOM}} </td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+                        </table>
+                      </div>
+                    </mat-tab>
+                  </mat-tab-group>
+                  <!-- <div>
                     <button mat-raised-button matTooltip="Schedules" style="background-color: #1b56ca;height: 32px;">
                       <span style="color: white">Schedules</span>
                     </button>
@@ -284,7 +471,7 @@
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
-                  </table>
+                  </table> -->
                 </mat-card>
               </div>
             </div>

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MatIconRegistry, MatSnackBar, MatTableDataSource } from '@angular/material';
+import { MatIconRegistry, MatSnackBar, MatTableDataSource, MatSort } from '@angular/material';
 import { Router } from '@angular/router';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
@@ -30,6 +30,7 @@ export class DashboardComponent implements OnInit {
   // displayedColumns1: string[] = ['Description', 'Quantity', 'Status'];
   widget5: any = {};
   selected = 'Month';
+  @ViewChild(MatSort) sort: MatSort;
   constructor(private _router: Router, matIconRegistry: MatIconRegistry, sanitizer: DomSanitizer, public snackBar: MatSnackBar) {
     matIconRegistry.addSvgIcon('pdficon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/dashboard/pdf.svg'));
     matIconRegistry.addSvgIcon('questionmarkicon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/dashboard/noun-help-922772.svg'));
@@ -108,7 +109,9 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     // Retrive authorizationData
     this.dataSource = new MatTableDataSource(ELEMENT_DATA);
+    this.dataSource.sort = this.sort;
     this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
+    this.dataSource1.sort = this.sort;
     this.selection = new SelectionModel(true, []);
     this.isAllSelected();
     this.masterToggle();

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderacknowledgmentComponent } from './orderacknowledgment/orderacknowledgment.component';
 import { Routes, RouterModule } from '@angular/router';
-import { MatChipsModule, MatDialogModule, MatDatepickerModule, MatTableModule, MatToolbarModule, MatSidenavModule, MatRadioModule, MatMenuModule, MatListModule, MatProgressSpinnerModule, MatCheckboxModule, MatStepperModule, MatSelectModule, MatInputModule, MatIconModule, MatFormFieldModule, MatCardModule, MatButtonModule } from '@angular/material';
+import { MatChipsModule, MatDialogModule, MatDatepickerModule, MatTableModule, MatToolbarModule, MatSidenavModule, MatRadioModule, MatMenuModule, MatListModule, MatProgressSpinnerModule, MatCheckboxModule, MatStepperModule, MatSelectModule, MatInputModule, MatIconModule, MatFormFieldModule, MatCardModule, MatButtonModule, MatSortModule } from '@angular/material';
 import { FileUploadModule } from 'ng2-file-upload';
 import { FuseSharedModule } from '@fuse/shared.module';
 
@@ -37,6 +37,7 @@ const OrderAcknowledgment: Routes = [
     MatDatepickerModule,
     MatDialogModule,
     MatChipsModule,
+    MatSortModule,
     RouterModule.forChild(OrderAcknowledgment)
   ]
 })

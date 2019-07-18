@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { fuseAnimations } from '@fuse/animations';
 
@@ -33,6 +33,7 @@ export class ShipmentnotificationComponent implements OnInit {
     dataSourse2: MatTableDataSource<VendorInvoice>;
     dataSourse3: MatTableDataSource<AttachmentDetails>;
     selection: SelectionModel<Shipment>;
+    @ViewChild(MatSort) sort: MatSort;
 
     constructor() {}
 
@@ -41,6 +42,10 @@ export class ShipmentnotificationComponent implements OnInit {
         this.dataSourse1 = new MatTableDataSource();
         this.dataSourse2 = new MatTableDataSource(ELEMENT_DATA2);
         this.dataSourse3 = new MatTableDataSource(ELEMENT_DATA3);
+        this.dataSource.sort = this.sort;
+        this.dataSourse1.sort = this.sort;
+        this.dataSourse2.sort = this.sort;
+        this.dataSourse3.sort = this.sort;
         this.selection = new SelectionModel(true, []);
         this.isAllSelected();
         this.masterToggle();

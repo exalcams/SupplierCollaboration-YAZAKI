@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
@@ -14,11 +14,14 @@ export class OrderacknowledgmentComponent implements OnInit {
   dataSource: MatTableDataSource<OrderAcknowledgment>;
   dataSource1: MatTableDataSource<AttachmentDetails>;
   selection = new SelectionModel<OrderAcknowledgment>(true, []);
+  @ViewChild(MatSort) sort: MatSort;
   constructor() { }
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource(ELEMENT_DATA);
+    this.dataSource.sort = this.sort;
     this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
+    this.dataSource1.sort = this.sort;
     this.isAllSelected();
     this.masterToggle();
     this.checkboxLabel();
