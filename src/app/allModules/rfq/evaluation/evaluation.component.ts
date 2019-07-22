@@ -26,6 +26,15 @@ export class EvaluationComponent implements OnInit {
       {
         VendorName: 'Inowits Technologies Pvt Ltd', GSTNumber: '29AEDF80092', VendorType: '', City: 'Bangalore , KA ,India',
       },
+      {
+        VendorName: 'ApeeJay Technologies Pvt Ltd', GSTNumber: '29AEDF80091', VendorType: '', City: 'Bangalore , KA ,India',
+      },
+      {
+        VendorName: 'PathWork Technologies Pvt Ltd', GSTNumber: '29AEDF80092', VendorType: '', City: 'Bangalore , KA ,India',
+      },
+      {
+        VendorName: 'Quints Technologies Pvt Ltd', GSTNumber: '29AEDF80092', VendorType: '', City: 'Bangalore , KA ,India',
+      },
     ];
     this.dataSource = new MatTableDataSource(this.SupplierInviteClassList);
     this.isAllSelected();

@@ -36,6 +36,9 @@
 .borderTop {
   border-top: 1px solid #dce1e9;
 }
+.borderBottom{
+  border-bottom: 1px solid #dce1e9;
+}
 .roundedBorder {
   border-radius: 10px;
 }
@@ -87,6 +90,9 @@ body.theme-default .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-out
 body.theme-default .mat-radio-button.mat-accent .mat-radio-inner-circle {
   background-color: #3cb878 !important;
 }
+// .mat-form-field-wrapper {
+//   padding-bottom: 0px !important; 
+// }
 // .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle{
 //   border-color:rgb(16, 177, 37);
 // }
