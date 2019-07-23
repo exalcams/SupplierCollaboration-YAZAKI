@@ -39,6 +39,10 @@ const appRoutes: Routes = [
         loadChildren: './allModules/gate-entry-exit/gate-entry-exit.module#GateEntryExitModule'
     },
     {
+        path: 'documentCollection',
+        loadChildren: './allModules/documentcollection/documentcollection.module#DocumentcollectionModule'
+    },
+    {
         path: 'master',
         loadChildren: './allModules/master/master.module#MasterModule'
     },

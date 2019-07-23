@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     subChildren: FuseNavigation[] = [];
     subChildren1: FuseNavigation[] = [];
     subChildren2: FuseNavigation[] = [];
+    subChildren3: FuseNavigation[] = [];
     private _unsubscribeAll: Subject<any>;
     message = 'Snack Bar opened.';
     actionButtonLabel = 'Retry';
@@ -273,6 +274,34 @@ export class LoginComponent implements OnInit, OnDestroy {
                 // icon: 'orderIcon',
                 isSvgIcon: true,
                 children: this.subChildren2
+            });
+        }
+        if (true) {
+            this.subChildren3.push(
+                {
+                    id: 'vendorAssignment',
+                    title: 'Vendor Assignment',
+                    type: 'item',
+                    url: '/documentCollection/vendor_assignment'
+                }
+            );
+        }
+        if (true) {
+            this.subChildren3.push(
+                {
+                    id: 'capaAssignment',
+                    title: 'CAPA Assignment',
+                    type: 'item',
+                    url: '/documentCollection/capa_assignment'
+                }
+            );
+        }
+        if (true) {
+            this.children.push({
+                id: 'documentCollection',
+                title: 'Document Collection',
+                type: 'collapsable',
+                children: this.subChildren3
             });
         }
         if (this.MenuItems.indexOf('PaymentReportPO') >= 0) {
