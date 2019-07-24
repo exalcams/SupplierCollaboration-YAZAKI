@@ -188,7 +188,7 @@
             <button mat-stroked-button>
               Save
             </button>
-            <button class="SaveBtnClass ml-8" mat-raised-button>
+            <button [ngClass]="BGClassName?.layout?.toolbar?.background" class=" ml-8" mat-raised-button>
               Save & Assign
             </button>
           </div>
@@ -239,7 +239,7 @@
             <div fxLayout FxLayoutAlign="center">
               <div fxFlex></div>
               <div fxFlex>
-                <button class="SearchBtnClass" mat-raised-button>
+                <button [ngClass]="BGClassName?.layout?.toolbar?.background"  mat-raised-button>
                   Search
                 </button>
               </div>
@@ -285,7 +285,7 @@
                 <td mat-cell *matCellDef="let element"> {{element.City}} </td>
               </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
           </div>

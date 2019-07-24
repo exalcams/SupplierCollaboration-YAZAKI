@@ -30,20 +30,7 @@ $icon-small-size: 16px;
     border: 1px solid #1b56ca;
     border-radius: 1e-6px;
 }
-table {
-    width: 100%;
-    th{
-      background: #082f7d;
-      color: white;
-      //font-family: Ubuntu;
-      padding-left: 25px;
-      border-right: 1px solid #e0e0e0
-    }
-    td{
-        padding-left: 15px;
-        border-right: 1px solid #1b56ca
-    }
-  }
+
   .mat-table-sticky {
     border-left: 1px solid #1b56ca;
   }
@@ -106,7 +93,7 @@ table {
 table {
     width: 100%;
     th{
-      background: #082f7d;
+     // background: #082f7d;
       color: white;
       //font-family: Ubuntu;
       // padding-left: 25px;

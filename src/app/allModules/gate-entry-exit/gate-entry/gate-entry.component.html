@@ -384,7 +384,7 @@
                       <input matInput #fileInput>
                     </mat-form-field>
                     <input hidden type="file" #fileInput />
-                    <button mat-raised-button style="background-color: #1b56ca;margin-left: 20px;height: 30px;" (click)="fileInput.click()">
+                    <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-left: 20px;height: 30px;" (click)="fileInput.click()">
                       <span style="color: white">
                         Browse
                       </span>
@@ -458,13 +458,13 @@
                     </mat-checkbox>
                   </td>
                 </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
               </table>
             </div>
             <div style="margin-top: 15px;margin-bottom: 15px">
               <div style="text-align: end">
-                <button mat-raised-button style="background-color: #1b56ca;margin-top: -21px;margin-left: 20px;">
+                <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-top: -21px;margin-left: 20px;">
                   <mat-icon style="color: lightgreen;margin-left: -15px">check</mat-icon>
                   <span style="color: white">Submit</span>
                 </button>

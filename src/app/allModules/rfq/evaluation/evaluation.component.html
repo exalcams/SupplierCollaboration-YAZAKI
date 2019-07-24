@@ -173,7 +173,7 @@
               <div fxLayout FxLayoutAlign="center">
                 <div fxFlex></div>
                 <div fxFlex class="pl-120">
-                  <button class="SearchBtnClass" mat-raised-button>
+                  <button [ngClass]="BGClassName?.layout?.toolbar?.background" class="SearchBtnClass" mat-raised-button>
                     Search
                   </button>
                 </div>
@@ -220,7 +220,7 @@
                     <td mat-cell *matCellDef="let element"> {{element.City}} </td>
                   </ng-container>
 
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
 

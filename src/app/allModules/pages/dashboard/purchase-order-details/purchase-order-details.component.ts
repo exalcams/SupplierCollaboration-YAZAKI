@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'app-purchase-order-details',
@@ -10,11 +11,12 @@ import { SelectionModel } from '@angular/cdk/collections';
 export class PurchaseOrderDetailsComponent implements OnInit {
 
   displayedColumns: string[] = ['select', 'Item', 'Material', 'Description', 'PurchaseQuantity', 'OrderUnit', 'Currency'];
-  displayedColumns1: string[] = ['Item', 'Description', 'ScheduleLine', 'DeliveryDate', 'ScheduleQuantity','UOM'];
+  displayedColumns1: string[] = ['Item', 'Description', 'ScheduleLine', 'DeliveryDate', 'ScheduleQuantity', 'UOM'];
   dataSource: MatTableDataSource<ItemDetails>;
   dataSource1: MatTableDataSource<ItemDetails1>;
   selection: SelectionModel<ItemDetails>;
-  constructor() { }
+  BGClassName:any;
+  constructor(private _fuseConfigService: FuseConfigService) { }
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource(ELEMENT_DATA);
@@ -23,6 +25,11 @@ export class PurchaseOrderDetailsComponent implements OnInit {
     this.isAllSelected();
     this.masterToggle();
     this.checkboxLabel();
+    this._fuseConfigService.config
+      // .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config) => {
+        this.BGClassName = config;
+      });
   }
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -61,9 +68,9 @@ export interface ItemDetails1 {
   UOM: string;
 }
 const ELEMENT_DATA: ItemDetails[] = [
-  { Item: '10', Material: 'Vegetables', Description: 'data', PurchaseQuantity: "900.00", OrderUnit: 'KG', Currency:'INR', select: false }
+  { Item: '10', Material: 'Vegetables', Description: 'data', PurchaseQuantity: "900.00", OrderUnit: 'KG', Currency: 'INR', select: false }
 ];
 const ELEMENT_DATA1: ItemDetails1[] = [
-  { Item: '10', ScheduleLine: '1', Description: 'data', DeliveryDate: "23-05-2019", ScheduleQuantity: '10.00', UOM:'KG'}
+  { Item: '10', ScheduleLine: '1', Description: 'data', DeliveryDate: "23-05-2019", ScheduleQuantity: '10.00', UOM: 'KG' }
 ];
 // ['Item', 'Description', 'ScheduleLine', 'DeliveryDate', 'ScheduleQuantity','UOM'];
