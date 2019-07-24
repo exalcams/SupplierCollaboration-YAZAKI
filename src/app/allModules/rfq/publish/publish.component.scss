@@ -19,13 +19,14 @@
 table {
   width: 100%;
   th {
-    background: #082f7d;
+   // background: #082f7d;
     color: white !important;
     padding: 10px !important;
     border-right: 1px solid #e0e0e0;
   }
   td {
     padding-left: 15px !important;
+    border: 1px solid #1b56ca !important;
     // border-right: 1px solid #1b56ca;
   }
   tr {
@@ -38,14 +39,14 @@ table,
 th,
 tr,
 td {
-  border: 1px solid #1b56ca !important;
+ // border: 1px solid #1b56ca !important;
   border-collapse: collapse;
 }
 .mat-table {
   border: 1px solid #082f7d;
 }
 .SaveBtnClass {
-  background-color: #1b56ca !important;
+ // background-color: #1b56ca !important;
   color: white !important;
 }
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {

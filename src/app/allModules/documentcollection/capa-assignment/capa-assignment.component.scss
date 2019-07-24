@@ -49,13 +49,14 @@
   table {
     width: 100%;
     th {
-      background: #082f7d;
+     // background: #082f7d;
       color: white !important;
       padding: 10px !important;
       border-right: 1px solid #e0e0e0;
     }
     td {
       padding-left: 15px !important;
+      border: 1px solid #1b56ca !important;
       // border-right: 1px solid #1b56ca;
     }
     tr {
@@ -68,7 +69,7 @@
   th,
   tr,
   td {
-    border: 1px solid #1b56ca !important;
+   // border: 1px solid #1b56ca !important;
     border-collapse: collapse;
   }
   .mat-table {

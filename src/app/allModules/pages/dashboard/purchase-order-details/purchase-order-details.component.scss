@@ -31,20 +31,27 @@ $icon-small-size: 16px;
     border-radius: 1e-6px;
 }
 table {
-    width: 100%;
-    th{
-      background: #082f7d;
-      color: white;
-      //font-family: Ubuntu;
-      padding-left: 25px;
-      border-right: 1px solid #e0e0e0
-    }
-    td{
-        padding-left: 15px;
-        border-right: 1px solid #1b56ca;
-        padding: 5px;
-    }
+  width: 100%; 
+  th{
+   // background: #082f7d;
+    color: white;
+    //font-family: Ubuntu;
+    // padding-left: 25px;
+    padding: 2px;
+    border-right: 1px solid #e0e0e0;
+    font-size: 10px;
+    
   }
+  td{
+      padding-left: 15px;
+      border-right: 1px solid #1b56ca;
+      padding: 5px;
+      font-size: 10px;
+  }
+  tr{
+    height: 40px;
+  }
+}
   .mat-table-sticky {
     border-left: 1px solid #1b56ca;
   }
@@ -103,22 +110,3 @@ table {
   .img-style{
     height:45px
 }
-
-table {
-    width: 100%;
-    th{
-      background: #082f7d;
-      color: white;
-      //font-family: Ubuntu;
-      // padding-left: 25px;
-      padding: 10px;
-      border-right: 1px solid #e0e0e0
-    }
-    td{
-        padding-left: 15px;
-        border-right: 1px solid #1b56ca
-    }
-    tr{
-      height: 40px;
-    }
-  }

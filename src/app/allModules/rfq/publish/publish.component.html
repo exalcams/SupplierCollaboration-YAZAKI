@@ -136,7 +136,7 @@
               </mat-radio-group>
             </div>
             <div fxFlex="40" align="end" class="pb-8">
-              <button class="SaveBtnClass" mat-raised-button>
+              <button [ngClass]="BGClassName?.layout?.toolbar?.background" class="SaveBtnClass" mat-raised-button>
                 Publish RFQ
               </button>
             </div>
@@ -195,7 +195,7 @@
                 <td mat-cell *matCellDef="let element"> {{element.Award}} </td>
               </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
           </div>

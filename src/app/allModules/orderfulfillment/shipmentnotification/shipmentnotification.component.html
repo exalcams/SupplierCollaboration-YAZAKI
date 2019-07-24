@@ -6,7 +6,7 @@
 
   <!-- CENTER  margin-top: 20px;-->
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
-    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
+    <div [ngClass]="BGClassName?.layout?.toolbar?.th?.background" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
       <div fxLayout class="layoutclass">
         <div fxFlex fxLayout="column">
           <div fxFlex>
@@ -145,11 +145,11 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div style="border-bottom: 1px solid #48c22b;border-top: 1px solid #48c22b;" class="borderRightSide">
+          <div style="border-bottom: 1px solid #4a77fb;border-top: 1px solid #4a77fb;" class="borderRightSide">
             <div style="margin-top: 5px;" class="round1">
             </div>
             <div>
-              <span style="color: #4a77fb;font-size: 18px">#254786984</span>
+              <span style="font-size: 18px">#254786984</span>
             </div>
             <div style="font-size: 11px;margin-bottom: 5px">
               <span style="margin-right: 10px">03/062019</span>
@@ -160,7 +160,7 @@
             <div class="round2">
             </div>
             <div>
-              <span style="color: #4a77fb;font-size: 18px">#254786984</span>
+              <span style="font-size: 18px">#254786984</span>
             </div>
             <div style="font-size: 11px">
               <span style="margin-right: 10px">03/062019</span>
@@ -171,7 +171,7 @@
             <div class="round3">
             </div>
             <div>
-              <span style="color: #4a77fb;font-size: 18px">#254786984</span>
+              <span style="font-size: 18px">#254786984</span>
             </div>
             <div style="font-size: 11px">
               <span style="margin-right: 10px">03/062019</span>
@@ -404,7 +404,7 @@
                       <input matInput #fileInput>
                     </mat-form-field>
                     <input hidden type="file" #fileInput />
-                    <button mat-raised-button style="background-color: #1b56ca;margin-left: 20px;height: 30px;" (click)="fileInput.click()">
+                    <button mat-raised-button style="margin-left: 20px;height: 30px;" [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="fileInput.click()">
                       <span style="color: white">
                         Browse
                       </span>
@@ -494,7 +494,7 @@
                 </ng-container>
 
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
               </table>
             </div>
@@ -645,7 +645,7 @@
                           <td mat-cell *matCellDef="let element"> {{element.batch}} </td>
                         </ng-container>  -->
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
 
               </table>
@@ -798,7 +798,7 @@
                     </ng-container>
 
 
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+                    <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns3;"></tr>
 
                   </table>
@@ -827,7 +827,7 @@
                         <input matInput #fileInput>
                       </mat-form-field>
                       <input hidden type="file" #fileInput />
-                      <button mat-raised-button style="background-color: #1b56ca;margin-top: -21px;margin-left: 20px;" (click)="fileInput.click()"> <span style="color: white">Browse</span></button>
+                      <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-top: -21px;margin-left: 20px;" (click)="fileInput.click()"> <span style="color: white">Browse</span></button>
                     </div>
                     <!-- <div class="form-group">
                           <label for="file">Choose File</label>
@@ -888,10 +888,10 @@
               </div>
             </div>
             <div style="text-align: end">
-              <button mat-raised-button style="background-color: #1b56ca;margin-top: -21px;margin-left: 20px;">
+              <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-top: -21px;margin-left: 20px;">
                 <mat-icon style="color: gray;margin-left: -13px">drafts</mat-icon> <span style="color: white;margin-left: 5px">Save as Draft</span>
               </button>
-              <button mat-raised-button style="background-color: #1b56ca;margin-top: -21px;margin-left: 20px;">
+              <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-top: -21px;margin-left: 20px;">
                 <mat-icon style="color: lightgreen;margin-left: -15px">check</mat-icon>
                 <span style="color: white">Submit</span>
               </button>
