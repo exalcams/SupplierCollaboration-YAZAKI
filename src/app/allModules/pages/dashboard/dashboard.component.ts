@@ -202,6 +202,12 @@ export class DashboardComponent implements OnInit {
   PurchaseOrder() {
     this._router.navigate(['/dashboard/purchaseOrderDetails']);
   }
+  OrderAcknowledgement() {
+    this._router.navigate(['/orderacknowledgment/acknowledgment']);
+  }
+  AdvanceShipment() {
+    this._router.navigate(['/order/shipment']);
+  }
   // router.navigate(['/dashboard/purchaseOrderDetails']);
 }
 

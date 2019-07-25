@@ -192,17 +192,17 @@ export class LoginComponent implements OnInit, OnDestroy {
                 url: '/dashboard'
             });
         }
-        if (this.MenuItems.indexOf('AdvanceShipment') >= 0) {
-            this.children.push({
-                id: 'advanceShipment',
-                title: 'Advance Shipment',
-                translate: 'NAV.SAMPLE.TITLE',
-                type: 'item',
-                icon: 'shipment',
-                isSvgIcon: true,
-                url: '/order/shipment'
-            });
-        }
+        // if (this.MenuItems.indexOf('AdvanceShipment') >= 0) {
+        //     this.children.push({
+        //         id: 'advanceShipment',
+        //         title: 'Advance Shipment',
+        //         translate: 'NAV.SAMPLE.TITLE',
+        //         type: 'item',
+        //         icon: 'shipment',
+        //         isSvgIcon: true,
+        //         url: '/order/shipment'
+        //     });
+        // }
         if (this.MenuItems.indexOf('GateTransaction') >= 0) {
             this.children.push({
                 id: 'gateEntry',
@@ -214,17 +214,17 @@ export class LoginComponent implements OnInit, OnDestroy {
                 url: '/gateTransaction/gateentry'
             });
         }
-        if (this.MenuItems.indexOf('OrderAcknowledgment') >= 0) {
-            this.children.push({
-                id: 'orderAcknowledgment',
-                title: 'Order Acknowledgment',
-                translate: 'NAV.SAMPLE.TITLE',
-                type: 'item',
-                icon: 'orderIcon',
-                isSvgIcon: true,
-                url: '/orderacknowledgment/acknowledgment'
-            });
-        }
+        // if (this.MenuItems.indexOf('OrderAcknowledgment') >= 0) {
+        //     this.children.push({
+        //         id: 'orderAcknowledgment',
+        //         title: 'Order Acknowledgment',
+        //         translate: 'NAV.SAMPLE.TITLE',
+        //         type: 'item',
+        //         icon: 'orderIcon',
+        //         isSvgIcon: true,
+        //         url: '/orderacknowledgment/acknowledgment'
+        //     });
+        // }
         if (true) {
             this.subChildren2.push(
                 {
