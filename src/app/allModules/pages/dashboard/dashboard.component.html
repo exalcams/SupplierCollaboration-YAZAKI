@@ -303,9 +303,9 @@
                   src="assets/images/dashboard/po-download.png">
                 <img class="m-8" style="height: 20px" matTooltip="Purchase Order Look Up" (click)="PurchaseOrder()"
                   src="assets/images/dashboard/po-lookup.png">
-                <img class="m-8" style="height: 20px" matTooltip="Order Acknowledgement"
+                <img class="m-8" style="height: 20px" matTooltip="Order Acknowledgement" (click)="OrderAcknowledgement()"
                   src="assets/images/dashboard/order-acknowledgement.png">
-                <img class="m-8" style="height: 20px" matTooltip="Create Advance Shipment Notification"
+                <img class="m-8" style="height: 20px" matTooltip="Create Advance Shipment Notification" (click)="AdvanceShipment()"
                   src="assets/images/dashboard/create-asn.png">
                 <img class="m-8" style="height: 20px" matTooltip="Inspection Check"
                   src="assets/images/dashboard/inspection-check.png">
@@ -335,10 +335,10 @@
 
                 <ng-container matColumnDef="select">
                   <th mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                    <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
                       [checked]="selection.hasValue() && isAllSelected()"
                       [indeterminate]="selection.hasValue() && !isAllSelected()">
-                    </mat-checkbox>
+                    </mat-checkbox> -->
                   </th>
                   <td mat-cell *matCellDef="let row">
                     <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
