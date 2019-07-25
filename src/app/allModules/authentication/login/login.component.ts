@@ -225,7 +225,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         //         url: '/orderacknowledgment/acknowledgment'
         //     });
         // }
-        if (true) {
+        if (this.MenuItems.indexOf('RFQCreation') >= 0) {
             this.subChildren2.push(
                 {
                     id: 'creation',
@@ -235,7 +235,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 }
             );
         }
-        if (true) {
+        if (this.MenuItems.indexOf('RFQPublish') >= 0) {
             this.subChildren2.push(
                 {
                     id: 'publish',
@@ -245,7 +245,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 }
             );
         }
-        if (true) {
+        if (this.MenuItems.indexOf('RFQEvaluation') >= 0) {
             this.subChildren2.push(
                 {
                     id: 'evaluation',
@@ -255,7 +255,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 }
             );
         }
-        if (true) {
+        if (this.MenuItems.indexOf('RFQAwareded') >= 0) {
             this.subChildren2.push(
                 {
                     id: 'awarded',
@@ -265,13 +265,14 @@ export class LoginComponent implements OnInit, OnDestroy {
                 }
             );
         }
-        if (true) {
+        if (this.MenuItems.indexOf('RFQCreation') >= 0 || this.MenuItems.indexOf('RFQPublish') >= 0 ||
+            this.MenuItems.indexOf('RFQEvaluation') >= 0 || this.MenuItems.indexOf('RFQAwareded') >= 0) {
             this.children.push({
                 id: 'rfq',
                 title: 'RFQ',
                 // translate: 'NAV.DASHBOARDS',
                 type: 'collapsable',
-                // icon: 'orderIcon',
+                icon: 'paymentReport',
                 isSvgIcon: true,
                 children: this.subChildren2
             });
