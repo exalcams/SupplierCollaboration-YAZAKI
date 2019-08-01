@@ -183,42 +183,42 @@
             </div> -->
             <div class="row" style="margin-top: 25px" fxLayoutAlign="start">
               <div fxFlex="15" style="text-align: right">
-                Purc.Organization : 
+                Purc.Organization :
               </div>
               <div fxFlex="15">
-                IN47 (IN47 PUR ORG)
+                {{POPurchaseOrderDetails.PoOrganization}} (IN47 PUR ORG)
               </div>
               <div fxFlex="15" style="text-align: right">
-                Vendor : 
+                Vendor :
               </div>
               <div fxFlex="15">
-                EXALCA01 (exalca)
+                {{POPurchaseOrderDetails.Vendor}}
               </div>
               <div fxFlex="15" style="text-align: right">
-                Doc.Date : 
+                Doc.Date :
               </div>
               <div fxFlex="15">
-                25.03.2019
+                {{POPurchaseOrderDetails.PODate}}
               </div>
             </div>
             <div class="row" style="margin-top: 25px" fxLayoutAlign="start">
               <div fxFlex="15" style="text-align: right">
-                Company Code : 
+                Company Code :
               </div>
               <div fxFlex="15">
-                IN47 (IMC)
+                {{POPurchaseOrderDetails.CompanyCode}} (IMC)
               </div>
               <div fxFlex="15" style="text-align: right">
-                Plant : 
+                Plant :
               </div>
               <div fxFlex="15">
-                IN47 (IMP)
+                {{POPurchaseOrderDetails.Plant}} (IMP)
               </div>
               <div fxFlex="15" style="text-align: right">
-                Buyer : 
+                Buyer :
               </div>
               <div fxFlex="15">
-                851 (ANZ)
+                {{POPurchaseOrderDetails.Buyer}} (ANZ)
               </div>
             </div>
             <div style="margin-top: 30px">
@@ -226,14 +226,15 @@
               <mat-divider [inset]="true"></mat-divider>
               <div style="margin-top: 20px;">
                 <mat-card fxFlex="50">
-                  <table style="margin-top: 10px;" mat-table [dataSource]="dataSource">
+                  <table style="margin-top: 10px;" mat-table [dataSource]="POItemList">
                     <ng-container matColumnDef="select">
                       <th mat-header-cell *matHeaderCellDef>Select
                       </th>
                       <td mat-cell *matCellDef="let row">
-                        <mat-checkbox (click)="$event.stopPropagation()"
+                        <mat-checkbox></mat-checkbox>
+                        <!-- <mat-checkbox (click)="$event.stopPropagation()"
                           (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
-                        </mat-checkbox>
+                        </mat-checkbox> -->
                       </td>
                     </ng-container>
                     <ng-container matColumnDef="Item">
@@ -248,17 +249,18 @@
 
                     <ng-container matColumnDef="Description">
                       <th mat-header-cell *matHeaderCellDef>Description</th>
-                      <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
+                      <td mat-cell *matCellDef="let element"> {{element.MaterialText}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="PurchaseQuantity">
                       <th mat-header-cell *matHeaderCellDef>Purchase Quantity</th>
-                      <td style="text-align: right" mat-cell *matCellDef="let element"> {{element.PurchaseQuantity}} </td>
+                      <td style="text-align: right" mat-cell *matCellDef="let element"> {{element.OrderedQuantity}}
+                      </td>
                     </ng-container>
 
                     <ng-container matColumnDef="OrderUnit">
                       <th mat-header-cell *matHeaderCellDef>Order Unit</th>
-                      <td mat-cell *matCellDef="let element"> {{element.OrderUnit}} </td>
+                      <td mat-cell *matCellDef="let element"> {{element.UnitofMeasure}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="Currency">
@@ -297,7 +299,8 @@
 
                           <ng-container matColumnDef="ScheduleQuantity">
                             <th mat-header-cell *matHeaderCellDef>Schedule Quantity</th>
-                            <td style="text-align: right" mat-cell *matCellDef="let element"> {{element.ScheduleQuantity}} </td>
+                            <td style="text-align: right" mat-cell *matCellDef="let element">
+                              {{element.ScheduleQuantity}} </td>
                           </ng-container>
 
                           <ng-container matColumnDef="UOM">
@@ -335,7 +338,7 @@
 
                           <ng-container matColumnDef="ScheduleQuantity">
                             <th mat-header-cell *matHeaderCellDef>Schedule Quantity</th>
-                            <td  mat-cell *matCellDef="let element"> {{element.ScheduleQuantity}} </td>
+                            <td mat-cell *matCellDef="let element"> {{element.ScheduleQuantity}} </td>
                           </ng-container>
 
                           <ng-container matColumnDef="UOM">

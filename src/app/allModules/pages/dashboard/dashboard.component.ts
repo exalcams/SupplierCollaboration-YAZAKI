@@ -7,6 +7,8 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { AuthenticationDetails } from 'app/models/master';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
+import { DashboardService } from 'app/services/dashboard.service';
+import { POList, PO_Notifications, DashboardStatus, PO_DeliveryStatus, PO_PurchaseOrderDetails } from 'app/models/dashboard';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,17 +16,25 @@ import { FuseConfigService } from '@fuse/services/config.service';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  showChart = false;
   BGClassName: any;
-  displayedColumns: string[] = ['select', 'PO', 'PurchaseOrder', 'Item', 'PODate', 'Material', 'Description', 'POQuantity', 'OrderUnit', 'QAStatus', 'ASNStatus', 'Attechment'];
+  displayedColumns: string[] = ['select', 'PurchaseOrder', 'Item', 'PODate', 'Material', 'Description', 'POQuantity', 'OrderUnit', 'QAStatus', 'ASNStatus', 'Attechment'];
   displayedColumns1: string[] = ['DraftID', 'ServiceEnterSheetID', 'PurchaseOrder', 'Amount'];
-  dataSource: MatTableDataSource<OrderFullfillment>;
+  AllPOList: POList[] = [];
+  POListDataSource: MatTableDataSource<POList>;
+  IsAllPOListCompleted: boolean;
   dataSource1: MatTableDataSource<PreviousRequests>;
-  selection: SelectionModel<OrderFullfillment>;
+  selection: SelectionModel<POList>;
   authenticationDetails: AuthenticationDetails;
   MenuItems: string[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   public isVisible: boolean;
+  POID: any;
+  PONotifications: PO_Notifications = new PO_Notifications();
+  DashbordStatus: DashboardStatus = new DashboardStatus();
+  PODeliveryStatus: PO_DeliveryStatus = new PO_DeliveryStatus();
   selected1 = 'option1';
+  selected2='option1';
   // private LinItemList: LineItems[];
   public OrderList: Orders[];
   // displayedColumns: string[] = ['Description', 'Quantity', 'Rate'];
@@ -36,91 +46,29 @@ export class DashboardComponent implements OnInit {
     private _router: Router,
     matIconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer,
+    public dashboardService: DashboardService,
     public snackBar: MatSnackBar) {
     matIconRegistry.addSvgIcon('pdficon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/dashboard/pdf.svg'));
     matIconRegistry.addSvgIcon('questionmarkicon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/dashboard/noun-help-922772.svg'));
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
 
-    this.widget5 = {
-
-      data: {
-        labels: ['0', '10', '20', '30', '40', '50', '60', '70'],
-        datasets: [
-          {
-            type: 'line',
-            label: '',
-            data: [15, 37, 5, 60, 50, 75, 35, 15],
-            fill: false,
-            lineTension: 0.4,
-            borderColor: ['#2979ff'],
-            // pointBorderColor: "#71a5e2",
-            pointRadius: 1,
-            // pointHoverRadius: 7,
-            // pointBorderWidth: 5,
-            // pointBorderColor: '#ffffff',
-            pointBackgroundColor: "#2979ff",
-            // borderWidth: 1
-          },
-          {
-            type: 'line',
-            label: '',
-            data: [20, 70, 27, 38, 22, 65, 22, 19],
-            fill: false,
-            lineTension: 0.4,
-            borderColor: ['#e32049'],
-            // pointBorderColor: "#71a5e2",
-            pointRadius: 1,
-            // pointHoverRadius: 7,
-            // pointBorderWidth: 5,
-            // pointBorderColor: '#ffffff',
-            pointBackgroundColor: "#e32049",
-            // borderWidth: 1
-          },
-        ],
-      },
-      options: {
-        title: {
-          text: '',
-          display: true
-        },
-        legend: {
-          display: false
-        },
-        tooltips: {
-          enabled: false
-        },
-        scales: {
-          xAxes: [{
-            barPercentage: 0.3,
-            gridLines: {
-              display: false
-            },
-          }],
-          yAxes: [{
-            ticks: {
-              beginAtZero: true,
-              gridLines: {
-                display: false
-              },
-              stepSize: 40,
-
-            }
-          }]
-        },
-      }
-    }
   }
 
   ngOnInit(): void {
     // Retrive authorizationData
-    this.dataSource = new MatTableDataSource(ELEMENT_DATA);
-    this.dataSource.sort = this.sort;
+    //this.dataSource = new MatTableDataSource(ELEMENT_DATA);
+    //this.dataSource.sort = this.sort;
+    this.GetAllPOList();
+    this.GetAllPONotifications();
+    this.GetAllDashboardStatus();
+    this.GetAllPODeliveryStatus();
+    this.IsAllPOListCompleted = false;
     this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
     this.dataSource1.sort = this.sort;
-    this.selection = new SelectionModel(true, []);
-    this.isAllSelected();
-    this.masterToggle();
-    this.checkboxLabel();
+    this.selection = new SelectionModel(false, []);
+    // this.isAllSelected();
+    // this.masterToggle();
+    // this.checkboxLabel();
     this._fuseConfigService.config
       // .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config) => {
@@ -174,6 +122,8 @@ export class DashboardComponent implements OnInit {
     return sum;
   }
 
+
+
   filterForeCasts(filterVal: any) {
     this.selected = filterVal;
     //alert(filterVal);
@@ -182,25 +132,27 @@ export class DashboardComponent implements OnInit {
     // else
     // this.forecasts = this.cacheForecasts.filter((item) => item.summary == filterVal); 
   }
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
-  }
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: OrderFullfillment): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.POQuantity + 1}`;
-  }
+  // isAllSelected() {
+  //   const numSelected = this.selection.selected.length;
+  //   const numRows = this.POListDataSource.data.length;
+  //   return numSelected === numRows;
+  // }
+  // masterToggle() {
+  //   this.isAllSelected() ?
+  //     this.selection.clear() :
+  //     this.POListDataSource.data.forEach(row => this.selection.select(row));
+  // }
+  // /** The label for the checkbox on the passed row */
+  // checkboxLabel(row?: POList): string {
+  //   if (!row) {
+  //     return `${this.isAllSelected() ? '' : 'deselect'} all`;
+  //   }
+  //   return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.POQuantity + 1}`;
+  // }
   PurchaseOrder() {
-    this._router.navigate(['/dashboard/purchaseOrderDetails']);
+    let id;
+    id = this.POID;
+    this._router.navigate(['/dashboard/purchaseOrderDetails'], { queryParams: { id: id } });
   }
   OrderAcknowledgement() {
     this._router.navigate(['/orderacknowledgment/acknowledgment']);
@@ -208,7 +160,123 @@ export class DashboardComponent implements OnInit {
   AdvanceShipment() {
     this._router.navigate(['/order/shipment']);
   }
-  // router.navigate(['/dashboard/purchaseOrderDetails']);
+  GetPOID(PoId: any): void {
+    this.POID = PoId;
+  }
+  GetAllPOList(): void {
+    this.dashboardService.GetAllPoList().subscribe((data) => {
+      if (data) {
+        this.AllPOList = <POList[]>data;
+        this.POListDataSource = new MatTableDataSource(this.AllPOList);
+        this.POListDataSource.sort = this.sort;
+      }
+      this.IsAllPOListCompleted = true;
+    },
+      (err) => {
+        console.error(err);
+      });
+  }
+  GetAllPONotifications(): void {
+    this.dashboardService.GetAllPONotifications().subscribe((data) => {
+      if (data) {
+        this.PONotifications = <PO_Notifications>data;
+      }
+    },
+      (err) => {
+        console.error(err);
+      });
+  }
+  GetAllDashboardStatus(): void {
+    this.dashboardService.GetAllDashboardStatus().subscribe((data) => {
+      if (data) {
+        this.DashbordStatus = <DashboardStatus>data;
+      }
+    },
+      (err) => {
+        console.error(err);
+      });
+  }
+  GetAllPODeliveryStatus(): void {
+    this.dashboardService.GetAllPODeliveryStatus().subscribe((data) => {
+      if (data) {
+        this.PODeliveryStatus = <PO_DeliveryStatus>data;
+        console.log(this.PODeliveryStatus);
+        this.widget5 = {
+          data: {
+            labels: this.PODeliveryStatus.Date,
+            datasets: [
+              {
+                type: 'line',
+                label: '',
+                data: this.PODeliveryStatus.ExpDateOfArrivalCount,
+                fill: false,
+                lineTension: 0.4,
+                borderColor: ['#2979ff'],
+                // pointBorderColor: "#71a5e2",
+                pointRadius: 2,
+                // pointHoverRadius: 7,
+                // pointBorderWidth: 5,
+                // pointBorderColor: '#ffffff',
+                pointBackgroundColor: "#2979ff",
+                // borderWidth: 1
+              },
+              {
+                type: 'line',
+                label: '',
+                data: this.PODeliveryStatus.Count,
+                fill: false,
+                lineTension: 0.4,
+                borderColor: ['#e32049'],
+                // pointBorderColor: "#71a5e2",
+                pointRadius: 2,
+                // pointHoverRadius: 7,
+                // pointBorderWidth: 5,
+                // pointBorderColor: '#ffffff',
+                pointBackgroundColor: "#e32049",
+                // borderWidth: 1
+              },
+            ],
+          },
+          options: {
+            title: {
+              text: '',
+              display: true
+            },
+            legend: {
+              display: false
+            },
+            tooltips: {
+              enabled: true
+            },
+            scales: {
+              xAxes: [{
+                barPercentage: 0.3,
+                valueFormatString: "DD-MMM",
+                gridLines: {
+                  display: false
+                },
+              }],
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true,
+                  gridLines: {
+                    display: false
+                  },
+                  stepSize: 2,
+
+                }
+              }]
+            },
+          }
+        }
+        this.showChart = true;
+      }
+    },
+      (err) => {
+
+      });
+  }
+
 }
 
 export class LineItems {
@@ -228,35 +296,12 @@ export class Orders {
   IsVisible?: boolean;
   LineItemsList?: LineItems[];
 }
-export interface OrderFullfillment {
-  PO: string;
-  PurchaseOrder: string;
-  Item: string;
-  PODate: string;
-  Material: string;
-  Description: string;
-  POQuantity: number;
-  OrderUnit: string;
-  QAStatus: string;
-  ASNStatus: string;
-  Attechment: string;
-  select: boolean;
-}
 export interface PreviousRequests {
   DraftID: number;
   ServiceEnterSheetID: string;
   PurchaseOrder: string;
   Amount: string;
 }
-const ELEMENT_DATA: OrderFullfillment[] = [
-  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '', select: false },
-  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '', select: false },
-  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '', select: false },
-  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '', select: false },
-  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '', select: false },
-  { PO: '10', PurchaseOrder: '8001002118', Item: '10', PODate: "2019-06-21", Material: 'Vegetables', Description: 'data', POQuantity: 100.00, OrderUnit: 'Kg', QAStatus: 'Oky', ASNStatus: 'Errors', Attechment: '', select: false },
-
-];
 const ELEMENT_DATA1: PreviousRequests[] = [
   { DraftID: 102654, PurchaseOrder: '8001002118', ServiceEnterSheetID: '10', Amount: '25411.00' }
 ];

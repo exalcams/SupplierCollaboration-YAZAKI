@@ -6,8 +6,8 @@
 
   <!-- CENTER  margin-top: 20px;-->
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
-    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px"
-      fxLayoutGap.xs="10">
+    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center"
+      fxLayoutGap="10px" fxLayoutGap.xs="10">
       <div fxLayout>
         <div fxFlex fxLayout="column">
           <div fxFlex>
@@ -19,11 +19,13 @@
           </div>
           <div fxFlex fxLayout fxLayoutAlign="center center">
             <div fxFlex="60%">
-              <div class="pl-8">
-                <span style="color:white;font-size:28px">24</span>
+              <div style="margin-top: 5px;">
+                <span style="color:#dddbdb">PO:</span>
+                <span>{{DashbordStatus.PO}}</span>
               </div>
-              <div style="color:rgba(255, 255, 255, 0.5)">
-                /7 Days
+              <div style="margin-top: 5px">
+                <span style="color:#dddbdb">From:</span>
+                <span>{{DashbordStatus.FromDays}} Days</span>
               </div>
             </div>
             <div fxFlex>
@@ -46,11 +48,11 @@
             <div fxFlex="60%" style="color:white;">
               <div>
                 <span style="color:#dddbdb">Open:</span>
-                <span> 4 PO's</span>
+                <span>{{DashbordStatus.ShipOpen}}</span>
               </div>
-              <div style="margin-top: 11px">
+              <div style="margin-top: 5px">
                 <span style="color:#dddbdb">Week:</span>
-                <span> 2Shipment</span>
+                <span> {{DashbordStatus.ShipWeek}}</span>
               </div>
             </div>
             <div fxFlex>
@@ -73,11 +75,11 @@
             <div fxFlex="60%" style="color:white;">
               <div>
                 <span style="color:#dddbdb">In Transit:</span>
-                <span> 4</span>
+                <span>{{DashbordStatus.InTransit}}</span>
               </div>
-              <div style="margin-top: 11px">
+              <div style="margin-top: 5px">
                 <span style="color:#dddbdb">Received:</span>
-                <span> 1</span>
+                <span>{{DashbordStatus.TransitReceived}}</span>
               </div>
             </div>
             <div fxFlex>
@@ -100,11 +102,11 @@
             <div fxFlex="60%" style="color:white">
               <div>
                 <span style="color:#dddbdb">Due:</span>
-                <span> 8</span>
+                <span> {{DashbordStatus.PaymentDue}}</span>
               </div>
-              <div style="margin-top: 11px">
+              <div style="margin-top: 5px">
                 <span style="color:#dddbdb">Received:</span>
-                <span> 2</span>
+                <span> {{DashbordStatus.PaymentReceived}}</span>
               </div>
             </div>
             <div fxFlex>
@@ -135,7 +137,7 @@
               </div>
             </mat-card-header>
             <mat-card-content>
-              <canvas width="565px " height="130px " baseChart [datasets]="widget5.data.datasets"
+              <canvas *ngIf="showChart" width="565px " height="130px " baseChart [datasets]="widget5.data.datasets"
                 [labels]="widget5.data.labels" [options]="widget5.options">
               </canvas>
             </mat-card-content>
@@ -290,7 +292,7 @@
     <div fxFlex>
       <div style="margin-top: 10px" fxLayout fxLayout.xs="column" fxLayout.sm="column" fxLayoutGap="20px"
         fxLayoutGap.xs="20px">
-        <div fxFlex=80% fxFlex.ls="80">
+        <div fxFlex=74% fxFlex.ls="74">
           <mat-card style="margin-bottom: 20px">
             <mat-card-header>
               <mat-card-title style="margin-left: 10px;margin-top:-5px"><strong>Order Fullfillment Status</strong>
@@ -303,23 +305,15 @@
                   src="assets/images/dashboard/po-download.png">
                 <img class="m-8" style="height: 20px" matTooltip="Purchase Order Look Up" (click)="PurchaseOrder()"
                   src="assets/images/dashboard/po-lookup.png">
-                <img class="m-8" style="height: 20px" matTooltip="Order Acknowledgement" (click)="OrderAcknowledgement()"
-                  src="assets/images/dashboard/order-acknowledgement.png">
-                <img class="m-8" style="height: 20px" matTooltip="Create Advance Shipment Notification" (click)="AdvanceShipment()"
-                  src="assets/images/dashboard/create-asn.png">
+                <img class="m-8" style="height: 20px" matTooltip="Order Acknowledgement"
+                  (click)="OrderAcknowledgement()" src="assets/images/dashboard/order-acknowledgement.png">
+                <img class="m-8" style="height: 20px" matTooltip="Create Advance Shipment Notification"
+                  (click)="AdvanceShipment()" src="assets/images/dashboard/create-asn.png">
                 <img class="m-8" style="height: 20px" matTooltip="Inspection Check"
                   src="assets/images/dashboard/inspection-check.png">
                 <img class="m-8" style="height: 20px" matTooltip="Expediting Event"
                   src="assets/images/dashboard/expediting-event.png">
                 <img class="m-8" style="height: 20px" matTooltip="Export Excel" src="assets/images/dashboard/excel.png">
-
-                <!-- <mat-icon matTooltip="ePurchase Order Download">arrow_downward</mat-icon>
-                <mat-icon matTooltip="Purchase Order Look Up" (click)="PurchaseOrder()">arrow_upward</mat-icon>
-                <mat-icon matTooltip="Order Acknowledgement">check</mat-icon>
-                <mat-icon matTooltip="Create Advance Shipment Notification">notifications</mat-icon>
-                <mat-icon matTooltip="Inspection Check">local_grocery_store</mat-icon>
-                <mat-icon matTooltip="Expediting Event">access_time</mat-icon>
-                <mat-icon matTooltip="Export Excel">insert_drive_file</mat-icon> -->
               </div>
               <div style="text-align: end;margin-top: -40px;background-color: #eaf2ff;">
                 <img class="m-8" style="height: 20px" matTooltip="Invoice Upload"
@@ -327,11 +321,8 @@
                 <img class="m-8" style="height: 20px" matTooltip="DisPute Management"
                   src="assets/images/dashboard/dispute-management.png">
                 <img class="m-8" style="height: 20px" matTooltip="Expand All" src="assets/images/dashboard/resize.png">
-                <!-- <mat-icon matTooltip="Invoice Upload">cloud_upload</mat-icon>
-                <mat-icon matTooltip="DisPute Management">select_all</mat-icon>
-                <mat-icon matTooltip="Expand All">collections_bookmark</mat-icon> -->
               </div>
-              <table style="margin-top: 10px;" mat-table [dataSource]="dataSource" matSort>
+              <table style="margin-top: 10px;" mat-table [dataSource]="POListDataSource" matSort>
 
                 <ng-container matColumnDef="select">
                   <th mat-header-cell *matHeaderCellDef>
@@ -340,16 +331,20 @@
                       [indeterminate]="selection.hasValue() && !isAllSelected()">
                     </mat-checkbox> -->
                   </th>
-                  <td mat-cell *matCellDef="let row">
-                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                  <td mat-cell *matCellDef="let element">
+                    <!-- <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
                       [checked]="selection.isSelected(row)">
-                    </mat-checkbox>
+                    </mat-checkbox> -->
+                    <mat-checkbox (click)="GetPOID(element.PurchaseOrder)"></mat-checkbox>
                   </td>
+                  <!-- <td mat-cell *matCellDef="let element" *ngif="element.Select === 'true'">
+
+                    <mat-checkbox></mat-checkbox> -->
                 </ng-container>
-                <ng-container matColumnDef="PO">
+                <!-- <ng-container matColumnDef="PO">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>PO</th>
                   <td mat-cell *matCellDef="let element">{{element.PO}}</td>
-                </ng-container>
+                </ng-container> -->
 
                 <ng-container matColumnDef="PurchaseOrder">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Purchase Order</th>
@@ -363,7 +358,7 @@
 
                 <ng-container matColumnDef="PODate">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>PO Date</th>
-                  <td mat-cell *matCellDef="let element"> {{element.PODate}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.PODate | date : 'dd-MM-yyyy'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Material">
@@ -377,8 +372,8 @@
                 </ng-container>
 
                 <ng-container matColumnDef="POQuantity">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>POQty</th>
-                  <td mat-cell *matCellDef="let element"> {{element.POQuantity}} </td>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>PO Qty</th>
+                  <td style="text-align: right;" mat-cell *matCellDef="let element"> {{element.POQuantity}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="OrderUnit">
@@ -388,12 +383,19 @@
 
                 <ng-container matColumnDef="QAStatus">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>QA Status </th>
-                  <td mat-cell *matCellDef="let element"> {{element.QAStatus}} </td>
+                  <td mat-cell *matCellDef="let element">
+                    <span
+                      [ngClass]="{'statusNotDone': element.QAStatus == 'New' || element.QAStatus == 'Open','statusDone':element.QAStatus == 'Closed'}"></span>
+                  </td>
+                  <!-- {{element.QAStatus}} -->
                 </ng-container>
 
                 <ng-container matColumnDef="ASNStatus">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>ASN Status </th>
-                  <td mat-cell *matCellDef="let element"> {{element.ASNStatus}} </td>
+                  <td mat-cell *matCellDef="let element">
+                    <span
+                      [ngClass]="{'statusDone': element.ASNStatus == 'ASNCompleted' || element.ASNStatus == 'FrightCompleted','statusNotDone':element.ASNStatus == 'Cancelled','statusPartiallyDone':element.ASNStatus == 'Draft'}"></span>
+                  </td>
                 </ng-container>
                 <ng-container matColumnDef="Attechment">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -414,34 +416,35 @@
               </ng-container> -->
 
 
-                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
+                  *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
               </table>
             </mat-card-content>
           </mat-card>
         </div>
-        <div fxFlex=30% fxFlex.ls="30">
+        <div fxFlex=26% fxFlex.ls="26">
           <div>
             <mat-card>
-              <mat-card-header>
-                <mat-card-title style="margin-left: 10px;margin-top:-5px"><strong>My Notifications</strong>
+              <mat-card-header style="margin-top: -10px;margin-left:-10px">
+                <mat-card-title ><strong>My Notifications</strong>
                 </mat-card-title>
               </mat-card-header>
-              <mat-divider></mat-divider>
+              <mat-divider style="margin-top: -10px;"></mat-divider>
               <div>
                 <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
                   <div>
                     <div class="pt-8 pr-8" fxLayoutAlign="end start">
-                      Total Po Document - 243
+                      Total Po Document - {{PONotifications.TotalPODocument}}
                     </div>
                     <div class="pt-8 pr-8" fxLayoutAlign="end start">
-                      Open Po Document - 83
+                      Open Po Document - {{PONotifications.OpenPODocument}}
                     </div>
                     <div class="pt-8 pr-8" fxLayoutAlign="end start">
-                      In Transit - 20
+                      In Transit - {{PONotifications.InTransit}}
                     </div>
                     <div class="pt-8 pr-8" fxLayoutAlign="end start">
-                      ASN Pending - 45
+                      ASN Pending - {{PONotifications.ASNPending}}
                     </div>
                   </div>
                 </div>
@@ -450,24 +453,24 @@
           </div>
           <div style="margin-top: 15px">
             <mat-card style="margin-top: -5px;margin-bottom: 20px">
-              <mat-card-header>
-                <mat-card-title style="margin-left: 10px;margin-top:-5px"><strong>My Previous Requests</strong>
+              <mat-card-header style="margin-top: -10px;margin-left:-10px">
+                <mat-card-title><strong>My Previous Requests</strong>
                 </mat-card-title>
               </mat-card-header>
-              <mat-divider></mat-divider>
-              <div>
+              <mat-divider style="margin-top: -10px;"></mat-divider>
+              <div style="margin-top: -15px;">
                 <mat-form-field style="width: 80%;margin-left: -10px">
                   <!-- <mat-label style="color: hsl(220, 76%, 45%)">Select</mat-label> -->
-                  <mat-select style="height: 25px" [(value)]="selected1">
+                  <mat-select [(value)]="selected1">
                     <mat-option value="option1">Advance Shipment Notification Requests</mat-option>
                     <mat-option value="option2">Joint Measurement Sheet Requests</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div>
-                <mat-form-field style="width: 80px;margin-left: -10px;margin-top: -20px">
-                  <mat-label style="color: #1b56ca">Select</mat-label>
-                  <mat-select style="height: 25px">
+              <div style="margin-top: -7px;">
+                <mat-form-field style="width: 95px;margin-left: -10px;margin-top: -20px">
+                  <!-- <mat-label style="color: #1b56ca">Select</mat-label> -->
+                  <mat-select [(value)]="selected2">
                     <!-- <mat-option>None</mat-option> -->
                     <mat-option value="option1">Drafted</mat-option>
                     <mat-option value="option2">Previous</mat-option>
@@ -477,7 +480,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <table style="margin-top: 10px" mat-table [dataSource]="dataSource1" matSort>
+              <table style="margin-left: -10px;" mat-table [dataSource]="dataSource1" matSort>
                 <ng-container matColumnDef="DraftID">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>DraftID</th>
                   <td mat-cell *matCellDef="let element"> {{element.DraftID}} </td>
@@ -497,13 +500,13 @@
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount</th>
                   <td mat-cell *matCellDef="let element"> {{element.Amount}} </td>
                 </ng-container>
-                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
+                  *matHeaderRowDef="displayedColumns1"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns1"></tr>
               </table>
             </mat-card>
           </div>
         </div>
-
       </div>
     </div>
 
