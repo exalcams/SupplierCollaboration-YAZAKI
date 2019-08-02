@@ -15,10 +15,10 @@ export class ASN {
     GargoDescription: string;
     MaterialDescription: string;
     Remarks: string;
-    ShipFrom: string;
+    // ShipFrom: string;
     Vendor: string;
-    Item: string;
-    Name: string;
+    Name1: string;
+    Name2: string;
     Street: string;
     City: string;
     PINCode: number;
@@ -37,12 +37,17 @@ export class ASNItem {
     Item: string;
     MaterialDescription: string;
     OrderedQuantity: number;
-    UnitOfMeasure: string;
+    UOM: string;
+    ApprovedQuantity: number;
+    InProcessQuantity: number;
+    OfferedQuantity: number;
+    PackageID: string;
     BatchNumber: string;
-    Plant: string;
-    Vendor: string;
-    Currency: string;
-    Details: string;
+    Remarks: string;
+    // Plant: string;
+    // Vendor: string;
+    // Currency: string;
+    // Details: string;
     Number: string;
     ItemDate: Date;
     DepatureDate?: Date;
@@ -63,9 +68,11 @@ export class ASNPackageDetail {
     PackageType: string;
     ReferenceNumber: string;
     Dimension: string;
-    GrossWeight: string;
+    GrossWeight: number;
     Volume: string;
-    VolumeUnitOfMeasure: string;
+    NetWeight: number;
+    VolumeUOM: string;
+    GrossWeightUOM: string;
     CreatedOn: Date;
     CreatedBy: string;
     ModifiedOn?: Date;
@@ -75,8 +82,8 @@ export class ASNPackageDetail {
 
 export class VendorLocation {
     Vendor: string;
-    Item: string;
-    Name: string;
+    Name1: string;
+    Name2: string;
     Street: string;
     City: string;
     PINCode: number;
@@ -89,10 +96,23 @@ export class VendorLocation {
     IsActive: boolean;
 }
 
-export class ASNHeaderView{
+export class ASNHeaderView {
     TransID: number;
     ASN_Header_PO: string;
     Status: string;
     NoOfPackages: number;
     NotificationDate: Date;
+}
+
+export class Auxiliary {
+    APPID: number;
+    APPNumber: number;
+    AttachmentNumber: number;
+    AttachmentName: string;
+    DocumentType: string;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+    IsActive: boolean;
 }
