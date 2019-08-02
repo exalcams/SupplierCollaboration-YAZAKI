@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { ASN, VendorLocation, ASNHeaderView, Auxiliary } from 'app/models/asn';
+import { ASN, VendorLocation, ASNHeaderView, Auxiliary, POView } from 'app/models/asn';
 
 @Injectable({
     providedIn: 'root'
@@ -64,6 +64,18 @@ export class ASNService {
     }
     GetAllASNHeaderViews(): Observable<ASNHeaderView[] | string> {
         return this._httpClient.get<ASNHeaderView[]>(`${this.baseAddress}api/ASN/GetAllASNHeaderViews`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetAllPOByAcknowledgementStatus(Status: string): Observable<POView[] | string> {
+        return this._httpClient.get<POView[]>(`${this.baseAddress}api/ASN/GetAllPOByAcknowledgementStatus?Status=${Status}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetAcknowledgedPOByPO(PO: string, Item: string): Observable<POView | string> {
+        return this._httpClient.get<POView>(`${this.baseAddress}api/ASN/GetAcknowledgedPOByPO?PO=${PO}&Item=${Item}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetASNByPO(PO: string, Item: string): Observable<ASN | string> {
+        return this._httpClient.get<ASN>(`${this.baseAddress}api/ASN/GetASNByPO?PO=${PO}&Item=${Item}`)
             .pipe(catchError(this.errorHandler));
     }
     GetASNByTransID(TransID: number): Observable<ASN | string> {

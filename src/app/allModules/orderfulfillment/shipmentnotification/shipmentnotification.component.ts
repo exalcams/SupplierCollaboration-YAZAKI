@@ -4,7 +4,7 @@ import { MatTableDataSource, MatSort, MatDialogConfig, MatDialog, MatSnackBar, M
 import { SelectionModel } from '@angular/cdk/collections';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
-import { VendorLocation, ASN, ASNHeaderView, ASNItem, ASNPackageDetail, Auxiliary } from 'app/models/asn';
+import { VendorLocation, ASN, ASNHeaderView, ASNItem, ASNPackageDetail, Auxiliary, POView } from 'app/models/asn';
 import { ASNService } from 'app/services/asn.service';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
@@ -13,6 +13,7 @@ import { FileUploader } from 'ng2-file-upload';
 import { BehaviorSubject } from 'rxjs';
 import { isNumber } from 'util';
 import { isNumeric } from 'rxjs/util/isNumeric';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -28,11 +29,15 @@ export class ShipmentnotificationComponent implements OnInit {
     VendorLocationList: VendorLocation[];
     notificationSnackBarComponent: NotificationSnackBarComponent;
     AllASNHeaderViews: ASNHeaderView[] = [];
-    SelectedTransID: number;
+    AllAcknowledgedPOViews: POView[] = [];
+    // SelectedTransID: number;
+    SelectedPO: string;
+    SelectedPOItem: string;
     fileToUpload: File;
     fileToUploadList: File[] = [];
     AttachmentDetailsList: AttachmentDetails[] = [];
     fileUploader: FileUploader;
+    PO_ID: string;
     ASNItemColumns: string[] = [
         'Select',
         'Item',
@@ -65,10 +70,15 @@ export class ShipmentnotificationComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private _asnService: ASNService,
         public snackBar: MatSnackBar,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private route: ActivatedRoute
     ) {
         this.ASNClass = new ASN();
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+        this.route.queryParams.subscribe(params => {
+            this.SelectedPO = params['id'];
+            this.SelectedPOItem = params['item'];
+        });
     }
 
     ngOnInit(): void {
@@ -112,7 +122,8 @@ export class ShipmentnotificationComponent implements OnInit {
         // this.AttachmentDataSource.sort = this.sort;
         this.selection = new SelectionModel(true, []);
         this.getAllVendorLocations();
-        this.GetAllASNHeaderViews();
+        // this.GetAllASNHeaderViews();
+        this.GetAllAcknowledgedPOViews();
         // this.isAllSelected();
         // this.masterToggle();
         // this.checkboxLabel();
@@ -172,7 +183,10 @@ export class ShipmentnotificationComponent implements OnInit {
         });
         this.ResetASNPackageDetails();
         this.ResetAttachements();
-        this.SelectedTransID = 0;
+    }
+    ResetSelectedPO(): void {
+        this.SelectedPO = '';
+        this.SelectedPOItem = '';
     }
     ClearFormArray = (formArray: FormArray) => {
         while (formArray.length !== 0) {
@@ -259,6 +273,22 @@ export class ShipmentnotificationComponent implements OnInit {
         this._asnService.GetAllASNHeaderViews().subscribe(
             (data) => {
                 this.AllASNHeaderViews = data as ASNHeaderView[];
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetAllAcknowledgedPOViews(): void {
+        const AcknowledgementStatus = 'closed';
+        this._asnService.GetAllPOByAcknowledgementStatus(AcknowledgementStatus).subscribe(
+            (data) => {
+                this.AllAcknowledgedPOViews = data as POView[];
+                if (this.SelectedPO && this.SelectedPOItem) {
+                    const s = this.AllAcknowledgedPOViews.filter(x => x.PO === this.SelectedPO && x.Item === this.SelectedPOItem)[0];
+                    this.headerClick(s);
+                }
             },
             (err) => {
                 console.error(err);
@@ -384,8 +414,10 @@ export class ShipmentnotificationComponent implements OnInit {
                                     this._asnService.AddASNAttachment(aux, this.fileToUploadList).subscribe(
                                         (dat) => {
                                             this.ResetControl();
+                                            this.ResetSelectedPO();
                                             this.notificationSnackBarComponent.openSnackBar('ASN details updated successfully', SnackBarStatus.success);
-                                            this.GetAllASNHeaderViews();
+                                            // this.GetAllASNHeaderViews();
+                                            this.GetAllAcknowledgedPOViews();
                                         },
                                         (err) => {
                                             console.error(err);
@@ -425,8 +457,10 @@ export class ShipmentnotificationComponent implements OnInit {
                                     this._asnService.AddASNAttachment(aux, this.fileToUploadList).subscribe(
                                         (dat) => {
                                             this.ResetControl();
+                                            this.ResetSelectedPO();
                                             this.notificationSnackBarComponent.openSnackBar('ASN details created successfully', SnackBarStatus.success);
-                                            this.GetAllASNHeaderViews();
+                                            // this.GetAllASNHeaderViews();
+                                            this.GetAllAcknowledgedPOViews();
                                         },
                                         (err) => {
                                             console.error(err);
@@ -452,9 +486,25 @@ export class ShipmentnotificationComponent implements OnInit {
             });
         }
     }
-    headerClick(TransID: number): void {
-        this.SelectedTransID = TransID;
-        this.GetASNByTransID(TransID);
+    headerClick(SelectPOView: POView): void {
+        this.SelectedPO = SelectPOView.PO;
+        this.SelectedPOItem = SelectPOView.Item;
+        if (SelectPOView.ASNStatus.toLowerCase() === 'open') {
+            this.ResetControl();
+            this.ASNClass.ASN_Header_PO = this.SelectedPO;
+            this.ASNFormGroup.get('ASN_Header_PO').patchValue(this.ASNClass.ASN_Header_PO);
+            this.ASNClass.ASNItems = [];
+            const ASNIte = new ASNItem();
+            ASNIte.Item = this.SelectedPOItem;
+            ASNIte.MaterialDescription = SelectPOView.MaterialDescription;
+            ASNIte.OrderedQuantity = SelectPOView.OrderedQuantity;
+            ASNIte.UOM = SelectPOView.UnitOfMeasure;
+            this.ASNClass.ASNItems.push(ASNIte);
+            this.ASNItemDataSource = new MatTableDataSource(this.ASNClass.ASNItems);
+
+        } else {
+            this.GetASNByPO(this.SelectedPO, this.SelectedPOItem);
+        }
     }
     InsertASNHeaderValues(): void {
         this.ASNFormGroup.get('ASN_Header_PO').patchValue(this.ASNClass.ASN_Header_PO);
@@ -514,6 +564,36 @@ export class ShipmentnotificationComponent implements OnInit {
     }
     GetASNByTransID(TransID): void {
         this._asnService.GetASNByTransID(TransID).subscribe(
+            (data) => {
+                if (data) {
+                    this.ASNClass = data as ASN;
+                    this.InsertASNHeaderValues();
+                    if (this.ASNClass.ASNItems && this.ASNClass.ASNItems.length) {
+                        this.ASNItemDataSource = new MatTableDataSource(this.ASNClass.ASNItems);
+                        this.InsertASNItemsFormGroup();
+                    }
+                    if (this.ASNClass.ASNPackageDetails && this.ASNClass.ASNPackageDetails.length) {
+                        this.ClearFormArray(this.rows);
+                        this.ASNClass.ASNPackageDetails.forEach((x, i) => {
+                            if (i < this.ASNClass.NoOfPackages) {
+                                this.InsertASNPackageDetailsFormGroup(x);
+                            }
+                        });
+                    } else {
+                        this.ResetASNPackageDetails();
+                    }
+
+                }
+
+            },
+            (err) => {
+                console.log(err);
+            }
+        );
+    }
+
+    GetASNByPO(PO: string, Item: string): void {
+        this._asnService.GetASNByPO(PO, Item).subscribe(
             (data) => {
                 if (data) {
                     this.ASNClass = data as ASN;

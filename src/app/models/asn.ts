@@ -96,6 +96,17 @@ export class VendorLocation {
     IsActive: boolean;
 }
 
+export class POView {
+    PO: string;
+    PODate: Date;
+    Item: string;
+    OrderedQuantity: number;
+    UnitOfMeasure: string;
+    Material: string;
+    MaterialDescription: string;
+    AcknowledgementStatus: string;
+    ASNStatus: string;
+}
 export class ASNHeaderView {
     TransID: number;
     ASN_Header_PO: string;
