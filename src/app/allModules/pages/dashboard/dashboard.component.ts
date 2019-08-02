@@ -34,7 +34,8 @@ export class DashboardComponent implements OnInit {
   DashbordStatus: DashboardStatus = new DashboardStatus();
   PODeliveryStatus: PO_DeliveryStatus = new PO_DeliveryStatus();
   selected1 = 'option1';
-  selected2='option1';
+  selected2 = 'option1';
+  iconVisible = false;
   // private LinItemList: LineItems[];
   public OrderList: Orders[];
   // displayedColumns: string[] = ['Description', 'Quantity', 'Rate'];
@@ -155,13 +156,16 @@ export class DashboardComponent implements OnInit {
     this._router.navigate(['/dashboard/purchaseOrderDetails'], { queryParams: { id: id } });
   }
   OrderAcknowledgement() {
-    this._router.navigate(['/orderacknowledgment/acknowledgment']);
+    let id;
+    id = this.POID;
+    this._router.navigate(['/orderacknowledgment/acknowledgment'], { queryParams: { id: id } });
   }
   AdvanceShipment() {
     this._router.navigate(['/order/shipment']);
   }
   GetPOID(PoId: any): void {
     this.POID = PoId;
+    this.iconVisible = true;
   }
   GetAllPOList(): void {
     this.dashboardService.GetAllPoList().subscribe((data) => {
