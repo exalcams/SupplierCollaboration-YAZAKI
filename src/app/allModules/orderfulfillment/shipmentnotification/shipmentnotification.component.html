@@ -146,15 +146,15 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div *ngFor="let asn of AllASNHeaderViews" (click)="headerClick(asn.TransID)" class="borderRightSide"
-            [class.highLight]="asn.TransID===SelectedTransID">
+          <div *ngFor="let poV of AllAcknowledgedPOViews" (click)="headerClick(poV)" class="borderRightSide"
+            [class.highLight]="poV.PO===SelectedPO && poV.Item===SelectedPOItem">
             <div style="margin-top: 5px;" class="round1">
             </div>
             <div>
-              <span style="font-size: 18px">{{asn.ASN_Header_PO}}</span>
+              <span style="font-size: 18px">{{poV.PO}}</span>
             </div>
             <div style="font-size: 11px;margin-bottom: 5px">
-              <span style="margin-right: 10px">{{asn.NotificationDate | date : 'dd-MM-yyyy hh:mm:ss a'}}</span>
+              <span style="margin-right: 10px">{{poV.PODate | date : 'dd-MM-yyyy hh:mm:ss a'}}</span>
             </div>
           </div>
           <!-- <div style="margin-top: 25px;">

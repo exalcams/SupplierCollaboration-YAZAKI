@@ -30,6 +30,7 @@ export class DashboardComponent implements OnInit {
   notificationSnackBarComponent: NotificationSnackBarComponent;
   public isVisible: boolean;
   POID: any;
+  SelectedPOItem: string;
   PONotifications: PO_Notifications = new PO_Notifications();
   DashbordStatus: DashboardStatus = new DashboardStatus();
   PODeliveryStatus: PO_DeliveryStatus = new PO_DeliveryStatus();
@@ -161,10 +162,12 @@ export class DashboardComponent implements OnInit {
     this._router.navigate(['/orderacknowledgment/acknowledgment'], { queryParams: { id: id } });
   }
   AdvanceShipment() {
-    this._router.navigate(['/order/shipment']);
+    const id = this.POID;
+    this._router.navigate(['/order/shipment'], { queryParams: { id: id, item: this.SelectedPOItem } });
   }
-  GetPOID(PoId: any): void {
-    this.POID = PoId;
+  GetPOID(Po: POList): void {
+    this.POID = Po.PurchaseOrder;
+    this.SelectedPOItem = Po.Item;
     this.iconVisible = true;
   }
   GetAllPOList(): void {
