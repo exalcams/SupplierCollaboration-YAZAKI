@@ -122,6 +122,7 @@ table {
   margin-right: 20px;
   margin-left: -24px;
   padding: 5px;
+  padding-left: 10px;
 }
 
 // .mat-form-field-appearance-outline {
@@ -182,4 +183,7 @@ table {
   border-bottom: 1px solid #4a77fb;
   border-top: 1px solid #4a77fb;
   border-left: 5px solid #4a77fb;
+}
+::ng-deep table .mat-form-field-underline {
+  display: none;
 }
