@@ -202,6 +202,7 @@ export class ShipmentnotificationComponent implements OnInit {
     ResetAttachements(): void {
         this.AttachmentDetailsList = [];
         this.AttachmentDataSource = new MatTableDataSource(this.AttachmentDetailsList);
+        this.fileToUploadList = [];
     }
     // NoOfPackagesChanged(value: any): void {
     //     if (isNumeric(value)) {
@@ -230,10 +231,15 @@ export class ShipmentnotificationComponent implements OnInit {
                 this.rows.removeAt(i);
                 this.ASNPackageDetailsDataSource.next(this.rows.controls);
             }
-        } else {
-            for (let i = 0; i < NoOfPac - r; i++) {
-                this.addASNPackageDetailsFormGroup();
-            }
+        }
+        else if (NoOfPac - r === 0) {
+            this.notificationSnackBarComponent.openSnackBar('no more packages to add', SnackBarStatus.warning);
+        }
+        else {
+            // for (let i = 0; i < NoOfPac - r; i++) {
+            //     this.addASNPackageDetailsFormGroup();
+            // }
+            this.addASNPackageDetailsFormGroup();
         }
 
     }
@@ -597,6 +603,7 @@ export class ShipmentnotificationComponent implements OnInit {
             (data) => {
                 if (data) {
                     this.ASNClass = data as ASN;
+                    this.GetAttachmentViewsByAppID(1, this.ASNClass.TransID);
                     this.InsertASNHeaderValues();
                     if (this.ASNClass.ASNItems && this.ASNClass.ASNItems.length) {
                         this.ASNItemDataSource = new MatTableDataSource(this.ASNClass.ASNItems);
@@ -621,7 +628,24 @@ export class ShipmentnotificationComponent implements OnInit {
             }
         );
     }
+    GetAttachmentViewsByAppID(APPID: number, APPNumber: number): void {
+        this._asnService.GetAttachmentViewsByAppID(APPID, APPNumber).subscribe(
+            (data) => {
+                this.AttachmentDetailsList = data as AttachmentDetails[];
+                this.AttachmentDataSource = new MatTableDataSource(this.AttachmentDetailsList);
+                if (this.AttachmentDetailsList && this.AttachmentDetailsList.length) {
+                    this.AttachmentDetailsList.forEach(f => {
+                        this.fileToUpload = new File([''], f.AttachmentName, { type: f.DocumentType });
+                        this.fileToUploadList.push(this.fileToUpload);
+                    });
+                }
 
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
 
     handleFileInput(evt): void {
         if (evt.target.files && evt.target.files.length > 0) {

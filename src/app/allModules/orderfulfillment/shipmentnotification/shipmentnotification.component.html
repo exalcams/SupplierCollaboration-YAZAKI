@@ -217,8 +217,7 @@
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field style="max-width: 60px;" appearance="outline">
-                      <input matInput formControlName="NoOfPackages"
-                        type="number">
+                      <input matInput formControlName="NoOfPackages" type="number">
                       <mat-error
                         *ngIf="ASNFormGroup.get('NoOfPackages').touched && ASNFormGroup.get('NoOfPackages').hasError('required')">
                         No Of Packages is required
@@ -306,14 +305,16 @@
                     <span style="font-size: 13px;">Cargo Type</span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
-                    <select class="dropdownstyle" formControlName="GargoType">
-                      <option value="HARDOU">HARDOU</option>
-                      <option value="Year">Year</option>
-                    </select>
-                    <mat-error
-                      *ngIf="ASNFormGroup.get('GargoType').touched && ASNFormGroup.get('GargoType').hasError('required')">
-                      Gargo Type is required
-                    </mat-error>
+                    <mat-form-field style="width: 203px" appearance="outline">
+                      <mat-select class="dropdownstyle1" formControlName="GargoType">
+                        <mat-option value="HARDOU">HARDOU</mat-option>
+                        <mat-option value="Year">Year</mat-option>
+                      </mat-select>
+                      <mat-error
+                        *ngIf="ASNFormGroup.get('GargoType').touched && ASNFormGroup.get('GargoType').hasError('required')">
+                        Gargo Type is required
+                      </mat-error>
+                    </mat-form-field>
                   </div>
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
