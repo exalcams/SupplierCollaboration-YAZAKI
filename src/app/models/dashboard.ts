@@ -1,13 +1,13 @@
-export class POList {
+export class POView {
 
-    PurchaseOrder: string;
+    PO: string;
     Item: string;
     PODate: Date;
     Material: string;
-    Description: string;
-    POQuantity: number;
-    OrderUnit: string;
-    QAStatus: string;
+    MaterialDescription: string;
+    OrderedQuantity: number;
+    UnitOfMeasure: string;
+    AcknowledgementStatus: string;
     ASNStatus: string;
     Attechment: string;
     Select: boolean;

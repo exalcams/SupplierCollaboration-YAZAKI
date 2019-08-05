@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
-import { POList, PO_Notifications, DashboardStatus, PO_DeliveryStatus, PO_PurchaseOrderDetails } from 'app/models/dashboard';
+import { PO_Notifications, DashboardStatus, PO_DeliveryStatus, PO_PurchaseOrderDetails, POView } from 'app/models/dashboard';
 import { catchError } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
@@ -22,8 +22,8 @@ export class DashboardService {
     this.baseAddress = _authService.baseAddress;
   }
 
-  GetAllPoList(): Observable<POList[] | string> {
-    return this._httpClient.get<POList[]>(`${this.baseAddress}api/DashBoardController/GetPoList`).pipe(catchError(this.errorHandler));
+  GetAllPoList(): Observable<POView[] | string> {
+    return this._httpClient.get<POView[]>(`${this.baseAddress}api/DashBoardController/GetPoList`).pipe(catchError(this.errorHandler));
   }
   GetAllPONotifications(): Observable<PO_Notifications | string> {
     return this._httpClient.get<PO_Notifications>(`${this.baseAddress}api/DashBoardController/GetAllPONotifications`).pipe(catchError(this.errorHandler));
