@@ -348,7 +348,7 @@
 
                 <ng-container matColumnDef="PurchaseOrder">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Purchase Order</th>
-                  <td mat-cell *matCellDef="let element"> {{element.PurchaseOrder}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.PO}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Item">
@@ -368,24 +368,24 @@
 
                 <ng-container matColumnDef="Description">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-                  <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.MaterialDescription}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="POQuantity">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>PO Qty</th>
-                  <td style="text-align: right;" mat-cell *matCellDef="let element"> {{element.POQuantity}} </td>
+                  <td style="text-align: right;" mat-cell *matCellDef="let element"> {{element.OrderedQuantity}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="OrderUnit">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Order Unit </th>
-                  <td mat-cell *matCellDef="let element"> {{element.OrderUnit}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.UnitOfMeasure}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="QAStatus">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>QA Status </th>
                   <td mat-cell *matCellDef="let element">
                     <span
-                      [ngClass]="{'statusNotDone': element.QAStatus == 'New' || element.QAStatus == 'Open','statusDone':element.QAStatus == 'Closed'}"></span>
+                      [ngClass]="{'statusNotDone': element.AcknowledgementStatus == 'New' || element.AcknowledgementStatus == 'Open','statusDone':element.AcknowledgementStatus == 'Closed'}"></span>
                   </td>
                   <!-- {{element.QAStatus}} -->
                 </ng-container>

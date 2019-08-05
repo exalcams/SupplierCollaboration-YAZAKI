@@ -8,7 +8,7 @@ import { AuthenticationDetails } from 'app/models/master';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { DashboardService } from 'app/services/dashboard.service';
-import { POList, PO_Notifications, DashboardStatus, PO_DeliveryStatus, PO_PurchaseOrderDetails } from 'app/models/dashboard';
+import { PO_Notifications, DashboardStatus, PO_DeliveryStatus, PO_PurchaseOrderDetails, POView } from 'app/models/dashboard';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,11 +20,11 @@ export class DashboardComponent implements OnInit {
   BGClassName: any;
   displayedColumns: string[] = ['select', 'PurchaseOrder', 'Item', 'PODate', 'Material', 'Description', 'POQuantity', 'OrderUnit', 'QAStatus', 'ASNStatus', 'Attechment'];
   displayedColumns1: string[] = ['DraftID', 'ServiceEnterSheetID', 'PurchaseOrder', 'Amount'];
-  AllPOList: POList[] = [];
-  POListDataSource: MatTableDataSource<POList>;
+  AllPOList: POView[] = [];
+  POListDataSource: MatTableDataSource<POView>;
   IsAllPOListCompleted: boolean;
   dataSource1: MatTableDataSource<PreviousRequests>;
-  selection: SelectionModel<POList>;
+  selection: SelectionModel<POView>;
   authenticationDetails: AuthenticationDetails;
   MenuItems: string[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -165,15 +165,15 @@ export class DashboardComponent implements OnInit {
     const id = this.POID;
     this._router.navigate(['/order/shipment'], { queryParams: { id: id, item: this.SelectedPOItem } });
   }
-  GetPOID(Po: POList): void {
-    this.POID = Po.PurchaseOrder;
+  GetPOID(Po: POView): void {
+    this.POID = Po.PO;
     this.SelectedPOItem = Po.Item;
     this.iconVisible = true;
   }
   GetAllPOList(): void {
     this.dashboardService.GetAllPoList().subscribe((data) => {
       if (data) {
-        this.AllPOList = <POList[]>data;
+        this.AllPOList = <POView[]>data;
         this.POListDataSource = new MatTableDataSource(this.AllPOList);
         this.POListDataSource.sort = this.sort;
       }
