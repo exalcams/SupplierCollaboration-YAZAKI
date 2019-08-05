@@ -5,6 +5,7 @@ import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { ASN, VendorLocation, ASNHeaderView, Auxiliary, POView } from 'app/models/asn';
+import { AttachmentDetails } from 'app/allModules/orderacknowledgment/orderacknowledgment/orderacknowledgment.component';
 
 @Injectable({
     providedIn: 'root'
@@ -82,7 +83,10 @@ export class ASNService {
         return this._httpClient.get<ASN>(`${this.baseAddress}api/ASN/GetASNByTransID?TransID=${TransID}`)
             .pipe(catchError(this.errorHandler));
     }
-
+    GetAttachmentViewsByAppID(APPID: number, APPNumber: number): Observable<AttachmentDetails[] | string> {
+        return this._httpClient.get<AttachmentDetails[]>(`${this.baseAddress}api/ASN/GetAttachmentViewsByAppID?APPID=${APPID}&APPNumber=${APPNumber}`)
+            .pipe(catchError(this.errorHandler));
+    }
     GetAllVendorLocations(): Observable<VendorLocation[] | string> {
         return this._httpClient.get<VendorLocation[]>(`${this.baseAddress}api/ASN/GetAllVendorLocations`)
             .pipe(catchError(this.errorHandler));
