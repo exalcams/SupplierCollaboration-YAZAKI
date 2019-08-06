@@ -175,15 +175,24 @@
         <div class="borderRight1"></div>
         <div fxFlex="85" style="margin: 50px 0px 0px 20px">
           <mat-card-content>
-            <div>
+            <form (ngSubmit)="onSubmit()" [formGroup]="gateEntryForm">
               <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px" style="margin-bottom: 10px">
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                   <span style="font-size: 13px;">Register Type</span>
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-radio-group>
-                    <mat-radio-button value="1">Inward</mat-radio-button>
-                    <mat-radio-button value="2">Outward</mat-radio-button>
+                  <mat-radio-group (change)="registerTypeChanged($event)" formControlName="registerType">
+                    <mat-radio-button value="Inward">Inward</mat-radio-button>
+                    <mat-radio-button value="Outward">Outward</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
+                  <!-- <span style="font-size: 13px;">Register Type</span> -->
+                </div>
+                <div fxFlex="35" fxLayoutAlign="start center">
+                  <mat-radio-group (change)="orderTypeChanged($event)" *ngIf="showOrderType" formControlName="orderType">
+                    <mat-radio-button value="ASN">ASN</mat-radio-button>
+                    <mat-radio-button value="PO">PO</mat-radio-button>
                   </mat-radio-group>
                 </div>
               </div>
@@ -192,72 +201,13 @@
                   <span style="font-size: 13px;">Reference</span>
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
-                  <select class="dropdownstyle">
-                    <option value="Select process">Select process</option>
-                    <option value="Receipt - with PO">Receipt - with PO</option>
-                    <option value="Receipt - without PO">Receipt - without PO</option>
-                    <option value="Receipt - with contractor items">Receipt - with contractor items</option>
-                  </select>
-                </div>
-
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px;text-align: right">Vendor/Visitor</span>
-                </div>
-                <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-form-field appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px;">Challan No./Doc. Ref. No</span>
-                </div>
-                <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-form-field appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
-                </div>
-
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px;text-align: right">Challan Date/Doc. Ref. Dt</span>
-                </div>
-                <div fxFlex="12" fxLayoutAlign="start center">
-                  <mat-form-field appearance="outline" class="field-width">
-                    <input matInput [matDatepicker]="picker">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px;">Gate In</span>
-                </div>
-                <div fxFlex="35" fxLayoutAlign="start center">
-                  <select class="dropdownstyle">
-                    <option value="HARDOU">Gate 1</option>
-                    <option value="Year">Gate 2</option>
-                  </select>
-                </div>
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px;text-align: right">Gate-in Date</span>
-                </div>
-                <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-form-field appearance="outline" class="field-width">
-                    <input matInput [matDatepicker]="picker1">
-                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                    <mat-datepicker #picker1></mat-datepicker>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px;">Gate</span>
-                </div>
-                <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-form-field appearance="outline">
-                    <input matInput>
+                  <mat-form-field appearance="outline" style="width: 204px">
+                    <mat-select (selectionChange)="ChangeReference($event.value)" formControlName="referenceType">
+                      <mat-option *ngFor="let option of referenceOptions; let i = index" [value]="option">
+                        {{option}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="gateEntryForm.get('referenceType').dirty && gateEntryForm.get('referenceType').touched && gateEntryForm.get('referenceType').errors?.validReference">First Name is required!</mat-error>
                   </mat-form-field>
                 </div>
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
@@ -265,58 +215,84 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput>
+                    <input matInput formControlName="plant">
                   </mat-form-field>
                 </div>
               </div>
+
               <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px;">Gate Exit</span>
+                  <span style="font-size: 13px;text-align: right">Vendor/Visitor</span>
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
-                  <select class="dropdownstyle">
-                    <option value="HARDOU">Gate 1</option>
-                    <option value="Year">Gate 2</option>
-                  </select>
-                </div>
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px;text-align: right">Gate-exit Date</span>
-                </div>
-                <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-form-field appearance="outline" class="field-width">
-                    <input matInput [matDatepicker]="picker2">
-                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                    <mat-datepicker #picker2></mat-datepicker>
+                  <mat-form-field appearance="outline">
+                    <input matInput formControlName="vendor">
                   </mat-form-field>
                 </div>
-              </div>
-              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                   <span style="font-size: 13px;">Mode Of Transport</span>
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
-                  <select class="dropdownstyle">
-                    <option value="HARDOU">Truck</option>
-                    <option value="Year">Courier</option>
-                  </select>
+                  <mat-form-field appearance="outline" style="width: 204px">
+                    <mat-select formControlName="transportType">
+                      <mat-option value="Truck">Truck</mat-option>
+                      <mat-option value="Courier">Courier</mat-option>
+                      <mat-option value="By Hand">By Hand</mat-option>
+                    </mat-select>
+                  </mat-form-field>
                 </div>
+              </div>
 
+              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
+                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
+                  <span style="font-size: 13px;">Challan No./Doc. Ref. No</span>
+                </div>
+                <div fxFlex="35" fxLayoutAlign="start center">
+                  <mat-form-field appearance="outline">
+                    <input matInput formControlName="challanRefNo">
+                  </mat-form-field>
+                </div>
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                   <span style="font-size: 13px;text-align: right">Driver Name/Contact</span>
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput>
+                    <input matInput formControlName="driverName">
                   </mat-form-field>
                 </div>
               </div>
+
               <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
+                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
+                  <span style="font-size: 13px;text-align: right">Challan Date/Doc. Ref. Dt</span>
+                </div>
+                <div fxFlex="35" fxLayoutAlign="start center">
+                  <mat-form-field appearance="outline" class="field-width">
+                    <input matInput [matDatepicker]="picker" formControlName="challanRefDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                   <span style="font-size: 13px;">DL No.</span>
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput>
+                    <input matInput formControlName="drivingLicense">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
+                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
+                  <span style="font-size: 13px;">Gate-In</span>
+                </div>
+                <div fxFlex="35" fxLayoutAlign="start center">
+                  <mat-form-field appearance="outline" style="width:204px">
+                    <mat-select formControlName="gateIn">
+                      <mat-option value="Gate 1">Gate 1</mat-option>
+                      <mat-option value="Gate 2">Gate 2</mat-option>
+                    </mat-select>
                   </mat-form-field>
                 </div>
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
@@ -324,22 +300,84 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput>
+                    <input matInput formControlName="vehicleNo">
                   </mat-form-field>
                 </div>
               </div>
-            </div>
-            <div>
-              <div style="margin-top: 15px;margin-bottom: 15px">
-                <strong class="sub-Title">Item Details</strong>
+
+              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
+                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
+                  <span style="font-size: 13px;text-align: right">Gate-In Date</span>
+                </div>
+                <div fxFlex="35" fxLayoutAlign="start center">
+                  <mat-form-field appearance="outline" class="field-width">
+                    <input matInput [matDatepicker]="picker1" formControlName="gateInDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
+                  <span style="font-size: 13px;">Gate Exit</span>
+                </div>
+                <div fxFlex="35" fxLayoutAlign="start center">
+                  <mat-form-field appearance="outline" style="width:204px">
+                    <mat-select formControlName="gateExit">
+                      <mat-option value="Gate 1">Gate 1</mat-option>
+                      <mat-option value="Gate 2">Gate 2</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
               </div>
-              <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
+
+              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
+                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
+                  <span style="font-size: 13px;">Gate User</span>
+                </div>
+                <div fxFlex="35" fxLayoutAlign="start center">
+                  <mat-form-field appearance="outline">
+                    <input matInput formControlName="gateUser">
+                  </mat-form-field>
+                </div>
+                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
+                  <span style="font-size: 13px;text-align: right">Gate-exit Date</span>
+                </div>
+                <div fxFlex="35" fxLayoutAlign="start center">
+                  <mat-form-field appearance="outline" class="field-width">
+                    <input matInput [matDatepicker]="picker2" formControlName="gateExitDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
+                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
+                  <span style="font-size: 13px;">Reporting Time</span>
+                </div>
+                <div fxFlex="35" fxLayoutAlign="start center">
+                  <mat-form-field appearance="outline" class="field-width">
+                    <input matInput [matDatepicker]="picker3" formControlName="reportingTime">
+                    <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                    <mat-datepicker #picker3></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
+                  <span style="font-size: 13px;text-align: right">Gate-Exit User</span>
+                </div>
+                <div fxFlex="35" fxLayoutAlign="start center">
+                  <mat-form-field appearance="outline">
+                    <input matInput formControlName="gateExitUser">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                   <span style="font-size: 13px;">Reference No.</span>
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput>
+                    <input matInput formControlName="referenceNo">
                   </mat-form-field>
                 </div>
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
@@ -347,18 +385,19 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" class="field-width">
-                    <input matInput>
+                    <input matInput formControlName="tareWeight">
                     <span matSuffix>KG</span>
                   </mat-form-field>
                 </div>
               </div>
-              <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
+
+              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                   <span style="font-size: 13px;">Gross Weight</span>
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" class="field-width">
-                    <input matInput>
+                    <input matInput formControlName="grossWeight">
                     <span matSuffix>KG</span>
                   </mat-form-field>
                 </div>
@@ -367,13 +406,26 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" class="field-width">
-                    <input matInput>
+                    <input matInput formControlName="netWeight">
                     <span matSuffix>KG</span>
                   </mat-form-field>
                 </div>
               </div>
-            </div>
-            <div>
+
+              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
+                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
+                  <span style="font-size: 13px;">Remarks</span>
+                </div>
+                <div fxFlex="35" fxLayoutAlign="start center">
+                  <mat-form-field style="width: 100%" appearance="outline">
+                    <textarea matInput formControlName="remarks"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div style="margin-top: 15px;margin-bottom: 15px">
+                <strong class="sub-Title">Item Details</strong>
+              </div>
               <div style="margin-top: 15px">
                 <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
                   <!-- <div fxFlex="44">
@@ -461,15 +513,15 @@
                 <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
               </table>
-            </div>
-            <div style="margin-top: 15px;margin-bottom: 15px">
-              <div style="text-align: end">
-                <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-top: -21px;margin-left: 20px;">
-                  <mat-icon style="color: lightgreen;margin-left: -15px">check</mat-icon>
-                  <span style="color: white">Submit</span>
-                </button>
+              <div style="margin-top: 15px;margin-bottom: 15px">
+                <div style="text-align: end">
+                  <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-top: -21px;margin-left: 20px;">
+                    <mat-icon style="color: lightgreen;margin-left: -15px">check</mat-icon>
+                    <span style="color: white">Submit</span>
+                  </button>
+                </div>
               </div>
-            </div>
+            </form>
           </mat-card-content>
         </div>
         <!-- #endregion -->

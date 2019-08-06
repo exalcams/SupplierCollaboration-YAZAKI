@@ -1,7 +1,10 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { MatTableDataSource, MatRadioChange } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Shipment } from 'app/models/Shipment.model';
+import { ValidateReference } from 'app/Validators/ValidateReference';
 
 @Component({
     selector: 'app-gate-entry',
@@ -27,29 +30,79 @@ export class GateEntryComponent implements OnInit {
     displayedColumns2: string[] = ['InvoiceNo', 'InvoiceDate', 'InvoiceAmount', 'Currency', 'Delete'];
     displayedColumns3: string[] = ['AttachmentNumber', 'AttachmentName', 'DocumentType', 'Delete'];
     dataSource: MatTableDataSource<Shipment>;
-    dataSourse1: MatTableDataSource<PackageDetails>;
-    dataSourse2: MatTableDataSource<VendorInvoice>;
-    dataSourse3: MatTableDataSource<AttachmentDetails>;
     selection: SelectionModel<Shipment>;
 
-    constructor(private _fuseConfigService: FuseConfigService) { }
+    showOrderType = false;
+    referenceOptions: string[] = [];
+    referenceInwardOptions: string[] = ['Select process', 'Receipt - with PO', 'Receipt - without PO', 'Receipt - with contractor items'];
+    referenceOutwardOptions: string[] = [
+        'Select process',
+        'Dispatch - FG',
+        'Dispatch - KEG',
+        'Dispatch - Others',
+        'Dispatch - Company Returnable',
+        'Dispatch - Contractor Items'
+    ];
+    gateEntryForm: FormGroup;
+
+    constructor(private _fuseConfigService: FuseConfigService, private form: FormBuilder) {
+        this.initForm();
+    }
 
     ngOnInit(): void {
+        this.referenceOptions = this.referenceInwardOptions;
         this.dataSource = new MatTableDataSource(ELEMENT_DATA);
-        this.dataSourse1 = new MatTableDataSource();
-        this.dataSourse2 = new MatTableDataSource(ELEMENT_DATA2);
-        this.dataSourse3 = new MatTableDataSource(ELEMENT_DATA3);
         this.selection = new SelectionModel(true, []);
         this.isAllSelected();
         this.masterToggle();
         this.checkboxLabel();
-        console.log(this.dataSourse1);
-        this._fuseConfigService.config
-            // .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((config) => {
-                this.BGClassName = config;
-            });
+        this._fuseConfigService.config.subscribe(config => {
+            this.BGClassName = config;
+        });
     }
+
+    initForm(): void {
+        this.gateEntryForm = this.form.group({
+            registerType: ['Inward'],
+            orderType: [null],
+            referenceType: ['Select process', [Validators.required, ValidateReference]],
+            plant: [{ value: '3201', disabled: true }],
+            vendor: ['', Validators.required],
+            transportType: ['Truck', Validators.required],
+            challanRefNo: [''],
+            driverName: [''],
+            challanRefDate: [''],
+            drivingLicense: [''],
+            gateIn: [{ value: 'Gate 1', disabled: true }],
+            vehicleNo: [''],
+            gateInDate: [{ value: new Date(), disabled: true }],
+            gateExit: [{ value: 'Gate 1', disabled: true }],
+            gateUser: [{ value: '3201_gate', disabled: true }],
+            gateExitDate: [{ value: new Date(), disabled: true }],
+            reportingTime: [{ value: new Date(), disabled: true }],
+            gateExitUser: [{ value: '3201_gate', disabled: true }],
+            referenceNo: [''],
+            tareWeight: [''],
+            grossWeight: [''],
+            netWeight: [''],
+            remarks: [''],
+            poItem: this.form.array([{}])
+        });
+    }
+
+    registerTypeChanged($event: MatRadioChange): void {
+        if ($event.value === 'Inward') {
+            this.referenceOptions = this.referenceInwardOptions;
+        } else {
+            this.referenceOptions = this.referenceOutwardOptions;
+        }
+    }
+
+    ChangeReference(value: string): void {
+        this.showOrderType = value === 'Receipt - with PO' ? true : false;
+    }
+
+    orderTypeChanged($event: MatRadioChange): void {}
 
     isAllSelected(): boolean {
         const numSelected = this.selection.selected.length;
@@ -67,43 +120,11 @@ export class GateEntryComponent implements OnInit {
         return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.no + 1}`;
     }
 
-    DeleteConfiguration(): void { }
+    onSubmit(): void {
+        console.log(this.gateEntryForm.getRawValue());
+    }
 }
 
-export interface Shipment {
-    vendor: string;
-    plant: string;
-    poNumber: string;
-    currency: string;
-    details: string;
-    materialDescription: string;
-    orderQuantity: number;
-    unit: string;
-    batch: string;
-    no: number;
-    select: boolean;
-}
-export interface PackageDetails {
-    packageID: number;
-    packageType: string;
-    referenceNo: number;
-    dimension: string;
-    grossWt: string;
-    volume: string;
-    volumeUnit: string;
-    grosss: string;
-}
-export interface VendorInvoice {
-    InvoiceNo: number;
-    InvoiceDate: Date;
-    InvoiceAmount: string;
-    Currency: string;
-}
-export interface AttachmentDetails {
-    AttachmentNumber: number;
-    AttachmentName: string;
-    DocumentType: string;
-}
 const ELEMENT_DATA: Shipment[] = [
     {
         no: 10,
@@ -119,8 +140,3 @@ const ELEMENT_DATA: Shipment[] = [
         select: false
     }
 ];
-const ELEMENT_DATA1: PackageDetails[] = [
-    { packageID: null, packageType: '', referenceNo: null, dimension: '', grossWt: '', volume: '', volumeUnit: '', grosss: '' }
-];
-const ELEMENT_DATA2: VendorInvoice[] = [{ InvoiceNo: null, InvoiceDate: null, InvoiceAmount: null, Currency: '' }];
-const ELEMENT_DATA3: AttachmentDetails[] = [{ AttachmentNumber: null, AttachmentName: null, DocumentType: null }];
