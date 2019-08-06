@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, OnDestroy, Compiler } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
@@ -55,8 +55,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         private _menuUpdationService: MenuUpdataionService,
         // private _loginService: LoginService,
         public dialog: MatDialog,
-        public snackBar: MatSnackBar
+        public snackBar: MatSnackBar,
+        private _compiler: Compiler
     ) {
+        localStorage.removeItem('authorizationData');
+        localStorage.removeItem('menuItemsData');
+        localStorage.removeItem('userPreferenceData');
+        this._compiler.clearCache();
+
         this._fuseConfigService.config = {
             layout: {
                 navbar: {
@@ -88,7 +94,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
-
     }
 
     LoginClicked(): void {
@@ -97,7 +102,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             this._authService.login(this.loginForm.get('userName').value, this.loginForm.get('password').value).subscribe(
                 data => {
                     this._authService.GetUserPreferenceByUserID(data.userID as Guid).subscribe(
-                        (data1) => {
+                        data1 => {
                             let userPre = data1 as UserPreference;
                             if (!userPre) {
                                 userPre = new UserPreference();
@@ -108,7 +113,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                             localStorage.setItem('userPreferenceData', JSON.stringify(userPre));
                             this.UpdateUserPreference();
                         },
-                        (err1) => {
+                        err1 => {
                             console.error(err1);
                         }
                     );
@@ -138,10 +143,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     UpdateUserPreference(): void {
         this._fuseConfigService.config
             //   .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((config) => {
-
+            .subscribe(config => {
                 this.fuseConfig = config;
-                // Retrive user preference from Local Storage    
+                // Retrive user preference from Local Storage
                 const userPre = localStorage.getItem('userPreferenceData');
                 if (userPre) {
                     const userPrefercence: UserPreference = JSON.parse(userPre) as UserPreference;
@@ -168,7 +172,6 @@ export class LoginComponent implements OnInit, OnDestroy {
                     this.fuseConfig.layout.toolbar.background = 'blue-800';
                     this.fuseConfig.layout.toolbar.customBackgroundColor = true;
                 }
-
             });
         this._fuseConfigService.config = this.fuseConfig;
     }
@@ -226,47 +229,43 @@ export class LoginComponent implements OnInit, OnDestroy {
         //     });
         // }
         if (this.MenuItems.indexOf('RFQCreation') >= 0) {
-            this.subChildren2.push(
-                {
-                    id: 'creation',
-                    title: 'Creation',
-                    type: 'item',
-                    url: '/rfq/creation',
-                }
-            );
+            this.subChildren2.push({
+                id: 'creation',
+                title: 'Creation',
+                type: 'item',
+                url: '/rfq/creation'
+            });
         }
         if (this.MenuItems.indexOf('RFQPublish') >= 0) {
-            this.subChildren2.push(
-                {
-                    id: 'publish',
-                    title: 'Publish & Invite',
-                    type: 'item',
-                    url: '/rfq/publish',
-                }
-            );
+            this.subChildren2.push({
+                id: 'publish',
+                title: 'Publish & Invite',
+                type: 'item',
+                url: '/rfq/publish'
+            });
         }
         if (this.MenuItems.indexOf('RFQEvaluation') >= 0) {
-            this.subChildren2.push(
-                {
-                    id: 'evaluation',
-                    title: 'Evaluation',
-                    type: 'item',
-                    url: '/rfq/evaluation',
-                }
-            );
+            this.subChildren2.push({
+                id: 'evaluation',
+                title: 'Evaluation',
+                type: 'item',
+                url: '/rfq/evaluation'
+            });
         }
         if (this.MenuItems.indexOf('RFQAwareded') >= 0) {
-            this.subChildren2.push(
-                {
-                    id: 'awarded',
-                    title: 'Awarded',
-                    type: 'item',
-                    url: '/rfq/awarded',
-                }
-            );
+            this.subChildren2.push({
+                id: 'awarded',
+                title: 'Awarded',
+                type: 'item',
+                url: '/rfq/awarded'
+            });
         }
-        if (this.MenuItems.indexOf('RFQCreation') >= 0 || this.MenuItems.indexOf('RFQPublish') >= 0 ||
-            this.MenuItems.indexOf('RFQEvaluation') >= 0 || this.MenuItems.indexOf('RFQAwareded') >= 0) {
+        if (
+            this.MenuItems.indexOf('RFQCreation') >= 0 ||
+            this.MenuItems.indexOf('RFQPublish') >= 0 ||
+            this.MenuItems.indexOf('RFQEvaluation') >= 0 ||
+            this.MenuItems.indexOf('RFQAwareded') >= 0
+        ) {
             this.children.push({
                 id: 'rfq',
                 title: 'RFQ',
@@ -278,24 +277,20 @@ export class LoginComponent implements OnInit, OnDestroy {
             });
         }
         if (true) {
-            this.subChildren3.push(
-                {
-                    id: 'vendorAssignment',
-                    title: 'Vendor Assignment',
-                    type: 'item',
-                    url: '/documentCollection/vendor_assignment'
-                }
-            );
+            this.subChildren3.push({
+                id: 'vendorAssignment',
+                title: 'Vendor Assignment',
+                type: 'item',
+                url: '/documentCollection/vendor_assignment'
+            });
         }
         if (true) {
-            this.subChildren3.push(
-                {
-                    id: 'capaAssignment',
-                    title: 'CAPA Assignment',
-                    type: 'item',
-                    url: '/documentCollection/capa_assignment'
-                }
-            );
+            this.subChildren3.push({
+                id: 'capaAssignment',
+                title: 'CAPA Assignment',
+                type: 'item',
+                url: '/documentCollection/capa_assignment'
+            });
         }
         if (true) {
             this.children.push({
@@ -306,36 +301,34 @@ export class LoginComponent implements OnInit, OnDestroy {
             });
         }
         if (this.MenuItems.indexOf('PaymentReportPO') >= 0) {
-            this.subChildren1.push(
-                {
-                    id: 'paymentReportPO',
-                    title: 'PO',
-                    type: 'item',
-                    url: '/paymentReport/po'
-                },
-            );
+            this.subChildren1.push({
+                id: 'paymentReportPO',
+                title: 'PO',
+                type: 'item',
+                url: '/paymentReport/po'
+            });
         }
         if (this.MenuItems.indexOf('PaymentReportInvoice') >= 0) {
-            this.subChildren1.push(
-                {
-                    id: 'paymentReportInvoice',
-                    title: 'Invoice',
-                    type: 'item',
-                    url: '/paymentReport/invoice'
-                },
-            );
+            this.subChildren1.push({
+                id: 'paymentReportInvoice',
+                title: 'Invoice',
+                type: 'item',
+                url: '/paymentReport/invoice'
+            });
         }
         if (this.MenuItems.indexOf('PaymentReportReference') >= 0) {
-            this.subChildren1.push(
-                {
-                    id: 'paymentReportReference',
-                    title: 'Reference',
-                    type: 'item',
-                    url: '/paymentReport/reference'
-                }
-            );
+            this.subChildren1.push({
+                id: 'paymentReportReference',
+                title: 'Reference',
+                type: 'item',
+                url: '/paymentReport/reference'
+            });
         }
-        if (this.MenuItems.indexOf('PaymentReportPO') >= 0 || this.MenuItems.indexOf('PaymentReportInvoice') >= 0 || this.MenuItems.indexOf('PaymentReportReference') >= 0) {
+        if (
+            this.MenuItems.indexOf('PaymentReportPO') >= 0 ||
+            this.MenuItems.indexOf('PaymentReportInvoice') >= 0 ||
+            this.MenuItems.indexOf('PaymentReportReference') >= 0
+        ) {
             this.children.push({
                 id: 'paymentReport',
                 title: 'Payment Report',
@@ -344,8 +337,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 icon: 'paymentReport',
                 isSvgIcon: true,
                 children: this.subChildren1
-            }
-            );
+            });
         }
         if (this.MenuItems.indexOf('App') >= 0) {
             this.subChildren.push({
@@ -379,7 +371,12 @@ export class LoginComponent implements OnInit, OnDestroy {
                 url: '/master/userPreference'
             });
         }
-        if (this.MenuItems.indexOf('App') >= 0 || this.MenuItems.indexOf('Role') >= 0 || this.MenuItems.indexOf('User') >= 0 || this.MenuItems.indexOf('UserPreference')) {
+        if (
+            this.MenuItems.indexOf('App') >= 0 ||
+            this.MenuItems.indexOf('Role') >= 0 ||
+            this.MenuItems.indexOf('User') >= 0 ||
+            this.MenuItems.indexOf('UserPreference')
+        ) {
             this.children.push({
                 id: 'master',
                 title: 'Master',
