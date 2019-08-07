@@ -136,37 +136,14 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div class="borderRightSide">
+          <div *ngFor="let item of allGatePassNoData" (click)="GTNOSelected(item)" [class.highLight]="item.GT_No===selectGTNO" style="padding-left: 10px">
             <div style="margin-top: 5px;" class="round1">
             </div>
-            <div style="padding: 5px">
-              <div class="h3">#254786984</div>
-              <div>
-                <span class="h6">03/06/2019</span>
-                <span class="h6">, 6:35PM</span>
-              </div>
+            <div>
+              <span style="font-size: 18px">{{item.GT_No}}</span>
             </div>
-          </div>
-          <div style="margin-top: 25px;">
-            <div class="round2">
-            </div>
-            <div style="padding: 5px">
-              <div class="h3">#254786984</div>
-              <div>
-                <span class="h6">03/06/2019</span>
-                <span class="h6">, 6:35PM</span>
-              </div>
-            </div>
-          </div>
-          <div style="margin-top: 25px;">
-            <div class="round3">
-            </div>
-            <div style="padding: 5px">
-              <div class="h3">#254786984</div>
-              <div>
-                <span class="h6">03/06/2019</span>
-                <span class="h6">, 6:35PM</span>
-              </div>
+            <div style="font-size: 11px;margin-bottom: 5px">
+              <span style="margin-right: 10px">{{item.CreatedDate | date : 'dd-MM-yyyy hh:mm:ss a'}}</span>
             </div>
           </div>
         </div>
@@ -181,7 +158,7 @@
                   <span style="font-size: 13px;">Register Type</span>
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-radio-group (change)="registerTypeChanged($event)" formControlName="registerType">
+                  <mat-radio-group (change)="registerTypeChanged($event)" formControlName="RegisterType">
                     <mat-radio-button value="Inward">Inward</mat-radio-button>
                     <mat-radio-button value="Outward">Outward</mat-radio-button>
                   </mat-radio-group>
@@ -190,7 +167,7 @@
                   <!-- <span style="font-size: 13px;">Register Type</span> -->
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-radio-group (change)="orderTypeChanged($event)" *ngIf="showOrderType" formControlName="orderType">
+                  <mat-radio-group (change)="orderTypeChanged($event)" *ngIf="showOrderType" formControlName="OrderType">
                     <mat-radio-button value="ASN">ASN</mat-radio-button>
                     <mat-radio-button value="PO">PO</mat-radio-button>
                   </mat-radio-group>
@@ -202,12 +179,12 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" style="width: 204px">
-                    <mat-select (selectionChange)="ChangeReference($event.value)" formControlName="referenceType">
+                    <mat-select (selectionChange)="ChangeReference($event.value)" formControlName="ReferenceType">
                       <mat-option *ngFor="let option of referenceOptions; let i = index" [value]="option">
                         {{option}}
                       </mat-option>
                     </mat-select>
-                    <mat-error *ngIf="gateEntryForm.get('referenceType').dirty && gateEntryForm.get('referenceType').touched && gateEntryForm.get('referenceType').errors?.validReference">First Name is required!</mat-error>
+                    <mat-error *ngIf="gateEntryForm.get('ReferenceType').dirty && gateEntryForm.get('ReferenceType').touched && gateEntryForm.get('ReferenceType').errors?.validReference">First Name is required!</mat-error>
                   </mat-form-field>
                 </div>
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
@@ -215,7 +192,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput formControlName="plant">
+                    <input matInput formControlName="Plant">
                   </mat-form-field>
                 </div>
               </div>
@@ -226,7 +203,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput formControlName="vendor">
+                    <input matInput formControlName="Vendor">
                   </mat-form-field>
                 </div>
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
@@ -234,7 +211,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" style="width: 204px">
-                    <mat-select formControlName="transportType">
+                    <mat-select formControlName="TransportMode">
                       <mat-option value="Truck">Truck</mat-option>
                       <mat-option value="Courier">Courier</mat-option>
                       <mat-option value="By Hand">By Hand</mat-option>
@@ -249,7 +226,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput formControlName="challanRefNo">
+                    <input matInput formControlName="ChallanNo">
                   </mat-form-field>
                 </div>
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
@@ -257,7 +234,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput formControlName="driverName">
+                    <input matInput formControlName="Driver">
                   </mat-form-field>
                 </div>
               </div>
@@ -268,7 +245,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" class="field-width">
-                    <input matInput [matDatepicker]="picker" formControlName="challanRefDate">
+                    <input matInput [matDatepicker]="picker" formControlName="ChallanDate">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
@@ -278,7 +255,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput formControlName="drivingLicense">
+                    <input matInput formControlName="DrivingLicense">
                   </mat-form-field>
                 </div>
               </div>
@@ -289,7 +266,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" style="width:204px">
-                    <mat-select formControlName="gateIn">
+                    <mat-select formControlName="GateIn">
                       <mat-option value="Gate 1">Gate 1</mat-option>
                       <mat-option value="Gate 2">Gate 2</mat-option>
                     </mat-select>
@@ -300,7 +277,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput formControlName="vehicleNo">
+                    <input matInput formControlName="VehiceNo">
                   </mat-form-field>
                 </div>
               </div>
@@ -311,7 +288,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" class="field-width">
-                    <input matInput [matDatepicker]="picker1" formControlName="gateInDate">
+                    <input matInput [matDatepicker]="picker1" formControlName="GateInDate">
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
                   </mat-form-field>
@@ -321,7 +298,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" style="width:204px">
-                    <mat-select formControlName="gateExit">
+                    <mat-select formControlName="GateExit">
                       <mat-option value="Gate 1">Gate 1</mat-option>
                       <mat-option value="Gate 2">Gate 2</mat-option>
                     </mat-select>
@@ -335,7 +312,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput formControlName="gateUser">
+                    <input matInput formControlName="GateInUser">
                   </mat-form-field>
                 </div>
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
@@ -343,7 +320,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" class="field-width">
-                    <input matInput [matDatepicker]="picker2" formControlName="gateExitDate">
+                    <input matInput [matDatepicker]="picker2" formControlName="GateExitDate">
                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker #picker2></mat-datepicker>
                   </mat-form-field>
@@ -356,7 +333,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" class="field-width">
-                    <input matInput [matDatepicker]="picker3" formControlName="reportingTime">
+                    <input matInput [matDatepicker]="picker3" formControlName="ReportingDate">
                     <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                     <mat-datepicker #picker3></mat-datepicker>
                   </mat-form-field>
@@ -366,7 +343,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput formControlName="gateExitUser">
+                    <input matInput formControlName="GateExitUser">
                   </mat-form-field>
                 </div>
               </div>
@@ -377,7 +354,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline">
-                    <input matInput formControlName="referenceNo">
+                    <input matInput formControlName="ReferenceNo">
                   </mat-form-field>
                 </div>
                 <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
@@ -385,7 +362,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" class="field-width">
-                    <input matInput formControlName="tareWeight">
+                    <input matInput formControlName="TareWeight">
                     <span matSuffix>KG</span>
                   </mat-form-field>
                 </div>
@@ -397,7 +374,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" class="field-width">
-                    <input matInput formControlName="grossWeight">
+                    <input matInput formControlName="GrossWeight">
                     <span matSuffix>KG</span>
                   </mat-form-field>
                 </div>
@@ -406,7 +383,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field appearance="outline" class="field-width">
-                    <input matInput formControlName="netWeight">
+                    <input matInput formControlName="NetWeight">
                     <span matSuffix>KG</span>
                   </mat-form-field>
                 </div>
@@ -418,7 +395,7 @@
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
                   <mat-form-field style="width: 100%" appearance="outline">
-                    <textarea matInput formControlName="remarks"></textarea>
+                    <textarea matInput formControlName="Remarks"></textarea>
                   </mat-form-field>
                 </div>
               </div>
@@ -452,69 +429,58 @@
                   </div>
                 </div>
               </div>
-              <table mat-table [dataSource]="dataSource">
-                <ng-container matColumnDef="no">
-                  <th mat-header-cell *matHeaderCellDef></th>
-                  <td mat-cell *matCellDef="let element">{{element.no}}</td>
-                </ng-container>
 
-                <ng-container matColumnDef="materialDescription">
-                  <th mat-header-cell *matHeaderCellDef>Material Description </th>
-                  <td mat-cell *matCellDef="let element"> {{element.materialDescription}} </td>
-                </ng-container>
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-                <ng-container matColumnDef="orderQuantity">
-                  <th mat-header-cell *matHeaderCellDef>order Qty</th>
-                  <td mat-cell *matCellDef="let element"> {{element.orderQuantity}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="unit">
-                  <th mat-header-cell *matHeaderCellDef>Unit</th>
-                  <td mat-cell *matCellDef="let element"> {{element.unit}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="plant">
-                  <th mat-header-cell *matHeaderCellDef>Plant </th>
-                  <td mat-cell *matCellDef="let element"> {{element.plant}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="vendor">
-                  <th mat-header-cell *matHeaderCellDef>Vendor</th>
-                  <td mat-cell *matCellDef="let element"> {{element.vendor}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="poNumber">
-                  <th mat-header-cell *matHeaderCellDef>PoNumber</th>
-                  <td mat-cell *matCellDef="let element"> {{element.poNumber}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="currency">
-                  <th mat-header-cell *matHeaderCellDef>Currency </th>
-                  <td mat-cell *matCellDef="let element"> {{element.currency}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="details">
-                  <th mat-header-cell *matHeaderCellDef>Details </th>
-                  <td mat-cell *matCellDef="let element"> {{element.details}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="batch">
-                  <th mat-header-cell *matHeaderCellDef>Batch </th>
-                  <td mat-cell *matCellDef="let element"> {{element.batch}} </td>
-                </ng-container>
                 <ng-container matColumnDef="select">
-                  <th mat-header-cell *matHeaderCellDef>Select
+                  <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                    </mat-checkbox>
                   </th>
                   <td mat-cell *matCellDef="let row">
-                    <mat-checkbox style="margin-left: 15px" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
                     </mat-checkbox>
                   </td>
                 </ng-container>
+
+                <ng-container matColumnDef="item">
+                  <th mat-header-cell *matHeaderCellDef> PO </th>
+                  <td mat-cell *matCellDef="let element"> {{element.PO}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="po">
+                  <th mat-header-cell *matHeaderCellDef> Item </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Item}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="material">
+                  <th mat-header-cell *matHeaderCellDef> Material </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Material}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef> Description </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="qty">
+                  <th mat-header-cell *matHeaderCellDef> Qty </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Qty}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="uom">
+                  <th mat-header-cell *matHeaderCellDef> UoM </th>
+                  <td mat-cell *matCellDef="let element"> {{element.UoM}} </td>
+                </ng-container>
+
                 <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+
               </table>
+
               <div style="margin-top: 15px;margin-bottom: 15px">
                 <div style="text-align: end">
+                  <!-- <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-top: -21px;margin-left: 20px;" [disabled]="!gateEntryForm.valid"> -->
                   <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-top: -21px;margin-left: 20px;">
                     <mat-icon style="color: lightgreen;margin-left: -15px">check</mat-icon>
                     <span style="color: white">Submit</span>

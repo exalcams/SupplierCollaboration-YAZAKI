@@ -1,0 +1,64 @@
+import { GateEntryHeader, GatePassInfo } from './gateEntry.model';
+import { Guid } from 'guid-typescript';
+
+export interface GateEntryHeader {
+    GT_NO?: string;
+    UserID: Guid;
+    RegisterType: string;
+    ReferenceType: string;
+    TransportMode: string;
+    VehiceNo: string;
+    Vendor: string;
+    Driver: string;
+    DrivingLicense: string;
+    GateIn: string;
+    GateInUser: string;
+    GateInDate: Date;
+    Plant: string;
+    GateExit: string;
+    GateExitDate: Date;
+    GateExitUser: string;
+    CreatedDate: Date;
+    ModifiedDate: Date;
+    ChallanNo: string;
+    ChallanDate: Date;
+    ReportingDate: Date;
+    IsCancelled: boolean;
+    Remarks: string;
+    ReferenceNo: string;
+    TareWeight: number;
+    GrossWeight: number;
+    NetWeight: number;
+}
+
+export interface GatePassInfo {
+    GT_NO?: string;
+    USERID?: Guid;
+    PO: string;
+    ASN_ID?: string;
+    Item: number;
+    ChallanNo?: string;
+    ChallanDate?: Date;
+    Qty: number;
+    Material: string;
+    Description: string;
+    NonReturnable?: boolean;
+    Plant?: string;
+    LineItemID?: number;
+    OpenRNR?: number;
+    LastQty?: number;
+    PrevQty?: number;
+    IsCancelled?: boolean;
+    UoM: string;
+    CreatedDate?: Date;
+    ModifiedDate?: Date;
+}
+
+export interface GatePassModel extends GateEntryHeader {
+    GatePassItem: GatePassInfo[];
+}
+
+export interface GatePassNoData {
+    GT_No: string;
+    CreatedDate: Date;
+}
