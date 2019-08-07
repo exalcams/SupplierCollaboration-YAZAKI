@@ -11,9 +11,6 @@ $icon-small-size: 16px;
         }
     }
 }
-// mat-card{
-//     border-radius: 20px;
-// }
 
 .sub-Title {
     margin-left: -24px;
@@ -44,21 +41,7 @@ table {
         height: 40px;
     }
 }
-.mat-table-sticky {
-    border-left: 1px solid #1b56ca;
-}
-.sub-title1 {
-    border-bottom: 1px solid #e32049;
-}
 
-.dropdownstyle {
-    width: 203px;
-    height: 26px;
-    margin-top: -20px;
-}
-.mat-column-select {
-    overflow: initial;
-}
 .round1 {
     padding: 5px;
     width: 10px;
@@ -95,13 +78,7 @@ table {
 .mat-table {
     border: 1px solid #082f7d;
 }
-.divclass {
-    margin-top: 25px;
-    margin-left: 15px;
-}
-.Relevantclass {
-    margin-top: 10px;
-}
+
 .Title {
     font-size: 14px;
     color: rgba(255, 255, 255, 0.6);
@@ -123,10 +100,14 @@ table {
 .icon-style {
     background-color: #eaf2ff;
 }
-.icon-Borde-Right {
-    border-right: 1px solid;
-}
 
 .field-width {
     max-width: 204px;
+}
+
+.highLight {
+    background: lightgray;
+    border-bottom: 1px solid #4a77fb;
+    border-top: 1px solid #4a77fb;
+    border-left: 5px solid #4a77fb;
 }
