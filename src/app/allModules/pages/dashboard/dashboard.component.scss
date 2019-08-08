@@ -108,6 +108,9 @@ table {
     border-radius: 10px;
     background-color: #e32049;
   }
+  .disabled {
+    cursor: not-allowed;
+  }
 //   .ASNDone{
 
 //   }
@@ -119,4 +122,11 @@ table {
     height: 10px;
     display: block;
     background-color: #F4D03F;
+  }
+
+  .highlight{
+    background: lightgray !important;
+  }
+  .tableCard{
+    margin-bottom: 20px !important;
   }

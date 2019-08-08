@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
-import { PO_Notifications, DashboardStatus, PO_DeliveryStatus, PO_PurchaseOrderDetails, POView } from 'app/models/dashboard';
+import { PO_Notifications, DashboardStatus, PO_DeliveryStatus, PO_PurchaseOrderDetails, POView, PO_OrderAcknowledgement } from 'app/models/dashboard';
 import { catchError } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
@@ -22,9 +22,9 @@ export class DashboardService {
     this.baseAddress = _authService.baseAddress;
   }
 
-  GetAllPoList(): Observable<POView[] | string> {
-    return this._httpClient.get<POView[]>(`${this.baseAddress}api/DashBoardController/GetPoList`).pipe(catchError(this.errorHandler));
-  }
+  // GetAllPoList(): Observable<POView[] | string> {
+  //   return this._httpClient.get<POView[]>(`${this.baseAddress}api/DashBoardController/GetPoList`).pipe(catchError(this.errorHandler));
+  // }
   GetAllPONotifications(): Observable<PO_Notifications | string> {
     return this._httpClient.get<PO_Notifications>(`${this.baseAddress}api/DashBoardController/GetAllPONotifications`).pipe(catchError(this.errorHandler));
   }
@@ -37,6 +37,10 @@ export class DashboardService {
   GetPOPurchaseOrderDetails(PO_Id: any): Observable<PO_PurchaseOrderDetails | string> {
     // alert(PO_Id);
     return this._httpClient.get<PO_PurchaseOrderDetails>(`${this.baseAddress}api/DashBoardController/GetPOPurchaseOrderDetails?PO_Id=${PO_Id}`).pipe(catchError(this.errorHandler));
+  }
+  GetPOOrderAcknowledgement(PO_Id: any ,Item:string): Observable<PO_OrderAcknowledgement | string> {
+    // alert(PO_Id);
+    return this._httpClient.get<PO_OrderAcknowledgement>(`${this.baseAddress}api/DashBoardController/GetPO_OrderAcknowledgement?PO_Id=${PO_Id}&Item=${Item}`).pipe(catchError(this.errorHandler));
   }
   errorHandler(error: HttpErrorResponse): Observable<string> {
     return throwError(error.error.error_description || error.error || error.message || 'Server Error');

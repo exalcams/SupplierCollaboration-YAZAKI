@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { DashboardService } from 'app/services/dashboard.service';
+import { PO_OrderAcknowledgement } from 'app/models/dashboard';
 
 @Component({
   selector: 'app-orderacknowledgment',
@@ -15,8 +18,27 @@ export class OrderacknowledgmentComponent implements OnInit {
   dataSource: MatTableDataSource<OrderAcknowledgment>;
   dataSource1: MatTableDataSource<AttachmentDetails>;
   selection = new SelectionModel<OrderAcknowledgment>(true, []);
+  AcknowledgementDetails: PO_OrderAcknowledgement = new PO_OrderAcknowledgement();
+  POId: string;
+  Item: string;
   @ViewChild(MatSort) sort: MatSort;
-  constructor(private _fuseConfigService: FuseConfigService) { }
+  constructor(private _fuseConfigService: FuseConfigService, public dashboardService: DashboardService, private _router: Router, private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
+      this.POId = params['id'];
+      this.Item = params['item'];
+      this.dashboardService.GetPOOrderAcknowledgement(this.POId, this.Item).subscribe((data) => {
+        if (data) {
+          this.AcknowledgementDetails = <PO_OrderAcknowledgement>data;
+          console.log(this.AcknowledgementDetails);
+          // this.POItemList = new MatTableDataSource(this.POPurchaseOrderDetails.POItemList);
+          // console.log(this.POPurchaseOrderDetails)
+        }
+      },
+        (err) => {
+          console.error(err);
+        })
+    })
+  }
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource(ELEMENT_DATA);
@@ -54,7 +76,10 @@ export class OrderacknowledgmentComponent implements OnInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.Item + 1}`;
   }
-
+  BackToDashboard(): void {
+    this._router.navigate(['/dashboard']);
+    // { queryParams: { id: this.POId } }
+  }
 }
 
 export interface OrderAcknowledgment {
