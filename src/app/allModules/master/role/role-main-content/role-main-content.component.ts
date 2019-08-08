@@ -7,7 +7,7 @@ import { MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Router } from '@angular/router';
-import { RoleWithApp, MenuApp, AuthenticationDetails } from 'app/models/master';
+import { RoleWithMenuApp, MenuApp, AuthenticationDetails } from 'app/models/master';
 
 @Component({
   selector: 'role-main-content',
@@ -17,13 +17,13 @@ import { RoleWithApp, MenuApp, AuthenticationDetails } from 'app/models/master';
   animations: fuseAnimations
 })
 export class RoleMainContentComponent implements OnInit, OnChanges {
-  @Input() currentSelectedRole: RoleWithApp = new RoleWithApp();
+  @Input() currentSelectedRole: RoleWithMenuApp = new RoleWithMenuApp();
   @Output() SaveSucceed: EventEmitter<string> = new EventEmitter<string>();
   @Output() ShowProgressBarEvent: EventEmitter<string> = new EventEmitter<string>();
-  role: RoleWithApp;
+  role: RoleWithMenuApp;
   roleMainFormGroup: FormGroup;
   AllMenuApps: MenuApp[] = [];
-  AppIDListAllID: number;
+  MenuAppIDListAllID: number;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   authenticationDetails: AuthenticationDetails;
   MenuItems: string[];
@@ -35,23 +35,23 @@ export class RoleMainContentComponent implements OnInit, OnChanges {
     private dialog: MatDialog) {
     this.roleMainFormGroup = this._formBuilder.group({
       roleName: ['', Validators.required],
-      appIDList: [[], Validators.required]
-      // appIDList: [[], CustomValidators.SelectedRole('Administrator')]
+      menuAppIDList: [[], Validators.required]
+      // MenuAppIDList: [[], CustomValidators.SelectedRole('Administrator')]
     });
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
-    this.AppIDListAllID = 0;
-    this.role = new RoleWithApp();
+    this.MenuAppIDListAllID = 0;
+    this.role = new RoleWithMenuApp();
     this.authenticationDetails = new AuthenticationDetails();
   }
 
   GetAllMenuApps(): void {
-    this._masterService.GetAllMenuApp().subscribe(
+    this._masterService.GetAllMenuApps().subscribe(
       (data) => {
         this.AllMenuApps = <MenuApp[]>data;
         if (this.AllMenuApps && this.AllMenuApps.length > 0) {
-          const xy = this.AllMenuApps.filter(x => x.AppName === 'All')[0];
+          const xy = this.AllMenuApps.filter(x => x.MenuAppName === 'All')[0];
           if (xy) {
-            this.AppIDListAllID = xy.AppID;
+            this.MenuAppIDListAllID = xy.MenuAppID;
           }
         }
         // console.log(this.AllMenuApps);
@@ -79,7 +79,7 @@ export class RoleMainContentComponent implements OnInit, OnChanges {
     this.ResetControl();
   }
   ResetControl(): void {
-    this.role = new RoleWithApp();
+    this.role = new RoleWithMenuApp();
     this.roleMainFormGroup.reset();
     Object.keys(this.roleMainFormGroup.controls).forEach(key => {
       this.roleMainFormGroup.get(key).markAsUntouched();
@@ -102,7 +102,7 @@ export class RoleMainContentComponent implements OnInit, OnChanges {
             if (result) {
               this.ShowProgressBarEvent.emit('show');
               this.role.RoleName = this.roleMainFormGroup.get('roleName').value;
-              this.role.AppIDList = <number[]>this.roleMainFormGroup.get('appIDList').value;
+              this.role.MenuAppIDList = <number[]>this.roleMainFormGroup.get('menuAppIDList').value;
               this.role.ModifiedBy = this.authenticationDetails.userID.toString();
 
               this._masterService.UpdateRole(this.role).subscribe(
@@ -135,7 +135,7 @@ export class RoleMainContentComponent implements OnInit, OnChanges {
             if (result) {
               this.ShowProgressBarEvent.emit('show');
               this.role.RoleName = this.roleMainFormGroup.get('roleName').value;
-              this.role.AppIDList = this.roleMainFormGroup.get('appIDList').value;
+              this.role.MenuAppIDList = this.roleMainFormGroup.get('menuAppIDList').value;
               this.role.CreatedBy = this.authenticationDetails.userID.toString();
               this._masterService.CreateRole(this.role).subscribe(
                 (data) => {
@@ -178,7 +178,7 @@ export class RoleMainContentComponent implements OnInit, OnChanges {
             if (result) {
               this.ShowProgressBarEvent.emit('show');
               this.role.RoleName = this.roleMainFormGroup.get('roleName').value;
-              this.role.AppIDList = <number[]>this.roleMainFormGroup.get('appIDList').value;
+              this.role.MenuAppIDList = <number[]>this.roleMainFormGroup.get('menuAppIDList').value;
               this.role.ModifiedBy = this.authenticationDetails.userID.toString();
 
               this._masterService.DeleteRole(this.role).subscribe(
@@ -211,7 +211,7 @@ export class RoleMainContentComponent implements OnInit, OnChanges {
     this.role = this.currentSelectedRole;
     if (this.role) {
       this.roleMainFormGroup.get('roleName').patchValue(this.role.RoleName);
-      this.roleMainFormGroup.get('appIDList').patchValue(this.role.AppIDList);
+      this.roleMainFormGroup.get('menuAppIDList').patchValue(this.role.MenuAppIDList);
     } else {
       // this.menuAppMainFormGroup.get('appName').patchValue('');
       this.ResetControl();
@@ -220,13 +220,13 @@ export class RoleMainContentComponent implements OnInit, OnChanges {
 
   OnAppNameChanged(): void {
     // console.log('changed');
-    const SelectedValues = this.roleMainFormGroup.get('appIDList').value as number[];
-    if (SelectedValues.includes(this.AppIDListAllID)) {
-      this.roleMainFormGroup.get('appIDList').patchValue([this.AppIDListAllID]);
+    const SelectedValues = this.roleMainFormGroup.get('menuAppIDList').value as number[];
+    if (SelectedValues.includes(this.MenuAppIDListAllID)) {
+      this.roleMainFormGroup.get('menuAppIDList').patchValue([this.MenuAppIDListAllID]);
       this.notificationSnackBarComponent.openSnackBar('All have all the menu items, please uncheck All if you want to select specific menu', SnackBarStatus.info, 4000);
 
     }
-    // console.log(this.roleMainFormGroup.get('appIDList').value);
+    // console.log(this.roleMainFormGroup.get('menuAppIDList').value);
   }
 
 }

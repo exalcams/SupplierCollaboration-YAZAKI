@@ -339,10 +339,10 @@ export class LoginComponent implements OnInit, OnDestroy {
                 children: this.subChildren1
             });
         }
-        if (this.MenuItems.indexOf('App') >= 0) {
+        if (this.MenuItems.indexOf('MenuApp') >= 0) {
             this.subChildren.push({
                 id: 'menuapp',
-                title: 'App',
+                title: 'Menu App',
                 type: 'item',
                 url: '/master/menuApp'
             });
@@ -372,7 +372,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             });
         }
         if (
-            this.MenuItems.indexOf('App') >= 0 ||
+            this.MenuItems.indexOf('MenuApp') >= 0 ||
             this.MenuItems.indexOf('Role') >= 0 ||
             this.MenuItems.indexOf('User') >= 0 ||
             this.MenuItems.indexOf('UserPreference')

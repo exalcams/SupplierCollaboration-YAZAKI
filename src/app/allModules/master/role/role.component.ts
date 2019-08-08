@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { MatSnackBar } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { AuthenticationDetails, RoleWithApp } from 'app/models/master';
+import { AuthenticationDetails, RoleWithMenuApp } from 'app/models/master';
 import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
@@ -17,8 +17,8 @@ import { FuseConfigService } from '@fuse/services/config.service';
 })
 export class RoleComponent implements OnInit {
   BGClassName: any;
-  AllRoles: RoleWithApp[] = [];
-  SelectedRole: RoleWithApp;
+  AllRoles: RoleWithMenuApp[] = [];
+  SelectedRole: RoleWithMenuApp;
   authenticationDetails: AuthenticationDetails;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
@@ -50,7 +50,7 @@ export class RoleComponent implements OnInit {
   GetAllRoles(): void {
     this._masterService.GetAllRoles().subscribe(
       (data) => {
-        this.AllRoles = <RoleWithApp[]>data;
+        this.AllRoles = <RoleWithMenuApp[]>data;
         this.IsProgressBarVisibile = false;
         // console.log(this.AllMenuApps);
       },
@@ -61,7 +61,7 @@ export class RoleComponent implements OnInit {
       }
     );
   }
-  OnRoleSelectionChanged(selectedRole: RoleWithApp): void {
+  OnRoleSelectionChanged(selectedRole: RoleWithMenuApp): void {
     // console.log(selectedMenuApp);
     this.SelectedRole = selectedRole;
   }

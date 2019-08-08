@@ -48,7 +48,7 @@ export class MenuAppComponent implements OnInit {
 
   }
   GetAllMenuApps(): void {
-    this._masterService.GetAllMenuApp().subscribe(
+    this._masterService.GetAllMenuApps().subscribe(
       (data) => {
         this.AllMenuApps = <MenuApp[]>data;
         this.IsProgressBarVisibile = false;

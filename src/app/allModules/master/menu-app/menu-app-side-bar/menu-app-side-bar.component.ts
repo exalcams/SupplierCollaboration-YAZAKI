@@ -23,7 +23,7 @@ export class MenuAppSideBarComponent implements OnInit, OnChanges {
     this.searchText = '';
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     // if (this.AllMenuApps.length > 0) {
-    //   this.selectID = this.AllMenuApps[0].AppID;
+    //   this.selectID = this.AllMenuApps[0].MenuAppID;
     // }
   }
 
@@ -34,13 +34,13 @@ export class MenuAppSideBarComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     // console.log(this.currentSelectedMenuApp);
     if (this.AllMenuApps.length > 0) {
-      this.selectID = this.AllMenuApps[0].AppID;
+      this.selectID = this.AllMenuApps[0].MenuAppID;
       this.loadSelectedMenuApp(this.AllMenuApps[0]);
     }
   }
 
   loadSelectedMenuApp(SelectedMenuApp: MenuApp): void {
-    this.selectID = SelectedMenuApp.AppID;
+    this.selectID = SelectedMenuApp.MenuAppID;
     this.MenuAppSelectionChanged.emit(SelectedMenuApp);
     // console.log(SelectedMenuApp);
   }

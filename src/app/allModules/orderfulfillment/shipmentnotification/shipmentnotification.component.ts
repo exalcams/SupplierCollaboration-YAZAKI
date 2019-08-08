@@ -14,7 +14,8 @@ import { BehaviorSubject } from 'rxjs';
 import { isNumber } from 'util';
 import { isNumeric } from 'rxjs/util/isNumeric';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, App } from 'app/models/master';
+import { MasterService } from 'app/services/master.service';
 
 
 @Component({
@@ -29,6 +30,7 @@ export class ShipmentnotificationComponent implements OnInit {
     CurrentUserName: string;
     BGClassName: any;
     ASNClass: ASN;
+    ASNAppID: number;
     VendorLocationList: VendorLocation[];
     notificationSnackBarComponent: NotificationSnackBarComponent;
     AllASNHeaderViews: ASNHeaderView[] = [];
@@ -71,12 +73,14 @@ export class ShipmentnotificationComponent implements OnInit {
         private _fuseConfigService: FuseConfigService,
         private _formBuilder: FormBuilder,
         private _asnService: ASNService,
+        private _masterService: MasterService,
         private _router: Router,
         public snackBar: MatSnackBar,
         private dialog: MatDialog,
         private route: ActivatedRoute
     ) {
         this.ASNClass = new ASN();
+        this.ASNAppID = 0;
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
         this.route.queryParams.subscribe(params => {
             this.SelectedPO = params['id'];
@@ -131,6 +135,7 @@ export class ShipmentnotificationComponent implements OnInit {
         this.dataSourse2.sort = this.sort;
         // this.AttachmentDataSource.sort = this.sort;
         this.selection = new SelectionModel(true, []);
+        this.GetAppByName();
         this.getAllVendorLocations();
         // this.GetAllASNHeaderViews();
         this.GetAllAcknowledgedPOViews();
@@ -260,6 +265,20 @@ export class ShipmentnotificationComponent implements OnInit {
         } else {
             this.notificationSnackBarComponent.openSnackBar('no packages to delete', SnackBarStatus.warning);
         }
+    }
+    GetAppByName(): void {
+        const AppName = 'ASN';
+        this._masterService.GetAppByName(AppName).subscribe(
+            (data) => {
+                const ASNAPP = data as App;
+                if (ASNAPP) {
+                    this.ASNAppID = ASNAPP.AppID;
+                }
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
     }
     getAllVendorLocations(): void {
         this._asnService.GetAllVendorLocations().subscribe(
@@ -434,7 +453,7 @@ export class ShipmentnotificationComponent implements OnInit {
                                 (data) => {
                                     const TransID = data as number;
                                     const aux = new Auxiliary();
-                                    aux.APPID = 1;
+                                    aux.APPID = this.ASNAppID;
                                     aux.APPNumber = TransID;
                                     aux.CreatedBy = this.CurrentUserName;
                                     this._asnService.AddASNAttachment(aux, this.fileToUploadList).subscribe(
@@ -479,7 +498,7 @@ export class ShipmentnotificationComponent implements OnInit {
                                 (data) => {
                                     const TransID = data as number;
                                     const aux = new Auxiliary();
-                                    aux.APPID = 1;
+                                    aux.APPID = this.ASNAppID;
                                     aux.APPNumber = TransID;
                                     aux.CreatedBy = this.CurrentUserName;
                                     this._asnService.AddASNAttachment(aux, this.fileToUploadList).subscribe(
@@ -665,7 +684,7 @@ export class ShipmentnotificationComponent implements OnInit {
             (data) => {
                 if (data) {
                     this.ASNClass = data as ASN;
-                    this.GetAttachmentViewsByAppID(1, this.ASNClass.TransID);
+                    this.GetAttachmentViewsByAppID(this.ASNAppID, this.ASNClass.TransID);
                     this.InsertASNHeaderValues();
                     if (this.ASNClass.ASNItems && this.ASNClass.ASNItems.length) {
                         this.ASNItemDataSource = new MatTableDataSource(this.ASNClass.ASNItems);

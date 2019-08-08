@@ -11,14 +11,14 @@
   </div>
   <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" *ngIf="roleMainFormGroup.get('roleName').value!=='Administrator'">
     <mat-form-field class="p-12" fxFlex="100">
-      <mat-select placeholder="App Name" formControlName="appIDList" multiple (selectionChange)="OnAppNameChanged()">
+      <mat-select placeholder="App Name" formControlName="menuAppIDList" multiple (selectionChange)="OnAppNameChanged()">
         <mat-option *ngFor="let mp of AllMenuApps" [value]="mp.AppID">{{mp.AppName}}</mat-option>
       </mat-select>
       <mat-error
-        *ngIf="roleMainFormGroup.get('appIDList').touched && roleMainFormGroup.get('appIDList').hasError('required')">
+        *ngIf="roleMainFormGroup.get('menuAppIDList').touched && roleMainFormGroup.get('menuAppIDList').hasError('required')">
         App Name required</mat-error>
     </mat-form-field>
-    <!-- <mat-error *ngIf="roleMainFormGroup.get('appIDList').touched && roleMainFormGroup.get('appIDList').hasError('appIDRequired')">App
+    <!-- <mat-error *ngIf="roleMainFormGroup.get('menuAppIDList').touched && roleMainFormGroup.get('menuAppIDList').hasError('appIDRequired')">App
         Name required</mat-error>
     </mat-form-field> -->
   </div>

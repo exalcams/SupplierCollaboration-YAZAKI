@@ -13,10 +13,10 @@ export class UserWithRole {
     ModifiedOn?: Date;
     ModifiedBy: string;
 }
-export class RoleWithApp {
+export class RoleWithMenuApp {
     RoleID: Guid;
     RoleName: string;
-    AppIDList: number[];
+    MenuAppIDList: number[];
     IsActive: boolean;
     CreatedOn: Date;
     CreatedBy: string;
@@ -24,6 +24,15 @@ export class RoleWithApp {
     ModifiedBy: string;
 }
 export class MenuApp {
+    MenuAppID: number;
+    MenuAppName: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
+export class App {
     AppID: number;
     AppName: string;
     IsActive: boolean;
