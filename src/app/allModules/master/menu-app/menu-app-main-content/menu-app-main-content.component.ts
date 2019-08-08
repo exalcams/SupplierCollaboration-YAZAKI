@@ -29,13 +29,13 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
   constructor(private _masterService: MasterService, private _formBuilder: FormBuilder, private _router: Router,
     public snackBar: MatSnackBar, private dialog: MatDialog) {
     this.menuAppMainFormGroup = this._formBuilder.group({
-      appName: ['', Validators.required]
+      MenuAppName: ['', Validators.required]
     });
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.menuApp = new MenuApp();
     this.authenticationDetails = new AuthenticationDetails();
     // this.currentSelectedMenuApp = new MenuApp();
-    // this.currentSelectedMenuApp.AppID = 0;
+    // this.currentSelectedMenuApp.MenuAppID = 0;
     // if(this.currentSelectedMenuApp)
     // console.log(this.currentSelectedMenuApp);
   }
@@ -57,7 +57,7 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
   }
 
   ResetControl(): void {
-    // this.menuAppMainFormGroup.get('appName').patchValue('');
+    // this.menuAppMainFormGroup.get('menuAppName').patchValue('');
     this.menuApp = new MenuApp();
     this.menuAppMainFormGroup.reset();
     Object.keys(this.menuAppMainFormGroup.controls).forEach(key => {
@@ -68,7 +68,7 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
 
   SaveClicked(): void {
     if (this.menuAppMainFormGroup.valid) {
-      if (this.menuApp.AppID) {
+      if (this.menuApp.MenuAppID) {
         const dialogConfig: MatDialogConfig = {
           data: {
             Actiontype: 'Update',
@@ -80,7 +80,7 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
           result => {
             if (result) {
               this.ShowProgressBarEvent.emit('show');
-              this.menuApp.AppName = this.menuAppMainFormGroup.get('appName').value;
+              this.menuApp.MenuAppName = this.menuAppMainFormGroup.get('menuAppName').value;
               this.menuApp.ModifiedBy = this.authenticationDetails.userID.toString();
               this._masterService.UpdateMenuApp(this.menuApp).subscribe(
                 (data) => {
@@ -112,7 +112,7 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
             if (result) {
               this.ShowProgressBarEvent.emit('show');
               this.menuApp = new MenuApp();
-              this.menuApp.AppName = this.menuAppMainFormGroup.get('appName').value;
+              this.menuApp.MenuAppName = this.menuAppMainFormGroup.get('menuAppName').value;
               this.menuApp.CreatedBy = this.authenticationDetails.userID.toString();
               this._masterService.CreateMenuApp(this.menuApp).subscribe(
                 (data) => {
@@ -141,7 +141,7 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
 
   DeleteClicked(): void {
     if (this.menuAppMainFormGroup.valid) {
-      if (this.menuApp.AppID) {
+      if (this.menuApp.MenuAppID) {
         const dialogConfig: MatDialogConfig = {
           data: {
             Actiontype: 'Delete',
@@ -153,7 +153,7 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
           result => {
             if (result) {
               this.ShowProgressBarEvent.emit('show');
-              this.menuApp.AppName = this.menuAppMainFormGroup.get('appName').value;
+              this.menuApp.MenuAppName = this.menuAppMainFormGroup.get('menuAppName').value;
               this.menuApp.ModifiedBy = this.authenticationDetails.userID.toString();
               this._masterService.DeleteMenuApp(this.menuApp).subscribe(
                 (data) => {
@@ -184,9 +184,9 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
     // console.log(this.currentSelectedMenuApp);
     this.menuApp = this.currentSelectedMenuApp;
     if (this.menuApp) {
-      this.menuAppMainFormGroup.get('appName').patchValue(this.menuApp.AppName);
+      this.menuAppMainFormGroup.get('menuAppName').patchValue(this.menuApp.MenuAppName);
     } else {
-      // this.menuAppMainFormGroup.get('appName').patchValue('');
+      // this.menuAppMainFormGroup.get('menuAppName').patchValue('');
       this.ResetControl();
     }
   }

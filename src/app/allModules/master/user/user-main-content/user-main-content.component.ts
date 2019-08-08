@@ -10,7 +10,7 @@ import { AuthService } from 'app/services/auth.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Router } from '@angular/router';
-import { UserWithRole, RoleWithApp, AuthenticationDetails } from 'app/models/master';
+import { UserWithRole, RoleWithMenuApp, AuthenticationDetails } from 'app/models/master';
 
 @Component({
   selector: 'user-main-content',
@@ -26,7 +26,7 @@ export class UserMainContentComponent implements OnInit, OnChanges {
   @Output() ShowProgressBarEvent: EventEmitter<string> = new EventEmitter<string>();
   user: UserWithRole;
   userMainFormGroup: FormGroup;
-  AllRoles: RoleWithApp[] = [];
+  AllRoles: RoleWithMenuApp[] = [];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   fileToUpload: File;
   fileUploader: FileUploader;
@@ -59,7 +59,7 @@ export class UserMainContentComponent implements OnInit, OnChanges {
   GetAllRoles(): void {
     this._masterService.GetAllRoles().subscribe(
       (data) => {
-        this.AllRoles = <RoleWithApp[]>data;
+        this.AllRoles = <RoleWithMenuApp[]>data;
         // console.log(this.AllMenuApps);
       },
       (err) => {

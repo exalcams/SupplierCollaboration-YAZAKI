@@ -3,7 +3,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { MatSnackBar } from '@angular/material';
-import { RoleWithApp } from 'app/models/master';
+import { RoleWithMenuApp } from 'app/models/master';
 
 @Component({
   selector: 'role-side-bar',
@@ -16,8 +16,8 @@ export class RoleSideBarComponent implements OnInit, OnChanges {
 
   searchText: string;
   selectID: Guid;
-  @Input() AllRoles: RoleWithApp[] = [];
-  @Output() RoleSelectionChanged: EventEmitter<RoleWithApp> = new EventEmitter<RoleWithApp>();
+  @Input() AllRoles: RoleWithMenuApp[] = [];
+  @Output() RoleSelectionChanged: EventEmitter<RoleWithMenuApp> = new EventEmitter<RoleWithMenuApp>();
   notificationSnackBarComponent: NotificationSnackBarComponent;
   constructor(public snackBar: MatSnackBar) {
     this.searchText = '';
@@ -35,7 +35,7 @@ export class RoleSideBarComponent implements OnInit, OnChanges {
     }
   }
 
-  loadSelectedRole(SelectedRole: RoleWithApp): void {
+  loadSelectedRole(SelectedRole: RoleWithMenuApp): void {
     this.selectID = SelectedRole.RoleID;
     this.RoleSelectionChanged.emit(SelectedRole);
     // console.log(SelectedMenuApp);

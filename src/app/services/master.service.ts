@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithApp, UserWithRole, UserNotification, UserPreference } from 'app/models/master';
+import { MenuApp, RoleWithMenuApp, UserWithRole, UserNotification, UserPreference, App } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 
 @Injectable({
@@ -33,9 +33,9 @@ export class MasterService {
     return throwError(error.error || error.message || 'Server Error');
   }
 
-  // App
+  // MenuApp
   CreateMenuApp(menuApp: MenuApp): Observable<any> {
-    return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateApp`,
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateMenuApp`,
       menuApp,
       {
         headers: new HttpHeaders({
@@ -45,13 +45,13 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
-  GetAllMenuApp(): Observable<MenuApp[] | string> {
-    return this._httpClient.get<MenuApp[]>(`${this.baseAddress}api/Master/GetAllApps`)
+  GetAllMenuApps(): Observable<MenuApp[] | string> {
+    return this._httpClient.get<MenuApp[]>(`${this.baseAddress}api/Master/GetAllMenuApps`)
       .pipe(catchError(this.errorHandler));
   }
 
   UpdateMenuApp(menuApp: MenuApp): Observable<any> {
-    return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateApp`,
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateMenuApp`,
       menuApp,
       {
         headers: new HttpHeaders({
@@ -62,7 +62,7 @@ export class MasterService {
   }
 
   DeleteMenuApp(menuApp: MenuApp): Observable<any> {
-    return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteApp`,
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteMenuApp`,
       menuApp,
       {
         headers: new HttpHeaders({
@@ -72,8 +72,52 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
+  // App
+  CreateApp(app: App): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateApp`,
+      app,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllApps(): Observable<App[] | string> {
+    return this._httpClient.get<App[]>(`${this.baseAddress}api/Master/GetAllApps`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAppByName(Name: string): Observable<App | string> {
+    return this._httpClient.get<App>(`${this.baseAddress}api/Master/GetAppByName?Name=${Name}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateApp(app: App): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateApp`,
+      app,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DeleteApp(app: App): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteApp`,
+      app,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
   // Role
-  CreateRole(role: RoleWithApp): Observable<any> {
+  CreateRole(role: RoleWithMenuApp): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateRole`,
       role,
       {
@@ -83,12 +127,12 @@ export class MasterService {
       });
   }
 
-  GetAllRoles(): Observable<RoleWithApp[] | string> {
-    return this._httpClient.get<RoleWithApp[]>(`${this.baseAddress}api/Master/GetAllRoles`)
+  GetAllRoles(): Observable<RoleWithMenuApp[] | string> {
+    return this._httpClient.get<RoleWithMenuApp[]>(`${this.baseAddress}api/Master/GetAllRoles`)
       .pipe(catchError(this.errorHandler));
   }
 
-  UpdateRole(role: RoleWithApp): Observable<any> {
+  UpdateRole(role: RoleWithMenuApp): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateRole`,
       role,
       {
@@ -99,7 +143,7 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
-  DeleteRole(role: RoleWithApp): Observable<any> {
+  DeleteRole(role: RoleWithMenuApp): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteRole`,
       role,
       {
@@ -209,7 +253,7 @@ export class MasterService {
     return this._httpClient.get<UserPreference[]>(`${this.baseAddress}api/Master/GetAllUserPrefercences`)
       .pipe(catchError(this.errorHandler));
   }
-  GetUserPreferenceByUserID(UserID: Guid): Observable<UserPreference| string> {
+  GetUserPreferenceByUserID(UserID: Guid): Observable<UserPreference | string> {
     return this._httpClient.get<UserPreference>(`${this.baseAddress}api/Master/GetUserPreferenceByUserID?UserID=${UserID}`)
       .pipe(catchError(this.errorHandler));
   }

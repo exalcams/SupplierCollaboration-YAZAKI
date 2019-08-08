@@ -4,9 +4,9 @@
     <div class="h2 mb-24">{{menuApp.AppID?'Update':'Create'}} App</div>
     <div fxLayout="row wrap" fxLayoutAlign="start" fxFlex="1 0 auto">
         <mat-form-field fxFlex="100">
-            <input matInput placeholder="App Name" formControlName="appName">
+            <input matInput placeholder="App Name" formControlName="menuAppName">
             <mat-error
-                *ngIf="menuAppMainFormGroup.get('appName').touched && menuAppMainFormGroup.get('appName').hasError('required')">
+                *ngIf="menuAppMainFormGroup.get('menuAppName').touched && menuAppMainFormGroup.get('menuAppName').hasError('required')">
                 App Name required</mat-error>
         </mat-form-field>
     </div>
