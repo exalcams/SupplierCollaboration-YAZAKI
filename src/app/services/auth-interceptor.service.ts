@@ -7,7 +7,7 @@ import { map, catchError } from 'rxjs/operators';
     providedIn: 'root'
 })
 export class AuthInterceptorService implements HttpInterceptor {
-    constructor() {}
+    constructor() { }
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const authorizationData = JSON.parse(localStorage.getItem('authorizationData'));
         if (authorizationData) {
@@ -18,7 +18,7 @@ export class AuthInterceptorService implements HttpInterceptor {
             }
         }
 
-        if (!request.headers.has('Content-Type')) {
+        if (!request.headers.has('Content-Type') && !request.url.includes('AddASNAttachment')) {
             request = request.clone({ headers: request.headers.set('Content-Type', 'application/json') });
         }
 
