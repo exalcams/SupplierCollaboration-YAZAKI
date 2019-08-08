@@ -133,8 +133,8 @@
                 </div>
               </div>
             </button>  -->
-          <div style="margin-top: 25px;margin-left: 15px;">
-            <mat-form-field style="width: 80px;">
+          <div style="margin-top: 40px;">
+            <mat-form-field style="width: 120px;">
               <mat-label style="color: #1b56ca">Select</mat-label>
               <mat-select style="height: 25px">
                 <!-- <mat-option>None</mat-option> -->
@@ -203,7 +203,7 @@
                     <span style="font-size: 13px;">Purchase Order</span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
-                    <mat-form-field appearance="outline" style="max-width: 150px;">
+                    <mat-form-field appearance="outline">
                       <input matInput formControlName="ASN_Header_PO">
                       <mat-error
                         *ngIf="ASNFormGroup.get('ASN_Header_PO').touched && ASNFormGroup.get('ASN_Header_PO').hasError('required')">
@@ -216,7 +216,7 @@
                     <span style="font-size: 13px;text-align: right">Number-of-Packs</span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
-                    <mat-form-field style="max-width: 60px;" appearance="outline">
+                    <mat-form-field appearance="outline">
                       <input matInput formControlName="NoOfPackages" type="number">
                       <mat-error
                         *ngIf="ASNFormGroup.get('NoOfPackages').touched && ASNFormGroup.get('NoOfPackages').hasError('required')">
@@ -250,17 +250,15 @@
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;text-align: right">Gross-Wt-Unit-of-Measurement</span>
                   </div>
-                  <div fxFlex="12" fxLayoutAlign="start center">
-                    <mat-form-field style="max-width: 90px" appearance="outline">
+                  <div fxFlex="35" fxLayoutAlign="start center">
+                    <mat-form-field style="max-width: 100px" appearance="outline">
                       <input matInput placeholder="0:000" formControlName="GrossWeight">
                       <mat-error
                         *ngIf="ASNFormGroup.get('GrossWeight').touched && ASNFormGroup.get('GrossWeight').hasError('required')">
                         Gross Weight is required
                       </mat-error>
                     </mat-form-field>
-                  </div>
-                  <div fxFlex="15" class="text" fxLayoutAlign="start start">
-                    <mat-form-field style="max-width: 90px;margin-left: -6px" appearance="outline">
+                    <mat-form-field class="pl-4" style="max-width: 104px;" appearance="outline">
                       <input matInput formControlName="GrossWeightUOM">
                       <mat-error
                         *ngIf="ASNFormGroup.get('GrossWeightUOM').touched && ASNFormGroup.get('GrossWeightUOM').hasError('required')">
@@ -269,6 +267,16 @@
                       <mat-icon style="font-size: 17px;padding-left: 10px" matSuffix>filter_none</mat-icon>
                     </mat-form-field>
                   </div>
+                  <!-- <div fxFlex="20" class="text" fxLayoutAlign="start start">
+                    <mat-form-field style="max-width: 90px;margin-left: -6px" appearance="outline">
+                      <input matInput formControlName="GrossWeightUOM">
+                      <mat-error
+                        *ngIf="ASNFormGroup.get('GrossWeightUOM').touched && ASNFormGroup.get('GrossWeightUOM').hasError('required')">
+                        Gross Weight UOM is required
+                      </mat-error>
+                      <mat-icon style="font-size: 17px;padding-left: 10px" matSuffix>filter_none</mat-icon>
+                    </mat-form-field>
+                  </div> -->
                 </div>
                 <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column"
                   fxLayoutGap.lt-md="0px">
@@ -289,7 +297,7 @@
                     <span style="font-size: 13px;text-align: right">Net Weight</span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
-                    <mat-form-field style="max-width: 90px;" appearance="outline">
+                    <mat-form-field appearance="outline">
                       <input matInput placeholder="0:000" formControlName="NetWeight">
                       <mat-error
                         *ngIf="ASNFormGroup.get('NetWeight').touched && ASNFormGroup.get('NetWeight').hasError('required')">
@@ -320,17 +328,15 @@
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;text-align: right">Volume/Unit of measuerement</span>
                   </div>
-                  <div fxFlex="12" fxLayoutAlign="start center">
-                    <mat-form-field style="max-width: 90px" appearance="outline">
+                  <div fxFlex="35" fxLayoutAlign="start center">
+                    <mat-form-field style="max-width: 100px" appearance="outline">
                       <input matInput placeholder="0:000" formControlName="Volume">
                       <mat-error
                         *ngIf="ASNFormGroup.get('Volume').touched && ASNFormGroup.get('Volume').hasError('required')">
                         Volume is required
                       </mat-error>
                     </mat-form-field>
-                  </div>
-                  <div fxFlex="15" class="text" fxLayoutAlign="start start">
-                    <mat-form-field style="max-width: 90px;margin-left: -6px" appearance="outline">
+                    <mat-form-field class="pl-4" style="max-width: 104px" appearance="outline">
                       <input matInput formControlName="VolumeUOM">
                       <mat-icon style="font-size: 17px;padding-left: 10px" matSuffix>filter_none</mat-icon>
                       <mat-error
@@ -339,6 +345,16 @@
                       </mat-error>
                     </mat-form-field>
                   </div>
+                  <!-- <div fxFlex="15" class="text" fxLayoutAlign="start start">
+                    <mat-form-field style="max-width: 90px;margin-left: -6px" appearance="outline">
+                      <input matInput formControlName="VolumeUOM">
+                      <mat-icon style="font-size: 17px;padding-left: 10px" matSuffix>filter_none</mat-icon>
+                      <mat-error
+                        *ngIf="ASNFormGroup.get('VolumeUOM').touched && ASNFormGroup.get('VolumeUOM').hasError('required')">
+                        Volume UOM is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div> -->
                 </div>
                 <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column"
                   fxLayoutGap.lt-md="0px">
@@ -346,7 +362,7 @@
                     <span style="font-size: 13px;">Mode Of Transport</span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
-                    <mat-form-field style="max-width: 170px" appearance="outline">
+                    <mat-form-field appearance="outline">
                       <input matInput formControlName="ModeOfTransport">
                       <mat-error
                         *ngIf="ASNFormGroup.get('ModeOfTransport').touched && ASNFormGroup.get('ModeOfTransport').hasError('required')">
@@ -359,7 +375,7 @@
                     <span style="font-size: 13px;text-align: right">General Material Decription</span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
-                    <mat-form-field style="max-width: 170px" appearance="outline">
+                    <mat-form-field appearance="outline">
                       <input matInput formControlName="GeneralMaterialDescription">
                       <mat-error
                         *ngIf="ASNFormGroup.get('GeneralMaterialDescription').touched && ASNFormGroup.get('GeneralMaterialDescription').hasError('required')">
@@ -439,7 +455,7 @@
                     <span style="font-size: 13px;text-align: right">City</span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
-                    <mat-form-field style="max-width: 150px" appearance="outline">
+                    <mat-form-field appearance="outline">
                       <input matInput formControlName="City">
                       <mat-error
                         *ngIf="ASNFormGroup.get('City').touched && ASNFormGroup.get('City').hasError('required')">
@@ -453,10 +469,10 @@
                   fxLayoutGap.lt-md="0px">
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                    <span style="font-size: 13px;">Postal Coast</span>
+                    <span style="font-size: 13px;">Postal Code</span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
-                    <mat-form-field style="max-width: 110px" appearance="outline">
+                    <mat-form-field appearance="outline">
                       <input matInput formControlName="PINCode">
                       <mat-error
                         *ngIf="ASNFormGroup.get('PINCode').touched && ASNFormGroup.get('PINCode').hasError('required')">
@@ -468,7 +484,7 @@
                     <span style="font-size: 13px;text-align: right">Region</span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
-                    <mat-form-field style="max-width: 170px;" appearance="outline">
+                    <mat-form-field appearance="outline">
                       <input matInput formControlName="Region">
                       <mat-error
                         *ngIf="ASNFormGroup.get('Region').touched && ASNFormGroup.get('Region').hasError('required')">
@@ -484,7 +500,7 @@
                     <span style="font-size: 13px;">Country</span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
-                    <mat-form-field style="max-width: 150px;" appearance="outline">
+                    <mat-form-field appearance="outline">
                       <input matInput formControlName="Country">
                       <mat-error
                         *ngIf="ASNFormGroup.get('Country').touched && ASNFormGroup.get('Country').hasError('required')">
@@ -538,53 +554,50 @@
                         </div>
                       </div>
                     </div>
-                    <table mat-table [dataSource]="ASNItemDataSource" matSort>
-                      <ng-container matColumnDef="Select">
+                    <table mat-table [dataSource]="ASNItemDataSource" class="mat-elevation-z8">
+                      <!-- <ng-container matColumnDef="Select">
                         <th mat-header-cell *matHeaderCellDef>Select
-                          <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
-                                                [checked]="selection.hasValue() && isAllSelected()"
-                                                [indeterminate]="selection.hasValue() && !isAllSelected()">
-                                  </mat-checkbox> -->
+                        
                         </th>
                         <td mat-cell *matCellDef="let row">
                           <mat-checkbox style="margin-left: 15px" (click)="$event.stopPropagation()"
                             (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
                           </mat-checkbox>
                         </td>
-                      </ng-container>
+                      </ng-container> -->
                       <ng-container matColumnDef="Item">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Item</th>
+                        <th mat-header-cell *matHeaderCellDef>Item</th>
                         <td mat-cell *matCellDef="let element">{{element.Item}}</td>
                       </ng-container>
 
                       <ng-container matColumnDef="OrderedQuantity">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Order Quantity</th>
+                        <th mat-header-cell *matHeaderCellDef>Order Quantity</th>
                         <td mat-cell *matCellDef="let element"> {{element.OrderedQuantity}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="UOM">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>UOM</th>
+                        <th mat-header-cell *matHeaderCellDef>UOM</th>
                         <td mat-cell *matCellDef="let element"> {{element.UOM}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="ApprovedQuantity">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Approved Quantity </th>
+                        <th mat-header-cell *matHeaderCellDef>Approved Quantity </th>
                         <td mat-cell *matCellDef="let element"> {{element.ApprovedQuantity}} </td>
                       </ng-container>
 
 
                       <ng-container matColumnDef="InProcessQuantity">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>InProcess Quantity </th>
+                        <th mat-header-cell *matHeaderCellDef>InProcess Quantity </th>
                         <td mat-cell *matCellDef="let element"> {{element.InProcessQuantity}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="OfferedQuantity">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Offered Quantity</th>
+                        <th mat-header-cell *matHeaderCellDef>Offered Quantity</th>
                         <td mat-cell *matCellDef="let element"> {{element.OfferedQuantity}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="PackageID">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Package ID</th>
+                        <th mat-header-cell *matHeaderCellDef>Package ID</th>
                         <td mat-cell *matCellDef="let element">
                           <mat-form-field style="width: 75px">
                             <input matInput formControlName="PackageID">
@@ -593,7 +606,7 @@
                       </ng-container>
 
                       <ng-container matColumnDef="BatchNumber">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Batch Number</th>
+                        <th mat-header-cell *matHeaderCellDef>Batch Number</th>
                         <td mat-cell *matCellDef="let element">
                           <mat-form-field style="width: 75px">
                             <input matInput formControlName="BatchNumber">
@@ -602,7 +615,7 @@
                       </ng-container>
 
                       <ng-container matColumnDef="Remarks">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Remarks </th>
+                        <th mat-header-cell *matHeaderCellDef>Remarks </th>
                         <td mat-cell *matCellDef="let element">
                           <mat-form-field style="width: 75px">
                             <input style="border-width:0px;border:none" matInput formControlName="Remarks">
@@ -611,7 +624,7 @@
                       </ng-container>
 
                       <ng-container matColumnDef="MaterialDescription">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>MaterialDescription </th>
+                        <th mat-header-cell *matHeaderCellDef>MaterialDescription </th>
                         <td mat-cell *matCellDef="let element"> {{element.MaterialDescription}} </td>
                       </ng-container>
 
@@ -677,7 +690,7 @@
                       <span style="font-size: 13px;">Challan-Number</span>
                     </div>
                     <div fxFlex="35" fxLayoutAlign="start center">
-                      <mat-form-field style="max-width: 120px;" appearance="outline">
+                      <mat-form-field appearance="outline">
                         <input matInput formControlName="ChallanNumber">
                       </mat-form-field>
                     </div>
@@ -718,12 +731,16 @@
                     <strong class="sub-Title">Package-Details</strong>
                   </div>
                   <div fxFlex align="end">
-                    <button mat-raised-button (click)="AddPackages()">Add</button>
+                    <!-- <button mat-raised-button (click)="AddPackages()">Add</button> -->
+                    <img class="p-8 icon-style1" matTooltip="Add packages" (click)="AddPackages()"
+                      src="assets/images/plus.png">
+                    <img class="p-8 icon-style1" matTooltip="Remove package" (click)="RemovePackages()"
+                      src="assets/images/error.png">
                   </div>
                 </div>
                 <!-- <div *ngIf="!dataSourse1.data.push()">No past invoices found!</div> -->
 
-                <table style="margin-top: 35px" mat-table [dataSource]="ASNPackageDetailsDataSource" matSort
+                <table mat-table [dataSource]="ASNPackageDetailsDataSource" class="mat-elevation-z8"
                   formArrayName="ASNPackageDetails">
                   <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
                     *matHeaderRowDef="ASNPackageDetailsColumns">
@@ -731,7 +748,7 @@
                   <tr mat-row *matRowDef="let row;let i = index; columns: ASNPackageDetailsColumns;"></tr>
 
                   <ng-container matColumnDef="no" sticky>
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <th mat-header-cell *matHeaderCellDef>
                       <mat-icon matSuffix style="font-size: 17px">filter_none</mat-icon>
                     </th>
                     <td mat-cell *matCellDef="let element"></td>
@@ -935,17 +952,17 @@
                     <table style="margin-top: 10px" mat-table #AttachmentTable [dataSource]="AttachmentDataSource"
                       matSort>
                       <ng-container matColumnDef="AttachmentNumber">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Attachment Number</th>
+                        <th mat-header-cell *matHeaderCellDef>Attachment Number</th>
                         <td mat-cell *matCellDef="let element"> {{element.AttachmentNumber}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="AttachmentName">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Attachment Name</th>
+                        <th mat-header-cell *matHeaderCellDef>Attachment Name</th>
                         <td mat-cell *matCellDef="let element"> {{element.AttachmentName}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="DocumentType">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Document Type</th>
+                        <th mat-header-cell *matHeaderCellDef>Document Type</th>
                         <td mat-cell *matCellDef="let element"> {{element.DocumentType}} </td>
                       </ng-container>
 
@@ -962,7 +979,7 @@
                       <tr mat-row *matRowDef="let row; columns: displayedColumns3;"></tr>
 
                     </table>
-                    <div *ngIf="!AttachmentDataSource?.length">
+                    <div *ngIf="!AttachmentDetailsList?.length">
                       <mat-icon style="    color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
                       <span style="margin-left: 10px;">The table does not contain any data</span>
                     </div>
