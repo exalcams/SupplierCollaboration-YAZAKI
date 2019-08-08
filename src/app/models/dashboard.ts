@@ -49,11 +49,22 @@ export class PO_Item {
     OrderedQuantity: number;
     MaterialText: string;
     UnitofMeasure: string;
-    OpDate: number;
+    OpDate: Date;
     DeliveryDate: Date;
     LastShipmentDate: Date;
     isDeleted: boolean;
     isForeClosed: boolean;
     Currency: string;
     IsActive: string;
+}
+export class PO_OrderAcknowledgement{
+    PO:string;
+    CompanyCode:string;
+    PODate:Date;
+    PlantGST:string;
+    PaymentTerms:string;
+    Currency:string;
+    Buyer:string;
+    BuyerPhNo:string;
+    POItemList: PO_Item[];
 }

@@ -1,9 +1,6 @@
 <div id="chat" class="page-layout carded fullwidth" fusePerfectScrollbar>
   <div class="top-bg" [ngClass]="BGClassName?.layout?.toolbar?.background"></div>
-  <!-- <div class="top-bg" style="background-color:#1b56ca"></div> -->
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
-    <!-- <div class="page-layout blank">
-        <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px"> -->
     <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center"
       fxLayoutGap="10px" fxLayoutGap.xs="10">
       <div fxLayout class="layoutclass">
@@ -117,70 +114,15 @@
     <div fxFlex>
       <mat-card>
         <div>
+          <div style="text-align: end">
+            <mat-icon (click)="BackToDashboard()">arrow_back</mat-icon>
+          </div>
           <mat-card-header>
-            <mat-card-title fxFlex style="margin-left: 10px;margin-top:-5px"><strong>Purchase Order Details</strong>
+            <mat-card-title fxFlex style="margin-left: 10px;margin-top: -25px;"><strong>Purchase Order Details</strong>
             </mat-card-title>
           </mat-card-header>
           <mat-divider [inset]="true"></mat-divider>
-
           <mat-card-content>
-            <!-- <div class="row" style="margin-top: 25px" fxLayoutAlign="start">
-              <div class="pt-8 pr-8" style="text-align: right;" fxFlex="12">
-                Purc.Organization
-              </div>
-              <div fxFlex="24">
-                <mat-form-field style="max-width: 120px;" appearance="outline">
-                  <input matInput>
-                </mat-form-field>
-                <span>IN47 PUR ORG</span>
-              </div>
-              <div class="pt-8 pr-8" style="text-align: right;" fxFlex="10">
-                Vendor
-              </div>
-              <div fxFlex="20">
-                <mat-form-field style="max-width: 120px;" appearance="outline">
-                  <input matInput>
-                </mat-form-field>
-                <span>exalca</span>
-              </div>
-              <div class="pt-8 pr-8" style="text-align: right;" fxFlex="10">
-                Doc.Date
-              </div>
-              <div fxFlex="24">
-                <mat-form-field style="max-width: 120px;" appearance="outline">
-                  <input matInput>
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="row" fxLayoutAlign="start">
-              <div class="pt-8 pr-8" style="text-align: right;" fxFlex="12">
-                Company Code
-              </div>
-              <div fxFlex="24">
-                <mat-form-field style="max-width: 120px;" appearance="outline">
-                  <input matInput>
-                </mat-form-field>
-                <span>IMC</span>
-              </div>
-              <div class="pt-8 pr-8" style="text-align: right;" fxFlex="10">
-                Plant
-              </div>
-              <div fxFlex="20">
-                <mat-form-field style="max-width: 120px;" appearance="outline">
-                  <input matInput>
-                </mat-form-field>
-                <span>IMP</span>
-              </div>
-              <div class="pt-8 pr-8" style="text-align: right;" fxFlex="10">
-                Buyer
-              </div>
-              <div fxFlex="24">
-                <mat-form-field style="max-width: 120px;" appearance="outline">
-                  <input matInput>
-                </mat-form-field>
-                <span>ANZ</span>
-              </div>
-            </div> -->
             <div class="row" style="margin-top: 25px" fxLayoutAlign="start">
               <div fxFlex="15" style="text-align: right">
                 Purc.Organization :
@@ -232,9 +174,6 @@
                       </th>
                       <td mat-cell *matCellDef="let row">
                         <mat-checkbox></mat-checkbox>
-                        <!-- <mat-checkbox (click)="$event.stopPropagation()"
-                          (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
-                        </mat-checkbox> -->
                       </td>
                     </ng-container>
                     <ng-container matColumnDef="Item">
@@ -273,10 +212,10 @@
                   </table>
                 </mat-card>
                 <mat-card style="margin-left: 15px;" fxFlex="50">
-                  <mat-tab-group dynamicHeight="true">
+                  <mat-tab-group style="margin-top: -19px;" dynamicHeight="true">
                     <mat-tab matTooltip="Schedules" label="Schedules">
-                      <div class="p-24">
-                        <table style="margin-top: 10px;" mat-table [dataSource]="dataSource1">
+                      <div class="p-12">
+                        <table mat-table [dataSource]="dataSource1">
                           <ng-container matColumnDef="Item">
                             <th mat-header-cell *matHeaderCellDef>Item</th>
                             <td mat-cell *matCellDef="let element">{{element.Item}}</td>
@@ -314,8 +253,8 @@
                       </div>
                     </mat-tab>
                     <mat-tab matTooltip="Advance Shipment Notification" label="ASN">
-                      <div class="p-24">
-                        <table style="margin-top: 10px;" mat-table [dataSource]="dataSource1">
+                      <div class="p-12">
+                        <table  mat-table [dataSource]="dataSource1">
                           <ng-container matColumnDef="Item">
                             <th mat-header-cell *matHeaderCellDef>Item</th>
                             <td mat-cell *matCellDef="let element">{{element.Item}}</td>
@@ -352,8 +291,8 @@
                       </div>
                     </mat-tab>
                     <mat-tab matTooltip="Goods Reciept Note" label="GRT">
-                      <div class="p-24">
-                        <table style="margin-top: 10px;" mat-table [dataSource]="dataSource1">
+                      <div class="p-12">
+                        <table  mat-table [dataSource]="dataSource1">
                           <ng-container matColumnDef="Item">
                             <th mat-header-cell *matHeaderCellDef>Item</th>
                             <td mat-cell *matCellDef="let element">{{element.Item}}</td>
@@ -390,8 +329,8 @@
                       </div>
                     </mat-tab>
                     <mat-tab matTooltip="Quentity Rejection" label="QR">
-                      <div class="p-24">
-                        <table style="margin-top: 10px;" mat-table [dataSource]="dataSource1">
+                      <div class="p-12">
+                        <table  mat-table [dataSource]="dataSource1">
                           <ng-container matColumnDef="Item">
                             <th mat-header-cell *matHeaderCellDef>Item</th>
                             <td mat-cell *matCellDef="let element">{{element.Item}}</td>
@@ -427,43 +366,6 @@
                         </table>
                       </div>
                     </mat-tab>
-                    <!-- <mat-tab matTooltip="PO Wise Advance" label="POWA">
-                      <div class="p-24">
-                        <table style="margin-top: 10px;" mat-table [dataSource]="dataSource1">
-                          <ng-container matColumnDef="Item">
-                            <th mat-header-cell *matHeaderCellDef>Item</th>
-                            <td mat-cell *matCellDef="let element">{{element.Item}}</td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="ScheduleLine">
-                            <th mat-header-cell *matHeaderCellDef>Schedule Line</th>
-                            <td mat-cell *matCellDef="let element"> {{element.ScheduleLine}} </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="Description">
-                            <th mat-header-cell *matHeaderCellDef>Description</th>
-                            <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="DeliveryDate">
-                            <th mat-header-cell *matHeaderCellDef>Delivery Date</th>
-                            <td mat-cell *matCellDef="let element"> {{element.DeliveryDate}} </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="ScheduleQuantity">
-                            <th mat-header-cell *matHeaderCellDef>Schedule Quantity</th>
-                            <td mat-cell *matCellDef="let element"> {{element.ScheduleQuantity}} </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="UOM">
-                            <th mat-header-cell *matHeaderCellDef>UOM</th>
-                            <td mat-cell *matCellDef="let element"> {{element.UOM}} </td>
-                          </ng-container>
-                          <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
-                          <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
-                        </table>
-                      </div>
-                    </mat-tab> -->
                   </mat-tab-group>
                 </mat-card>
               </div>
@@ -472,7 +374,5 @@
         </div>
       </mat-card>
     </div>
-    <!-- </div>
-      </div> -->
   </div>
 </div>

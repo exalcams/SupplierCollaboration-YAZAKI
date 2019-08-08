@@ -290,144 +290,123 @@
     </div>
 
     <div fxFlex>
-      <div style="margin-top: 10px" fxLayout fxLayout.xs="column" fxLayout.sm="column" fxLayoutGap="20px"
-        fxLayoutGap.xs="20px">
-        <div fxFlex=74% fxFlex.ls="74">
-          <mat-card style="margin-bottom: 20px">
-            <mat-card-header>
-              <mat-card-title style="margin-left: 10px;margin-top:-5px"><strong>Order Fullfillment Status</strong>
-              </mat-card-title>
-            </mat-card-header>
-            <mat-divider></mat-divider>
-            <mat-card-content>
-              <div  style="text-align: start;margin-top: 10px;margin-bottom: -12px;background-color: #eaf2ff; ">
-                <img class="m-8" style="height: 20px" matTooltip="ePurchase Order Download"
-                  src="assets/images/dashboard/po-download.png">
-                <img class="m-8" style="height: 20px" matTooltip="Purchase Order Look Up" (click)="PurchaseOrder()"
-                  src="assets/images/dashboard/po-lookup.png">
-                <img class="m-8" style="height: 20px" matTooltip="Order Acknowledgement"
-                  (click)="OrderAcknowledgement()" src="assets/images/dashboard/order-acknowledgement.png">
-                <img class="m-8" style="height: 20px" matTooltip="Create Advance Shipment Notification"
-                  (click)="AdvanceShipment()" src="assets/images/dashboard/create-asn.png">
-                <img class="m-8" style="height: 20px" matTooltip="Inspection Check"
-                  src="assets/images/dashboard/inspection-check.png">
-                <img class="m-8" style="height: 20px" matTooltip="Expediting Event"
-                  src="assets/images/dashboard/expediting-event.png">
-                <img class="m-8" style="height: 20px" matTooltip="Export Excel" src="assets/images/dashboard/excel.png">
-              </div>
-              <div style="text-align: end;margin-top: -40px;background-color: #eaf2ff;">
-                <img class="m-8" style="height: 20px" matTooltip="Invoice Upload"
-                  src="assets/images/dashboard/ivoice-upload.png">
-                <img class="m-8" style="height: 20px" matTooltip="DisPute Management"
-                  src="assets/images/dashboard/dispute-management.png">
-                <img class="m-8" style="height: 20px" matTooltip="Expand All" src="assets/images/dashboard/resize.png">
-              </div>
-              <table style="margin-top: 10px;" mat-table [dataSource]="POListDataSource" matSort>
+      <div style="margin-top: 40px" fxLayout fxLayout.xs="column" fxLayout.sm="column" fxLayoutAlign="center"
+        fxLayoutGap="20px" fxLayoutGap.xs="20px">
+        <mat-card class="tableCard" fxFlex=74% fxFlex.ls="74">
+          <mat-card-header>
+            <mat-card-title style="margin-left: 10px;margin-top:-5px"><strong>Order Fullfillment Status</strong>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-divider></mat-divider>
+          <mat-card-content>
+            <div style="text-align: start;margin-top: 10px;margin-bottom: -12px;background-color: #eaf2ff; ">
+              <img class="m-8" style="height: 20px" matTooltip="ePurchase Order Download"
+                src="assets/images/dashboard/po-download.png">
+              <!-- <mat-icon svgIcon="shipment" [class.disabled]="POID" (click)="OrderAcknowledgement()"></mat-icon> [class.disabled]="POID"-->
+              <img class="m-8" style="height: 20px" matTooltip="Purchase Order Look Up" (click)="PurchaseOrder()"
+                src="assets/images/dashboard/po-lookup.png">
+              <img class="m-8" style="height: 20px" matTooltip="Order Acknowledgement" (click)="OrderAcknowledgement()"
+                src="assets/images/dashboard/order-acknowledgement.png">
+              <img class="m-8" style="height: 20px" matTooltip="Create Advance Shipment Notification"
+                (click)="AdvanceShipment()" src="assets/images/dashboard/create-asn.png">
+              <img class="m-8" style="height: 20px" matTooltip="Inspection Check"
+                src="assets/images/dashboard/inspection-check.png">
+              <img class="m-8" style="height: 20px" matTooltip="Expediting Event"
+                src="assets/images/dashboard/expediting-event.png">
+              <img class="m-8" style="height: 20px" matTooltip="Export Excel" src="assets/images/dashboard/excel.png">
+            </div>
+            <div style="text-align: end;margin-top: -40px;background-color: #eaf2ff;">
+              <img class="m-8" style="height: 20px" matTooltip="Invoice Upload"
+                src="assets/images/dashboard/ivoice-upload.png">
+              <img class="m-8" style="height: 20px" matTooltip="DisPute Management"
+                src="assets/images/dashboard/dispute-management.png">
+              <img class="m-8" style="height: 20px" matTooltip="Expand All" src="assets/images/dashboard/resize.png">
+            </div>
+            <table style="margin-top: 10px;" mat-table [dataSource]="POListDataSource" matSort>
 
-                <ng-container matColumnDef="select">
-                  <th mat-header-cell *matHeaderCellDef>
-                    <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
-                      [checked]="selection.hasValue() && isAllSelected()"
-                      [indeterminate]="selection.hasValue() && !isAllSelected()">
-                    </mat-checkbox> -->
-                  </th>
-                  <td mat-cell *matCellDef="let element">
-                    <!-- <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                      [checked]="selection.isSelected(row)">
-                    </mat-checkbox> -->
-                    <mat-checkbox (click)="GetPOID(element)"></mat-checkbox>
-                  </td>
-                  <!-- <td mat-cell *matCellDef="let element" *ngif="element.Select === 'true'">
-
-                    <mat-checkbox></mat-checkbox> -->
-                </ng-container>
-                <!-- <ng-container matColumnDef="PO">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>PO</th>
-                  <td mat-cell *matCellDef="let element">{{element.PO}}</td>
-                </ng-container> -->
-
-                <ng-container matColumnDef="PurchaseOrder">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Purchase Order</th>
-                  <td mat-cell *matCellDef="let element"> {{element.PO}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="Item">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Item</th>
-                  <td mat-cell *matCellDef="let element"> {{element.Item}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="PODate">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>PO Date</th>
-                  <td mat-cell *matCellDef="let element"> {{element.PODate | date : 'dd-MM-yyyy'}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="Material">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Material</th>
-                  <td mat-cell *matCellDef="let element"> {{element.Material}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="Description">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-                  <td mat-cell *matCellDef="let element"> {{element.MaterialDescription}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="POQuantity">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>PO Qty</th>
-                  <td style="text-align: right;" mat-cell *matCellDef="let element"> {{element.OrderedQuantity}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="OrderUnit">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Order Unit </th>
-                  <td mat-cell *matCellDef="let element"> {{element.UnitOfMeasure}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="QAStatus">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>QA Status </th>
-                  <td mat-cell *matCellDef="let element">
-                    <span
-                      [ngClass]="{'statusNotDone': element.AcknowledgementStatus == 'New' || element.AcknowledgementStatus == 'Open','statusDone':element.AcknowledgementStatus == 'Closed'}"></span>
-                  </td>
-                  <!-- {{element.QAStatus}} -->
-                </ng-container>
-
-                <ng-container matColumnDef="ASNStatus">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>ASN Status </th>
-                  <td mat-cell *matCellDef="let element">
-                    <span
-                      [ngClass]="{'statusDone': element.ASNStatus == 'ASNCompleted' || element.ASNStatus == 'FrightCompleted','statusNotDone':element.ASNStatus == 'Cancelled','statusPartiallyDone':element.ASNStatus == 'Draft'}"></span>
-                  </td>
-                </ng-container>
-                <ng-container matColumnDef="Attechment">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    <mat-icon>attach_file</mat-icon>
-                  </th>
-                  <td mat-cell *matCellDef="let element">
-                    <mat-icon>attach_file</mat-icon>
-                  </td>
-                </ng-container>
-                <!-- <ng-container matColumnDef="select">
-                <th mat-header-cell *matHeaderCellDef>Select
+              <!-- <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
                 </th>
-                <td mat-cell *matCellDef="let row">
-                  <mat-checkbox style="margin-left: 15px" (click)="$event.stopPropagation()"
-                    (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
-                  </mat-checkbox>
+                <td mat-cell *matCellDef="let element">
+                  <mat-checkbox (click)="GetPOID(element,element.Select?'true':'false')"></mat-checkbox>
                 </td>
               </ng-container> -->
+              <!-- <ng-container matColumnDef="PO">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>PO</th>
+                <td mat-cell *matCellDef="let element">{{element.PO}}</td>
+              </ng-container> -->
 
+              <ng-container matColumnDef="PurchaseOrder">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Purchase Order</th>
+                <td mat-cell *matCellDef="let element"> {{element.PO}} </td>
+              </ng-container>
 
-                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
-                  *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              </table>
-            </mat-card-content>
-          </mat-card>
-        </div>
+              <ng-container matColumnDef="Item">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Item</th>
+                <td mat-cell *matCellDef="let element"> {{element.Item}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="PODate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>PO Date</th>
+                <td mat-cell *matCellDef="let element"> {{element.PODate | date : 'dd-MM-yyyy'}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Material">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Material</th>
+                <td mat-cell *matCellDef="let element"> {{element.Material}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Description">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+                <td mat-cell *matCellDef="let element"> {{element.MaterialDescription}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="POQuantity">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>PO Qty</th>
+                <td style="text-align: right;" mat-cell *matCellDef="let element"> {{element.OrderedQuantity}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="OrderUnit">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Order Unit </th>
+                <td mat-cell *matCellDef="let element"> {{element.UnitOfMeasure}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="QAStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>QA Status </th>
+                <td mat-cell *matCellDef="let element">
+                  <span
+                    [ngClass]="{'statusNotDone': element.AcknowledgementStatus == 'New' || element.AcknowledgementStatus == 'Open','statusDone':element.AcknowledgementStatus == 'Closed'}"></span>
+                </td>
+                <!-- {{element.QAStatus}} -->
+              </ng-container>
+
+              <ng-container matColumnDef="ASNStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>ASN Status </th>
+                <td mat-cell *matCellDef="let element">
+                  <span
+                    [ngClass]="{'statusDone': element.ASNStatus == 'ASNCompleted' || element.ASNStatus == 'FrightCompleted','statusNotDone':element.ASNStatus == 'Cancelled' || element.ASNStatus == 'Open','statusPartiallyDone':element.ASNStatus == 'Draft'}"></span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="Attechment">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  <mat-icon>attach_file</mat-icon>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-icon>attach_file</mat-icon>
+                </td>
+              </ng-container>
+              <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
+                *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="Checked(row)"
+                [class.highlight]="row === selectedPORow"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
         <div fxFlex=26% fxFlex.ls="26">
           <div>
             <mat-card>
               <mat-card-header style="margin-top: -10px;margin-left:-10px">
-                <mat-card-title ><strong>My Notifications</strong>
+                <mat-card-title><strong>My Notifications</strong>
                 </mat-card-title>
               </mat-card-header>
               <mat-divider style="margin-top: -10px;"></mat-divider>

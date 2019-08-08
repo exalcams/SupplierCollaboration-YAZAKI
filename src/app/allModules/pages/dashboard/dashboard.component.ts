@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry, MatSnackBar, MatTableDataSource, MatSort } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { AuthenticationDetails } from 'app/models/master';
@@ -9,6 +9,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { DashboardService } from 'app/services/dashboard.service';
 import { PO_Notifications, DashboardStatus, PO_DeliveryStatus, PO_PurchaseOrderDetails, POView } from 'app/models/dashboard';
+import { ASNService } from 'app/services/asn.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +19,7 @@ import { PO_Notifications, DashboardStatus, PO_DeliveryStatus, PO_PurchaseOrderD
 export class DashboardComponent implements OnInit {
   showChart = false;
   BGClassName: any;
-  displayedColumns: string[] = ['select', 'PurchaseOrder', 'Item', 'PODate', 'Material', 'Description', 'POQuantity', 'OrderUnit', 'QAStatus', 'ASNStatus', 'Attechment'];
+  displayedColumns: string[] = ['PurchaseOrder', 'Item', 'PODate', 'Material', 'Description', 'POQuantity', 'OrderUnit', 'QAStatus', 'ASNStatus', 'Attechment'];
   displayedColumns1: string[] = ['DraftID', 'ServiceEnterSheetID', 'PurchaseOrder', 'Amount'];
   AllPOList: POView[] = [];
   POListDataSource: MatTableDataSource<POView>;
@@ -29,18 +30,14 @@ export class DashboardComponent implements OnInit {
   MenuItems: string[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   public isVisible: boolean;
-  POID: any;
-  SelectedPOItem: string;
   PONotifications: PO_Notifications = new PO_Notifications();
   DashbordStatus: DashboardStatus = new DashboardStatus();
   PODeliveryStatus: PO_DeliveryStatus = new PO_DeliveryStatus();
   selected1 = 'option1';
   selected2 = 'option1';
   iconVisible = false;
-  // private LinItemList: LineItems[];
+  selectedPORow: POView = new POView();
   public OrderList: Orders[];
-  // displayedColumns: string[] = ['Description', 'Quantity', 'Rate'];
-  // displayedColumns1: string[] = ['Description', 'Quantity', 'Status'];
   widget5: any = {};
   selected = 'Month';
   @ViewChild(MatSort) sort: MatSort;
@@ -49,17 +46,22 @@ export class DashboardComponent implements OnInit {
     matIconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer,
     public dashboardService: DashboardService,
+    public asnService: ASNService,
+    private route: ActivatedRoute,
     public snackBar: MatSnackBar) {
     matIconRegistry.addSvgIcon('pdficon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/dashboard/pdf.svg'));
     matIconRegistry.addSvgIcon('questionmarkicon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/dashboard/noun-help-922772.svg'));
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
 
+    // this.route.queryParams.subscribe(params => {
+    //   this.selectedPORow.PO = params['id'];
+    //   console.log(this.selectedPORow.PO);
+      
+    // })
+
   }
 
   ngOnInit(): void {
-    // Retrive authorizationData
-    //this.dataSource = new MatTableDataSource(ELEMENT_DATA);
-    //this.dataSource.sort = this.sort;
     this.GetAllPOList();
     this.GetAllPONotifications();
     this.GetAllDashboardStatus();
@@ -68,11 +70,7 @@ export class DashboardComponent implements OnInit {
     this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
     this.dataSource1.sort = this.sort;
     this.selection = new SelectionModel(false, []);
-    // this.isAllSelected();
-    // this.masterToggle();
-    // this.checkboxLabel();
     this._fuseConfigService.config
-      // .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config) => {
         this.BGClassName = config;
       });
@@ -134,44 +132,33 @@ export class DashboardComponent implements OnInit {
     // else
     // this.forecasts = this.cacheForecasts.filter((item) => item.summary == filterVal); 
   }
-  // isAllSelected() {
-  //   const numSelected = this.selection.selected.length;
-  //   const numRows = this.POListDataSource.data.length;
-  //   return numSelected === numRows;
-  // }
-  // masterToggle() {
-  //   this.isAllSelected() ?
-  //     this.selection.clear() :
-  //     this.POListDataSource.data.forEach(row => this.selection.select(row));
-  // }
-  // /** The label for the checkbox on the passed row */
-  // checkboxLabel(row?: POList): string {
-  //   if (!row) {
-  //     return `${this.isAllSelected() ? '' : 'deselect'} all`;
-  //   }
-  //   return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.POQuantity + 1}`;
-  // }
   PurchaseOrder() {
-    let id;
-    id = this.POID;
-    this._router.navigate(['/dashboard/purchaseOrderDetails'], { queryParams: { id: id } });
+    if (this.selectedPORow.PO != null) {
+      this._router.navigate(['/dashboard/purchaseOrderDetails'], { queryParams: { id: this.selectedPORow.PO } });
+    }
+    else {
+      this.notificationSnackBarComponent.openSnackBar('Please select the PO ', SnackBarStatus.danger);
+    }
+
   }
   OrderAcknowledgement() {
-    let id;
-    id = this.POID;
-    this._router.navigate(['/orderacknowledgment/acknowledgment'], { queryParams: { id: id } });
+    if (this.selectedPORow.PO != null) {
+      this._router.navigate(['/orderacknowledgment/acknowledgment'], { queryParams: { id: this.selectedPORow.PO,item:this.selectedPORow.Item } });
+    }
+    else {
+      this.notificationSnackBarComponent.openSnackBar('Please select the PO ', SnackBarStatus.danger);
+    }
   }
   AdvanceShipment() {
-    const id = this.POID;
-    this._router.navigate(['/order/shipment'], { queryParams: { id: id, item: this.SelectedPOItem } });
+    if (this.selectedPORow.AcknowledgementStatus && this.selectedPORow.AcknowledgementStatus.toLowerCase() === 'closed') {
+      this._router.navigate(['/order/shipment'], { queryParams: { id: this.selectedPORow.PO, item: this.selectedPORow.AcknowledgementStatus } });
+    } else {
+      this.notificationSnackBarComponent.openSnackBar('Please acknowledge the PO item', SnackBarStatus.danger);
+    }
   }
-  GetPOID(Po: POView): void {
-    this.POID = Po.PO;
-    this.SelectedPOItem = Po.Item;
-    this.iconVisible = true;
-  }
+
   GetAllPOList(): void {
-    this.dashboardService.GetAllPoList().subscribe((data) => {
+    this.asnService.GetAllPOByAcknowledgementStatus("all").subscribe((data) => {
       if (data) {
         this.AllPOList = <POView[]>data;
         this.POListDataSource = new MatTableDataSource(this.AllPOList);
@@ -207,7 +194,6 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.GetAllPODeliveryStatus().subscribe((data) => {
       if (data) {
         this.PODeliveryStatus = <PO_DeliveryStatus>data;
-        console.log(this.PODeliveryStatus);
         this.widget5 = {
           data: {
             labels: this.PODeliveryStatus.Date,
@@ -284,6 +270,9 @@ export class DashboardComponent implements OnInit {
       });
   }
 
+  Checked(data) {
+    this.selectedPORow = data
+  }
 }
 
 export class LineItems {
