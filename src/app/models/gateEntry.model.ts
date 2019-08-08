@@ -60,5 +60,7 @@ export interface GatePassModel extends GateEntryHeader {
 
 export interface GatePassNoData {
     GT_No: string;
+    ReferenceType: string;
+    Vendor: string;
     CreatedDate: Date;
 }
