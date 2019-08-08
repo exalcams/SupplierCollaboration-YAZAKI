@@ -39,7 +39,6 @@ export class ShipmentnotificationComponent implements OnInit {
     fileUploader: FileUploader;
     PO_ID: string;
     ASNItemColumns: string[] = [
-        'Select',
         'Item',
         'OrderedQuantity',
         'UOM',
@@ -242,6 +241,14 @@ export class ShipmentnotificationComponent implements OnInit {
             this.addASNPackageDetailsFormGroup();
         }
 
+    }
+    RemovePackages(): void {
+        if (this.rows.length > 0) {
+            this.rows.removeAt(this.rows.length - 1);
+            this.ASNPackageDetailsDataSource.next(this.rows.controls);
+        } else {
+            this.notificationSnackBarComponent.openSnackBar('no packages to delete', SnackBarStatus.warning);
+        }
     }
     getAllVendorLocations(): void {
         this._asnService.GetAllVendorLocations().subscribe(
