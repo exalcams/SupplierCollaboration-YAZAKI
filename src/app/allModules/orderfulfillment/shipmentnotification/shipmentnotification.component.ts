@@ -691,6 +691,7 @@ export class ShipmentnotificationComponent implements OnInit {
         );
     }
     GetAttachmentViewsByAppID(APPID: number, APPNumber: number): void {
+        this.ResetAttachements();
         this._asnService.GetAttachmentViewsByAppID(APPID, APPNumber).subscribe(
             (data) => {
                 this.AttachmentDetailsList = data as AttachmentDetails[];

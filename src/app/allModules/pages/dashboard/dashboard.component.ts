@@ -151,7 +151,7 @@ export class DashboardComponent implements OnInit {
   }
   AdvanceShipment() {
     if (this.selectedPORow.AcknowledgementStatus && this.selectedPORow.AcknowledgementStatus.toLowerCase() === 'closed') {
-      this._router.navigate(['/order/shipment'], { queryParams: { id: this.selectedPORow.PO, item: this.selectedPORow.AcknowledgementStatus } });
+      this._router.navigate(['/order/shipment'], { queryParams: { id: this.selectedPORow.PO, item: this.selectedPORow.Item } });
     } else {
       this.notificationSnackBarComponent.openSnackBar('Please acknowledge the PO item', SnackBarStatus.danger);
     }
