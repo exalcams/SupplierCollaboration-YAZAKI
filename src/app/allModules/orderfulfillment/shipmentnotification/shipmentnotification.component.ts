@@ -16,6 +16,7 @@ import { isNumeric } from 'rxjs/util/isNumeric';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationDetails, App } from 'app/models/master';
 import { MasterService } from 'app/services/master.service';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -29,15 +30,18 @@ export class ShipmentnotificationComponent implements OnInit {
     authenticationDetails: AuthenticationDetails;
     CurrentUserName: string;
     BGClassName: any;
+    AcknowledgementStatus = 'closed';
     ASNClass: ASN;
     ASNAppID: number;
     VendorLocationList: VendorLocation[];
     notificationSnackBarComponent: NotificationSnackBarComponent;
+    IsProgressBarVisibile: boolean;
     AllASNHeaderViews: ASNHeaderView[] = [];
     AllAcknowledgedPOViews: POView[] = [];
     // SelectedTransID: number;
     SelectedPO: string;
     SelectedPOItem: string;
+    SelectedASNStatus: string;
     fileToUpload: File;
     fileToUploadList: File[] = [];
     AttachmentDetailsList: AttachmentDetails[] = [];
@@ -75,17 +79,21 @@ export class ShipmentnotificationComponent implements OnInit {
         private _asnService: ASNService,
         private _masterService: MasterService,
         private _router: Router,
+        private _location: Location,
         public snackBar: MatSnackBar,
         private dialog: MatDialog,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
     ) {
         this.ASNClass = new ASN();
         this.ASNAppID = 0;
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+        this.IsProgressBarVisibile = false;
         this.route.queryParams.subscribe(params => {
             this.SelectedPO = params['id'];
             this.SelectedPOItem = params['item'];
+            this.SelectedASNStatus = params['status'];
         });
+        this._location.replaceState(this._router.url.split('?')[0]);
     }
 
     ngOnInit(): void {
@@ -138,7 +146,8 @@ export class ShipmentnotificationComponent implements OnInit {
         this.GetAppByName();
         this.getAllVendorLocations();
         // this.GetAllASNHeaderViews();
-        this.GetAllAcknowledgedPOViews();
+        // this.GetAllAcknowledgedPOViews();
+        this.GetAllPOByAckAndASNStatus();
         // this.isAllSelected();
         // this.masterToggle();
         // this.checkboxLabel();
@@ -227,43 +236,47 @@ export class ShipmentnotificationComponent implements OnInit {
     //     }
     // }
     AddPackages(): void {
-        const NoOfPac = +this.ASNFormGroup.get('NoOfPackages').value;
-        const r = this.rows.length;
-        if (NoOfPac - r < 0) {
-            // if (this.ASNClass.TransID) {
-            //     const NoofRowsToDelete = r - NoOfPac;
-            //     for (let i = r - 1; i >= r - NoofRowsToDelete; i--) {
-            //         this.rows.removeAt(i);
-            //         this.ASNPackageDetailsDataSource.next(this.rows.controls);
-            //     }
-            // } else {
-            //     this.rows = this._formBuilder.array([]);
-            //     this.ASNPackageDetailsDataSource.next(this.rows.controls);
-            //     r = this.rows.length;
-            // }
-            const NoofRowsToDelete = r - NoOfPac;
-            for (let i = r - 1; i >= r - NoofRowsToDelete; i--) {
-                this.rows.removeAt(i);
-                this.ASNPackageDetailsDataSource.next(this.rows.controls);
+        if (this.SelectedASNStatus !== 'ASNCompleted') {
+            const NoOfPac = +this.ASNFormGroup.get('NoOfPackages').value;
+            const r = this.rows.length;
+            if (NoOfPac - r < 0) {
+                // if (this.ASNClass.TransID) {
+                //     const NoofRowsToDelete = r - NoOfPac;
+                //     for (let i = r - 1; i >= r - NoofRowsToDelete; i--) {
+                //         this.rows.removeAt(i);
+                //         this.ASNPackageDetailsDataSource.next(this.rows.controls);
+                //     }
+                // } else {
+                //     this.rows = this._formBuilder.array([]);
+                //     this.ASNPackageDetailsDataSource.next(this.rows.controls);
+                //     r = this.rows.length;
+                // }
+                const NoofRowsToDelete = r - NoOfPac;
+                for (let i = r - 1; i >= r - NoofRowsToDelete; i--) {
+                    this.rows.removeAt(i);
+                    this.ASNPackageDetailsDataSource.next(this.rows.controls);
+                }
             }
-        }
-        else if (NoOfPac - r === 0) {
-            this.notificationSnackBarComponent.openSnackBar('no more packages to add', SnackBarStatus.warning);
-        }
-        else {
-            // for (let i = 0; i < NoOfPac - r; i++) {
-            //     this.addASNPackageDetailsFormGroup();
-            // }
-            this.addASNPackageDetailsFormGroup();
+            else if (NoOfPac - r === 0) {
+                this.notificationSnackBarComponent.openSnackBar('no more packages to add', SnackBarStatus.warning);
+            }
+            else {
+                // for (let i = 0; i < NoOfPac - r; i++) {
+                //     this.addASNPackageDetailsFormGroup();
+                // }
+                this.addASNPackageDetailsFormGroup();
+            }
         }
 
     }
     RemovePackages(): void {
-        if (this.rows.length > 0) {
-            this.rows.removeAt(this.rows.length - 1);
-            this.ASNPackageDetailsDataSource.next(this.rows.controls);
-        } else {
-            this.notificationSnackBarComponent.openSnackBar('no packages to delete', SnackBarStatus.warning);
+        if (this.SelectedASNStatus !== 'ASNCompleted') {
+            if (this.rows.length > 0) {
+                this.rows.removeAt(this.rows.length - 1);
+                this.ASNPackageDetailsDataSource.next(this.rows.controls);
+            } else {
+                this.notificationSnackBarComponent.openSnackBar('no packages to delete', SnackBarStatus.warning);
+            }
         }
     }
     GetAppByName(): void {
@@ -324,13 +337,43 @@ export class ShipmentnotificationComponent implements OnInit {
     }
 
     GetAllAcknowledgedPOViews(): void {
-        const AcknowledgementStatus = 'closed';
-        this._asnService.GetAllPOByAcknowledgementStatus(AcknowledgementStatus).subscribe(
+        // const AcknowledgementStatus = 'closed';
+        this._asnService.GetAllPOByAcknowledgementStatus(this.AcknowledgementStatus).subscribe(
             (data) => {
                 this.AllAcknowledgedPOViews = data as POView[];
                 if (this.SelectedPO && this.SelectedPOItem) {
                     const s = this.AllAcknowledgedPOViews.filter(x => x.PO === this.SelectedPO && x.Item === this.SelectedPOItem)[0];
-                    this.headerClick(s);
+                    if (s) {
+                        this.headerClick(s);
+                        // this.SelectedPO = '';
+                        // this.SelectedPOItem = '';
+
+                    }
+                }
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }
+    ASNStatusSelected(ASNStatusValue: string): void {
+        this.ResetControl();
+        this.ResetSelectedPO();
+        this.GetAllPOByAckAndASNStatus();
+        this.getAllVendorLocations();
+    }
+
+    GetAllPOByAckAndASNStatus(): void {
+        this._asnService.GetAllPOByAckAndASNStatus(this.AcknowledgementStatus, this.SelectedASNStatus).subscribe(
+            (data) => {
+                this.AllAcknowledgedPOViews = data as POView[];
+                if (this.SelectedPO && this.SelectedPOItem) {
+                    const s = this.AllAcknowledgedPOViews.filter(x => x.PO === this.SelectedPO && x.Item === this.SelectedPOItem)[0];
+                    if (s) {
+                        this.headerClick(s);
+                        // this.SelectedPO = '';
+                        // this.SelectedPOItem = '';
+                    }
                 }
             },
             (err) => {
@@ -431,7 +474,7 @@ export class ShipmentnotificationComponent implements OnInit {
     }
 
     submitASNDetails(val: string): void {
-
+        this.ASNFormGroup.enable();
         if (this.ASNFormGroup.valid) {
             if (this.ASNClass.TransID) {
                 const dialogConfig: MatDialogConfig = {
@@ -444,6 +487,7 @@ export class ShipmentnotificationComponent implements OnInit {
                 dialogRef.afterClosed().subscribe(
                     result => {
                         if (result) {
+                            this.IsProgressBarVisibile = true;
                             this.ASNClass.Status = val;
                             this.GetASNHeaderValues();
                             this.GetASNItemDetailValues();
@@ -458,23 +502,35 @@ export class ShipmentnotificationComponent implements OnInit {
                                     aux.CreatedBy = this.CurrentUserName;
                                     this._asnService.AddASNAttachment(aux, this.fileToUploadList).subscribe(
                                         (dat) => {
+                                            this.IsProgressBarVisibile = false;
                                             this.ResetControl();
                                             this.ResetSelectedPO();
                                             this.notificationSnackBarComponent.openSnackBar('ASN details updated successfully', SnackBarStatus.success);
                                             // this.GetAllASNHeaderViews();
-                                            this.GetAllAcknowledgedPOViews();
+                                            // this.GetAllAcknowledgedPOViews();
+                                            this.GetAllPOByAckAndASNStatus();
+                                            this.getAllVendorLocations();
                                         },
                                         (err) => {
                                             console.error(err);
+                                            this.IsProgressBarVisibile = false;
                                             this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
                                         }
                                     );
                                 },
                                 (err) => {
                                     console.error(err);
+                                    this.IsProgressBarVisibile = false;
                                     this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
                                 }
                             );
+                        } else {
+                            if (this.SelectedASNStatus === 'ASNCompleted') {
+                                // this.ASNFormGroup.disable();
+                                Object.keys(this.ASNFormGroup.controls).forEach(key2 => {
+                                    this.ASNFormGroup.get(key2).disable();
+                                });
+                            }
                         }
                     }
                 );
@@ -489,6 +545,7 @@ export class ShipmentnotificationComponent implements OnInit {
                 dialogRef.afterClosed().subscribe(
                     result => {
                         if (result) {
+                            this.IsProgressBarVisibile = true;
                             this.ASNClass.Status = val;
                             this.GetASNHeaderValues();
                             this.GetASNItemDetailValues();
@@ -503,20 +560,25 @@ export class ShipmentnotificationComponent implements OnInit {
                                     aux.CreatedBy = this.CurrentUserName;
                                     this._asnService.AddASNAttachment(aux, this.fileToUploadList).subscribe(
                                         (dat) => {
+                                            this.IsProgressBarVisibile = false;
                                             this.ResetControl();
                                             this.ResetSelectedPO();
                                             this.notificationSnackBarComponent.openSnackBar('ASN details created successfully', SnackBarStatus.success);
                                             // this.GetAllASNHeaderViews();
-                                            this.GetAllAcknowledgedPOViews();
+                                            // this.GetAllAcknowledgedPOViews();
+                                            this.GetAllPOByAckAndASNStatus();
+                                            this.getAllVendorLocations();
                                         },
                                         (err) => {
                                             console.error(err);
+                                            this.IsProgressBarVisibile = false;
                                             this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
                                         }
                                     );
                                 },
                                 (err) => {
                                     console.error(err);
+                                    this.IsProgressBarVisibile = false;
                                     this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
                                 }
                             );
@@ -530,6 +592,24 @@ export class ShipmentnotificationComponent implements OnInit {
                 }
                 this.ASNFormGroup.get(key).markAsTouched();
                 this.ASNFormGroup.get(key).markAsDirty();
+                if (this.ASNFormGroup.get(key) instanceof FormArray) {
+                    const FormArrayControls = this.ASNFormGroup.get(key) as FormArray;
+                    Object.keys(FormArrayControls.controls).forEach(key1 => {
+                        if (FormArrayControls.get(key1) instanceof FormGroup) {
+                            const FormGroupControls = FormArrayControls.get(key1) as FormGroup;
+                            Object.keys(FormGroupControls.controls).forEach(key2 => {
+                                FormGroupControls.get(key2).markAsTouched();
+                                FormGroupControls.get(key2).markAsDirty();
+                                if (!FormGroupControls.get(key2).valid) {
+                                    console.log(key2);
+                                }
+                            });
+                        } else {
+                            FormArrayControls.get(key1).markAsTouched();
+                            FormArrayControls.get(key1).markAsDirty();
+                        }
+                    });
+                }
             });
         }
     }
@@ -579,7 +659,7 @@ export class ShipmentnotificationComponent implements OnInit {
             Country: this.ASNClass.Country,
             Remarks: this.ASNClass.Remarks,
         });
-        this.ASNFormGroup.disable();
+        // this.ASNFormGroup.disable();
         // this.ASNFormGroup.get('ASN_Header_PO').disable();
         // this.ASNFormGroup.get('ASN_Header_PO').patchValue(this.ASNClass.ASN_Header_PO);
         // this.ASNFormGroup.get('NoOfPackages').patchValue(this.ASNClass.NoOfPackages);
@@ -606,7 +686,7 @@ export class ShipmentnotificationComponent implements OnInit {
     }
     InsertASNItemsFormGroup(): void {
         const ASNItemsFormArray = this.ASNFormGroup.get('ASNItems') as FormArray;
-        ASNItemsFormArray.enable();
+        // ASNItemsFormArray.enable();
         ASNItemsFormArray.controls.forEach((x, i) => {
             x.patchValue({
                 PackageID: this.ASNClass.ASNItems[i].PackageID,
@@ -653,6 +733,9 @@ export class ShipmentnotificationComponent implements OnInit {
             (data) => {
                 if (data) {
                     this.ASNClass = data as ASN;
+                    if (this.SelectedASNStatus === 'ASNCompleted') {
+                        this.ASNFormGroup.disable();
+                    }
                     this.InsertASNHeaderValues();
                     if (this.ASNClass.ASNItems && this.ASNClass.ASNItems.length) {
                         this.ASNItemDataSource = new MatTableDataSource(this.ASNClass.ASNItems);
@@ -663,7 +746,7 @@ export class ShipmentnotificationComponent implements OnInit {
                         this.ASNClass.ASNPackageDetails.forEach((x, i) => {
                             if (i < this.ASNClass.NoOfPackages) {
                                 this.InsertASNPackageDetailsFormGroup(x);
-                                this.rows.enable();
+                                // this.rows.enable();
                             }
                         });
                     } else {
@@ -684,6 +767,7 @@ export class ShipmentnotificationComponent implements OnInit {
             (data) => {
                 if (data) {
                     this.ASNClass = data as ASN;
+
                     this.GetAttachmentViewsByAppID(this.ASNAppID, this.ASNClass.TransID);
                     this.InsertASNHeaderValues();
                     if (this.ASNClass.ASNItems && this.ASNClass.ASNItems.length) {
@@ -700,7 +784,15 @@ export class ShipmentnotificationComponent implements OnInit {
                     } else {
                         this.ResetASNPackageDetails();
                     }
-
+                    if (this.SelectedASNStatus === 'ASNCompleted') {
+                        // this.ASNFormGroup.disable();
+                        Object.keys(this.ASNFormGroup.controls).forEach(key2 => {
+                            this.ASNFormGroup.get(key2).disable();
+                        });
+                    } else {
+                        this.ASNFormGroup.enable();
+                        this.ASNFormGroup.get('ASN_Header_PO').disable();
+                    }
                 }
 
             },

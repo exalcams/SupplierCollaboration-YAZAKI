@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit {
     // this.route.queryParams.subscribe(params => {
     //   this.selectedPORow.PO = params['id'];
     //   console.log(this.selectedPORow.PO);
-      
+
     // })
 
   }
@@ -143,7 +143,7 @@ export class DashboardComponent implements OnInit {
   }
   OrderAcknowledgement() {
     if (this.selectedPORow.PO != null) {
-      this._router.navigate(['/orderacknowledgment/acknowledgment'], { queryParams: { id: this.selectedPORow.PO,item:this.selectedPORow.Item } });
+      this._router.navigate(['/orderacknowledgment/acknowledgment'], { queryParams: { id: this.selectedPORow.PO, item: this.selectedPORow.Item } });
     }
     else {
       this.notificationSnackBarComponent.openSnackBar('Please select the PO ', SnackBarStatus.danger);
@@ -151,7 +151,8 @@ export class DashboardComponent implements OnInit {
   }
   AdvanceShipment() {
     if (this.selectedPORow.AcknowledgementStatus && this.selectedPORow.AcknowledgementStatus.toLowerCase() === 'closed') {
-      this._router.navigate(['/order/shipment'], { queryParams: { id: this.selectedPORow.PO, item: this.selectedPORow.Item } });
+      this._router.navigate(['/order/shipment'],
+        { queryParams: { id: this.selectedPORow.PO, item: this.selectedPORow.Item, status: this.selectedPORow.ASNStatus } });
     } else {
       this.notificationSnackBarComponent.openSnackBar('Please acknowledge the PO item', SnackBarStatus.danger);
     }

@@ -29,7 +29,7 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
   constructor(private _masterService: MasterService, private _formBuilder: FormBuilder, private _router: Router,
     public snackBar: MatSnackBar, private dialog: MatDialog) {
     this.menuAppMainFormGroup = this._formBuilder.group({
-      MenuAppName: ['', Validators.required]
+      menuAppName: ['', Validators.required]
     });
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.menuApp = new MenuApp();
@@ -47,7 +47,7 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
-      if (this.MenuItems.indexOf('App') < 0) {
+      if (this.MenuItems.indexOf('MenuApp') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
         this._router.navigate(['/auth/login']);
       }
@@ -72,7 +72,7 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
         const dialogConfig: MatDialogConfig = {
           data: {
             Actiontype: 'Update',
-            Catagory: 'app'
+            Catagory: 'Menu app'
           },
         };
         const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
@@ -86,9 +86,9 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
                 (data) => {
                   // console.log(data);
                   this.ResetControl();
-                  this.notificationSnackBarComponent.openSnackBar('App updated successfully', SnackBarStatus.success);
+                  this.notificationSnackBarComponent.openSnackBar('Menu app updated successfully', SnackBarStatus.success);
                   this.SaveSucceed.emit('success');
-                  this._masterService.TriggerNotification('App updated successfully');
+                  this._masterService.TriggerNotification('Menu app updated successfully');
                 },
                 (err) => {
                   console.error(err);
@@ -103,7 +103,7 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
         const dialogConfig: MatDialogConfig = {
           data: {
             Actiontype: 'Create',
-            Catagory: 'app'
+            Catagory: 'Menu app'
           },
         };
         const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
@@ -118,9 +118,9 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
                 (data) => {
                   // console.log(data);
                   this.ResetControl();
-                  this.notificationSnackBarComponent.openSnackBar('App created successfully', SnackBarStatus.success);
+                  this.notificationSnackBarComponent.openSnackBar('Menu app created successfully', SnackBarStatus.success);
                   this.SaveSucceed.emit('success');
-                  this._masterService.TriggerNotification('App created successfully');
+                  this._masterService.TriggerNotification('Menu app created successfully');
                 },
                 (err) => {
                   console.error(err);
@@ -145,7 +145,7 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
         const dialogConfig: MatDialogConfig = {
           data: {
             Actiontype: 'Delete',
-            Catagory: 'app'
+            Catagory: 'Menu app'
           },
         };
         const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
@@ -159,9 +159,9 @@ export class MenuAppMainContentComponent implements OnInit, OnChanges {
                 (data) => {
                   // console.log(data);
                   this.ResetControl();
-                  this.notificationSnackBarComponent.openSnackBar('App deleted successfully', SnackBarStatus.success);
+                  this.notificationSnackBarComponent.openSnackBar('Menu app deleted successfully', SnackBarStatus.success);
                   this.SaveSucceed.emit('success');
-                  this._masterService.TriggerNotification('App deleted successfully');
+                  this._masterService.TriggerNotification('Menu app deleted successfully');
                 },
                 (err) => {
                   console.error(err);

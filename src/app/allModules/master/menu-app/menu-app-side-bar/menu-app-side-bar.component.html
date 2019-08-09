@@ -24,11 +24,11 @@
               Apps
           </div> -->
           <button mat-button class="contact" *ngFor="let ap of AllMenuApps | filter: searchText" (click)="loadSelectedMenuApp(ap)"
-              ngClass="{'unread':contact.unread}" [@animate]="{value:'*',params:{y:'100%'}}" [style.background-color]="selectID==ap.AppID?'lightgrey':'white'">
+              ngClass="{'unread':contact.unread}" [@animate]="{value:'*',params:{y:'100%'}}" [style.background-color]="selectID==ap.MenuAppID?'lightgrey':'white'">
               <div fxLayout="row" fxLayoutAlign="start center">
                   <div fxLayout="row" fxFlex>
                       <div class="" fxFlex fxLayout="column" fxLayoutAlign="center start">
-                          <div class="contact-name">{{ap.AppName}}</div>
+                          <div class="contact-name">{{ap.MenuAppName}}</div>
                       </div>
                       <div fxLayout="column" fxLayoutAlign="center end">
                           <div class="contact-last-message-time">

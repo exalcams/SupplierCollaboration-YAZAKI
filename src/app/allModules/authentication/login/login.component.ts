@@ -375,7 +375,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.MenuItems.indexOf('MenuApp') >= 0 ||
             this.MenuItems.indexOf('Role') >= 0 ||
             this.MenuItems.indexOf('User') >= 0 ||
-            this.MenuItems.indexOf('UserPreference')
+            this.MenuItems.indexOf('UserPreference')  >= 0
         ) {
             this.children.push({
                 id: 'master',
