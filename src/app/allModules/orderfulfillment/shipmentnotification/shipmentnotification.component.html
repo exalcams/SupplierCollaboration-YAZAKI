@@ -136,13 +136,14 @@
           <div style="margin-top: 40px;">
             <mat-form-field style="width: 120px;">
               <mat-label style="color: #1b56ca">Select</mat-label>
-              <mat-select style="height: 25px">
+              <mat-select style="height: 25px" [(ngModel)]="SelectedASNStatus" (selectionChange)="ASNStatusSelected($event.value)">
                 <!-- <mat-option>None</mat-option> -->
-                <mat-option value="option1">Saved as Draft Request</mat-option>
-                <mat-option value="option2">My Previous Request</mat-option>
-                <mat-option value="option3">Rejected Request</mat-option>
+                <mat-option value="Open">Open</mat-option>
+                <mat-option value="Draft">Saved as Draft Request</mat-option>
+                <mat-option value="ASNCompleted">My Previous Request</mat-option>
+                <!-- <mat-option value="option3">Rejected Request</mat-option>
                 <mat-option value="option1">Sent Back Request</mat-option>
-                <mat-option value="option2">EXIM confirmed Request</mat-option>
+                <mat-option value="option2">EXIM confirmed Request</mat-option> -->
               </mat-select>
             </mat-form-field>
           </div>
@@ -201,27 +202,27 @@
                 <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;">Purchase Order</span>
+                    <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASN_Header_PO').touched && 
+                      ASNFormGroup.get('ASN_Header_PO').hasError('required')">
+                      *
+                    </span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="ASN_Header_PO">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('ASN_Header_PO').touched && ASNFormGroup.get('ASN_Header_PO').hasError('required')">
-                        Po is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;text-align: right">Number-of-Packs</span>
+                    <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('NoOfPackages').touched && 
+                      ASNFormGroup.get('NoOfPackages').hasError('required')">
+                      *
+                    </span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
-                      <input matInput formControlName="NoOfPackages" type="number">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('NoOfPackages').touched && ASNFormGroup.get('NoOfPackages').hasError('required')">
-                        No Of Packages is required
-                      </mat-error>
+                      <input matInput formControlName="NoOfPackages" type="number" min="1">
                     </mat-form-field>
                   </div>
                 </div>
@@ -230,16 +231,16 @@
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;">Notification-Date</span>
+                    <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('NotificationDate').touched && 
+                      ASNFormGroup.get('NotificationDate').hasError('required')">
+                      *
+                    </span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field style="width: 205px" appearance="outline">
                       <input matInput [matDatepicker]="picker11" formControlName="NotificationDate">
                       <mat-datepicker-toggle matSuffix [for]="picker11"></mat-datepicker-toggle>
                       <mat-datepicker #picker11></mat-datepicker>
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('NotificationDate').touched && ASNFormGroup.get('NotificationDate').hasError('required')">
-                        Notification date is required
-                      </mat-error>
                     </mat-form-field>
                     <!-- <mat-form-field style="max-width: 110px;" appearance="outline">
                       <input matInput formControlName="NotificationDate">
@@ -249,21 +250,19 @@
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;text-align: right">Gross-Wt-Unit-of-Measurement</span>
+                    <span class="pl-4 errorClass" *ngIf="(ASNFormGroup.get('GrossWeight').touched && 
+                      ASNFormGroup.get('GrossWeight').hasError('required'))||
+                      ASNFormGroup.get('GrossWeightUOM').touched && 
+                      ASNFormGroup.get('GrossWeightUOM').hasError('required')">
+                      *
+                    </span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field style="max-width: 100px" appearance="outline">
                       <input matInput placeholder="0:000" formControlName="GrossWeight">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('GrossWeight').touched && ASNFormGroup.get('GrossWeight').hasError('required')">
-                        Gross Weight is required
-                      </mat-error>
                     </mat-form-field>
                     <mat-form-field class="pl-4" style="max-width: 104px;" appearance="outline">
                       <input matInput formControlName="GrossWeightUOM">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('GrossWeightUOM').touched && ASNFormGroup.get('GrossWeightUOM').hasError('required')">
-                        Gross Weight UOM is required
-                      </mat-error>
                       <mat-icon style="font-size: 17px;padding-left: 10px" matSuffix>filter_none</mat-icon>
                     </mat-form-field>
                   </div>
@@ -282,27 +281,28 @@
                   fxLayoutGap.lt-md="0px">
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;">Dispatch Location</span>
+                    <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('DispatchLocation').touched && 
+                      ASNFormGroup.get('DispatchLocation').hasError('required')">
+                      *
+                    </span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="DispatchLocation">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('DispatchLocation').touched && ASNFormGroup.get('DispatchLocation').hasError('required')">
-                        Dispatch Location is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;text-align: right">Net Weight</span>
+                    <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('NetWeight').touched && 
+                      ASNFormGroup.get('NetWeight').hasError('required')">
+                      *
+                    </span>
+
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
                       <input matInput placeholder="0:000" formControlName="NetWeight">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('NetWeight').touched && ASNFormGroup.get('NetWeight').hasError('required')">
-                        Net Weight is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
                 </div>
@@ -311,6 +311,10 @@
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;">Cargo Type</span>
+                    <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('GargoType').touched && 
+                      ASNFormGroup.get('GargoType').hasError('required')">
+                      *
+                    </span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field style="width: 203px" appearance="outline">
@@ -318,31 +322,24 @@
                         <mat-option value="HARDOU">HARDOU</mat-option>
                         <mat-option value="Year">Year</mat-option>
                       </mat-select>
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('GargoType').touched && ASNFormGroup.get('GargoType').hasError('required')">
-                        Gargo Type is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;text-align: right">Volume/Unit of measuerement</span>
+                    <span class="pl-4 errorClass" *ngIf="(ASNFormGroup.get('Volume').touched && 
+                      ASNFormGroup.get('Volume').hasError('required'))||
+                      ASNFormGroup.get('VolumeUOM').touched && ASNFormGroup.get('VolumeUOM').hasError('required')">
+                      *
+                    </span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field style="max-width: 100px" appearance="outline">
                       <input matInput placeholder="0:000" formControlName="Volume">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('Volume').touched && ASNFormGroup.get('Volume').hasError('required')">
-                        Volume is required
-                      </mat-error>
                     </mat-form-field>
                     <mat-form-field class="pl-4" style="max-width: 104px" appearance="outline">
                       <input matInput formControlName="VolumeUOM">
                       <mat-icon style="font-size: 17px;padding-left: 10px" matSuffix>filter_none</mat-icon>
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('VolumeUOM').touched && ASNFormGroup.get('VolumeUOM').hasError('required')">
-                        Volume UOM is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
                   <!-- <div fxFlex="15" class="text" fxLayoutAlign="start start">
@@ -360,27 +357,28 @@
                   fxLayoutGap.lt-md="0px">
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;">Mode Of Transport</span>
+                    <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ModeOfTransport').touched && 
+                      ASNFormGroup.get('ModeOfTransport').hasError('required')">
+                      *
+                    </span>
+
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="ModeOfTransport">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('ModeOfTransport').touched && ASNFormGroup.get('ModeOfTransport').hasError('required')">
-                        Mode Of Transport is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;text-align: right">General Material Decription</span>
+                    <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('GeneralMaterialDescription').touched && 
+                      ASNFormGroup.get('GeneralMaterialDescription').hasError('required')">
+                      *
+                    </span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="GeneralMaterialDescription">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('GeneralMaterialDescription').touched && ASNFormGroup.get('GeneralMaterialDescription').hasError('required')">
-                        General Material Description is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
                 </div>
@@ -393,6 +391,10 @@
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;">Ship From</span>
+                    <span class="pl-4 errorClass"
+                      *ngIf="ASNFormGroup.get('Vendor').touched && ASNFormGroup.get('Vendor').hasError('required')">
+                      *
+                    </span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field style="width: 203px" appearance="outline">
@@ -402,10 +404,6 @@
                         </mat-option>
                         <mat-option value="others">Others</mat-option>
                       </mat-select>
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('Vendor').touched && ASNFormGroup.get('Vendor').hasError('required')">
-                        Vendor is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
                   <!-- <div fxFlex="50"></div> -->
@@ -413,26 +411,28 @@
                 <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;text-align: right">Name 1</span>
+                    <span class="pl-4 errorClass"
+                      *ngIf="ASNFormGroup.get('Name1').touched && ASNFormGroup.get('Name1').hasError('required')">
+                      *
+                    </span>
+
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="Name1">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('Name1').touched && ASNFormGroup.get('Name1').hasError('required')">
-                        Name 1 is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;text-align: right">Name 2</span>
+                    <span class="pl-4 errorClass"
+                      *ngIf="ASNFormGroup.get('Name2').touched && ASNFormGroup.get('Name2').hasError('required')">
+                      *
+                    </span>
+
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="Name2">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('Name2').touched && ASNFormGroup.get('Name2').hasError('required')">
-                        Name 2 is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
 
@@ -441,26 +441,27 @@
                   fxLayoutGap.lt-md="0px">
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;">Street</span>
+                    <span class="pl-4 errorClass"
+                      *ngIf="ASNFormGroup.get('Street').touched && ASNFormGroup.get('Street').hasError('required')">
+                      *
+                    </span>
+
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="Street">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('Street').touched && ASNFormGroup.get('Street').hasError('required')">
-                        Street is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;text-align: right">City</span>
+                    <span class="pl-4 errorClass"
+                      *ngIf="ASNFormGroup.get('City').touched && ASNFormGroup.get('City').hasError('required')">
+                      *
+                    </span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="City">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('City').touched && ASNFormGroup.get('City').hasError('required')">
-                        City is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
 
@@ -470,26 +471,26 @@
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;">Postal Code</span>
+                    <span class="pl-4 errorClass"
+                      *ngIf="ASNFormGroup.get('PINCode').touched && ASNFormGroup.get('PINCode').hasError('required')">
+                      *
+                    </span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="PINCode">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('PINCode').touched && ASNFormGroup.get('PINCode').hasError('required')">
-                        PIN Code is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;text-align: right">Region</span>
+                    <span class="pl-4 errorClass"
+                      *ngIf="ASNFormGroup.get('Region').touched && ASNFormGroup.get('Region').hasError('required')">
+                      *
+                    </span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="Region">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('Region').touched && ASNFormGroup.get('Region').hasError('required')">
-                        Region is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
 
@@ -498,14 +499,14 @@
                   fxLayoutGap.lt-md="0px">
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;">Country</span>
+                    <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('Country').touched && 
+                      ASNFormGroup.get('Country').hasError('required')">
+                      *
+                    </span>
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="Country">
-                      <mat-error
-                        *ngIf="ASNFormGroup.get('Country').touched && ASNFormGroup.get('Country').hasError('required')">
-                        Country is required
-                      </mat-error>
                     </mat-form-field>
                   </div>
                   <!-- <div fxFlex="15" class="pt-8" fxLayoutAlign="start start">
@@ -601,6 +602,10 @@
                         <td mat-cell *matCellDef="let element">
                           <mat-form-field style="width: 75px">
                             <input matInput formControlName="PackageID">
+                            <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('PackageID').touched && 
+                              ASNFormGroup.get('ASNItems').controls[0].get('PackageID').hasError('required')">
+                              *
+                            </span>
                           </mat-form-field>
                         </td>
                       </ng-container>
@@ -610,6 +615,10 @@
                         <td mat-cell *matCellDef="let element">
                           <mat-form-field style="width: 75px">
                             <input matInput formControlName="BatchNumber">
+                            <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('BatchNumber').touched && 
+                              ASNFormGroup.get('ASNItems').controls[0].get('BatchNumber').hasError('required')">
+                              *
+                            </span>
                           </mat-form-field>
                         </td>
                       </ng-container>
@@ -619,6 +628,10 @@
                         <td mat-cell *matCellDef="let element">
                           <mat-form-field style="width: 75px">
                             <input style="border-width:0px;border:none" matInput formControlName="Remarks">
+                            <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('Remarks').touched && 
+                              ASNFormGroup.get('ASNItems').controls[0].get('Remarks').hasError('required')">
+                              *
+                            </span>
                           </mat-form-field>
                         </td>
                       </ng-container>
@@ -639,17 +652,25 @@
                   </div>
                   <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
                     <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                      <span style="font-size: 13px;">Number</span>
+                      <span style="font-size: 13px;">Number
+                        <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('Number').touched && 
+                          ASNFormGroup.get('ASNItems').controls[0].get('Number').hasError('required')">
+                          *
+                        </span>
+                      </span>
                     </div>
                     <div fxFlex="35" fxLayoutAlign="start center">
                       <mat-form-field appearance="outline">
                         <input matInput formControlName="Number">
-
                       </mat-form-field>
                     </div>
 
                     <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                       <span style="font-size: 13px;text-align: right">Date</span>
+                      <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('ItemDate').touched && 
+                        ASNFormGroup.get('ASNItems').controls[0].get('ItemDate').hasError('required')">
+                        *
+                      </span>
                     </div>
                     <div fxFlex="35" fxLayoutAlign="start center">
                       <mat-form-field appearance="outline">
@@ -664,6 +685,10 @@
 
                     <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                       <span style="font-size: 13px;">Departure-Date</span>
+                      <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('DepatureDate').touched && 
+                        ASNFormGroup.get('ASNItems').controls[0].get('DepatureDate').hasError('required')">
+                        *
+                      </span>
                     </div>
                     <div fxFlex="35" fxLayoutAlign="start center">
                       <mat-form-field style="width: 205px" appearance="outline">
@@ -675,6 +700,10 @@
 
                     <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                       <span style="font-size: 13px;text-align: right">Expected-Date-Of-Arrival</span>
+                      <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('ExpDateOfArrival').touched && 
+                        ASNFormGroup.get('ASNItems').controls[0].get('ExpDateOfArrival').hasError('required')">
+                        *
+                      </span>
                     </div>
                     <div fxFlex="35" fxLayoutAlign="start center">
                       <mat-form-field appearance="outline">
@@ -688,6 +717,10 @@
                     fxLayoutGap.lt-md="0px">
                     <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                       <span style="font-size: 13px;">Challan-Number</span>
+                      <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('ChallanNumber').touched && 
+                        ASNFormGroup.get('ASNItems').controls[0].get('ChallanNumber').hasError('required')">
+                        *
+                      </span>
                     </div>
                     <div fxFlex="35" fxLayoutAlign="start center">
                       <mat-form-field appearance="outline">
@@ -697,6 +730,10 @@
 
                     <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                       <span style="font-size: 13px;text-align: right">Challan-Date</span>
+                      <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('ChallanDate').touched && 
+                        ASNFormGroup.get('ASNItems').controls[0].get('ChallanDate').hasError('required')">
+                        *
+                      </span>
                     </div>
                     <div fxFlex="35" fxLayoutAlign="start center">
                       <mat-form-field appearance="outline">
@@ -710,6 +747,10 @@
                     fxLayoutGap.lt-md="0px">
                     <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
                       <span style="font-size: 13px;">Transporter-Name</span>
+                      <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('TransporterName').touched && 
+                        ASNFormGroup.get('ASNItems').controls[0].get('TransporterName').hasError('required')">
+                        *
+                      </span>
                     </div>
                     <div fxFlex="35" fxLayoutAlign="start center">
                       <mat-form-field appearance="outline">
@@ -758,6 +799,10 @@
                     <th mat-header-cell *matHeaderCellDef> Package ID </th>
                     <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                       <input matInput formControlName="PackageID">
+                      <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNPackageDetails').controls[index].get('PackageID').touched && 
+                      ASNFormGroup.get('ASNPackageDetails').controls[index].get('PackageID').hasError('required')">
+                        *
+                      </span>
                     </td>
                   </ng-container>
 
@@ -765,6 +810,10 @@
                     <th mat-header-cell *matHeaderCellDef> Package Type </th>
                     <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                       <input matInput formControlName="PackageType">
+                      <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNPackageDetails').controls[index].get('PackageType').touched && 
+                      ASNFormGroup.get('ASNPackageDetails').controls[index].get('PackageType').hasError('required')">
+                        *
+                      </span>
                     </td>
                   </ng-container>
 
@@ -772,6 +821,11 @@
                     <th mat-header-cell *matHeaderCellDef> Reference No </th>
                     <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                       <input matInput formControlName="ReferenceNumber">
+                      <span class="pl-4 errorClass"
+                        *ngIf="ASNFormGroup.get('ASNPackageDetails').controls[index].get('ReferenceNumber').touched && 
+                      ASNFormGroup.get('ASNPackageDetails').controls[index].get('ReferenceNumber').hasError('required')">
+                        *
+                      </span>
                     </td>
                   </ng-container>
 
@@ -779,6 +833,10 @@
                     <th mat-header-cell *matHeaderCellDef> Dimension </th>
                     <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                       <input matInput formControlName="Dimension">
+                      <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNPackageDetails').controls[index].get('Dimension').touched && 
+                      ASNFormGroup.get('ASNPackageDetails').controls[index].get('Dimension').hasError('required')">
+                        *
+                      </span>
                     </td>
                   </ng-container>
 
@@ -786,6 +844,10 @@
                     <th mat-header-cell *matHeaderCellDef> Gross.Wt </th>
                     <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                       <input matInput formControlName="GrossWeight">
+                      <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNPackageDetails').controls[index].get('GrossWeight').touched && 
+                      ASNFormGroup.get('ASNPackageDetails').controls[index].get('GrossWeight').hasError('required')">
+                        *
+                      </span>
                     </td>
                   </ng-container>
 
@@ -793,6 +855,10 @@
                     <th mat-header-cell *matHeaderCellDef> Volume </th>
                     <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                       <input matInput formControlName="Volume">
+                      <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNPackageDetails').controls[index].get('Volume').touched && 
+                      ASNFormGroup.get('ASNPackageDetails').controls[index].get('Volume').hasError('required')">
+                        *
+                      </span>
                     </td>
                   </ng-container>
 
@@ -800,6 +866,10 @@
                     <th mat-header-cell *matHeaderCellDef> Net Weight </th>
                     <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                       <input matInput formControlName="NetWeight">
+                      <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNPackageDetails').controls[index].get('NetWeight').touched && 
+                      ASNFormGroup.get('ASNPackageDetails').controls[index].get('NetWeight').hasError('required')">
+                        *
+                      </span>
                     </td>
                   </ng-container>
 
@@ -807,6 +877,10 @@
                     <th mat-header-cell *matHeaderCellDef> Volume Unit </th>
                     <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                       <input matInput formControlName="VolumeUOM">
+                      <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNPackageDetails').controls[index].get('VolumeUOM').touched && 
+                      ASNFormGroup.get('ASNPackageDetails').controls[index].get('VolumeUOM').hasError('required')">
+                        *
+                      </span>
                     </td>
                   </ng-container>
 
@@ -814,6 +888,11 @@
                     <th mat-header-cell *matHeaderCellDef> GrossWeight UOM </th>
                     <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                       <input matInput formControlName="GrossWeightUOM">
+                      <span class="pl-4 errorClass"
+                        *ngIf="ASNFormGroup.get('ASNPackageDetails').controls[index].get('GrossWeightUOM').touched && 
+                      ASNFormGroup.get('ASNPackageDetails').controls[index].get('GrossWeightUOM').hasError('required')">
+                        *
+                      </span>
                     </td>
                   </ng-container>
                 </table>
@@ -1027,6 +1106,10 @@
               <div>
                 <div style="margin-top: 15px">
                   <strong class="sub-Title">Comments</strong>
+                  <span class="errorClass" *ngIf="ASNFormGroup.get('Remarks').touched && 
+                      ASNFormGroup.get('Remarks').hasError('required')">
+                    *
+                  </span>
                 </div>
                 <!-- <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
                 <div fxFlex="20" style="margin-top: 10px;" class="pt-8" fxLayoutAlign="start start">
@@ -1045,7 +1128,7 @@
                 </div>
               </div>
               <div style="text-align: end">
-                <button mat-raised-button (click)="submitASNDetails('Draft')"
+                <button *ngIf="SelectedASNStatus!=='ASNCompleted'" mat-raised-button (click)="submitASNDetails('Draft')"
                   [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-top: -21px;margin-left: 20px;">
                   <mat-icon style="color: gray;margin-left: -13px">drafts</mat-icon> <span
                     style="color: white;margin-left: 5px">Save as Draft</span>
@@ -1059,9 +1142,12 @@
             </form>
           </mat-card-content>
         </div>
-
+        <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion1" color="accent"
+          mode="indeterminate"></mat-progress-spinner>
       </mat-card>
     </div>
+
+
   </div>
 
 </div>

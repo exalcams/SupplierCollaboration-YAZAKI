@@ -156,3 +156,12 @@ table {
 ::ng-deep table .mat-form-field-underline {
   display: none;
 }
+.ProgressBarPostion1 {
+  position: absolute !important;
+  bottom: 25%;
+  z-index: 1;
+  left: 55%;
+}
+.errorClass {
+  color: red !important;
+}

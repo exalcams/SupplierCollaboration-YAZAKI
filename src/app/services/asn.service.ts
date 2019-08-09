@@ -71,6 +71,10 @@ export class ASNService {
         return this._httpClient.get<POView[]>(`${this.baseAddress}api/ASN/GetAllPOByAcknowledgementStatus?Status=${Status}`)
             .pipe(catchError(this.errorHandler));
     }
+    GetAllPOByAckAndASNStatus(AckStatus: string, ASNStatus: string): Observable<POView[] | string> {
+        return this._httpClient.get<POView[]>(`${this.baseAddress}api/ASN/GetAllPOByAckAndASNStatus?AckStatus=${AckStatus}&ASNStatus=${ASNStatus}`)
+            .pipe(catchError(this.errorHandler));
+    }
     GetAcknowledgedPOByPO(PO: string, Item: string): Observable<POView | string> {
         return this._httpClient.get<POView>(`${this.baseAddress}api/ASN/GetAcknowledgedPOByPO?PO=${PO}&Item=${Item}`)
             .pipe(catchError(this.errorHandler));
