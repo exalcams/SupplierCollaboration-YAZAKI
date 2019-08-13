@@ -1,65 +1,91 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material';
 import { FuseConfigService } from '@fuse/services/config.service';
+import { Subscription } from 'rxjs';
+import { IPaymentReportPO } from 'app/models/paymentReportPO.model';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { PaymentReportPOService } from 'app/services/paymentReportPO.service';
 
 @Component({
-  selector: 'app-payment-report-reference',
-  templateUrl: './payment-report-reference.component.html',
-  styleUrls: ['./payment-report-reference.component.scss']
+    selector: 'app-payment-report-reference',
+    templateUrl: './payment-report-reference.component.html',
+    styleUrls: ['./payment-report-reference.component.scss']
 })
-export class PaymentReportReferenceComponent implements OnInit {
-  BGClassName: any;
+export class PaymentReportReferenceComponent implements OnInit, OnDestroy {
+    subscription: Subscription = new Subscription();
+    BGClassName: any;
+    displayedColumns: string[] = [
+        'PO',
+        'PODate',
+        'PaymentDoc',
+        'PaymentDate',
+        'InvoiceReference',
+        'ClearingDoc',
+        'ClearingDate',
+        'PaymentAdviceNo',
+        'PaymentAdviceAmount',
+        'Amount',
+        'Currency'
+    ];
+    dataSource: MatTableDataSource<IPaymentReportPO>;
+    filterForm: FormGroup;
+    IsProgressBarVisibile: boolean;
 
-  displayedColumns: string[] = ['select', 'PurchasingDocument', 'DocumentDate', 'Reference', 'Amount', 'ClearingDocument', 'PostingDate', 'Currency', 'PaymentDocumentNo', 'PaymentDate', 'AmountPaid'];
-  dataSource: MatTableDataSource<PaymentReportReference>;
-  selection: SelectionModel<PaymentReportReference>;
-  constructor(private _fuseConfigService: FuseConfigService) { }
+    constructor(
+        private _fuseConfigService: FuseConfigService,
+        private _payementReportService: PaymentReportPOService,
+        private _formBuilder: FormBuilder
+    ) {}
+    ngOnInit(): void {
+        this.IsProgressBarVisibile = false;
 
-  ngOnInit() {
-    this.dataSource = new MatTableDataSource(ELEMENT_DATA);
-    this.selection = new SelectionModel(true, []);
-    this.isAllSelected();
-    this.masterToggle();
-    this.checkboxLabel();
-    this._fuseConfigService.config
-    // .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((config) => {
-      this.BGClassName = config;
-    });
-  }
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
-  }
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: PaymentReportReference): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+        this.subscription.add(
+            this._fuseConfigService.config.subscribe(config => {
+                this.BGClassName = config;
+            })
+        );
+
+        this.InitForm();
+        this.dataSource = new MatTableDataSource();
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.Reference + 1}`;
-  }
-}
 
-export interface PaymentReportReference {
-  PurchasingDocument: string;
-  DocumentDate: string;
-  Reference: string;
-  Amount: string;
-  ClearingDocument: string;
-  PostingDate: string;
-  Currency: string;
-  PaymentDocumentNo: string;
-  PaymentDate: string;
-  AmountPaid: string;
-  select: boolean;
+    InitForm(): void {
+        this.filterForm = this._formBuilder.group({
+            referenceNo: [''],
+            vendorCode: [''],
+            fromDate: [new Date()],
+            toDate: [new Date()]
+        });
+    }
+
+    GetPaymentReportPO(): void {
+        this.IsProgressBarVisibile = true;
+        this._payementReportService
+            .getReport(
+                '',
+                '',
+                this.filterForm.value.referenceNo,
+                this.filterForm.value.fromDate,
+                this.filterForm.value.toDate,
+                this.filterForm.value.vendorCode
+            )
+            .subscribe(
+                (result: IPaymentReportPO[]) => {
+                    this.dataSource = new MatTableDataSource(result);
+                    this.IsProgressBarVisibile = false;
+                },
+                err => {
+                    this.IsProgressBarVisibile = false;
+                }
+            );
+    }
+
+    FormSubmit(): void {
+        this.GetPaymentReportPO();
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+    }
 }
-const ELEMENT_DATA: PaymentReportReference[] = [
-  { PurchasingDocument: '8001002366', DocumentDate: '2019-06-21', Reference: '139', Amount: "94500.00", ClearingDocument: '530000012', PostingDate: '2019-06-21', Currency: 'INR', PaymentDocumentNo: '400000012', PaymentDate: '2019-06-21', AmountPaid: '94500.00',select:false }
-];

@@ -1,86 +1,91 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
+import { IPaymentReportPO } from 'app/models/paymentReportPO.model';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { PaymentReportPOService } from 'app/services/paymentReportPO.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-payment-report-invoice',
     templateUrl: './payment-report-invoice.component.html',
     styleUrls: ['./payment-report-invoice.component.scss']
 })
-export class PaymentReportInvoiceComponent implements OnInit {
+export class PaymentReportInvoiceComponent implements OnInit, OnDestroy {
+    subscription: Subscription = new Subscription();
     BGClassName: any;
     displayedColumns: string[] = [
-        'select',
-        'PurchasingDocument',
-        'DocumentDate',
-        'Reference',
-        'Amount',
-        'ClearingDocument',
-        'PostingDate',
-        'Currency',
-        'PaymentDocumentNo',
+        'PO',
+        'PODate',
+        'PaymentDoc',
         'PaymentDate',
-        'AmountPaid'
+        'InvoiceReference',
+        'ClearingDoc',
+        'ClearingDate',
+        'PaymentAdviceNo',
+        'PaymentAdviceAmount',
+        'Amount',
+        'Currency'
     ];
-    dataSource: MatTableDataSource<PaymentReportInvoice>;
-    selection: SelectionModel<PaymentReportInvoice>;
-    constructor(private _fuseConfigService: FuseConfigService) {}
+    dataSource: MatTableDataSource<IPaymentReportPO>;
+    filterForm: FormGroup;
+    IsProgressBarVisibile: boolean;
 
-    ngOnInit() {
-        this.dataSource = new MatTableDataSource(ELEMENT_DATA);
-        this.selection = new SelectionModel(true, []);
-        this.isAllSelected();
-        this.masterToggle();
-        this.checkboxLabel();
-        this._fuseConfigService.config
-            // .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(config => {
+    constructor(
+        private _fuseConfigService: FuseConfigService,
+        private _payementReportService: PaymentReportPOService,
+        private _formBuilder: FormBuilder
+    ) {}
+
+    ngOnInit(): void {
+        this.IsProgressBarVisibile = false;
+        this.subscription.add(
+            this._fuseConfigService.config.subscribe(config => {
                 this.BGClassName = config;
-            });
-    }
-    isAllSelected() {
-        const numSelected = this.selection.selected.length;
-        const numRows = this.dataSource.data.length;
-        return numSelected === numRows;
-    }
-    masterToggle() {
-        this.isAllSelected() ? this.selection.clear() : this.dataSource.data.forEach(row => this.selection.select(row));
-    }
-    /** The label for the checkbox on the passed row */
-    checkboxLabel(row?: PaymentReportInvoice): string {
-        if (!row) {
-            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-        }
-        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.Reference + 1}`;
-    }
-}
+            })
+        );
 
-export interface PaymentReportInvoice {
-    PurchasingDocument: string;
-    DocumentDate: string;
-    Reference: string;
-    Amount: string;
-    ClearingDocument: string;
-    PostingDate: string;
-    Currency: string;
-    PaymentDocumentNo: string;
-    PaymentDate: string;
-    AmountPaid: string;
-    select: boolean;
-}
-const ELEMENT_DATA: PaymentReportInvoice[] = [
-    {
-        PurchasingDocument: '8001002366',
-        DocumentDate: '2019-06-21',
-        Reference: '139',
-        Amount: '94500.00',
-        ClearingDocument: '530000012',
-        PostingDate: '2019-06-21',
-        Currency: 'INR',
-        PaymentDocumentNo: '400000012',
-        PaymentDate: '2019-06-21',
-        AmountPaid: '94500.00',
-        select: false
+        this.InitForm();
+        this.dataSource = new MatTableDataSource();
     }
-];
+
+    InitForm(): void {
+        this.filterForm = this._formBuilder.group({
+            invoiceNo: [''],
+            vendorCode: [''],
+            fromDate: [new Date()],
+            toDate: [new Date()]
+        });
+    }
+
+    GetPaymentReportPO(): void {
+        this.IsProgressBarVisibile = true;
+        this._payementReportService
+            .getReport(
+                '',
+                this.filterForm.value.invoiceNo,
+                '',
+                this.filterForm.value.fromDate,
+                this.filterForm.value.toDate,
+                this.filterForm.value.vendorCode
+            )
+            .subscribe(
+                (result: IPaymentReportPO[]) => {
+                    this.dataSource = new MatTableDataSource(result);
+                    this.IsProgressBarVisibile = false;
+                },
+                err => {
+                    this.IsProgressBarVisibile = false;
+                }
+            );
+    }
+
+    FormSubmit(): void {
+        this.GetPaymentReportPO();
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+    }
+}

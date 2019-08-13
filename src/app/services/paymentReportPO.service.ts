@@ -22,12 +22,18 @@ export class PaymentReportPOService {
         return throwError(error.error || error.message || 'Server Error');
     }
 
-    getReport(poNumber: string, fromDate: Date, toDate: Date, vendorCode: string): Observable<IPaymentReportPO[] | string> {
+    getReport(
+        poNumber: string,
+        invoiceNo: string,
+        referenceNo: string,
+        fromDate: Date,
+        toDate: Date,
+        vendorCode: string
+    ): Observable<IPaymentReportPO[] | string> {
         return this._httpClient
             .get<any>(
-                `${
-                    this.baseAddress
-                }api/PaymentReport/GetPaymentReportPO?PONumber= ${poNumber}&VendorCode=${vendorCode}&FromDate=${this.datePipe.transform(
+                `${this.baseAddress}api/PaymentReport/GetPaymentReportPO?PONumber= ${poNumber}&InvoiceNo=${invoiceNo}
+                &ReferenceNo=${referenceNo}&VendorCode=${vendorCode}&FromDate=${this.datePipe.transform(
                     fromDate,
                     'yyyy-MM-dd'
                 )}&ToDate=${this.datePipe.transform(toDate, 'yyyy-MM-dd')}`
