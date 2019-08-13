@@ -1,7 +1,7 @@
-import { GateEntryHeader, GatePassInfo } from './gateEntry.model';
+import { IGateEntryHeader, IGatePassInfo } from './gateEntry.model';
 import { Guid } from 'guid-typescript';
 
-export interface GateEntryHeader {
+export interface IGateEntryHeader {
     GT_NO?: string;
     UserID: Guid;
     RegisterType: string;
@@ -31,7 +31,7 @@ export interface GateEntryHeader {
     NetWeight: number;
 }
 
-export interface GatePassInfo {
+export interface IGatePassInfo {
     GT_NO?: string;
     USERID?: Guid;
     PO: string;
@@ -54,11 +54,11 @@ export interface GatePassInfo {
     ModifiedDate?: Date;
 }
 
-export interface GatePassModel extends GateEntryHeader {
-    GatePassItem: GatePassInfo[];
+export interface IGatePassModel extends IGateEntryHeader {
+    GatePassItem: IGatePassInfo[];
 }
 
-export interface GatePassNoData {
+export interface IGatePassNoData {
     GT_No: string;
     ReferenceType: string;
     Vendor: string;

@@ -8,10 +8,11 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { GatePassInfo, GatePassNoData, GatePassModel } from './../../../models/gateEntry.model';
 import { ValidateReference } from 'app/Validators/ValidateReference';
 import { GateEntryService } from 'app/services/gate-entry.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
+import { IGatePassInfo, IGatePassNoData, IGatePassModel } from './../../../models/gateEntry.model';
+
 @Component({
     selector: 'app-gate-entry',
     templateUrl: './gate-entry.component.html',
@@ -35,10 +36,9 @@ export class GateEntryComponent implements OnInit, OnDestroy {
     ];
     gateEntryForm: FormGroup;
     poItemTableColumns: string[] = ['item', 'po', 'material', 'description', 'qty', 'uom'];
-    // POItemRowDataSource = new MatTableDataSource<GatePassInfo>(ELEMENT_DATA);
     POItemRowDataSource = new BehaviorSubject<AbstractControl[]>([]);
-    selection = new SelectionModel<GatePassInfo>(true, []);
-    allGatePassNoData: GatePassNoData[];
+    selection = new SelectionModel<IGatePassInfo>(true, []);
+    allGatePassNoData: IGatePassNoData[];
     selectedGTNo: string;
     poItemRows: FormArray = this._formBuilder.array([]);
 
@@ -49,21 +49,21 @@ export class GateEntryComponent implements OnInit, OnDestroy {
         public snackBar: MatSnackBar,
         private dialog: MatDialog
     ) {
-        this.initForm();
+        this.InitForm();
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     }
 
     ngOnInit(): void {
-        this.getAllGateEntries();
-        this.referenceOptions = this.referenceInwardOptions;
         this.subscription.add(
             this._fuseConfigService.config.subscribe(config => {
                 this.BGClassName = config;
             })
         );
+        this.GetAllGateEntries();
+        this.referenceOptions = this.referenceInwardOptions;
     }
 
-    initForm(): void {
+    InitForm(): void {
         this.gateEntryForm = this._formBuilder.group({
             RegisterType: ['Inward'],
             OrderType: [null],
@@ -98,18 +98,18 @@ export class GateEntryComponent implements OnInit, OnDestroy {
         this.gateEntryForm.get('TransportMode').enable();
         this.gateEntryForm.get('ChallanDate').enable();
         this.selectedGTNo = null;
-        this.clearFormArray();
-        this.initForm();
+        this.ClearFormArray();
+        this.InitForm();
     }
 
-    clearFormArray(): void {
+    ClearFormArray(): void {
         while (this.poItemRows.length !== 0) {
             this.poItemRows.removeAt(0);
         }
         this.POItemRowDataSource.next(this.poItemRows.controls);
     }
 
-    registerTypeChanged($event: MatRadioChange): void {
+    RegisterTypeChanged($event: MatRadioChange): void {
         if ($event.value === 'Inward') {
             this.referenceOptions = this.referenceInwardOptions;
         } else {
@@ -121,14 +121,13 @@ export class GateEntryComponent implements OnInit, OnDestroy {
         this.showOrderType = value === 'Receipt - with PO' ? true : false;
     }
 
-    orderTypeChanged($event: MatRadioChange): void {}
+    OrderTypeChanged($event: MatRadioChange): void {}
 
-    getAllGateEntries(): void {
+    GetAllGateEntries(): void {
         this._gateEntryService.GetAllGatePassNoData().subscribe(
-            (data: GatePassNoData[]) => {
+            (data: IGatePassNoData[]) => {
                 if (data.length > 0) {
                     this.allGatePassNoData = data;
-                    // this.GTNOSelected(this.allGatePassNoData[0]);
                 }
             },
             error => {
@@ -137,10 +136,10 @@ export class GateEntryComponent implements OnInit, OnDestroy {
         );
     }
 
-    GTNoSelected(gatePassData: GatePassNoData): void {
+    GTNoSelected(gatePassData: IGatePassNoData): void {
         this.selectedGTNo = gatePassData.GT_No;
         this._gateEntryService.GetThisGatePassData(gatePassData.GT_No).subscribe(
-            (returnedData: GatePassModel) => {
+            (returnedData: IGatePassModel) => {
                 this.UpdateGateEntryForm(returnedData);
             },
             error => {
@@ -149,7 +148,7 @@ export class GateEntryComponent implements OnInit, OnDestroy {
         );
     }
 
-    UpdateGateEntryForm(data: GatePassModel): void {
+    UpdateGateEntryForm(data: IGatePassModel): void {
         this.gateEntryForm.get('RegisterType').patchValue(data.RegisterType);
         this.gateEntryForm.get('ReferenceType').patchValue(data.ReferenceType);
         this.gateEntryForm.get('Plant').patchValue(data.Plant);
@@ -195,8 +194,8 @@ export class GateEntryComponent implements OnInit, OnDestroy {
         this.POItemRowDataSource.next(this.poItemRows.controls);
     }
 
-    UpdateItemTableRow(tableData: GatePassInfo[]): void {
-        this.clearFormArray();
+    UpdateItemTableRow(tableData: IGatePassInfo[]): void {
+        this.ClearFormArray();
         tableData.forEach(rowData => {
             const row = this._formBuilder.group({
                 Item: [rowData.Item, Validators.required],
@@ -240,18 +239,18 @@ export class GateEntryComponent implements OnInit, OnDestroy {
             dialogRef.afterClosed().subscribe(result => {
                 console.log('observer');
                 if (result) {
-                    this.onSubmit();
+                    this.OnSubmit();
                 }
             })
         );
     }
 
-    onSubmit(): void {
+    OnSubmit(): void {
         this._gateEntryService.savePOGateEntry(this.gateEntryForm.getRawValue()).subscribe(
             data => {
                 this.notificationSnackBarComponent.openSnackBar('Gate entry created successfully', SnackBarStatus.success);
                 this.ClearForm();
-                this.getAllGateEntries();
+                this.GetAllGateEntries();
             },
             err => {
                 this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
