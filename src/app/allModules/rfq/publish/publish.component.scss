@@ -10,7 +10,7 @@
 .borderRightClass {
   border-right: 1px solid #dce1e9;
 }
-.fullHeight{
+.fullHeight {
   height: 90%;
 }
 .roundedBorder {
@@ -19,13 +19,14 @@
 table {
   width: 100%;
   th {
-   // background: #082f7d;
+    // background: #082f7d;
     color: white !important;
     padding: 10px !important;
     border-right: 1px solid #e0e0e0;
   }
   td {
     padding-left: 15px !important;
+    padding-right: 15px !important;
     border: 1px solid #1b56ca !important;
     // border-right: 1px solid #1b56ca;
   }
@@ -39,14 +40,14 @@ table,
 th,
 tr,
 td {
- // border: 1px solid #1b56ca !important;
+  // border: 1px solid #1b56ca !important;
   border-collapse: collapse;
 }
 .mat-table {
   border: 1px solid #082f7d;
 }
 .SaveBtnClass {
- // background-color: #1b56ca !important;
+  // background-color: #1b56ca !important;
   color: white !important;
 }
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
@@ -54,4 +55,13 @@ td {
 }
 .mat-radio-button.mat-accent .mat-radio-inner-circle {
   background-color: #082f7d !important;
+}
+.ProgressBarPostion1 {
+  position: absolute !important;
+  bottom: 45%;
+  z-index: 1;
+  left: 55%;
+}
+.highlight{
+  background: lightgray !important;
 }

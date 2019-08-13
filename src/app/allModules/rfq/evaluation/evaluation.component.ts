@@ -41,10 +41,14 @@ export class EvaluationComponent implements OnInit {
     this.masterToggle();
     this.checkboxLabel();
     this._fuseConfigService.config
-    // .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((config) => {
-      this.BGClassName = config;
-    });
+      // .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config) => {
+        this.BGClassName = config;
+      });
+  }
+
+  radioChange(event: any): void {
+    console.log(event);
   }
 
   isAllSelected(): boolean {

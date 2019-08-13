@@ -242,7 +242,8 @@
               <div fxLayout fxLayoutAlign="center" class="borderClass m-8" *ngFor="let sup of SupplierInviteClassList">
                 <div fxFlex="10" class="borderRightClass pt-12">
                   <mat-radio-group aria-label="Select an option">
-                    <mat-radio-button value="1" class="mt-24 mx-8"></mat-radio-button>
+                    <mat-radio-button value="1" class="mt-24 mx-8" (click)="radioChange($event)">
+                    </mat-radio-button>
                   </mat-radio-group>
                 </div>
                 <div fxFlex="90" class="p-12">
