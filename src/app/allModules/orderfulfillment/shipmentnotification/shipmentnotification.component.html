@@ -215,7 +215,7 @@
                   </div>
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                    <span style="font-size: 13px;text-align: right">Number-of-Packs</span>
+                    <span style="font-size: 13px;text-align: right">No. of packs</span>
                     <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('NoOfPackages').touched && 
                       ASNFormGroup.get('NoOfPackages').hasError('required')">
                       *
@@ -231,7 +231,7 @@
                   fxLayoutGap.lt-md="0px">
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                    <span style="font-size: 13px;">Notification-Date</span>
+                    <span style="font-size: 13px;">Notification Date</span>
                     <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('NotificationDate').touched && 
                       ASNFormGroup.get('NotificationDate').hasError('required')">
                       *
@@ -250,7 +250,7 @@
                   </div>
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                    <span style="font-size: 13px;text-align: right">Gross-Wt-Unit-of-Measurement</span>
+                    <span style="font-size: 13px;text-align: right">Gross Wt. UOM</span>
                     <span class="pl-4 errorClass" *ngIf="(ASNFormGroup.get('GrossWeight').touched && 
                       ASNFormGroup.get('GrossWeight').hasError('required'))||
                       ASNFormGroup.get('GrossWeightUOM').touched && 
@@ -260,7 +260,7 @@
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field style="max-width: 100px" appearance="outline">
-                      <input matInput placeholder="0:000" formControlName="GrossWeight">
+                      <input class="RightAlign" matInput placeholder="0:000" formControlName="GrossWeight">
                     </mat-form-field>
                     <mat-form-field class="pl-4" style="max-width: 104px;" appearance="outline">
                       <input matInput formControlName="GrossWeightUOM">
@@ -303,7 +303,7 @@
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field appearance="outline">
-                      <input matInput placeholder="0:000" formControlName="NetWeight">
+                      <input class="RightAlign" matInput placeholder="0:000" formControlName="NetWeight">
                     </mat-form-field>
                   </div>
                 </div>
@@ -327,7 +327,7 @@
                   </div>
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                    <span style="font-size: 13px;text-align: right">Volume/Unit of measuerement</span>
+                    <span style="font-size: 13px;text-align: right">Volume/ UOM</span>
                     <span class="pl-4 errorClass" *ngIf="(ASNFormGroup.get('Volume').touched && 
                       ASNFormGroup.get('Volume').hasError('required'))||
                       ASNFormGroup.get('VolumeUOM').touched && ASNFormGroup.get('VolumeUOM').hasError('required')">
@@ -336,7 +336,7 @@
                   </div>
                   <div fxFlex="35" fxLayoutAlign="start center">
                     <mat-form-field style="max-width: 100px" appearance="outline">
-                      <input matInput placeholder="0:000" formControlName="Volume">
+                      <input class="RightAlign" matInput placeholder="0:000" formControlName="Volume">
                     </mat-form-field>
                     <mat-form-field class="pl-4" style="max-width: 104px" appearance="outline">
                       <input matInput formControlName="VolumeUOM">
@@ -371,7 +371,7 @@
                   </div>
 
                   <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                    <span style="font-size: 13px;text-align: right">General Material Decription</span>
+                    <span style="font-size: 13px;text-align: right">Material Decription</span>
                     <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('GeneralMaterialDescription').touched && 
                       ASNFormGroup.get('GeneralMaterialDescription').hasError('required')">
                       *
@@ -545,13 +545,15 @@
                             </span>
                           </button>
                           <!-- </span> -->
-                          <div class="icon-style">
-                            <img class="m-8" matTooltip="Import_file" src="assets/images/dashboard/import.png">
-                            <img class="m-8" matTooltip="Export_file" src="assets/images/dashboard/export.png">
-                            <img class="m-8" matTooltip="SelectAll" src="assets/images/dashboard/select.png">
-                            <img class="m-8" matTooltip="Unselect" src="assets/images/dashboard/Unselect.png">
-                            <img class="m-8" matTooltip="Copy_To_All" src="assets/images/dashboard/copy_to_all.png">
-                            <img class="m-8" matTooltip="Resize" src="assets/images/dashboard/resize.png">
+                          <div>
+                            <div fxFlex align="end">
+                              <img class="p-8 icon-style1" matTooltip="Import_file" src="assets/images/dashboard/import.png">
+                              <img class="p-8 icon-style1" matTooltip="Export_file" src="assets/images/dashboard/export.png">
+                              <img class="p-8 icon-style1" matTooltip="SelectAll" src="assets/images/dashboard/select.png">
+                              <img class="p-8 icon-style1" matTooltip="Unselect" src="assets/images/dashboard/Unselect.png">
+                              <img class="p-8 icon-style1" matTooltip="Copy_To_All" src="assets/images/dashboard/copy_to_all.png">
+                              <img class="p-8 icon-style1" matTooltip="Resize" src="assets/images/dashboard/resize.png">
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -574,7 +576,7 @@
 
                       <ng-container matColumnDef="OrderedQuantity">
                         <th mat-header-cell *matHeaderCellDef>Order Qty.</th>
-                        <td mat-cell *matCellDef="let element" class="grayColor"> {{element.OrderedQuantity}} </td>
+                        <td mat-cell style="text-align: right" *matCellDef="let element" class="grayColor"> {{element.OrderedQuantity}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="UOM">
@@ -584,18 +586,18 @@
 
                       <ng-container matColumnDef="ApprovedQuantity">
                         <th mat-header-cell *matHeaderCellDef>Approved Qty.</th>
-                        <td mat-cell *matCellDef="let element" class="grayColor"> {{element.ApprovedQuantity}} </td>
+                        <td mat-cell style="text-align: right" *matCellDef="let element" class="grayColor"> {{element.ApprovedQuantity}} </td>
                       </ng-container>
 
 
                       <ng-container matColumnDef="InProcessQuantity">
-                        <th mat-header-cell *matHeaderCellDef>InProcess Qty.</th>
-                        <td mat-cell *matCellDef="let element" class="grayColor"> {{element.InProcessQuantity}} </td>
+                        <th mat-header-cell *matHeaderCellDef>In Process Qty.</th>
+                        <td mat-cell style="text-align: right" *matCellDef="let element" class="grayColor"> {{element.InProcessQuantity}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="OfferedQuantity">
                         <th mat-header-cell *matHeaderCellDef>Offered Qty.</th>
-                        <td mat-cell *matCellDef="let element" class="grayColor"> {{element.OfferedQuantity}} </td>
+                        <td mat-cell style="text-align: right" *matCellDef="let element" class="grayColor"> {{element.OfferedQuantity}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="PackageID">
@@ -638,7 +640,7 @@
                       </ng-container>
 
                       <ng-container matColumnDef="MaterialDescription">
-                        <th mat-header-cell *matHeaderCellDef>MaterialDescription</th>
+                        <th mat-header-cell *matHeaderCellDef>Material Description</th>
                         <td mat-cell *matCellDef="let element" class="grayColor"> {{element.MaterialDescription}} </td>
                       </ng-container>
 
@@ -685,7 +687,7 @@
                     fxLayoutGap.lt-md="0px">
 
                     <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                      <span style="font-size: 13px;">Departure-Date</span>
+                      <span style="font-size: 13px;">Departure Date</span>
                       <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('DepatureDate').touched && 
                         ASNFormGroup.get('ASNItems').controls[0].get('DepatureDate').hasError('required')">
                         *
@@ -700,7 +702,7 @@
                     </div>
 
                     <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                      <span style="font-size: 13px;text-align: right">Expected-Date-Of-Arrival</span>
+                      <span style="font-size: 13px;text-align: right">Expected DOA</span>
                       <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('ExpDateOfArrival').touched && 
                         ASNFormGroup.get('ASNItems').controls[0].get('ExpDateOfArrival').hasError('required')">
                         *
@@ -717,7 +719,7 @@
                   <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column"
                     fxLayoutGap.lt-md="0px">
                     <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                      <span style="font-size: 13px;">Challan-Number</span>
+                      <span style="font-size: 13px;">Challan No.</span>
                       <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('ChallanNumber').touched && 
                         ASNFormGroup.get('ASNItems').controls[0].get('ChallanNumber').hasError('required')">
                         *
@@ -730,7 +732,7 @@
                     </div>
 
                     <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                      <span style="font-size: 13px;text-align: right">Challan-Date</span>
+                      <span style="font-size: 13px;text-align: right">Challan Date</span>
                       <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('ChallanDate').touched && 
                         ASNFormGroup.get('ASNItems').controls[0].get('ChallanDate').hasError('required')">
                         *
@@ -747,7 +749,7 @@
                   <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column"
                     fxLayoutGap.lt-md="0px">
                     <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                      <span style="font-size: 13px;">Transporter-Name</span>
+                      <span style="font-size: 13px;">Transporter Name</span>
                       <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNItems').controls[0].get('TransporterName').touched && 
                         ASNFormGroup.get('ASNItems').controls[0].get('TransporterName').hasError('required')">
                         *
@@ -843,8 +845,8 @@
 
                   <ng-container matColumnDef="GrossWeight">
                     <th mat-header-cell *matHeaderCellDef> Gross Wt. </th>
-                    <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                      <input matInput formControlName="GrossWeight">
+                    <td mat-cell style="text-align: right" *matCellDef="let row; let index = index" [formGroupName]="index">
+                      <input class="RightAlign" matInput formControlName="GrossWeight">
                       <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNPackageDetails').controls[index].get('GrossWeight').touched && 
                       ASNFormGroup.get('ASNPackageDetails').controls[index].get('GrossWeight').hasError('required')">
                         *
@@ -854,8 +856,8 @@
 
                   <ng-container matColumnDef="Volume">
                     <th mat-header-cell *matHeaderCellDef> Volume </th>
-                    <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                      <input matInput formControlName="Volume">
+                    <td mat-cell style="text-align: right" *matCellDef="let row; let index = index" [formGroupName]="index">
+                      <input matInput class="RightAlign" formControlName="Volume">
                       <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNPackageDetails').controls[index].get('Volume').touched && 
                       ASNFormGroup.get('ASNPackageDetails').controls[index].get('Volume').hasError('required')">
                         *
@@ -865,8 +867,8 @@
 
                   <ng-container matColumnDef="NetWeight">
                     <th mat-header-cell *matHeaderCellDef> Net Wt. </th>
-                    <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                      <input matInput formControlName="NetWeight">
+                    <td mat-cell style="text-align: right" *matCellDef="let row; let index = index" [formGroupName]="index">
+                      <input class="RightAlign" matInput formControlName="NetWeight">
                       <span class="pl-4 errorClass" *ngIf="ASNFormGroup.get('ASNPackageDetails').controls[index].get('NetWeight').touched && 
                       ASNFormGroup.get('ASNPackageDetails').controls[index].get('NetWeight').hasError('required')">
                         *
@@ -1032,7 +1034,7 @@
                     <table style="margin-top: 10px" mat-table #AttachmentTable [dataSource]="AttachmentDataSource"
                       matSort>
                       <ng-container matColumnDef="AttachmentNumber">
-                        <th mat-header-cell *matHeaderCellDef>Attachment Number</th>
+                        <th style="width: 110px" mat-header-cell *matHeaderCellDef>Attachment No.</th>
                         <td mat-cell *matCellDef="let element"> {{element.AttachmentNumber}} </td>
                       </ng-container>
 
@@ -1047,7 +1049,7 @@
                       </ng-container>
 
                       <ng-container matColumnDef="Delete">
-                        <th mat-header-cell *matHeaderCellDef> Delete</th>
+                        <th style="width: 100px" mat-header-cell *matHeaderCellDef> Delete</th>
                         <td mat-cell *matCellDef="let row" (click)="DeleteAttachment(row)">
                           <mat-icon aria-label="file_download">delete</mat-icon>
                         </td>

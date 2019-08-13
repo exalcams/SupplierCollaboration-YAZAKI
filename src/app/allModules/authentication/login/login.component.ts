@@ -228,22 +228,24 @@ export class LoginComponent implements OnInit, OnDestroy {
         //         url: '/orderacknowledgment/acknowledgment'
         //     });
         // }
-        if (this.MenuItems.indexOf('RFQCreation') >= 0) {
-            this.subChildren2.push({
-                id: 'creation',
-                title: 'Creation',
-                type: 'item',
-                url: '/rfq/creation'
-            });
-        }
         if (this.MenuItems.indexOf('RFQPublish') >= 0) {
             this.subChildren2.push({
                 id: 'publish',
-                title: 'Publish & Invite',
+                title: 'PR to RFQ',
                 type: 'item',
                 url: '/rfq/publish'
             });
         }
+
+        // if (this.MenuItems.indexOf('RFQCreation') >= 0) {
+        //     this.subChildren2.push({
+        //         id: 'creation',
+        //         title: 'Creation',
+        //         type: 'item',
+        //         url: '/rfq/creation'
+        //     });
+        // }
+       
         if (this.MenuItems.indexOf('RFQEvaluation') >= 0) {
             this.subChildren2.push({
                 id: 'evaluation',
