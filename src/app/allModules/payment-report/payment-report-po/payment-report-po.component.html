@@ -4,8 +4,7 @@
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
     <!-- <div class="page-layout blank">
         <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px"> -->
-    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px"
-      fxLayoutGap.xs="10">
+    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
       <div fxLayout class="layoutclass">
         <div fxFlex fxLayout="column">
           <div fxFlex>
@@ -124,51 +123,53 @@
           <mat-divider></mat-divider>
 
           <mat-card-content>
-            <div class="row" style="margin-top: 25px" fxLayoutAlign="start">
-              <div class="pt-8 pr-8" fxFlex="10">
-                PO Number
+            <form [formGroup]="form" (ngSubmit)="FormSubmit()">
+              <div class="row" style="margin-top: 25px" fxLayoutAlign="start">
+                <div class="pt-8 pr-8" fxFlex="10">
+                  PO Number
+                </div>
+                <div fxFlex="15">
+                  <mat-form-field style="max-width: 120px;" appearance="outline">
+                    <input matInput formControlName="poNumber">
+                  </mat-form-field>
+                </div>
+                <div class="pt-8 pr-8" fxFlex="10">
+                  Vendor Code
+                </div>
+                <div fxFlex="15">
+                  <mat-form-field style="max-width: 120px;" appearance="outline">
+                    <input matInput formControlName="vendorCode">
+                  </mat-form-field>
+                </div>
+                <div class="pt-8 pr-8" fxFlex="5">
+                  Date
+                </div>
+                <div fxFlex="15">
+                  <mat-form-field style="width: 150px;" appearance="outline">
+                    <input matInput [matDatepicker]="picker" formControlName="fromDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="2">
+                  <!-- PO Number -->
+                </div>
+                <div fxFlex="15">
+                  <mat-form-field style="width: 150px;" appearance="outline">
+                    <input matInput [matDatepicker]="picker1" formControlName="toDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-left: 20px;">
+                    <mat-icon style="margin-left: -15px;color: white">search</mat-icon>
+                    <span style="color: white">Search</span>
+                  </button>
+                </div>
               </div>
-              <div fxFlex="15">
-                <mat-form-field style="max-width: 120px;" appearance="outline">
-                  <input matInput>
-                </mat-form-field>
-              </div>
-              <div class="pt-8 pr-8" fxFlex="10">
-                Vendor Code
-              </div>
-              <div fxFlex="15">
-                <mat-form-field style="max-width: 120px;" appearance="outline">
-                  <input matInput>
-                </mat-form-field>
-              </div>
-              <div class="pt-8 pr-8" fxFlex="5">
-                Date
-              </div>
-              <div fxFlex="15">
-                <mat-form-field style="width: 150px;" appearance="outline">
-                  <input matInput [matDatepicker]="picker">
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-              </div>
-              <div fxFlex="2">
-                <!-- PO Number -->
-              </div>
-              <div fxFlex="15">
-                <mat-form-field style="width: 150px;" appearance="outline">
-                  <input matInput [matDatepicker]="picker1">
-                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                  <mat-datepicker #picker1></mat-datepicker>
-                </mat-form-field>
-              </div>
-              <div>
-                <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-left: 20px;">
-                  <mat-icon style="margin-left: -15px;color: white">search</mat-icon>
-                  <span style="color: white">Search</span>
-                </button>
-              </div>
+            </form>
 
-            </div>
             <div style="text-align: end">
               <button mat-stroked-button style="margin-left: 20px;color: darkgray;border-radius: 10px;">
                 <img style="height: 16px; width: 21px;" src="assets/images/dashboard/excel.png">
@@ -177,74 +178,71 @@
             </div>
             <div>
               <table style="margin-top: 10px;" mat-table [dataSource]="dataSource">
-                <ng-container matColumnDef="select">
-                  <th mat-header-cell *matHeaderCellDef>Select
-                  </th>
-                  <td mat-cell *matCellDef="let row">
-                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                      [checked]="selection.isSelected(row)">
-                    </mat-checkbox>
-                  </td>
-                </ng-container>
-                <ng-container matColumnDef="PurchasingDocument">
-                  <th mat-header-cell *matHeaderCellDef>Purchasing Document</th>
-                  <td mat-cell *matCellDef="let element">{{element.PurchasingDocument}}</td>
+                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <ng-container matColumnDef="PaymentDoc">
+                  <th mat-header-cell *matHeaderCellDef>Payment Doc</th>
+                  <td mat-cell *matCellDef="let element">{{element.PaymentDoc}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="DocumentDate">
-                  <th mat-header-cell *matHeaderCellDef>Document Date</th>
-                  <td mat-cell *matCellDef="let element"> {{element.DocumentDate}} </td>
+                <ng-container matColumnDef="PaymentDate">
+                  <th mat-header-cell *matHeaderCellDef>Payment Date</th>
+                  <td mat-cell *matCellDef="let element"> {{element.PaymentDate | date: 'dd/MM/yyyy'}} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="Reference">
-                  <th mat-header-cell *matHeaderCellDef>Reference</th>
-                  <td mat-cell *matCellDef="let element"> {{element.Reference}} </td>
+                <ng-container matColumnDef="PO">
+                  <th mat-header-cell *matHeaderCellDef>PO</th>
+                  <td mat-cell *matCellDef="let element"> {{element.PO}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="PODate">
+                  <th mat-header-cell *matHeaderCellDef>PO Date</th>
+                  <td mat-cell *matCellDef="let element"> {{element.PODate | date: 'dd/MM/yyyy'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="InvoiceReference">
+                  <th mat-header-cell *matHeaderCellDef>Invoice Reference</th>
+                  <td mat-cell *matCellDef="let element"> {{element.InvoiceReference}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ClearingDoc">
+                  <th mat-header-cell *matHeaderCellDef>Clearing Doc</th>
+                  <td mat-cell *matCellDef="let element"> {{element.ClearingDoc}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ClearingDate">
+                  <th mat-header-cell *matHeaderCellDef>Clearing Date</th>
+                  <td mat-cell *matCellDef="let element"> {{element.ClearingDate | date: 'dd/MM/yyyy'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="PaymentAdviceNo">
+                  <th mat-header-cell *matHeaderCellDef>Payment AdviceNo</th>
+                  <td mat-cell *matCellDef="let element"> {{element.PaymentAdviceNo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="PaymentAdviceAmount">
+                  <th mat-header-cell *matHeaderCellDef>Payment Advice Amount</th>
+                  <td mat-cell *matCellDef="let element"> {{element.PaymentAdviceAmount}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Amount">
                   <th mat-header-cell *matHeaderCellDef>Amount</th>
                   <td mat-cell *matCellDef="let element"> {{element.Amount}} </td>
                 </ng-container>
-
-                <ng-container matColumnDef="ClearingDocument">
-                  <th mat-header-cell *matHeaderCellDef>Clearing Document</th>
-                  <td mat-cell *matCellDef="let element"> {{element.ClearingDocument}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="PostingDate">
-                  <th mat-header-cell *matHeaderCellDef>Posting Date</th>
-                  <td mat-cell *matCellDef="let element"> {{element.PostingDate}} </td>
-                </ng-container>
-
                 <ng-container matColumnDef="Currency">
                   <th mat-header-cell *matHeaderCellDef>Currency</th>
                   <td mat-cell *matCellDef="let element"> {{element.Currency}} </td>
                 </ng-container>
-
-                <ng-container matColumnDef="PaymentDocumentNo">
-                  <th mat-header-cell *matHeaderCellDef>Payment DocumentNo</th>
-                  <td mat-cell *matCellDef="let element"> {{element.PaymentDocumentNo}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="PaymentDate">
-                  <th mat-header-cell *matHeaderCellDef>Payment Date</th>
-                  <td mat-cell *matCellDef="let element"> {{element.PaymentDate}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="PmntadviceNo">
-                  <th mat-header-cell *matHeaderCellDef>Pmntadvice No</th>
-                  <td mat-cell *matCellDef="let element"> {{element.PmntadviceNo}} </td>
-                </ng-container>
-                <ng-container matColumnDef="AmountPaid">
-                  <th mat-header-cell *matHeaderCellDef>Amount Paid</th>
-                  <td mat-cell *matCellDef="let element"> {{element.AmountPaid}} </td>
-                </ng-container>
-                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
               </table>
+              <div *ngIf="!dataSource.data.length">
+                <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
+                <span style="margin-left: 10px;">The table does not contain any data</span>
+              </div>
             </div>
           </mat-card-content>
         </div>
+        <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion" color="accent" mode="indeterminate"></mat-progress-spinner>
       </mat-card>
     </div>
     <!-- </div>

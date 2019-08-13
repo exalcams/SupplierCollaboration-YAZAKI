@@ -156,7 +156,7 @@
                   <span style="font-size: 13px;">Register Type</span>
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-radio-group (change)="registerTypeChanged($event)" formControlName="RegisterType">
+                  <mat-radio-group (change)="RegisterTypeChanged($event)" formControlName="RegisterType">
                     <mat-radio-button value="Inward">Inward</mat-radio-button>
                     <mat-radio-button value="Outward">Outward</mat-radio-button>
                   </mat-radio-group>
@@ -165,7 +165,7 @@
                   <!-- <span style="font-size: 13px;">Register Type</span> -->
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-radio-group (change)="orderTypeChanged($event)" *ngIf="showOrderType" formControlName="OrderType">
+                  <mat-radio-group (change)="OrderTypeChanged($event)" *ngIf="showOrderType" formControlName="OrderType">
                     <mat-radio-button value="ASN">ASN</mat-radio-button>
                     <mat-radio-button value="PO">PO</mat-radio-button>
                   </mat-radio-group>

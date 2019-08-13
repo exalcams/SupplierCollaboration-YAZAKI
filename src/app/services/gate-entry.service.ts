@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'environments/environment';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { GatePassNoData, GatePassModel } from 'app/models/gateEntry.model';
+import { IGatePassNoData, IGatePassModel } from 'app/models/gateEntry.model';
 
 @Injectable({
     providedIn: 'root'
@@ -25,13 +25,13 @@ export class GateEntryService {
         return this._httpClient.post<any>(`${this.baseAddress}api/GateEntry_Exit/CreateGateEntry`, data).pipe(catchError(this.errorHandler));
     }
 
-    GetAllGatePassNoData(): Observable<GatePassNoData[] | string> {
-        return this._httpClient.get<GatePassNoData[]>(`${this.baseAddress}api/GateEntry_Exit/GetAllGatePassNo`).pipe(catchError(this.errorHandler));
+    GetAllGatePassNoData(): Observable<IGatePassNoData[] | string> {
+        return this._httpClient.get<IGatePassNoData[]>(`${this.baseAddress}api/GateEntry_Exit/GetAllGatePassNo`).pipe(catchError(this.errorHandler));
     }
 
-    GetThisGatePassData(GT_No: string): Observable<GatePassModel | string> {
+    GetThisGatePassData(GT_No: string): Observable<IGatePassModel | string> {
         return this._httpClient
-            .get<GatePassModel>(`${this.baseAddress}api/GateEntry_Exit/GetThisGatePassData?GT_No=` + GT_No)
+            .get<IGatePassModel>(`${this.baseAddress}api/GateEntry_Exit/GetThisGatePassData?GT_No=` + GT_No)
             .pipe(catchError(this.errorHandler));
     }
 }
