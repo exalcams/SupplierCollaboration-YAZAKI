@@ -16,10 +16,10 @@ export class PaymentReportPoComponent implements OnInit, OnDestroy {
     IsProgressBarVisibile: boolean;
     BGClassName: any;
     displayedColumns: string[] = [
-        'PaymentDoc',
-        'PaymentDate',
         'PO',
         'PODate',
+        'PaymentDoc',
+        'PaymentDate',
         'InvoiceReference',
         'ClearingDoc',
         'ClearingDate',
@@ -31,7 +31,6 @@ export class PaymentReportPoComponent implements OnInit, OnDestroy {
     dataSource: MatTableDataSource<IPaymentReportPO>;
     selection: SelectionModel<IPaymentReportPO>;
     filterForm: FormGroup;
-    form: FormGroup;
 
     constructor(
         private _fuseConfigService: FuseConfigService,
@@ -48,12 +47,11 @@ export class PaymentReportPoComponent implements OnInit, OnDestroy {
             })
         );
         this.InitForm();
-        this.GetPaymentReportPO();
         this.dataSource = new MatTableDataSource();
     }
 
     InitForm(): void {
-        this.form = this._formBuilder.group({
+        this.filterForm = this._formBuilder.group({
             poNumber: [''],
             vendorCode: [''],
             fromDate: [new Date()],
@@ -64,7 +62,14 @@ export class PaymentReportPoComponent implements OnInit, OnDestroy {
     GetPaymentReportPO(): void {
         this.IsProgressBarVisibile = true;
         this._payementReportService
-            .getReport(this.form.value.poNumber, this.form.value.fromDate, this.form.value.toDate, this.form.value.vendorCode)
+            .getReport(
+                this.filterForm.value.poNumber,
+                '',
+                '',
+                this.filterForm.value.fromDate,
+                this.filterForm.value.toDate,
+                this.filterForm.value.vendorCode
+            )
             .subscribe(
                 (result: IPaymentReportPO[]) => {
                     this.dataSource = new MatTableDataSource(result);
