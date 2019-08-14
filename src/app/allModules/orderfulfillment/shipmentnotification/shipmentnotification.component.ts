@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { MatTableDataSource, MatSort, MatDialogConfig, MatDialog, MatSnackBar, MatTable } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -17,6 +17,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationDetails, App } from 'app/models/master';
 import { MasterService } from 'app/services/master.service';
 import { Location } from '@angular/common';
+import { ExcelService } from 'app/services/excel.service';
 
 
 @Component({
@@ -47,6 +48,7 @@ export class ShipmentnotificationComponent implements OnInit {
     AttachmentDetailsList: AttachmentDetails[] = [];
     fileUploader: FileUploader;
     PO_ID: string;
+    isDisable = true;
     ASNItemColumns: string[] = [
         'Item',
         'OrderedQuantity',
@@ -63,21 +65,25 @@ export class ShipmentnotificationComponent implements OnInit {
         'Dimension', 'GrossWeight', 'Volume', 'NetWeight', 'VolumeUOM', 'GrossWeightUOM'];
     displayedColumns2: string[] = ['InvoiceNo', 'InvoiceDate', 'InvoiceAmount', 'Currency', 'Delete'];
     displayedColumns3: string[] = ['AttachmentNumber', 'AttachmentName', 'DocumentType', 'Delete'];
-    ASNItemDataSource: MatTableDataSource<ASNItem>;
+    ASNItemsDataSource = new BehaviorSubject<AbstractControl[]>([]);
+    ASNItemsFormArray: FormArray = this._formBuilder.array([]);
     ASNPackageDetailsDataSource = new BehaviorSubject<AbstractControl[]>([]);
-    rows: FormArray = this._formBuilder.array([]);
+    ASNPackageDetailsFormArray: FormArray = this._formBuilder.array([]);
     dataSourse2: MatTableDataSource<VendorInvoice>;
     AttachmentDataSource: MatTableDataSource<AttachmentDetails>;
     selection: SelectionModel<ASNItem>;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild('AttachmentTable') AttachmentTable: MatTable<any>;
+    @ViewChild('ASNItemTable') ASNItemTable: ElementRef;
     ASNFormGroup: FormGroup;
+    ZeroIndex = 0;
 
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _formBuilder: FormBuilder,
         private _asnService: ASNService,
         private _masterService: MasterService,
+        private _excelService: ExcelService,
         private _router: Router,
         private _location: Location,
         public snackBar: MatSnackBar,
@@ -122,10 +128,15 @@ export class ShipmentnotificationComponent implements OnInit {
             PINCode: ['', Validators.required],
             Region: ['', Validators.required],
             Country: ['', Validators.required],
-            ASNItems: this._formBuilder.array([
-                this.addASNItemFormGroup()
-            ]),
-            ASNPackageDetails: this.rows
+            ASNItems: this.ASNItemsFormArray,
+            Number: ['', Validators.required],
+            ItemDate: ['', Validators.required],
+            DepatureDate: ['', Validators.required],
+            ExpDateOfArrival: ['', Validators.required],
+            ChallanNumber: ['', Validators.required],
+            ChallanDate: ['', Validators.required],
+            TransporterName: ['', Validators.required],
+            ASNPackageDetails: this.ASNPackageDetailsFormArray
             // CreatedBy: ['', Validators.required]
         });
         const retrievedObject = localStorage.getItem('authorizationData');
@@ -138,7 +149,7 @@ export class ShipmentnotificationComponent implements OnInit {
         // this.dataSourse1 = new MatTableDataSource();
         this.dataSourse2 = new MatTableDataSource(ELEMENT_DATA2);
         // this.AttachmentDataSource = new MatTableDataSource(ELEMENT_DATA3);
-        // this.ASNItemDataSource.sort = this.sort;
+        // this.ASNItemsDataSource.sort = this.sort;
         // this.dataSourse1.sort = this.sort;
         this.dataSourse2.sort = this.sort;
         // this.AttachmentDataSource.sort = this.sort;
@@ -158,8 +169,8 @@ export class ShipmentnotificationComponent implements OnInit {
                 this.BGClassName = config;
             });
     }
-    addASNItemFormGroup(): FormGroup {
-        return this._formBuilder.group({
+    addASNItemFormGroup(): void {
+        const row = this._formBuilder.group({
             // Item: ['', Validators.required],
             // OrderedQuantity: ['', Validators.required],
             // MaterialDescription: ['', Validators.required],
@@ -179,6 +190,8 @@ export class ShipmentnotificationComponent implements OnInit {
             ChallanDate: ['', Validators.required],
             TransporterName: ['', Validators.required],
         });
+        this.ASNItemsFormArray.push(row);
+        this.ASNItemsDataSource.next(this.ASNItemsFormArray.controls);
     }
     addASNPackageDetailsFormGroup(): void {
         const row = this._formBuilder.group({
@@ -193,18 +206,18 @@ export class ShipmentnotificationComponent implements OnInit {
             VolumeUOM: ['', Validators.required],
             GrossWeightUOM: ['', Validators.required],
         });
-        this.rows.push(row);
-        this.ASNPackageDetailsDataSource.next(this.rows.controls);
+        this.ASNPackageDetailsFormArray.push(row);
+        this.ASNPackageDetailsDataSource.next(this.ASNPackageDetailsFormArray.controls);
         // return row;
     }
 
     ResetControl(): void {
         this.ASNClass = new ASN();
-        this.ASNItemDataSource = new MatTableDataSource([]);
         this.ASNFormGroup.reset();
         Object.keys(this.ASNFormGroup.controls).forEach(key => {
             this.ASNFormGroup.get(key).markAsUntouched();
         });
+        this.ResetASNItems();
         this.ResetASNPackageDetails();
         this.ResetAttachements();
     }
@@ -217,11 +230,17 @@ export class ShipmentnotificationComponent implements OnInit {
             formArray.removeAt(0);
         }
     }
-    ResetASNPackageDetails(): void {
-        this.ClearFormArray(this.rows);
-        // this.rows = this._formBuilder.array([]);
+    ResetASNItems(): void {
+        this.ClearFormArray(this.ASNItemsFormArray);
+        // this.ASNPackageDetailsFormArray = this._formBuilder.array([]);
         // this.addASNPackageDetailsFormGroup();
-        this.ASNPackageDetailsDataSource.next(this.rows.controls);
+        this.ASNItemsDataSource.next(this.ASNItemsFormArray.controls);
+    }
+    ResetASNPackageDetails(): void {
+        this.ClearFormArray(this.ASNPackageDetailsFormArray);
+        // this.ASNPackageDetailsFormArray = this._formBuilder.array([]);
+        // this.addASNPackageDetailsFormGroup();
+        this.ASNPackageDetailsDataSource.next(this.ASNPackageDetailsFormArray.controls);
     }
     ResetAttachements(): void {
         this.AttachmentDetailsList = [];
@@ -238,23 +257,23 @@ export class ShipmentnotificationComponent implements OnInit {
     AddPackages(): void {
         if (this.SelectedASNStatus !== 'ASNCompleted') {
             const NoOfPac = +this.ASNFormGroup.get('NoOfPackages').value;
-            const r = this.rows.length;
+            const r = this.ASNPackageDetailsFormArray.length;
             if (NoOfPac - r < 0) {
                 // if (this.ASNClass.TransID) {
                 //     const NoofRowsToDelete = r - NoOfPac;
                 //     for (let i = r - 1; i >= r - NoofRowsToDelete; i--) {
-                //         this.rows.removeAt(i);
-                //         this.ASNPackageDetailsDataSource.next(this.rows.controls);
+                //         this.ASNPackageDetailsFormArray.removeAt(i);
+                //         this.ASNPackageDetailsDataSource.next(this.ASNPackageDetailsFormArray.controls);
                 //     }
                 // } else {
-                //     this.rows = this._formBuilder.array([]);
-                //     this.ASNPackageDetailsDataSource.next(this.rows.controls);
-                //     r = this.rows.length;
+                //     this.ASNPackageDetailsFormArray = this._formBuilder.array([]);
+                //     this.ASNPackageDetailsDataSource.next(this.ASNPackageDetailsFormArray.controls);
+                //     r = this.ASNPackageDetailsFormArray.length;
                 // }
                 const NoofRowsToDelete = r - NoOfPac;
                 for (let i = r - 1; i >= r - NoofRowsToDelete; i--) {
-                    this.rows.removeAt(i);
-                    this.ASNPackageDetailsDataSource.next(this.rows.controls);
+                    this.ASNPackageDetailsFormArray.removeAt(i);
+                    this.ASNPackageDetailsDataSource.next(this.ASNPackageDetailsFormArray.controls);
                 }
             }
             else if (NoOfPac - r === 0) {
@@ -271,9 +290,9 @@ export class ShipmentnotificationComponent implements OnInit {
     }
     RemovePackages(): void {
         if (this.SelectedASNStatus !== 'ASNCompleted') {
-            if (this.rows.length > 0) {
-                this.rows.removeAt(this.rows.length - 1);
-                this.ASNPackageDetailsDataSource.next(this.rows.controls);
+            if (this.ASNPackageDetailsFormArray.length > 0) {
+                this.ASNPackageDetailsFormArray.removeAt(this.ASNPackageDetailsFormArray.length - 1);
+                this.ASNPackageDetailsDataSource.next(this.ASNPackageDetailsFormArray.controls);
             } else {
                 this.notificationSnackBarComponent.openSnackBar('no packages to delete', SnackBarStatus.warning);
             }
@@ -309,11 +328,11 @@ export class ShipmentnotificationComponent implements OnInit {
     // }
     // isAllSelected(): boolean {
     //     const numSelected = this.selection.selected.length;
-    //     const numRows = this.ASNItemDataSource.data.length;
+    //     const numRows = this.ASNItemsDataSource.data.length;
     //     return numSelected === numRows;
     // }
     // masterToggle(): void {
-    //     this.isAllSelected() ? this.selection.clear() : this.ASNItemDataSource.data.forEach(row => this.selection.select(row));
+    //     this.isAllSelected() ? this.selection.clear() : this.ASNItemsDataSource.data.forEach(row => this.selection.select(row));
     // }
     // /** The label for the checkbox on the passed row */
     // checkboxLabel(row?: ASNItem): string {
@@ -434,29 +453,57 @@ export class ShipmentnotificationComponent implements OnInit {
         this.ASNClass.Remarks = this.ASNFormGroup.get('Remarks').value;
     }
     GetASNItemDetailValues(): void {
-        // this.ASNClass.ASNItems = [];
-        const ASNItemsFormArray = this.ASNFormGroup.get('ASNItems') as FormArray;
-        ASNItemsFormArray.controls.forEach((x, i) => {
-            // const ASNIte = new ASNItem();
-            this.ASNClass.ASNItems[i].PackageID = x.get('PackageID').value;
-            this.ASNClass.ASNItems[i].BatchNumber = x.get('BatchNumber').value;
-            this.ASNClass.ASNItems[i].Remarks = x.get('Remarks').value;
-            this.ASNClass.ASNItems[i].Number = x.get('Number').value;
-            this.ASNClass.ASNItems[i].ItemDate = x.get('ItemDate').value;
-            this.ASNClass.ASNItems[i].DepatureDate = x.get('DepatureDate').value;
-            this.ASNClass.ASNItems[i].ExpDateOfArrival = x.get('ExpDateOfArrival').value;
-            this.ASNClass.ASNItems[i].ChallanNumber = x.get('ChallanNumber').value;
-            this.ASNClass.ASNItems[i].ChallanDate = x.get('ChallanDate').value;
-            this.ASNClass.ASNItems[i].TransporterName = x.get('TransporterName').value;
-            // this.ASNClass.ASNItems.push(ASNIte);
+
+        this.ASNClass.ASNItems = [];
+        const ASNItemsFormArr = this.ASNFormGroup.get('ASNItems') as FormArray;
+        ASNItemsFormArr.controls.forEach((x, i) => {
+            const item: ASNItem = new ASNItem();
+            item.Item = x.get('Item').value;
+            item.OrderedQuantity = x.get('OrderedQuantity').value;
+            item.UOM = x.get('UOM').value;
+            item.ApprovedQuantity = x.get('ApprovedQuantity').value;
+            item.InProcessQuantity = x.get('InProcessQuantity').value;
+            item.OfferedQuantity = x.get('OfferedQuantity').value;
+            item.PackageID = x.get('PackageID').value;
+            item.BatchNumber = x.get('BatchNumber').value;
+            item.Remarks = x.get('Remarks').value;
+            item.MaterialDescription = x.get('MaterialDescription').value;
+            item.Number = this.ASNFormGroup.get('Number').value;
+            item.ItemDate = this.ASNFormGroup.get('ItemDate').value;
+            item.DepatureDate = this.ASNFormGroup.get('DepatureDate').value;
+            item.ExpDateOfArrival = this.ASNFormGroup.get('ExpDateOfArrival').value;
+            item.ChallanNumber = this.ASNFormGroup.get('ChallanNumber').value;
+            item.ChallanDate = this.ASNFormGroup.get('ChallanDate').value;
+            item.TransporterName = this.ASNFormGroup.get('TransporterName').value;
+            item.ApprovedQuantity = item.ApprovedQuantity ? item.ApprovedQuantity : 0;
+            item.InProcessQuantity = item.InProcessQuantity ? item.InProcessQuantity : 0;
+            item.OfferedQuantity = item.OfferedQuantity ? item.OfferedQuantity : 0;
+            this.ASNClass.ASNItems.push(item);
         });
+
+        // // this.ASNClass.ASNItems = [];
+        // const ASNItemsFormArray = this.ASNFormGroup.get('ASNItems') as FormArray;
+        // ASNItemsFormArray.controls.forEach((x, i) => {
+        //     // const ASNIte = new ASNItem();
+        //     this.ASNClass.ASNItems[i].PackageID = x.get('PackageID').value;
+        //     this.ASNClass.ASNItems[i].BatchNumber = x.get('BatchNumber').value;
+        //     this.ASNClass.ASNItems[i].Remarks = x.get('Remarks').value;
+        //     this.ASNClass.ASNItems[i].Number = x.get('Number').value;
+        //     this.ASNClass.ASNItems[i].ItemDate = x.get('ItemDate').value;
+        //     this.ASNClass.ASNItems[i].DepatureDate = x.get('DepatureDate').value;
+        //     this.ASNClass.ASNItems[i].ExpDateOfArrival = x.get('ExpDateOfArrival').value;
+        //     this.ASNClass.ASNItems[i].ChallanNumber = x.get('ChallanNumber').value;
+        //     this.ASNClass.ASNItems[i].ChallanDate = x.get('ChallanDate').value;
+        //     this.ASNClass.ASNItems[i].TransporterName = x.get('TransporterName').value;
+        //     // this.ASNClass.ASNItems.push(ASNIte);
+        // });
 
     }
 
     GetASNPackageDetails(): void {
         this.ASNClass.ASNPackageDetails = [];
-        const ASNPackageDetailsFormArray = this.ASNFormGroup.get('ASNPackageDetails') as FormArray;
-        ASNPackageDetailsFormArray.controls.forEach((x, i) => {
+        const ASNPackageDetailsFormArr = this.ASNFormGroup.get('ASNPackageDetails') as FormArray;
+        ASNPackageDetailsFormArr.controls.forEach((x, i) => {
             if (i < this.ASNClass.NoOfPackages) {
                 const asn: ASNPackageDetail = new ASNPackageDetail();
                 asn.PackageID = x.get('PackageID').value;
@@ -629,7 +676,11 @@ export class ShipmentnotificationComponent implements OnInit {
             ASNIte.OrderedQuantity = SelectPOView.OrderedQuantity;
             ASNIte.UOM = SelectPOView.UnitOfMeasure;
             this.ASNClass.ASNItems.push(ASNIte);
-            this.ASNItemDataSource = new MatTableDataSource(this.ASNClass.ASNItems);
+            // this.ASNItemsDataSource = new MatTableDataSource(this.ASNClass.ASNItems);
+            this.ClearFormArray(this.ASNItemsFormArray);
+            this.ASNClass.ASNItems.forEach(x => {
+                this.InsertASNItemsFormGroup(x);
+            });
 
         } else {
             this.GetASNByPO(this.SelectedPO, this.SelectedPOItem);
@@ -684,33 +735,62 @@ export class ShipmentnotificationComponent implements OnInit {
         // this.ASNFormGroup.get('Remarks').patchValue(this.ASNClass.Remarks);
 
     }
-    InsertASNItemsFormGroup(): void {
-        const ASNItemsFormArray = this.ASNFormGroup.get('ASNItems') as FormArray;
-        // ASNItemsFormArray.enable();
-        ASNItemsFormArray.controls.forEach((x, i) => {
-            x.patchValue({
-                PackageID: this.ASNClass.ASNItems[i].PackageID,
-                BatchNumber: this.ASNClass.ASNItems[i].BatchNumber,
-                Remarks: this.ASNClass.ASNItems[i].Remarks,
-                Number: this.ASNClass.ASNItems[i].Number,
-                ItemDate: this.ASNClass.ASNItems[i].ItemDate,
-                DepatureDate: this.ASNClass.ASNItems[i].DepatureDate,
-                ExpDateOfArrival: this.ASNClass.ASNItems[i].ExpDateOfArrival,
-                ChallanNumber: this.ASNClass.ASNItems[i].ChallanNumber,
-                ChallanDate: this.ASNClass.ASNItems[i].ChallanDate,
-                TransporterName: this.ASNClass.ASNItems[i].TransporterName,
-            });
-            // x.get('PackageID').patchValue(this.ASNClass.ASNItems[i].PackageID);
-            // x.get('BatchNumber').patchValue(this.ASNClass.ASNItems[i].BatchNumber);
-            // x.get('Remarks').patchValue(this.ASNClass.ASNItems[i].Remarks);
-            // x.get('Number').patchValue(this.ASNClass.ASNItems[i].Number);
-            // x.get('ItemDate').patchValue(this.ASNClass.ASNItems[i].ItemDate);
-            // x.get('DepatureDate').patchValue(this.ASNClass.ASNItems[i].DepatureDate);
-            // x.get('ExpDateOfArrival').patchValue(this.ASNClass.ASNItems[i].ExpDateOfArrival);
-            // x.get('ChallanNumber').patchValue(this.ASNClass.ASNItems[i].ChallanNumber);
-            // x.get('ChallanDate').patchValue(this.ASNClass.ASNItems[i].ChallanDate);
-            // x.get('TransporterName').patchValue(this.ASNClass.ASNItems[i].TransporterName);
+    InsertASNItemsFormGroup(item: ASNItem): void {
+        const row = this._formBuilder.group({
+            Item: [item.Item],
+            OrderedQuantity: [item.OrderedQuantity],
+            UOM: [item.UOM],
+            ApprovedQuantity: [item.ApprovedQuantity],
+            InProcessQuantity: [item.InProcessQuantity],
+            OfferedQuantity: [item.OfferedQuantity],
+            PackageID: [item.PackageID, Validators.required],
+            BatchNumber: [item.BatchNumber, Validators.required],
+            Remarks: [item.Remarks, Validators.required],
+            MaterialDescription: [item.MaterialDescription],
         });
+        row.disable();
+        row.get('PackageID').enable();
+        row.get('BatchNumber').enable();
+        row.get('Remarks').enable();
+        this.ASNItemsFormArray.push(row);
+        this.ASNItemsDataSource.next(this.ASNItemsFormArray.controls);
+        this.ASNFormGroup.patchValue({
+            Number: item.Number,
+            ItemDate: item.ItemDate,
+            DepatureDate: item.DepatureDate,
+            ExpDateOfArrival: item.ExpDateOfArrival,
+            ChallanDate: item.ChallanDate,
+            ChallanNumber: item.ChallanNumber,
+            TransporterName: item.TransporterName
+        });
+
+
+        // const ASNItemsFormArray = this.ASNFormGroup.get('ASNItems') as FormArray;
+        // // ASNItemsFormArray.enable();
+        // ASNItemsFormArray.controls.forEach((x, i) => {
+        //     x.patchValue({
+        //         PackageID: this.ASNClass.ASNItems[i].PackageID,
+        //         BatchNumber: this.ASNClass.ASNItems[i].BatchNumber,
+        //         Remarks: this.ASNClass.ASNItems[i].Remarks,
+        //         Number: this.ASNClass.ASNItems[i].Number,
+        //         ItemDate: this.ASNClass.ASNItems[i].ItemDate,
+        //         DepatureDate: this.ASNClass.ASNItems[i].DepatureDate,
+        //         ExpDateOfArrival: this.ASNClass.ASNItems[i].ExpDateOfArrival,
+        //         ChallanNumber: this.ASNClass.ASNItems[i].ChallanNumber,
+        //         ChallanDate: this.ASNClass.ASNItems[i].ChallanDate,
+        //         TransporterName: this.ASNClass.ASNItems[i].TransporterName,
+        //     });
+        //     // x.get('PackageID').patchValue(this.ASNClass.ASNItems[i].PackageID);
+        //     // x.get('BatchNumber').patchValue(this.ASNClass.ASNItems[i].BatchNumber);
+        //     // x.get('Remarks').patchValue(this.ASNClass.ASNItems[i].Remarks);
+        //     // x.get('Number').patchValue(this.ASNClass.ASNItems[i].Number);
+        //     // x.get('ItemDate').patchValue(this.ASNClass.ASNItems[i].ItemDate);
+        //     // x.get('DepatureDate').patchValue(this.ASNClass.ASNItems[i].DepatureDate);
+        //     // x.get('ExpDateOfArrival').patchValue(this.ASNClass.ASNItems[i].ExpDateOfArrival);
+        //     // x.get('ChallanNumber').patchValue(this.ASNClass.ASNItems[i].ChallanNumber);
+        //     // x.get('ChallanDate').patchValue(this.ASNClass.ASNItems[i].ChallanDate);
+        //     // x.get('TransporterName').patchValue(this.ASNClass.ASNItems[i].TransporterName);
+        // });
     }
     InsertASNPackageDetailsFormGroup(packDetails: ASNPackageDetail): void {
         const row = this._formBuilder.group({
@@ -719,13 +799,13 @@ export class ShipmentnotificationComponent implements OnInit {
             ReferenceNumber: [packDetails.ReferenceNumber, Validators.required],
             Dimension: [packDetails.Dimension, Validators.required],
             GrossWeight: [packDetails.GrossWeight, Validators.required],
-            Volume: [packDetails.VolumeUOM, Validators.required],
+            Volume: [packDetails.Volume, Validators.required],
             NetWeight: [packDetails.NetWeight, Validators.required],
             VolumeUOM: [packDetails.VolumeUOM, Validators.required],
             GrossWeightUOM: [packDetails.GrossWeightUOM, Validators.required],
         });
-        this.rows.push(row);
-        this.ASNPackageDetailsDataSource.next(this.rows.controls);
+        this.ASNPackageDetailsFormArray.push(row);
+        this.ASNPackageDetailsDataSource.next(this.ASNPackageDetailsFormArray.controls);
         // return row;
     }
     GetASNByTransID(TransID): void {
@@ -738,15 +818,19 @@ export class ShipmentnotificationComponent implements OnInit {
                     }
                     this.InsertASNHeaderValues();
                     if (this.ASNClass.ASNItems && this.ASNClass.ASNItems.length) {
-                        this.ASNItemDataSource = new MatTableDataSource(this.ASNClass.ASNItems);
-                        this.InsertASNItemsFormGroup();
+                        this.ClearFormArray(this.ASNItemsFormArray);
+                        this.ASNClass.ASNItems.forEach(x => {
+                            this.InsertASNItemsFormGroup(x);
+                        });
+                    } else {
+                        this.ResetASNItems();
                     }
                     if (this.ASNClass.ASNPackageDetails && this.ASNClass.ASNPackageDetails.length) {
-                        this.ClearFormArray(this.rows);
+                        this.ClearFormArray(this.ASNPackageDetailsFormArray);
                         this.ASNClass.ASNPackageDetails.forEach((x, i) => {
                             if (i < this.ASNClass.NoOfPackages) {
                                 this.InsertASNPackageDetailsFormGroup(x);
-                                // this.rows.enable();
+                                // this.ASNPackageDetailsFormArray.enable();
                             }
                         });
                     } else {
@@ -771,11 +855,15 @@ export class ShipmentnotificationComponent implements OnInit {
                     this.GetAttachmentViewsByAppID(this.ASNAppID, this.ASNClass.TransID);
                     this.InsertASNHeaderValues();
                     if (this.ASNClass.ASNItems && this.ASNClass.ASNItems.length) {
-                        this.ASNItemDataSource = new MatTableDataSource(this.ASNClass.ASNItems);
-                        this.InsertASNItemsFormGroup();
+                        this.ClearFormArray(this.ASNItemsFormArray);
+                        this.ASNClass.ASNItems.forEach(x => {
+                            this.InsertASNItemsFormGroup(x);
+                        });
+                    } else {
+                        this.ResetASNItems();
                     }
                     if (this.ASNClass.ASNPackageDetails && this.ASNClass.ASNPackageDetails.length) {
-                        this.ClearFormArray(this.rows);
+                        this.ClearFormArray(this.ASNPackageDetailsFormArray);
                         this.ASNClass.ASNPackageDetails.forEach((x, i) => {
                             if (i < this.ASNClass.NoOfPackages) {
                                 this.InsertASNPackageDetailsFormGroup(x);
@@ -791,6 +879,7 @@ export class ShipmentnotificationComponent implements OnInit {
                         });
                     } else {
                         this.ASNFormGroup.enable();
+                        this.DisableASNItemsInputs();
                         this.ASNFormGroup.get('ASN_Header_PO').disable();
                     }
                 }
@@ -800,6 +889,15 @@ export class ShipmentnotificationComponent implements OnInit {
                 console.log(err);
             }
         );
+    }
+    DisableASNItemsInputs(): void {
+        const ASNItemsFormArr = this.ASNFormGroup.get('ASNItems') as FormArray;
+        ASNItemsFormArr.controls.forEach((row, i) => {
+            row.disable();
+            row.get('PackageID').enable();
+            row.get('BatchNumber').enable();
+            row.get('Remarks').enable();
+        });
     }
     GetAttachmentViewsByAppID(APPID: number, APPNumber: number): void {
         this.ResetAttachements();
@@ -840,6 +938,27 @@ export class ShipmentnotificationComponent implements OnInit {
         this.AttachmentDetailsList.splice(index, 1);
         this.AttachmentDataSource = new MatTableDataSource(this.AttachmentDetailsList);
         this.AttachmentTable.renderRows();
+    }
+
+    exportAsXLSX(): void {
+        // const currentPageIndex = this.TransDetailsDataSource.paginator.pageIndex;
+        // const PageSize = this.TransDetailsDataSource.paginator.pageSize;
+        // const startIndex = currentPageIndex * PageSize;
+        // const endIndex = startIndex + PageSize;
+        // const itemsShowed = this.TransDetailsList.slice(startIndex, endIndex);
+        const itemsShowed1: any[] = [];
+        this.ASNClass.ASNItems.forEach(x => {
+            const dt = {
+                'Item': x.Item, 'Ordered Quantity': x.OrderedQuantity, 'UOM': x.UOM,
+                'Approved Quantity': x.ApprovedQuantity, 'In progress Quantity': x.InProcessQuantity,
+                'Offered Quantity': x.OfferedQuantity, 'Package ID': x.PackageID, 'Batch Number': x.BatchNumber,
+                'Remarks': x.Remarks, 'Material Description': x.MaterialDescription
+            };
+            itemsShowed1.push(dt);
+        });
+        this._excelService.exportAsExcelFile(itemsShowed1, 'ASN Item');
+        // const itemsShowed1 = this.ASNItemTable.nativeElement;
+        // this._excelService.exportTableToExcel(itemsShowed1, 'ASN Item');
     }
 }
 
