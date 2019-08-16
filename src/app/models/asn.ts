@@ -121,6 +121,8 @@ export class Auxiliary {
     AttachmentNumber: number;
     AttachmentName: string;
     DocumentType: string;
+    IsHeaderExist:boolean;
+    HeaderNumber:string;
     CreatedOn: Date;
     CreatedBy: string;
     ModifiedOn?: Date;

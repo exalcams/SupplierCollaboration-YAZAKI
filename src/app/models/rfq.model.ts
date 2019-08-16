@@ -50,6 +50,8 @@ export class RFQItem {
     UOM: string;
     Price: number;
     SupplierPartNumber: string;
+    Schedule: number;
+    NumberOfAttachments: number;
     QuestionerID: string;
     TechRating: string;
     ExpectedDeliveryDate?: Date;
@@ -72,7 +74,7 @@ export class RFQView {
     RFQEndDate?: Date;
     RFQResponseEndDate?: Date;
     Status: string;
-    RFQItems: RFQItem[];
+    RFQItems: RFQItemView[];
     // AutoEvaluation: string;
     // RFQType: string;
     // AwardedVendor: string;
@@ -83,4 +85,20 @@ export class RFQView {
     ModifiedOn?: Date;
     ModifiedBy: string;
     IsActive: boolean;
+}
+export class RFQItemView {
+    RFQID: number;
+    ItemID: number;
+    MaterialCode: string;
+    MaterialDescription: string;
+    OrderQuantity: number;
+    DelayDays: number;
+    UOM: string;
+    Price: number;
+    SupplierPartNumber: string;
+    Schedule: number;
+    NumberOfAttachments: number;
+    AttachmentNames: string[];
+    TechRating: string;
+    APPID: number;
 }

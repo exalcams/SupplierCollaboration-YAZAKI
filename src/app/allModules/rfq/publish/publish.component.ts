@@ -86,7 +86,7 @@ export class PublishComponent implements OnInit {
           id: this.SelectedPurchaseRequisition.PurchaseRequisitionID,
           status: this.SelectedPurchaseRequisition.RFQStatus
         },
-        skipLocationChange: true
+        // skipLocationChange: true
       });
     } else {
       this.notificationSnackBarComponent.openSnackBar('Please select a purchase requisition', SnackBarStatus.danger);
