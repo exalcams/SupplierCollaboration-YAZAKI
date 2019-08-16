@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef, ViewChild, Renderer } from '@angular/core';
 import { MatTableDataSource, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -6,12 +6,14 @@ import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '
 import { BehaviorSubject } from 'rxjs';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { RFQView, RFQItem } from 'app/models/rfq.model';
+import { RFQView, RFQItem, RFQItemView } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, App } from 'app/models/master';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RFQService } from 'app/services/rfq.service';
 import { Location } from '@angular/common';
+import { Auxiliary } from 'app/models/asn';
+import { MasterService } from 'app/services/master.service';
 
 @Component({
   selector: 'creation',
@@ -33,15 +35,21 @@ export class CreationComponent implements OnInit {
   RFQ: RFQView;
   BGClassName: any;
   RFQItemsColumns: string[] = ['ItemID', 'MaterialDescription', 'OrderQuantity', 'DelayDays', 'UOM', 'Price', 'SupplierPartNumber', 'Schedule', 'Attachment', 'TechRating'];
+  RFQItemAppID: number;
+  @ViewChild('fileInput1') fileInput1: ElementRef;
+  fileToUpload: File;
+  fileToUploadList: File[] = [];
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _router: Router,
     private route: ActivatedRoute,
     private _location: Location,
     private _rfqService: RFQService,
+    private _masterService: MasterService,
     private _formBuilder: FormBuilder,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private renderer: Renderer
   ) {
     this.route.queryParams.subscribe(data => {
       this.SelectedPurchaseRequisitionID = +data['id'];
@@ -51,6 +59,8 @@ export class CreationComponent implements OnInit {
       }
     });
     // this._location.replaceState(this._router.url.split('?')[0]);
+    // const url: string = this._router.url.substring(0, this._router.url.indexOf('?'));
+    // this._router.navigateByUrl(url);
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.RFQ = new RFQView();
@@ -81,7 +91,7 @@ export class CreationComponent implements OnInit {
       .subscribe((config) => {
         this.BGClassName = config;
       });
-
+    this.GetAppByName();
     if (this.SelectedRFQStatus.toLocaleLowerCase() !== 'open') {
       this.GetRFQByPurchaseRequisitionID();
     }
@@ -95,10 +105,13 @@ export class CreationComponent implements OnInit {
       UOM: ['', Validators.required],
       Price: ['', Validators.required],
       SupplierPartNumber: ['', Validators.required],
-      // Schedule: ['', Validators.required],
+      Schedule: ['', Validators.required],
+      NumberOfAttachments: [''],
+      AttachmentNames: [[]],
       TechRating: ['', Validators.required],
     });
     this.RFQItemFormArray.push(row);
+    // row.get('NumberOfAttachments').disable();
     this.RFQItemDataSource.next(this.RFQItemFormArray.controls);
   }
 
@@ -119,16 +132,64 @@ export class CreationComponent implements OnInit {
       formArray.removeAt(0);
     }
   }
+  GetAppByName(): void {
+    const AppName = 'RFQItem';
+    this._masterService.GetAppByName(AppName).subscribe(
+      (data) => {
+        const ASNAPP = data as App;
+        if (ASNAPP) {
+          this.RFQItemAppID = ASNAPP.AppID;
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
   AddRFQItem(): void {
-    this.AddRFQItemFormGroup();
+    if (this.RFQFormGroup.enabled) {
+      this.AddRFQItemFormGroup();
+    }
   }
   RemoveRFQItem(): void {
-    if (this.RFQItemFormArray.length > 0) {
-      this.RFQItemFormArray.removeAt(this.RFQItemFormArray.length - 1);
-      this.RFQItemDataSource.next(this.RFQItemFormArray.controls);
-    } else {
-      this.notificationSnackBarComponent.openSnackBar('no items to delete', SnackBarStatus.warning);
+    if (this.RFQFormGroup.enabled) {
+      if (this.RFQItemFormArray.length > 0) {
+        const AttNames = this.RFQItemFormArray.controls[this.RFQItemFormArray.length - 1].get('AttachmentNames').value as string[];
+        // this.fileToUploadList = this.fileToUploadList.filter((el) =>
+        //   !AttNames.includes(el.name)
+        // );
+        AttNames.forEach(x => {
+          const indexx = this.fileToUploadList.map(y => y.name).indexOf(x);
+          this.fileToUploadList.splice(indexx, 1);
+        });
+        this.RFQItemFormArray.removeAt(this.RFQItemFormArray.length - 1);
+        this.RFQItemDataSource.next(this.RFQItemFormArray.controls);
+      } else {
+        this.notificationSnackBarComponent.openSnackBar('no items to delete', SnackBarStatus.warning);
+      }
     }
+  }
+
+  AddAttachments(): void {
+    if (this.RFQFormGroup.enabled) {
+      const event = new MouseEvent('click', { bubbles: true });
+      this.renderer.invokeElementMethod(
+        this.fileInput1.nativeElement, 'dispatchEvent', [event]);
+    }
+  }
+
+  handleFileInput(evt, index: number): void {
+    if (evt.target.files && evt.target.files.length > 0) {
+      this.fileToUpload = evt.target.files[0];
+      this.fileToUploadList.push(this.fileToUpload);
+      const OldValue = +this.RFQItemFormArray.controls[index].get('NumberOfAttachments').value;
+      this.RFQItemFormArray.controls[index].get('NumberOfAttachments').patchValue(OldValue + 1);
+      const AttNames = this.RFQItemFormArray.controls[index].get('AttachmentNames').value as string[];
+      AttNames.push(this.fileToUpload.name);
+      this.RFQItemFormArray.controls[index].get('AttachmentNames').patchValue(AttNames);
+    }
+    // console.log(index);
   }
 
   GetRFQHeaderValues(): void {
@@ -146,18 +207,23 @@ export class CreationComponent implements OnInit {
     this.RFQ.RFQItems = [];
     const RFQItemsFormArray = this.RFQFormGroup.get('RFQItems') as FormArray;
     RFQItemsFormArray.controls.forEach((x, i) => {
-      const rfq: RFQItem = new RFQItem();
+      const rfq: RFQItemView = new RFQItemView();
       rfq.ItemID = x.get('ItemID').value;
       rfq.MaterialDescription = x.get('MaterialDescription').value;
       rfq.OrderQuantity = x.get('OrderQuantity').value;
       rfq.DelayDays = x.get('DelayDays').value;
       rfq.UOM = x.get('UOM').value;
       rfq.Price = x.get('Price').value;
-      // rfq.Schedule = x.get('Schedule').value;
+      rfq.SupplierPartNumber = x.get('SupplierPartNumber').value;
+      rfq.Schedule = x.get('Schedule').value;
+      rfq.NumberOfAttachments = x.get('NumberOfAttachments').value;
+      rfq.AttachmentNames = x.get('AttachmentNames').value;
       rfq.TechRating = x.get('TechRating').value;
+      rfq.APPID = this.RFQItemAppID;
       this.RFQ.RFQItems.push(rfq);
     });
   }
+
 
   SubmitRFQDetails(val: string): void {
     // this.RFQFormGroup.enable();
@@ -181,9 +247,23 @@ export class CreationComponent implements OnInit {
               this.RFQ.ModifiedBy = this.CurrentUserName;
               this._rfqService.UpdateRFQ(this.RFQ).subscribe(
                 (data) => {
-                  this.IsProgressBarVisibile = false;
-                  this.notificationSnackBarComponent.openSnackBar('RFQ details updated successfully', SnackBarStatus.success);
-                  this.ResetControl();
+                  const TransID = data as number;
+                  const aux = new Auxiliary();
+                  aux.APPID = this.RFQItemAppID;
+                  aux.HeaderNumber = TransID.toString();
+                  aux.CreatedBy = this.CurrentUserName;
+                  this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
+                    (dat) => {
+                      this.IsProgressBarVisibile = false;
+                      this.notificationSnackBarComponent.openSnackBar('RFQ details updated successfully', SnackBarStatus.success);
+                      this.ResetControl();
+                    },
+                    (err) => {
+                      console.error(err);
+                      this.IsProgressBarVisibile = false;
+                      this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+                    }
+                  );
                 },
                 (err) => {
                   console.error(err);
@@ -216,9 +296,26 @@ export class CreationComponent implements OnInit {
               this.RFQ.CreatedBy = this.CurrentUserName;
               this._rfqService.CreateRFQ(this.RFQ).subscribe(
                 (data) => {
-                  this.IsProgressBarVisibile = false;
-                  this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
-                  this.ResetControl();
+                  const TransID = data as number;
+                  const aux = new Auxiliary();
+                  aux.APPID = this.RFQItemAppID;
+                  aux.HeaderNumber = TransID.toString();
+                  aux.CreatedBy = this.CurrentUserName;
+                  this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
+                    (dat) => {
+                      this.IsProgressBarVisibile = false;
+                      this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
+                      this.ResetControl();
+                    },
+                    (err) => {
+                      console.error(err);
+                      this.IsProgressBarVisibile = false;
+                      this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+                    }
+                  );
+
+                  // this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
+                  // this.ResetControl();
                 },
                 (err) => {
                   console.error(err);
@@ -272,7 +369,7 @@ export class CreationComponent implements OnInit {
     });
   }
 
-  InsertRFQItemsFormGroup(rFQItem: RFQItem): void {
+  InsertRFQItemsFormGroup(rFQItem: RFQItemView): void {
     const row = this._formBuilder.group({
       ItemID: [rFQItem.ItemID, Validators.required],
       MaterialDescription: [rFQItem.MaterialDescription, Validators.required],
@@ -280,6 +377,9 @@ export class CreationComponent implements OnInit {
       DelayDays: [rFQItem.DelayDays, Validators.required],
       UOM: [rFQItem.UOM, Validators.required],
       Price: [rFQItem.Price, Validators.required],
+      Schedule: [rFQItem.Schedule, Validators.required],
+      NumberOfAttachments: [rFQItem.NumberOfAttachments],
+      AttachmentNames: [rFQItem.AttachmentNames],
       SupplierPartNumber: [rFQItem.SupplierPartNumber, Validators.required],
       TechRating: [rFQItem.TechRating, Validators.required],
     });
