@@ -102,3 +102,29 @@ export class RFQItemView {
     TechRating: string;
     APPID: number;
 }
+
+export class PurchaseRequisitionView {
+    PurchaseRequisitionID: number;
+    RFQID: number;
+    RFQStatus: string;
+}
+
+export class RFQAllocation {
+    RFQID: number;
+    VendorID: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
+export class RFQAllocationView {
+    PurchaseRequisitionID: number;
+    RFQID: number;
+    VendorID: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}

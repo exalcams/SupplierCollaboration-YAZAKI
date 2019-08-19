@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithMenuApp, UserWithRole, UserNotification, UserPreference, App } from 'app/models/master';
+import { MenuApp, RoleWithMenuApp, UserWithRole, UserNotification, UserPreference, App, Vendor, VendorSearchCondition } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 
 @Injectable({
@@ -108,6 +108,55 @@ export class MasterService {
   DeleteApp(app: App): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteApp`,
       app,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  // Vendor
+  CreateVendor(vendor: Vendor): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateVendor`,
+      vendor,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllVendors(): Observable<Vendor[] | string> {
+    return this._httpClient.get<Vendor[]>(`${this.baseAddress}api/Master/GetAllVendors`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateVendor(vendor: Vendor): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateVendor`,
+      vendor,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DeleteVendor(vendor: Vendor): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteVendor`,
+      vendor,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+  GetVendorsBasedOnConditions(vendorSearchCondition: VendorSearchCondition): Observable<Vendor[] | string> {
+    return this._httpClient.post<Vendor[]>(`${this.baseAddress}api/Master/GetVendorsBasedOnConditions`,
+      vendorSearchCondition,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'

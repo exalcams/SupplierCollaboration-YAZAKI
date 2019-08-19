@@ -1,7 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { VendorSearchCondition, Vendor, AuthenticationDetails } from 'app/models/master';
+import { MasterService } from 'app/services/master.service';
+import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
+import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
+import { ShareParameterService } from 'app/services/share-parameter.service';
+import { Router } from '@angular/router';
+import { RFQService } from 'app/services/rfq.service';
+import { RFQAllocationView } from 'app/models/rfq.model';
 
 @Component({
   selector: 'evaluation',
@@ -9,34 +18,63 @@ import { FuseConfigService } from '@fuse/services/config.service';
   styleUrls: ['./evaluation.component.scss']
 })
 export class EvaluationComponent implements OnInit {
-
-  SupplierInviteClassList: SupplierInviteClass[] = [];
+  authenticationDetails: AuthenticationDetails;
+  CurrentUserName: string;
+  SelectedPurchaseRequisitionID: number;
+  SelectedRFQStatus = '';
+  SelectedRFQID: number;
+  RFQAllocations: RFQAllocationView[] = [];
+  VendorSearchFormGroup: FormGroup;
+  conditions: VendorSearchCondition;
+  VendorList: Vendor[] = [];
+  SelectedVendorList: Vendor[] = [];
+  CheckedVendorList: Vendor[] = [];
   BGClassName: any;
-  displayedColumns: string[] = ['select', 'VendorName', 'GSTNumber', 'VendorType', 'City'];
-  dataSource: MatTableDataSource<SupplierInviteClass>;
-  selection = new SelectionModel<SupplierInviteClass>(true, []);
+  vendorDisplayedColumns: string[] = ['select', 'VendorName', 'GSTNumber', 'Type', 'City', 'State'];
+  vendorDataSource: MatTableDataSource<Vendor>;
+  selection = new SelectionModel<Vendor>(true, []);
+  notificationSnackBarComponent: NotificationSnackBarComponent;
+  IsProgressBarVisibile: boolean;
 
-  constructor(private _fuseConfigService: FuseConfigService) { }
+  constructor(
+    private _fuseConfigService: FuseConfigService,
+    private _masterService: MasterService,
+    private _shareParameterService: ShareParameterService,
+    private _rfqService: RFQService,
+    private _router: Router,
+    private _formBuilder: FormBuilder,
+    public snackBar: MatSnackBar,
+  ) {
+    const CurrentPurchaseRequisition = this._shareParameterService.GetPurchaseRequisition();
+    console.log(CurrentPurchaseRequisition);
+    if (CurrentPurchaseRequisition) {
+      this.SelectedPurchaseRequisitionID = CurrentPurchaseRequisition.PurchaseRequisitionID;
+      this.SelectedRFQID = CurrentPurchaseRequisition.RFQID;
+      this.SelectedRFQStatus = CurrentPurchaseRequisition.RFQStatus;
+    } else {
+      this._router.navigate(['/rfq/publish']);
+    }
+    this.IsProgressBarVisibile = false;
+    this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.conditions = new VendorSearchCondition();
+  }
 
   ngOnInit(): void {
-    this.SupplierInviteClassList = [
-      {
-        VendorName: 'Exalca Technologies Pvt Ltd', GSTNumber: '29AEDF80091', VendorType: '', City: 'Bangalore , KA ,India',
-      },
-      {
-        VendorName: 'Inowits Technologies Pvt Ltd', GSTNumber: '29AEDF80092', VendorType: '', City: 'Bangalore , KA ,India',
-      },
-      {
-        VendorName: 'ApeeJay Technologies Pvt Ltd', GSTNumber: '29AEDF80091', VendorType: '', City: 'Bangalore , KA ,India',
-      },
-      {
-        VendorName: 'PathWork Technologies Pvt Ltd', GSTNumber: '29AEDF80092', VendorType: '', City: 'Bangalore , KA ,India',
-      },
-      {
-        VendorName: 'Quints Technologies Pvt Ltd', GSTNumber: '29AEDF80092', VendorType: '', City: 'Bangalore , KA ,India',
-      },
-    ];
-    this.dataSource = new MatTableDataSource(this.SupplierInviteClassList);
+    const retrievedObject = localStorage.getItem('authorizationData');
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.CurrentUserName = this.authenticationDetails.userName;
+    } else {
+      this._router.navigate(['/auth/login']);
+    }
+    this.VendorSearchFormGroup = this._formBuilder.group({
+      VendorCode: [''],
+      VendorName: [''],
+      GSTNumber: [''],
+      State: [''],
+      Type: [''],
+    });
+    this.GetAllVendors();
     this.isAllSelected();
     this.masterToggle();
     this.checkboxLabel();
@@ -47,36 +85,189 @@ export class EvaluationComponent implements OnInit {
       });
   }
 
+  ResetControl(): void {
+    this.conditions = new VendorSearchCondition();
+    this.VendorSearchFormGroup.reset();
+    Object.keys(this.VendorSearchFormGroup.controls).forEach(key => {
+      this.VendorSearchFormGroup.get(key).markAsUntouched();
+    });
+    this.SelectedVendorList = [];
+    this.ResetCheckbox();
+  }
+
+  ResetCheckbox(): void {
+    this.selection.clear();
+    this.vendorDataSource.data.forEach(row => this.selection.deselect(row));
+
+  }
+
+  GetAllVendors(): void {
+    this.IsProgressBarVisibile = true;
+    this._masterService.GetAllVendors().subscribe(
+      (data) => {
+        this.VendorList = data as Vendor[];
+        this.vendorDataSource = new MatTableDataSource(this.VendorList);
+        this.IsProgressBarVisibile = false;
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+      }
+    );
+  }
+
+  GetVendorsBasedOnConditions(): void {
+    if (this.VendorSearchFormGroup.valid) {
+      this.CheckedVendorList = [];
+      this.ResetCheckbox();
+      this.IsProgressBarVisibile = true;
+      this.conditions.VendorCode = this.VendorSearchFormGroup.get('VendorCode').value;
+      this.conditions.VendorName = this.VendorSearchFormGroup.get('VendorName').value;
+      this.conditions.GSTNumber = this.VendorSearchFormGroup.get('GSTNumber').value;
+      this.conditions.State = this.VendorSearchFormGroup.get('State').value;
+      this.conditions.Type = this.VendorSearchFormGroup.get('Type').value;
+      this._masterService.GetVendorsBasedOnConditions(this.conditions).subscribe(
+        (data) => {
+          this.VendorList = data as Vendor[];
+          this.vendorDataSource = new MatTableDataSource(this.VendorList);
+          this.IsProgressBarVisibile = false;
+        },
+        (err) => {
+          console.error(err);
+          this.IsProgressBarVisibile = false;
+        }
+      );
+    } else {
+      Object.keys(this.VendorSearchFormGroup.controls).forEach(key => {
+        this.VendorSearchFormGroup.get(key).markAsTouched();
+        this.VendorSearchFormGroup.get(key).markAsDirty();
+      });
+    }
+  }
+
+  // CheckBoxEvent(event: any, selectedVendor: Vendor): void {
+  //   if (event.checked) {
+  //     this.CheckedVendorList.push(selectedVendor);
+  //   } else {
+  //     const index = this.CheckedVendorList.findIndex(x => x.ID === selectedVendor.ID);
+  //     if (index >= 0) {
+  //       this.CheckedVendorList.splice(index, 1);
+  //     }
+  //   }
+  // }
+
+  AddSelectedVendors(): void {
+    // if (this.CheckedVendorList && this.CheckedVendorList.length) {
+    //   this.CheckedVendorList.forEach(x => {
+    //     const index = this.SelectedVendorList.findIndex(y => y.ID === x.ID);
+    //     if (index < 0) {
+    //       this.SelectedVendorList.push(x);
+    //     }
+    //   });
+    // } else {
+    //   this.notificationSnackBarComponent.openSnackBar('no items selected', SnackBarStatus.warning);
+    // }
+    if (this.selection && this.selection.selected.length) {
+      this.selection.selected.forEach(x => {
+        const index = this.SelectedVendorList.findIndex(y => y.ID === x.ID);
+        if (index < 0) {
+          this.SelectedVendorList.push(x);
+        }
+      });
+    } else {
+      this.notificationSnackBarComponent.openSnackBar('no items selected', SnackBarStatus.warning);
+    }
+
+  }
+  RemoveSelectedVendor(VendorCode: string): void {
+    const indexx = this.SelectedVendorList.findIndex(x => x.VendorCode === VendorCode);
+    if (indexx >= 0) {
+      this.SelectedVendorList.splice(indexx, 1);
+    }
+  }
+
+  CreateRFQAllocation(): void {
+    if (this.SelectedVendorList && this.SelectedVendorList.length) {
+      this.IsProgressBarVisibile = true;
+      this.SelectedVendorList.forEach(x => {
+        let rFQAllocationView: RFQAllocationView = new RFQAllocationView();
+        rFQAllocationView.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
+        rFQAllocationView.RFQID = this.SelectedRFQID;
+        rFQAllocationView.VendorID = x.VendorCode;
+        rFQAllocationView.CreatedBy = this.CurrentUserName;
+        this.RFQAllocations.push(rFQAllocationView);
+      });
+      this._rfqService.CreateRFQAllocation(this.RFQAllocations).subscribe(
+        (data) => {
+          this.IsProgressBarVisibile = false;
+          this.notificationSnackBarComponent.openSnackBar('Allocation created successfully', SnackBarStatus.success);
+          this.ResetControl();
+        },
+        (err) => {
+          console.error(err);
+          this.IsProgressBarVisibile = false;
+          this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        }
+      );
+    } else {
+      this.notificationSnackBarComponent.openSnackBar('no vendor is added', SnackBarStatus.warning);
+    }
+  }
+
+  SaveRFQAllocationTemp(): void {
+    if (this.SelectedVendorList && this.SelectedVendorList.length) {
+      this.IsProgressBarVisibile = true;
+      this.SelectedVendorList.forEach(x => {
+        let rFQAllocationView: RFQAllocationView = new RFQAllocationView();
+        rFQAllocationView.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
+        rFQAllocationView.RFQID = this.SelectedRFQID;
+        rFQAllocationView.VendorID = x.VendorCode;
+        rFQAllocationView.CreatedBy = this.CurrentUserName;
+        this.RFQAllocations.push(rFQAllocationView);
+      });
+      this._rfqService.SaveRFQAllocationTemp(this.RFQAllocations).subscribe(
+        (data) => {
+          this.IsProgressBarVisibile = false;
+          this.notificationSnackBarComponent.openSnackBar('Allocation saved successfully', SnackBarStatus.success);
+          this.ResetControl();
+        },
+        (err) => {
+          console.error(err);
+          this.IsProgressBarVisibile = false;
+          this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        }
+      );
+    } else {
+      this.notificationSnackBarComponent.openSnackBar('no vendor is added', SnackBarStatus.warning);
+    }
+  }
+
   radioChange(event: any): void {
     console.log(event);
   }
 
   isAllSelected(): boolean {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+    // const numSelected = this.selection.selected.length;
+    // const numRows = this.vendorDataSource.data.length;
+    // return numSelected === numRows;
+    return true;
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle(): void {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+    // this.isAllSelected() ?
+    //   this.selection.clear() :
+    //   this.vendorDataSource.data.forEach(row => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: SupplierInviteClass): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.GSTNumber + 1}`;
+  checkboxLabel(row?: Vendor): string {
+    // if (!row) {
+    //   return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    // }
+    // return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.GSTNumber + 1}`;
+    return '';
   }
 
 }
 
-export class SupplierInviteClass {
-  VendorName: string;
-  GSTNumber: string;
-  VendorType: string;
-  City: string;
-}

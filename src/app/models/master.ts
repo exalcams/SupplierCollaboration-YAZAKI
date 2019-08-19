@@ -92,4 +92,27 @@ export class UserPreference {
     ModifiedBy: string;
 }
 
+export class Vendor {
+    ID: number;
+    VendorCode: string;
+    VendorName: string;
+    GSTNumber: string;
+    State: string;
+    City: string;
+    Plant: string;
+    Type: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
+export class VendorSearchCondition {
+    VendorCode: string;
+    VendorName: string;
+    GSTNumber: string;
+    State: string;
+    Type: string;
+}
+
 

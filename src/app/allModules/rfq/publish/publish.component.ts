@@ -2,12 +2,13 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
-import { PurchaseRequisition } from 'app/models/rfq.model';
+import { PurchaseRequisition, PurchaseRequisitionView } from 'app/models/rfq.model';
 import { RFQService } from 'app/services/rfq.service';
 import { AuthenticationDetails } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { Router } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
+import { ShareParameterService } from 'app/services/share-parameter.service';
 
 @Component({
   selector: 'publish',
@@ -31,6 +32,7 @@ export class PublishComponent implements OnInit {
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _rfqService: RFQService,
+    private _shareParameterService: ShareParameterService,
     private _router: Router,
     public snackBar: MatSnackBar
   ) {
@@ -80,12 +82,17 @@ export class PublishComponent implements OnInit {
 
   CreateRFQClicked(): void {
     if (this.SelectedPurchaseRequisition && this.SelectedPurchaseRequisition.PurchaseRequisitionID) {
+      let PurchaseRequisition: PurchaseRequisitionView = new PurchaseRequisitionView();
+      PurchaseRequisition.PurchaseRequisitionID = this.SelectedPurchaseRequisition.PurchaseRequisitionID;
+      PurchaseRequisition.RFQStatus = this.SelectedPurchaseRequisition.RFQStatus;
+
+      this._shareParameterService.SetPurchaseRequisition(PurchaseRequisition);
       this._router.navigate(['/rfq/creation'], {
-        queryParams:
-        {
-          id: this.SelectedPurchaseRequisition.PurchaseRequisitionID,
-          status: this.SelectedPurchaseRequisition.RFQStatus
-        },
+        // queryParams:
+        // {
+        //   id: this.SelectedPurchaseRequisition.PurchaseRequisitionID,
+        //   status: this.SelectedPurchaseRequisition.RFQStatus
+        // },
         // skipLocationChange: true
       });
     } else {
