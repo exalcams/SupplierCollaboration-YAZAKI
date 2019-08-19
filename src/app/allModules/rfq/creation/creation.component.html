@@ -450,9 +450,15 @@
           </table> -->
             <div fxLayout="row">
               <div fxFlex class="mt-12" align="end">
-                <button *ngIf="this.RFQFormGroup.enabled" [ngClass]="BGClassName?.layout?.toolbar?.background"
-                  class="SaveBtnClass" mat-raised-button (click)="SubmitRFQDetails('Open')">
+                <button *ngIf="(SelectedRFQStatus | lowercase)==='open'"
+                  [ngClass]="BGClassName?.layout?.toolbar?.background" class="SaveBtnClass" mat-raised-button
+                  (click)="SubmitRFQDetails()">
                   Save
+                </button>
+                <button *ngIf="(SelectedRFQStatus | lowercase)==='inprogress'"
+                  [ngClass]="BGClassName?.layout?.toolbar?.background" class="SaveBtnClass" mat-raised-button
+                  (click)="GoToAllocateRFQ()">
+                  Allocate Vendor
                 </button>
               </div>
             </div>

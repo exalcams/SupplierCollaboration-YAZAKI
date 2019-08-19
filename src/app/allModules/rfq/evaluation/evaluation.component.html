@@ -118,83 +118,89 @@
             <div fxFlex="70" class="borderRightClass">
               <div class="boldClass pt-16 px-24">Supplier Invite</div>
               <div fxLayout class="borderBottom mt-12"></div>
-              <div fxLayout class="mt-24 pl-24">
-                <div fxFlex>
-                  <div class="pt-8 pr-8">
-                    <span style="font-size: 13px;">Vendor ID</span>
+              <form name="form" [formGroup]="VendorSearchFormGroup">
+                <div fxLayout class="mt-24 pl-24">
+                  <div fxFlex>
+                    <div class="pt-8 pr-8">
+                      <span style="font-size: 13px;">Vendor ID</span>
+                    </div>
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="VendorCode">
+                    </mat-form-field>
                   </div>
-                  <mat-form-field appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
-                </div>
-                <div fxFlex>
-                  <div class="pt-8 pr-8">
-                    <span style="font-size: 13px;">Material</span>
+                  <div fxFlex>
+                    <div class="pt-8 pr-8">
+                      <span style="font-size: 13px;">Material</span>
+                    </div>
+                    <mat-form-field appearance="outline">
+                      <input matInput>
+                    </mat-form-field>
                   </div>
-                  <mat-form-field appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
-                </div>
-                <div fxFlex>
-                  <div class="pt-8 pr-8">
-                    <span style="font-size: 13px;">Vendor Name</span>
+                  <div fxFlex>
+                    <div class="pt-8 pr-8">
+                      <span style="font-size: 13px;">Vendor Name</span>
+                    </div>
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="VendorName">
+                    </mat-form-field>
                   </div>
-                  <mat-form-field appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
                 </div>
-              </div>
-              <div fxLayout class="mb-4 pl-24">
-                <div fxFlex>
-                  <div class="pr-8">
-                    <span style="font-size: 13px;">GST No.</span>
+                <div fxLayout class="mb-4 pl-24">
+                  <div fxFlex>
+                    <div class="pr-8">
+                      <span style="font-size: 13px;">GST No.</span>
+                    </div>
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="GSTNumber">
+                    </mat-form-field>
                   </div>
-                  <mat-form-field appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
-                </div>
-                <div fxFlex>
-                  <div class="pr-8">
-                    <span style="font-size: 13px;">Location</span>
+                  <div fxFlex>
+                    <div class="pr-8">
+                      <span style="font-size: 13px;">Location</span>
+                    </div>
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="State">
+                    </mat-form-field>
                   </div>
-                  <mat-form-field appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
-                </div>
-                <div fxFlex>
-                  <div class="pr-8">
-                    <span style="font-size: 13px;">Type</span>
+                  <div fxFlex>
+                    <div class="pr-8">
+                      <span style="font-size: 13px;">Type</span>
+                    </div>
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="Type">
+                    </mat-form-field>
                   </div>
-                  <mat-form-field appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
                 </div>
-              </div>
-              <div fxLayout FxLayoutAlign="center">
-                <div fxFlex></div>
-                <div fxFlex class="pl-120">
-                  <button [ngClass]="BGClassName?.layout?.toolbar?.background" class="SearchBtnClass" mat-raised-button>
-                    Search
-                  </button>
+                <div fxLayout FxLayoutAlign="center">
+                  <div fxFlex></div>
+                  <div fxFlex class="pl-120">
+                    <button [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="GetVendorsBasedOnConditions()"
+                      class="SearchBtnClass" mat-raised-button>
+                      Search
+                    </button>
+                  </div>
+                  <div fxFlex></div>
                 </div>
-                <div fxFlex></div>
-              </div>
+              </form>
               <div fxLayout class="borderBottom mt-12 mx-160"></div>
               <div fxLayout class="pr-16 px-24 pt-16">
                 <div fxFlex class="boldClass">VendorList</div>
                 <div fxFlex align="end">
-                  <button class="blueText" mat-stroked-button>
+                  <button class="blueText" (click)="AddSelectedVendors()" mat-stroked-button>
                     <mat-icon>add_circle_outline</mat-icon>
                     Add vendor
                   </button>
                 </div>
               </div>
               <div fxLayout class="mt-12 px-24 pr-16 pb-16" FxLayoutAlign="center">
-                <table mat-table [dataSource]="dataSource">
+                <table mat-table [dataSource]="vendorDataSource">
                   <ng-container matColumnDef="select">
                     <th mat-header-cell *matHeaderCellDef>
                     </th>
                     <td mat-cell *matCellDef="let row">
+                      <!-- <mat-checkbox [checked]="selection.isSelected(row)" 
+                      (change)="CheckBoxEvent($event,row)">
+                      </mat-checkbox> -->
                       <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
                         [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
                       </mat-checkbox>
@@ -210,9 +216,9 @@
                     <td mat-cell *matCellDef="let element"> {{element.GSTNumber}} </td>
                   </ng-container>
 
-                  <ng-container matColumnDef="VendorType">
+                  <ng-container matColumnDef="Type">
                     <th mat-header-cell *matHeaderCellDef>Vendor Type</th>
-                    <td mat-cell *matCellDef="let element"> {{element.VendorType}} </td>
+                    <td mat-cell *matCellDef="let element"> {{element.Type}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="City">
@@ -220,8 +226,14 @@
                     <td mat-cell *matCellDef="let element"> {{element.City}} </td>
                   </ng-container>
 
-                  <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  <ng-container matColumnDef="State">
+                    <th mat-header-cell *matHeaderCellDef>State</th>
+                    <td mat-cell *matCellDef="let element"> {{element.State}} </td>
+                  </ng-container>
+
+                  <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
+                    *matHeaderRowDef="vendorDisplayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: vendorDisplayedColumns;"></tr>
                 </table>
 
               </div>
@@ -230,26 +242,31 @@
             <div fxFlex="30" class="pb-8">
               <div fxLayout>
                 <div fxFlex class="p-12" align="end">
-                  <button mat-stroked-button>
+                  <button mat-stroked-button (click)="SaveRFQAllocationTemp()">
                     Save
                   </button>
-                  <button class="SaveBtnClass ml-8" mat-raised-button>
+                  <button (click)="CreateRFQAllocation()" class="SaveBtnClass ml-8" mat-raised-button>
                     Save & Publish
                   </button>
                 </div>
               </div>
               <div class="mt-8 mx-60 mb-16 borderTop"></div>
-              <div fxLayout fxLayoutAlign="center" class="borderClass m-8" *ngFor="let sup of SupplierInviteClassList">
-                <div fxFlex="10" class="borderRightClass pt-12">
-                  <mat-radio-group aria-label="Select an option">
-                    <mat-radio-button value="1" class="mt-24 mx-8" (click)="radioChange($event)">
-                    </mat-radio-button>
-                  </mat-radio-group>
+              <div fxLayout fxLayoutAlign="center" class="borderClass m-8" *ngFor="let sup of SelectedVendorList">
+                <div fxFlex="10" fxLayoutAlign="start center" class="borderRightClass pt-12">
+                  <!-- <button class="mat-mini-fab mat-accent" (click)="RemoveSelectedVendor(sup.VendorCode)">
+                    <span class="mat-button-wrapper">
+                      <mat-icon>clear</mat-icon>
+                    </span>
+                  </button> -->
+                  <div class="round ml-4">
+                    <mat-icon class="customIcon" (click)="RemoveSelectedVendor(sup.VendorCode)">clear</mat-icon>
+                  </div>
+
                 </div>
                 <div fxFlex="90" class="p-12">
                   <div class="boldClass">{{sup.VendorName}}</div>
                   <div>GST No : {{sup.GSTNumber}}</div>
-                  <div>Vendor type : {{sup.VendorType}}</div>
+                  <div>Vendor type : {{sup.Type}}</div>
                   <div>{{sup.City}}</div>
                 </div>
               </div>
@@ -257,6 +274,9 @@
           </div>
         </mat-card-content>
       </mat-card>
+      <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion1" color="accent"
+        mode="indeterminate"></mat-progress-spinner>
+      <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
     </div>
   </div>
 

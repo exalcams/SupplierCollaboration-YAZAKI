@@ -14,6 +14,7 @@ import { RFQService } from 'app/services/rfq.service';
 import { Location } from '@angular/common';
 import { Auxiliary } from 'app/models/asn';
 import { MasterService } from 'app/services/master.service';
+import { ShareParameterService } from 'app/services/share-parameter.service';
 
 @Component({
   selector: 'creation',
@@ -31,7 +32,7 @@ export class CreationComponent implements OnInit {
   RFQItemFormArray: FormArray = this._formBuilder.array([]);
   RFQItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
   SelectedPurchaseRequisitionID: number;
-  SelectedRFQStatus: string;
+  SelectedRFQStatus = '';
   RFQ: RFQView;
   BGClassName: any;
   RFQItemsColumns: string[] = ['ItemID', 'MaterialDescription', 'OrderQuantity', 'DelayDays', 'UOM', 'Price', 'SupplierPartNumber', 'Schedule', 'Attachment', 'TechRating'];
@@ -45,19 +46,30 @@ export class CreationComponent implements OnInit {
     private route: ActivatedRoute,
     private _location: Location,
     private _rfqService: RFQService,
+    private _shareParameterService: ShareParameterService,
     private _masterService: MasterService,
     private _formBuilder: FormBuilder,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
     private renderer: Renderer
   ) {
-    this.route.queryParams.subscribe(data => {
-      this.SelectedPurchaseRequisitionID = +data['id'];
-      this.SelectedRFQStatus = data['status'];
-      if (!this.SelectedPurchaseRequisitionID) {
-        this._router.navigate(['/rfq/publish']);
-      }
-    });
+    // this.route.queryParams.subscribe(data => {
+    //   this.SelectedPurchaseRequisitionID = +data['id'];
+    //   this.SelectedRFQStatus = data['status'];
+    //   if (!this.SelectedPurchaseRequisitionID) {
+    //     this._router.navigate(['/rfq/publish']);
+    //   }
+    // });
+    const CurrentPurchaseRequisition = this._shareParameterService.GetPurchaseRequisition();
+    console.log(CurrentPurchaseRequisition);
+    if (CurrentPurchaseRequisition) {
+      this.SelectedPurchaseRequisitionID = CurrentPurchaseRequisition.PurchaseRequisitionID;
+      this.SelectedRFQStatus = CurrentPurchaseRequisition.RFQStatus;
+    } else {
+      this._router.navigate(['/rfq/publish']);
+    }
+
+
     // this._location.replaceState(this._router.url.split('?')[0]);
     // const url: string = this._router.url.substring(0, this._router.url.indexOf('?'));
     // this._router.navigateByUrl(url);
@@ -67,6 +79,13 @@ export class CreationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const retrievedObject = localStorage.getItem('authorizationData');
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.CurrentUserName = this.authenticationDetails.userName;
+    } else {
+      this._router.navigate(['/auth/login']);
+    }
     this.RFQFormGroup = this._formBuilder.group({
       Title: ['', Validators.required],
       SupplyPlant: ['', Validators.required],
@@ -79,13 +98,6 @@ export class CreationComponent implements OnInit {
       RFQItems: this.RFQItemFormArray
       // CreatedBy: ['', Validators.required]
     });
-    const retrievedObject = localStorage.getItem('authorizationData');
-    if (retrievedObject) {
-      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-      this.CurrentUserName = this.authenticationDetails.userName;
-    } else {
-      this._router.navigate(['/auth/login']);
-    }
     this._fuseConfigService.config
       // .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config) => {
@@ -225,7 +237,7 @@ export class CreationComponent implements OnInit {
   }
 
 
-  SubmitRFQDetails(val: string): void {
+  SubmitRFQDetails(): void {
     // this.RFQFormGroup.enable();
     if (this.RFQFormGroup.valid) {
       if (this.RFQ.RFQID) {
@@ -241,29 +253,37 @@ export class CreationComponent implements OnInit {
             if (result) {
               this.IsProgressBarVisibile = true;
               this.RFQ.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
-              this.RFQ.Status = val;
               this.GetRFQHeaderValues();
               this.GetRFQItems();
               this.RFQ.ModifiedBy = this.CurrentUserName;
               this._rfqService.UpdateRFQ(this.RFQ).subscribe(
                 (data) => {
                   const TransID = data as number;
+                  this.RFQ.RFQID = TransID;
                   const aux = new Auxiliary();
                   aux.APPID = this.RFQItemAppID;
                   aux.HeaderNumber = TransID.toString();
                   aux.CreatedBy = this.CurrentUserName;
-                  this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
-                    (dat) => {
-                      this.IsProgressBarVisibile = false;
-                      this.notificationSnackBarComponent.openSnackBar('RFQ details updated successfully', SnackBarStatus.success);
-                      this.ResetControl();
-                    },
-                    (err) => {
-                      console.error(err);
-                      this.IsProgressBarVisibile = false;
-                      this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-                    }
-                  );
+                  if (this.fileToUploadList && this.fileToUploadList.length) {
+                    this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
+                      (dat) => {
+                        this.IsProgressBarVisibile = false;
+                        this.notificationSnackBarComponent.openSnackBar('RFQ details updated successfully', SnackBarStatus.success);
+                        this.ResetControl();
+                        this.GoToAllocateRFQ();
+                      },
+                      (err) => {
+                        console.error(err);
+                        this.IsProgressBarVisibile = false;
+                        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+                      }
+                    );
+                  } else {
+                    this.IsProgressBarVisibile = false;
+                    this.notificationSnackBarComponent.openSnackBar('RFQ details updated successfully', SnackBarStatus.success);
+                    this.ResetControl();
+                    this.GoToAllocateRFQ();
+                  }
                 },
                 (err) => {
                   console.error(err);
@@ -290,30 +310,37 @@ export class CreationComponent implements OnInit {
             if (result) {
               this.IsProgressBarVisibile = true;
               this.RFQ.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
-              this.RFQ.Status = val;
               this.GetRFQHeaderValues();
               this.GetRFQItems();
               this.RFQ.CreatedBy = this.CurrentUserName;
               this._rfqService.CreateRFQ(this.RFQ).subscribe(
                 (data) => {
                   const TransID = data as number;
+                  this.RFQ.RFQID = TransID;
                   const aux = new Auxiliary();
                   aux.APPID = this.RFQItemAppID;
                   aux.HeaderNumber = TransID.toString();
                   aux.CreatedBy = this.CurrentUserName;
-                  this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
-                    (dat) => {
-                      this.IsProgressBarVisibile = false;
-                      this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
-                      this.ResetControl();
-                    },
-                    (err) => {
-                      console.error(err);
-                      this.IsProgressBarVisibile = false;
-                      this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-                    }
-                  );
-
+                  if (this.fileToUploadList && this.fileToUploadList.length) {
+                    this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
+                      (dat) => {
+                        this.IsProgressBarVisibile = false;
+                        this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
+                        this.ResetControl();
+                        this.GoToAllocateRFQ();
+                      },
+                      (err) => {
+                        console.error(err);
+                        this.IsProgressBarVisibile = false;
+                        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+                      }
+                    );
+                  } else {
+                    this.IsProgressBarVisibile = false;
+                    this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
+                    this.ResetControl();
+                    this.GoToAllocateRFQ();
+                  }
                   // this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
                   // this.ResetControl();
                 },
@@ -354,6 +381,13 @@ export class CreationComponent implements OnInit {
         }
       });
     }
+  }
+
+  GoToAllocateRFQ(): void {
+    const CurrentPurchaseRequisition = this._shareParameterService.GetPurchaseRequisition();
+    CurrentPurchaseRequisition.RFQID = this.RFQ.RFQID;
+    this._shareParameterService.SetPurchaseRequisition(CurrentPurchaseRequisition);
+    this._router.navigate(['/rfq/evaluation']);
   }
 
   InsertRFQHeaderValues(): void {

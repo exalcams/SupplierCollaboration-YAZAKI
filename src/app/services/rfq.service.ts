@@ -5,7 +5,7 @@ import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { AttachmentDetails } from 'app/allModules/orderacknowledgment/orderacknowledgment/orderacknowledgment.component';
-import { RFQView, PurchaseRequisition } from 'app/models/rfq.model';
+import { RFQView, PurchaseRequisition, RFQAllocationView } from 'app/models/rfq.model';
 import { Auxiliary } from 'app/models/asn';
 
 @Injectable({
@@ -66,7 +66,7 @@ export class RFQService {
         }
         formData.append('APPID', auxiliary.APPID.toString());
         formData.append('HeaderNumber', auxiliary.HeaderNumber.toString());
-      
+
         return this._httpClient.post<any>(`${this.baseAddress}api/RFQ/AddRFQAttachment`,
             formData,
             // {
@@ -76,6 +76,28 @@ export class RFQService {
             // }
         ).pipe(catchError(this.errorHandler));
 
+    }
+
+    CreateRFQAllocation(RFQAllocations: RFQAllocationView[]): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}api/RFQ/CreateRFQAllocation`,
+            RFQAllocations,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+
+    SaveRFQAllocationTemp(RFQAllocations: RFQAllocationView[]): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}api/RFQ/SaveRFQAllocationTemp`,
+            RFQAllocations,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
     }
 
 }
