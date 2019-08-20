@@ -133,6 +133,17 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
+  GetVendorsByVendorCodes(VendorCodes: string[]): Observable<Vendor[] | string> {
+    return this._httpClient.post<Vendor[]>(`${this.baseAddress}api/Master/GetVendorsByVendorCodes`,
+      VendorCodes,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
   UpdateVendor(vendor: Vendor): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateVendor`,
       vendor,
