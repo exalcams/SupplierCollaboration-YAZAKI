@@ -100,4 +100,9 @@ export class RFQService {
             .pipe(catchError(this.errorHandler));
     }
 
+    GetRFQAllocationTempByRFQID(RFQID: number): Observable<RFQAllocationView[] | string> {
+        return this._httpClient.get<RFQAllocationView[]>(`${this.baseAddress}api/RFQ/GetRFQAllocationTempByRFQID?RFQID=${RFQID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
 }

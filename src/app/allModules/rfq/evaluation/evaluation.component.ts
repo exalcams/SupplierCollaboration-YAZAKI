@@ -116,6 +116,37 @@ export class EvaluationComponent implements OnInit {
     );
   }
 
+  GetRFQAllocationTempByRFQID(): void {
+    this.IsProgressBarVisibile = true;
+    this._rfqService.GetRFQAllocationTempByRFQID(this.SelectedRFQID).subscribe(
+      (data) => {
+        if (data && data.length > 0) {
+          const rFQAllocationViews = data as RFQAllocationView[];
+          const VendorCodes = rFQAllocationViews.map(x => x.VendorID);
+          this._masterService.GetVendorsByVendorCodes(VendorCodes).subscribe(
+            (data1) => {
+              const AlreadySelectedVendors = data1 as Vendor[];
+              if (AlreadySelectedVendors && AlreadySelectedVendors.length) {
+                this.SelectedVendorList = AlreadySelectedVendors;
+              }
+              this.IsProgressBarVisibile = false;
+            },
+            (err1) => {
+              console.error(err1);
+              this.IsProgressBarVisibile = false;
+            }
+          );
+        } else {
+          this.IsProgressBarVisibile = false;
+        }
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+      }
+    );
+  }
+
   GetVendorsBasedOnConditions(): void {
     if (this.VendorSearchFormGroup.valid) {
       this.CheckedVendorList = [];
