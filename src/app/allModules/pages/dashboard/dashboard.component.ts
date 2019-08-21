@@ -10,6 +10,7 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { DashboardService } from 'app/services/dashboard.service';
 import { PO_Notifications, DashboardStatus, PO_DeliveryStatus, PO_PurchaseOrderDetails, POView } from 'app/models/dashboard';
 import { ASNService } from 'app/services/asn.service';
+import { ASN } from 'app/models/asn';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,11 +21,12 @@ export class DashboardComponent implements OnInit {
   showChart = false;
   BGClassName: any;
   displayedColumns: string[] = ['PurchaseOrder', 'Item', 'PODate', 'Material', 'Description', 'POQuantity', 'OrderUnit', 'QAStatus', 'ASNStatus', 'Attechment'];
-  displayedColumns1: string[] = ['DraftID', 'ServiceEnterSheetID', 'PurchaseOrder', 'Amount'];
+  displayedColumns1: string[] = ['TransId', 'PurchaseOrder', 'Status'];
   AllPOList: POView[] = [];
+  ASNHeaderList: ASN[] = [];
   POListDataSource: MatTableDataSource<POView>;
   IsAllPOListCompleted: boolean;
-  dataSource1: MatTableDataSource<PreviousRequests>;
+  ASNHeaderDataSource: MatTableDataSource<ASN>;
   selection: SelectionModel<POView>;
   authenticationDetails: AuthenticationDetails;
   MenuItems: string[];
@@ -56,7 +58,7 @@ export class DashboardComponent implements OnInit {
     // this.route.queryParams.subscribe(params => {
     //   this.selectedPORow.PO = params['id'];
     //   console.log(this.selectedPORow.PO);
-      
+
     // })
 
   }
@@ -66,9 +68,10 @@ export class DashboardComponent implements OnInit {
     this.GetAllPONotifications();
     this.GetAllDashboardStatus();
     this.GetAllPODeliveryStatus();
+    this.GetASNHeader();
     this.IsAllPOListCompleted = false;
-    this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
-    this.dataSource1.sort = this.sort;
+    // this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
+    // this.dataSource1.sort = this.sort;
     this.selection = new SelectionModel(false, []);
     this._fuseConfigService.config
       .subscribe((config) => {
@@ -143,7 +146,7 @@ export class DashboardComponent implements OnInit {
   }
   OrderAcknowledgement() {
     if (this.selectedPORow.PO != null) {
-      this._router.navigate(['/orderacknowledgment/acknowledgment'], { queryParams: { id: this.selectedPORow.PO,item:this.selectedPORow.Item } });
+      this._router.navigate(['/orderacknowledgment/acknowledgment'], { queryParams: { id: this.selectedPORow.PO, item: this.selectedPORow.Item } });
     }
     else {
       this.notificationSnackBarComponent.openSnackBar('Please select the PO ', SnackBarStatus.danger);
@@ -165,6 +168,18 @@ export class DashboardComponent implements OnInit {
         this.POListDataSource.sort = this.sort;
       }
       this.IsAllPOListCompleted = true;
+    },
+      (err) => {
+        console.error(err);
+      });
+  }
+  GetASNHeader(): void {
+    this.dashboardService.GetASNHeader().subscribe((data) => {
+      if (data) {
+        this.ASNHeaderList = <ASN[]>data;
+        this.ASNHeaderDataSource = new MatTableDataSource(this.ASNHeaderList);
+        this.ASNHeaderDataSource.sort = this.sort;
+      }
     },
       (err) => {
         console.error(err);
@@ -269,7 +284,6 @@ export class DashboardComponent implements OnInit {
 
       });
   }
-
   Checked(data) {
     this.selectedPORow = data
   }

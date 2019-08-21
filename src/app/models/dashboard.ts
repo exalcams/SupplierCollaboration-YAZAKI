@@ -57,14 +57,96 @@ export class PO_Item {
     Currency: string;
     IsActive: string;
 }
-export class PO_OrderAcknowledgement{
-    PO:string;
-    CompanyCode:string;
-    PODate:Date;
-    PlantGST:string;
-    PaymentTerms:string;
-    Currency:string;
-    Buyer:string;
-    BuyerPhNo:string;
-    POItemList: PO_Item[];
+export class PO_OrderLookUpDetails {
+    PO_ScheduleDetails: PO_ScheduleDetails[];
+    PO_AdvanceShipmentNotification: PO_AdvanceShipmentNotification[];
+    PO_GRN: PO_GRN[];
+}
+export class PO_ScheduleDetails {
+    Item: string;
+    Description: string;
+    ScheduleLine: string;
+    DaliveryDate: Date;
+    ScheduleQuantity: number;
+    UOM: string;
+}
+export class PO_AdvanceShipmentNotification {
+    Item: string;
+    Description: string;
+    ShipmentId: string;
+    Material: string;
+    ASNStatus: string;
+    ShipmentQuantity: number;
+    UOM: string;
+    cargoType: string;
+}
+export class PO_GRN {
+    Item: string;
+    Description: string;
+    Material: string;
+    MaterialDocument: string;
+    Status: string;
+    UOM: string;
+    PostingDate: Date;
+    DeliveredQuantity: number;
+    RejectQuantity: number;
+
+}
+export class Acknowledgement {
+    TransID: number;
+    Acknowledgement_PO: string;
+    Item: string;
+    Status: string;
+    OrderedQuantity: string;
+    AcknowledgedQuantity: string;
+    OrderedDeliveryDate: string;
+    AcknowledgedDeliveryDate: string;
+    CreatedBy_On: Date;
+    Approved_By: string;
+    Approved_On: Date;
+    CreatedBy: string;
+    IsActive: boolean;
+}
+export class PO_ScheduleLine {
+    PO_ScheduleLine_PO: string;
+    Item: string;
+    ScheduleLine: string;
+    Material: string;
+    OrderedQuantity: number;
+    MaterialText: string;
+    UnitofMeasure: string;
+    OpDate: Date;
+    DeliveryDate: Date;
+    LastShipmentDate: Date;
+    isDeleted: boolean;
+    isForeClosed: boolean;
+    Currency: string;
+    IsActive: string;
+}
+export class PO_OrderAcknowledgement {
+    PO: string;
+    CompanyCode: string;
+    PODate: Date;
+    PlantGST: string;
+    PaymentTerms: string;
+    Currency: string;
+    Buyer: string;
+    BuyerPhNo: string;
+  //  POItemList: PO_Item[];
+    // AcknowledgementDetails: Acknowledgement[];
+    POOrderScheduleDetails: PO_ScheduleLine[];
+    POOrderScheduleLine: POOrderScheduleLine[];
+}
+export class POOrderScheduleLine {
+    PO: string;
+    Item: string;
+    ScheduleLine: string;
+    Material: string;
+    MaterialDescription: string;
+    DeliveryDate: Date;
+    AcceptedDate: Date;
+    OrderQuantity: string;
+    AcceptedQuantity: string;
+    UOM: string;
+    NetPrice: string;
 }

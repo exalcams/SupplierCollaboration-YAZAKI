@@ -87,3 +87,29 @@ table {
 .mat-tab-label{
   min-width: 100px !important;
 }
+.highlight{
+  background: lightgray !important;
+}
+.statusDone{
+  width: 10px;
+  height: 10px;
+  display: block;
+  /* border-radius: 2px; */
+  background-color: green
+}
+.statusNotDone{
+  width: 10px;
+  display: block;
+  height: 10px;
+  border-radius: 10px;
+  background-color: #e32049;
+}
+.disabled {
+  cursor: not-allowed;
+}
+.statusPartiallyDone{
+  width: 10px;
+  height: 10px;
+  display: block;
+  background-color: #F4D03F;
+}
