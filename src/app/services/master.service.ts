@@ -232,22 +232,9 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
-  CreateUser(user: UserWithRole, selectedFile: File): Observable<any> {
-
-    const formData: FormData = new FormData();
-    if (selectedFile) {
-      formData.append('selectedFile', selectedFile, selectedFile.name);
-    }
-    // formData.append('UserID', user.UserID.toString());
-    formData.append('UserName', user.UserName);
-    formData.append('Email', user.Email);
-    formData.append('ContactNumber', user.ContactNumber);
-    formData.append('Password', user.Password);
-    formData.append('RoleID', user.RoleID.toString());
-    formData.append('CreatedBy', user.CreatedBy);
-
+  CreateUser(user: UserWithRole): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateUser`,
-      formData,
+      user,
       // {
       //   headers: new HttpHeaders({
       //     'Content-Type': 'application/json'
@@ -262,21 +249,9 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
-  UpdateUser(user: UserWithRole, selectedFile: File): Observable<any> {
-    const formData: FormData = new FormData();
-    if (selectedFile) {
-      formData.append('selectedFile', selectedFile, selectedFile.name);
-    }
-    formData.append('UserID', user.UserID.toString());
-    formData.append('UserName', user.UserName);
-    formData.append('Email', user.Email);
-    formData.append('ContactNumber', user.ContactNumber);
-    formData.append('Password', user.Password);
-    formData.append('RoleID', user.RoleID.toString());
-    formData.append('CreatedBy', user.CreatedBy);
-    formData.append('ModifiedBy', user.ModifiedBy);
+  UpdateUser(user: UserWithRole): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateUser`,
-      formData,
+      user,
       // {
       //   headers: new HttpHeaders({
       //     'Content-Type': 'application/json'

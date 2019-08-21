@@ -61,7 +61,7 @@ export class CreationComponent implements OnInit {
     //   }
     // });
     const CurrentPurchaseRequisition = this._shareParameterService.GetPurchaseRequisition();
-    console.log(CurrentPurchaseRequisition);
+    // console.log(CurrentPurchaseRequisition);
     if (CurrentPurchaseRequisition) {
       this.SelectedPurchaseRequisitionID = CurrentPurchaseRequisition.PurchaseRequisitionID;
       this.SelectedRFQStatus = CurrentPurchaseRequisition.RFQStatus;
@@ -269,8 +269,8 @@ export class CreationComponent implements OnInit {
                       (dat) => {
                         this.IsProgressBarVisibile = false;
                         this.notificationSnackBarComponent.openSnackBar('RFQ details updated successfully', SnackBarStatus.success);
-                        this.ResetControl();
                         this.GoToAllocateRFQ();
+                        this.ResetControl();
                       },
                       (err) => {
                         console.error(err);
@@ -281,8 +281,8 @@ export class CreationComponent implements OnInit {
                   } else {
                     this.IsProgressBarVisibile = false;
                     this.notificationSnackBarComponent.openSnackBar('RFQ details updated successfully', SnackBarStatus.success);
-                    this.ResetControl();
                     this.GoToAllocateRFQ();
+                    this.ResetControl();
                   }
                 },
                 (err) => {
@@ -326,8 +326,8 @@ export class CreationComponent implements OnInit {
                       (dat) => {
                         this.IsProgressBarVisibile = false;
                         this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
-                        this.ResetControl();
                         this.GoToAllocateRFQ();
+                        this.ResetControl();
                       },
                       (err) => {
                         console.error(err);
@@ -338,8 +338,8 @@ export class CreationComponent implements OnInit {
                   } else {
                     this.IsProgressBarVisibile = false;
                     this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
-                    this.ResetControl();
                     this.GoToAllocateRFQ();
+                    this.ResetControl();
                   }
                   // this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
                   // this.ResetControl();

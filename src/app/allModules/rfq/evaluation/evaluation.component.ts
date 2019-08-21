@@ -30,7 +30,7 @@ export class EvaluationComponent implements OnInit {
   SelectedVendorList: Vendor[] = [];
   CheckedVendorList: Vendor[] = [];
   BGClassName: any;
-  vendorDisplayedColumns: string[] = ['select', 'VendorName', 'GSTNumber', 'Type', 'City', 'State'];
+  vendorDisplayedColumns: string[] = ['select', 'VendorCode', 'VendorName', 'GSTNumber', 'Type', 'City', 'State'];
   vendorDataSource: MatTableDataSource<Vendor>;
   selection = new SelectionModel<Vendor>(true, []);
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -75,6 +75,12 @@ export class EvaluationComponent implements OnInit {
       Type: [''],
     });
     this.GetAllVendors();
+    if (this.SelectedRFQStatus.toLocaleLowerCase() === 'inprogress') {
+      this.GetRFQAllocationTempByRFQID();
+    }
+    if (this.SelectedRFQStatus.toLocaleLowerCase() === 'completed') {
+      this.GetRFQAllocationByRFQID();
+    }
     this.isAllSelected();
     this.masterToggle();
     this.checkboxLabel();
@@ -119,6 +125,37 @@ export class EvaluationComponent implements OnInit {
   GetRFQAllocationTempByRFQID(): void {
     this.IsProgressBarVisibile = true;
     this._rfqService.GetRFQAllocationTempByRFQID(this.SelectedRFQID).subscribe(
+      (data) => {
+        if (data && data.length > 0) {
+          const rFQAllocationViews = data as RFQAllocationView[];
+          const VendorCodes = rFQAllocationViews.map(x => x.VendorID);
+          this._masterService.GetVendorsByVendorCodes(VendorCodes).subscribe(
+            (data1) => {
+              const AlreadySelectedVendors = data1 as Vendor[];
+              if (AlreadySelectedVendors && AlreadySelectedVendors.length) {
+                this.SelectedVendorList = AlreadySelectedVendors;
+              }
+              this.IsProgressBarVisibile = false;
+            },
+            (err1) => {
+              console.error(err1);
+              this.IsProgressBarVisibile = false;
+            }
+          );
+        } else {
+          this.IsProgressBarVisibile = false;
+        }
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+      }
+    );
+  }
+
+  GetRFQAllocationByRFQID(): void {
+    this.IsProgressBarVisibile = true;
+    this._rfqService.GetRFQAllocationByRFQID(this.SelectedRFQID).subscribe(
       (data) => {
         if (data && data.length > 0) {
           const rFQAllocationViews = data as RFQAllocationView[];
@@ -220,8 +257,9 @@ export class EvaluationComponent implements OnInit {
   CreateRFQAllocation(): void {
     if (this.SelectedVendorList && this.SelectedVendorList.length) {
       this.IsProgressBarVisibile = true;
+      this.RFQAllocations = [];
       this.SelectedVendorList.forEach(x => {
-        let rFQAllocationView: RFQAllocationView = new RFQAllocationView();
+        const rFQAllocationView: RFQAllocationView = new RFQAllocationView();
         rFQAllocationView.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
         rFQAllocationView.RFQID = this.SelectedRFQID;
         rFQAllocationView.VendorID = x.VendorCode;
@@ -233,6 +271,7 @@ export class EvaluationComponent implements OnInit {
           this.IsProgressBarVisibile = false;
           this.notificationSnackBarComponent.openSnackBar('Allocation created successfully', SnackBarStatus.success);
           this.ResetControl();
+          this._router.navigate(['/rfq/publish']);
         },
         (err) => {
           console.error(err);
@@ -248,8 +287,9 @@ export class EvaluationComponent implements OnInit {
   SaveRFQAllocationTemp(): void {
     if (this.SelectedVendorList && this.SelectedVendorList.length) {
       this.IsProgressBarVisibile = true;
+      this.RFQAllocations = [];
       this.SelectedVendorList.forEach(x => {
-        let rFQAllocationView: RFQAllocationView = new RFQAllocationView();
+        const rFQAllocationView: RFQAllocationView = new RFQAllocationView();
         rFQAllocationView.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
         rFQAllocationView.RFQID = this.SelectedRFQID;
         rFQAllocationView.VendorID = x.VendorCode;
@@ -261,6 +301,7 @@ export class EvaluationComponent implements OnInit {
           this.IsProgressBarVisibile = false;
           this.notificationSnackBarComponent.openSnackBar('Allocation saved successfully', SnackBarStatus.success);
           this.ResetControl();
+          this._router.navigate(['/rfq/publish']);
         },
         (err) => {
           console.error(err);

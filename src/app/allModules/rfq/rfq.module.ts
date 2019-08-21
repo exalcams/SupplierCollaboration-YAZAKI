@@ -53,6 +53,8 @@ import { CreationComponent } from './creation/creation.component';
 import { PublishComponent } from './publish/publish.component';
 import { EvaluationComponent } from './evaluation/evaluation.component';
 import { AwardedComponent } from './awarded/awarded.component';
+import { PurchaseRequisitionVendorComponent } from './purchase-requisition-vendor/purchase-requisition-vendor.component';
+import { ResponseComponent } from './response/response.component';
 
 const routes: Routes = [
     {
@@ -66,6 +68,14 @@ const routes: Routes = [
     {
         path: 'evaluation',
         component: EvaluationComponent
+    },
+    {
+        path: 'prvendor',
+        component: PurchaseRequisitionVendorComponent
+    },
+    {
+        path: 'response',
+        component: ResponseComponent
     },
     {
         path: 'awarded',
@@ -130,7 +140,7 @@ const routes: Routes = [
 
         FormsModule,
     ],
-    declarations: [CreationComponent, PublishComponent, EvaluationComponent, AwardedComponent],
+    declarations: [CreationComponent, PublishComponent, EvaluationComponent, AwardedComponent, PurchaseRequisitionVendorComponent,ResponseComponent],
     providers: [],
     entryComponents: [
     ]

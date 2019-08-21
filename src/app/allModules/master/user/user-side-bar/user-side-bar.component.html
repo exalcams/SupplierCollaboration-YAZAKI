@@ -10,7 +10,7 @@
           <div fxFlex fxLayout="row" fxLayoutAlign="end center">
                   <button class="mat-mini-fab mat-accent" (click)="clearUser()">
                       <span class="mat-button-wrapper">
-                          <mat-icon>add_circle_outline</mat-icon>
+                          <mat-icon>add_outline</mat-icon>
                       </span>
                   </button>
               </div>
@@ -24,7 +24,7 @@
               Apps
           </div> -->
           <button mat-button class="contact" *ngFor="let usr of AllUsers | filter: searchText" (click)="loadSelectedUser(usr)"
-              ngClass="{'unread':contact.unread}" [@animate]="{value:'*',params:{y:'100%'}}" [style.background-color]="selectID==usr.UserID?'lightgrey':'white'">
+              ngClass="{'unread':contact.unread}" [@animate]="{value:'*',params:{y:'100%'}}" [class.borderLeft]="selectID==usr.UserID">
               <div fxLayout="row" fxLayoutAlign="start center">
                   <div fxLayout="row" fxFlex>
                       <div class="" fxFlex fxLayout="column" fxLayoutAlign="center start">
