@@ -1,4 +1,4 @@
-<div id="chat" class=" page-layout carded fullwidth" fusePerfectScrollbar>
+<div id="chat" class="page-layout carded fullwidth" fusePerfectScrollbar>
   <div class="top-bg" [ngClass]="BGClassName?.layout?.toolbar?.background"></div>
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
     <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center"
@@ -112,7 +112,7 @@
       </div>
     </div>
     <div fxFlex class="mt-20">
-      <mat-card>
+      <mat-card class="mb-16">
         <mat-card-header>
           <mat-card-title><strong>REQ ID : {{SelectedPurchaseRequisitionID}}</strong>
           </mat-card-title>
@@ -460,6 +460,11 @@
                   (click)="GoToAllocateRFQ()">
                   Allocate Vendor
                 </button>
+                <button *ngIf="(SelectedRFQStatus | lowercase)==='completed'"
+                [ngClass]="BGClassName?.layout?.toolbar?.background" class="SaveBtnClass" mat-raised-button
+                (click)="GoToAllocateRFQ()">
+                Review Vendor allocation
+              </button>
               </div>
             </div>
           </form>

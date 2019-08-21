@@ -245,15 +245,16 @@ export class LoginComponent implements OnInit, OnDestroy {
         //         url: '/rfq/creation'
         //     });
         // }
-       
-        if (this.MenuItems.indexOf('RFQEvaluation') >= 0) {
-            this.subChildren2.push({
-                id: 'evaluation',
-                title: 'Evaluation',
-                type: 'item',
-                url: '/rfq/evaluation'
-            });
-        }
+
+        // if (this.MenuItems.indexOf('RFQEvaluation') >= 0) {
+        //     this.subChildren2.push({
+        //         id: 'evaluation',
+        //         title: 'Evaluation',
+        //         type: 'item',
+        //         url: '/rfq/evaluation'
+        //     });
+        // }
+
         if (this.MenuItems.indexOf('RFQAwareded') >= 0) {
             this.subChildren2.push({
                 id: 'awarded',
@@ -262,11 +263,29 @@ export class LoginComponent implements OnInit, OnDestroy {
                 url: '/rfq/awarded'
             });
         }
+        if (this.MenuItems.indexOf('PurchaseRequisitionVendor') >= 0) {
+            this.subChildren2.push({
+                id: 'prvendor',
+                title: 'PR-Vendor',
+                type: 'item',
+                url: '/rfq/prvendor'
+            });
+        }
+        if (this.MenuItems.indexOf('RFQResponse') >= 0) {
+            this.subChildren2.push({
+                id: 'response',
+                title: 'Response',
+                type: 'item',
+                url: '/rfq/response'
+            });
+        }
         if (
             this.MenuItems.indexOf('RFQCreation') >= 0 ||
             this.MenuItems.indexOf('RFQPublish') >= 0 ||
             this.MenuItems.indexOf('RFQEvaluation') >= 0 ||
-            this.MenuItems.indexOf('RFQAwareded') >= 0
+            this.MenuItems.indexOf('RFQAwareded') >= 0 ||
+            this.MenuItems.indexOf('PurchaseRequisitionVendor') >= 0 ||
+            this.MenuItems.indexOf('RFQResponse') >= 0
         ) {
             this.children.push({
                 id: 'rfq',
@@ -377,7 +396,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.MenuItems.indexOf('MenuApp') >= 0 ||
             this.MenuItems.indexOf('Role') >= 0 ||
             this.MenuItems.indexOf('User') >= 0 ||
-            this.MenuItems.indexOf('UserPreference')  >= 0
+            this.MenuItems.indexOf('UserPreference') >= 0
         ) {
             this.children.push({
                 id: 'master',

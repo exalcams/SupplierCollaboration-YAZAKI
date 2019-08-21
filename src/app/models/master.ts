@@ -4,6 +4,7 @@ export class UserWithRole {
     UserID: Guid;
     RoleID: Guid;
     UserName: string;
+    VendorCode: string;
     Email: string;
     Password: string;
     ContactNumber: string;
@@ -48,6 +49,7 @@ export class AuthenticationDetails {
     displayName: string;
     emailAddress: string;
     userRole: string;
+    // vendorCode: string;
     menuItemNames: string;
     profile: string;
     refreahToken: string;

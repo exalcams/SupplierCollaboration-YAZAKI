@@ -27,6 +27,9 @@
 .mat-form-field-flex > .mat-form-field-infix {
   padding: 0.002em 0px !important;
 }
+.normal .mat-form-field-flex > .mat-form-field-infix {
+  padding: 0.4375em 0 !important;
+}
 .mat-form-field-label-wrapper {
   top: -1em;
 }
@@ -55,9 +58,9 @@
   padding-bottom: 0.7em !important;
 }
 
-#login .mat-form-field-wrapper{
-    padding-bottom: 1.4em !important; 
-}
+// #login .mat-form-field-wrapper {
+//   padding-bottom: 1.4em !important;
+// }
 
 .success {
   background-color: #26b329 !important;

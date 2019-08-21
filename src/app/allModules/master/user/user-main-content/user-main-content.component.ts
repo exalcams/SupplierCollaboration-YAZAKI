@@ -28,13 +28,10 @@ export class UserMainContentComponent implements OnInit, OnChanges {
   userMainFormGroup: FormGroup;
   AllRoles: RoleWithMenuApp[] = [];
   notificationSnackBarComponent: NotificationSnackBarComponent;
-  fileToUpload: File;
-  fileUploader: FileUploader;
   baseAddress: string;
-  slectedProfile: Uint8Array;
   authenticationDetails: AuthenticationDetails;
   MenuItems: string[];
-
+  isVendor: boolean;
   constructor(private _masterService: MasterService,
     private _router: Router,
     private _formBuilder: FormBuilder,
@@ -46,20 +43,21 @@ export class UserMainContentComponent implements OnInit, OnChanges {
       roleID: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       contactNumber: ['', [Validators.required, Validators.pattern]],
-      password: ['', [Validators.required,
-      Validators.pattern('(?=.*[a-z].*[a-z].*[a-z])(?=.*[A-Z])(?=.*[0-9].*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]],
-      confirmPassword: ['', [Validators.required, confirmPasswordValidator]],
-      profile: ['']
+      vendorCode: [''],
     });
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.user = new UserWithRole();
     this.authenticationDetails = new AuthenticationDetails();
     this.baseAddress = _authService.baseAddress;
+    this.isVendor = false;
   }
   GetAllRoles(): void {
     this._masterService.GetAllRoles().subscribe(
       (data) => {
         this.AllRoles = <RoleWithMenuApp[]>data;
+        if (this.user && this.user.RoleID) {
+          this.CheckIsVendor(this.user.RoleID);
+        }
         // console.log(this.AllMenuApps);
       },
       (err) => {
@@ -93,12 +91,32 @@ export class UserMainContentComponent implements OnInit, OnChanges {
       // const control = this.userMainFormGroup.get(key);
       this.userMainFormGroup.get(key).markAsUntouched();
     });
-    this.fileToUpload = null;
+    this.isVendor = false;
+  }
+
+  roleSelectionChange(event): void {
+    this.CheckIsVendor(event.value);
+  }
+
+  CheckIsVendor(val: any): void {
+    if (this.AllRoles) {
+      const SR: RoleWithMenuApp = this.AllRoles.filter(x => x.RoleID === val)[0];
+      if (SR) {
+        if (SR.RoleName.toLocaleLowerCase() === 'vendor') {
+          this.isVendor = true;
+          this.userMainFormGroup.get('vendorCode').setValidators(Validators.required);
+          this.userMainFormGroup.get('vendorCode').updateValueAndValidity();
+        } else {
+          this.isVendor = false;
+          this.userMainFormGroup.get('vendorCode').clearValidators();
+          this.userMainFormGroup.get('vendorCode').updateValueAndValidity();
+        }
+      }
+    }
   }
 
   SaveClicked(): void {
     if (this.userMainFormGroup.valid) {
-      const file: File = this.fileToUpload;
       if (this.user.UserID) {
         const dialogConfig: MatDialogConfig = {
           data: {
@@ -115,9 +133,9 @@ export class UserMainContentComponent implements OnInit, OnChanges {
               this.user.RoleID = <Guid>this.userMainFormGroup.get('roleID').value;
               this.user.Email = this.userMainFormGroup.get('email').value;
               this.user.ContactNumber = this.userMainFormGroup.get('contactNumber').value;
-              this.user.Password = this.userMainFormGroup.get('password').value;
+              this.user.VendorCode = this.userMainFormGroup.get('vendorCode').value;
               this.user.ModifiedBy = this.authenticationDetails.userID.toString();
-              this._masterService.UpdateUser(this.user, file).subscribe(
+              this._masterService.UpdateUser(this.user).subscribe(
                 (data) => {
                   // console.log(data);
                   this.ResetControl();
@@ -152,10 +170,10 @@ export class UserMainContentComponent implements OnInit, OnChanges {
               this.user.RoleID = this.userMainFormGroup.get('roleID').value;
               this.user.Email = this.userMainFormGroup.get('email').value;
               this.user.ContactNumber = this.userMainFormGroup.get('contactNumber').value;
-              this.user.Password = this.userMainFormGroup.get('password').value;
+              this.user.VendorCode = this.userMainFormGroup.get('vendorCode').value;
               this.user.CreatedBy = this.authenticationDetails.userID.toString();
               // this.user.Profile = this.slectedProfile;
-              this._masterService.CreateUser(this.user, file).subscribe(
+              this._masterService.CreateUser(this.user).subscribe(
                 (data) => {
                   // console.log(data);
                   this.ResetControl();
@@ -198,7 +216,7 @@ export class UserMainContentComponent implements OnInit, OnChanges {
               this.user.RoleID = <Guid>this.userMainFormGroup.get('roleID').value;
               this.user.Email = this.userMainFormGroup.get('email').value;
               this.user.ContactNumber = this.userMainFormGroup.get('contactNumber').value;
-              this.user.Password = this.userMainFormGroup.get('password').value;
+              this.user.VendorCode = this.userMainFormGroup.get('vendorCode').value;
               this.user.ModifiedBy = this.authenticationDetails.userID.toString();
               this._masterService.DeleteUser(this.user).subscribe(
                 (data) => {
@@ -232,19 +250,13 @@ export class UserMainContentComponent implements OnInit, OnChanges {
     if (this.user) {
       this.userMainFormGroup.get('userName').patchValue(this.user.UserName);
       this.userMainFormGroup.get('roleID').patchValue(this.user.RoleID);
+      this.CheckIsVendor(this.user.RoleID);
       this.userMainFormGroup.get('email').patchValue(this.user.Email);
       this.userMainFormGroup.get('contactNumber').patchValue(this.user.ContactNumber);
-      this.userMainFormGroup.get('password').patchValue(this.user.Password);
-      this.userMainFormGroup.get('confirmPassword').patchValue(this.user.Password);
+      this.userMainFormGroup.get('vendorCode').patchValue(this.user.VendorCode);
     } else {
       // this.menuAppMainFormGroup.get('appName').patchValue('');
       this.ResetControl();
-    }
-  }
-
-  handleFileInput(evt): void {
-    if (evt.target.files && evt.target.files.length > 0) {
-      this.fileToUpload = evt.target.files[0];
     }
   }
 }

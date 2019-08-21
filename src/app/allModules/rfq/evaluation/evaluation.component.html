@@ -1,4 +1,4 @@
-<div id="chat" class=" page-layout carded fullwidth" fusePerfectScrollbar>
+<div id="chat" class="page-layout carded fullwidth" fusePerfectScrollbar>
   <div class="top-bg" [ngClass]="BGClassName?.layout?.toolbar?.background"></div>
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
     <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center"
@@ -119,7 +119,7 @@
               <div class="boldClass pt-16 px-24">Supplier Invite</div>
               <div fxLayout class="borderBottom mt-12"></div>
               <form name="form" [formGroup]="VendorSearchFormGroup">
-                <div fxLayout class="mt-24 pl-24">
+                <div fxLayout class="mt-4 pl-24">
                   <div fxFlex>
                     <div class="pt-8 pr-8">
                       <span style="font-size: 13px;">Vendor ID</span>
@@ -156,7 +156,7 @@
                   </div>
                   <div fxFlex>
                     <div class="pr-8">
-                      <span style="font-size: 13px;">Location</span>
+                      <span style="font-size: 13px;">State</span>
                     </div>
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="State">
@@ -174,7 +174,8 @@
                 <div fxLayout FxLayoutAlign="center">
                   <div fxFlex></div>
                   <div fxFlex class="pl-120">
-                    <button [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="GetVendorsBasedOnConditions()"
+                    <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="GetVendorsBasedOnConditions()"
                       class="SearchBtnClass" mat-raised-button>
                       Search
                     </button>
@@ -186,7 +187,8 @@
               <div fxLayout class="pr-16 px-24 pt-16">
                 <div fxFlex class="boldClass">VendorList</div>
                 <div fxFlex align="end">
-                  <button class="blueText" (click)="AddSelectedVendors()" mat-stroked-button>
+                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
+                  class="blueText" (click)="AddSelectedVendors()" mat-stroked-button>
                     <mat-icon>add_circle_outline</mat-icon>
                     Add vendor
                   </button>
@@ -206,6 +208,12 @@
                       </mat-checkbox>
                     </td>
                   </ng-container>
+
+                  <ng-container matColumnDef="VendorCode">
+                    <th mat-header-cell *matHeaderCellDef>Vendor ID</th>
+                    <td mat-cell *matCellDef="let element">{{element.VendorCode}}</td>
+                  </ng-container>
+
                   <ng-container matColumnDef="VendorName">
                     <th mat-header-cell *matHeaderCellDef>Vendor Name</th>
                     <td mat-cell *matCellDef="let element">{{element.VendorName}}</td>
@@ -242,10 +250,12 @@
             <div fxFlex="30" class="pb-8">
               <div fxLayout>
                 <div fxFlex class="p-12" align="end">
-                  <button mat-stroked-button (click)="SaveRFQAllocationTemp()">
+                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
+                  mat-stroked-button (click)="SaveRFQAllocationTemp()">
                     Save
                   </button>
-                  <button (click)="CreateRFQAllocation()" class="SaveBtnClass ml-8" mat-raised-button>
+                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
+                  (click)="CreateRFQAllocation()" class="SaveBtnClass ml-8" mat-raised-button>
                     Save & Publish
                   </button>
                 </div>
@@ -258,7 +268,7 @@
                       <mat-icon>clear</mat-icon>
                     </span>
                   </button> -->
-                  <div class="round ml-4">
+                  <div class="round ml-4" *ngIf="(SelectedRFQStatus | lowercase)!=='completed'">
                     <mat-icon class="customIcon" (click)="RemoveSelectedVendor(sup.VendorCode)">clear</mat-icon>
                   </div>
 

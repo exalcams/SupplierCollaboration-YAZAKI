@@ -7,6 +7,7 @@ import { catchError } from 'rxjs/operators';
 import { AttachmentDetails } from 'app/allModules/orderacknowledgment/orderacknowledgment/orderacknowledgment.component';
 import { RFQView, PurchaseRequisition, RFQAllocationView } from 'app/models/rfq.model';
 import { Auxiliary } from 'app/models/asn';
+import { Guid } from 'guid-typescript';
 
 @Injectable({
     providedIn: 'root'
@@ -56,7 +57,10 @@ export class RFQService {
         return this._httpClient.get<RFQView>(`${this.baseAddress}api/RFQ/GetRFQByPurchaseRequisitionID?PurchaseRequisitionID=${PurchaseRequisitionID}`)
             .pipe(catchError(this.errorHandler));
     }
-
+    GetAllCompletedPurchaseRequisitionByVendor(UserID: Guid): Observable<PurchaseRequisition[] | string> {
+        return this._httpClient.get<PurchaseRequisition[]>(`${this.baseAddress}api/RFQ/GetAllCompletedPurchaseRequisitionByVendor?UserID=${UserID}`)
+            .pipe(catchError(this.errorHandler));
+    }
     AddRFQAttachment(auxiliary: Auxiliary, selectedFiles: File[]): Observable<any> {
         const formData: FormData = new FormData();
         if (selectedFiles && selectedFiles.length) {
@@ -99,7 +103,10 @@ export class RFQService {
             })
             .pipe(catchError(this.errorHandler));
     }
-
+    GetRFQAllocationByRFQID(RFQID: number): Observable<RFQAllocationView[] | string> {
+        return this._httpClient.get<RFQAllocationView[]>(`${this.baseAddress}api/RFQ/GetRFQAllocationByRFQID?RFQID=${RFQID}`)
+            .pipe(catchError(this.errorHandler));
+    }
     GetRFQAllocationTempByRFQID(RFQID: number): Observable<RFQAllocationView[] | string> {
         return this._httpClient.get<RFQAllocationView[]>(`${this.baseAddress}api/RFQ/GetRFQAllocationTempByRFQID?RFQID=${RFQID}`)
             .pipe(catchError(this.errorHandler));
