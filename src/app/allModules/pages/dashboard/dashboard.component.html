@@ -437,48 +437,26 @@
                 </mat-card-title>
               </mat-card-header>
               <mat-divider style="margin-top: -10px;"></mat-divider>
-              <div style="margin-top: -15px;">
-                <mat-form-field style="width: 80%;margin-left: -10px">
-                  <!-- <mat-label style="color: hsl(220, 76%, 45%)">Select</mat-label> -->
-                  <mat-select [(value)]="selected1">
-                    <mat-option value="option1">Advance Shipment Notification Requests</mat-option>
-                    <mat-option value="option2">Joint Measurement Sheet Requests</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div style="margin-top: -7px;">
-                <mat-form-field style="width: 95px;margin-left: -10px;margin-top: -20px">
-                  <!-- <mat-label style="color: #1b56ca">Select</mat-label> -->
-                  <mat-select [(value)]="selected2">
-                    <!-- <mat-option>None</mat-option> -->
-                    <mat-option value="option1">Drafted</mat-option>
-                    <mat-option value="option2">Previous</mat-option>
-                    <mat-option value="option3">Rejected</mat-option>
-                    <mat-option value="option1">SentBack</mat-option>
-                    <mat-option value="option2">Deleted</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <table style="margin-left: -10px;" mat-table [dataSource]="dataSource1" matSort>
-                <ng-container matColumnDef="DraftID">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>DraftID</th>
-                  <td mat-cell *matCellDef="let element"> {{element.DraftID}} </td>
+              <table style="margin-left: -10px;" mat-table [dataSource]="ASNHeaderDataSource" matSort>
+                <ng-container matColumnDef="TransId">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>TransId</th>
+                  <td mat-cell *matCellDef="let element"> {{element.TransID}} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="ServiceEnterSheetID">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>SheetID</th>
-                  <td mat-cell *matCellDef="let element"> {{element.ServiceEnterSheetID}} </td>
+                <ng-container matColumnDef="Status">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                  <td mat-cell *matCellDef="let element"> {{element.Status}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="PurchaseOrder">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>PO</th>
-                  <td mat-cell *matCellDef="let element"> {{element.PurchaseOrder}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.ASN_Header_PO}} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="Amount">
+                <!-- <ng-container matColumnDef="Amount">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount</th>
                   <td mat-cell *matCellDef="let element"> {{element.Amount}} </td>
-                </ng-container>
+                </ng-container> -->
                 <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
                   *matHeaderRowDef="displayedColumns1"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns1"></tr>

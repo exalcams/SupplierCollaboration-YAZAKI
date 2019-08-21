@@ -1,10 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatTableDataSource, MatSort, MatTable } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DashboardService } from 'app/services/dashboard.service';
-import { PO_OrderAcknowledgement } from 'app/models/dashboard';
+import { PO_OrderAcknowledgement, POOrderScheduleLine } from 'app/models/dashboard';
+import { FileUploader } from 'ng2-file-upload';
+
 
 @Component({
   selector: 'app-orderacknowledgment',
@@ -13,11 +15,17 @@ import { PO_OrderAcknowledgement } from 'app/models/dashboard';
 })
 export class OrderacknowledgmentComponent implements OnInit {
   BGClassName: any;
-  displayedColumns: string[] = ['select', 'Item', 'PurchaseOrderQuantity', 'UnitOfMeasurement', 'NetPrice', 'Remarks'];
-  displayedColumns1: string[] = ['AttachmentNumber', 'AttachmentName', 'DocumentType', 'Delete'];
-  dataSource: MatTableDataSource<OrderAcknowledgment>;
-  dataSource1: MatTableDataSource<AttachmentDetails>;
-  selection = new SelectionModel<OrderAcknowledgment>(true, []);
+  displayedColumns: string[] = ['select','Item', 'SLine', 'Material', 'MaterialDescription', 'DeliveryDate', 'AcceptedDate', 'POQuantity', 'AcceptedQuantity', 'UOM', 'NetPrice'];
+  attachmentColumns: string[] = ['AttachmentNumber', 'AttachmentName', 'DocumentType', 'Delete'];
+  OrderAcknowledgmentDataSource: MatTableDataSource<POOrderScheduleLine>;
+ // OrderAcknowledgmentList: POOrderScheduleLine[] = [];
+  AttachmentDataSource: MatTableDataSource<AttachmentDetails>;
+  AttachmentDetailsList: AttachmentDetails[] = [];
+  fileToUpload: File;
+  fileToUploadList: File[] = [];
+  fileUploader: FileUploader;
+  @ViewChild('AttachmentTable') AttachmentTable: MatTable<any>;
+  selection = new SelectionModel<POOrderScheduleLine>(true, []);
   AcknowledgementDetails: PO_OrderAcknowledgement = new PO_OrderAcknowledgement();
   POId: string;
   Item: string;
@@ -30,8 +38,9 @@ export class OrderacknowledgmentComponent implements OnInit {
         if (data) {
           this.AcknowledgementDetails = <PO_OrderAcknowledgement>data;
           console.log(this.AcknowledgementDetails);
-          // this.POItemList = new MatTableDataSource(this.POPurchaseOrderDetails.POItemList);
-          // console.log(this.POPurchaseOrderDetails)
+          this.OrderAcknowledgmentDataSource = new MatTableDataSource(this.AcknowledgementDetails.POOrderScheduleLine);
+          // this.OrderAcknowledgmentDataSource = new MatTableDataSource(this.AcknowledgementDetails.POOrderScheduleLine);
+           console.log(this.OrderAcknowledgmentDataSource);
         }
       },
         (err) => {
@@ -41,13 +50,13 @@ export class OrderacknowledgmentComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource(ELEMENT_DATA);
-    this.dataSource.sort = this.sort;
-    this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
-    this.dataSource1.sort = this.sort;
-    this.isAllSelected();
-    this.masterToggle();
-    this.checkboxLabel();
+    // this.dataSource = new MatTableDataSource(ELEMENT_DATA);
+    // this.dataSource.sort = this.sort;
+    // this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
+    // this.dataSource1.sort = this.sort;
+    // this.isAllSelected();
+    // this.masterToggle();
+    // this.checkboxLabel();
     this._fuseConfigService.config
       // .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config) => {
@@ -55,30 +64,73 @@ export class OrderacknowledgmentComponent implements OnInit {
       });
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
+  // /** Whether the number of selected elements matches the total number of rows. */
+  // isAllSelected() {
+  //   const numSelected = this.selection.selected.length;
+  //   const numRows = this.OrderAcknowledgmentDataSource.data.length;
+  //   return numSelected === numRows;
+  // }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+  // /** Selects all rows if they are not all selected; otherwise clear selection. */
+  // masterToggle() {
+  //   this.isAllSelected() ?
+  //     this.selection.clear() :
+  //     this.OrderAcknowledgmentDataSource.data.forEach(row => this.selection.select(row));
+  // }
+  ResetAttachements(): void {
+    this.AttachmentDetailsList = [];
+    this.AttachmentDataSource = new MatTableDataSource(this.AttachmentDetailsList);
+    // this.fileUploader = [];
   }
-
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: OrderAcknowledgment): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.Item + 1}`;
-  }
+  // /** The label for the checkbox on the passed row */
+  // checkboxLabel(row?: POOrderScheduleLine): string {
+  //   if (!row) {
+  //     return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+  //   }
+  //   return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.Item + 1}`;
+  // }
   BackToDashboard(): void {
     this._router.navigate(['/dashboard']);
     // { queryParams: { id: this.POId } }
+  }
+  GetAttachmentViewsByAppID(APPID: number, APPNumber: number): void {
+    this.dashboardService.GetAttachmentViewsByAppID(APPID, APPNumber).subscribe(
+      (data) => {
+        this.AttachmentDetailsList = data as AttachmentDetails[];
+        this.AttachmentDataSource = new MatTableDataSource(this.AttachmentDetailsList);
+        if (this.AttachmentDetailsList && this.AttachmentDetailsList.length) {
+          this.AttachmentDetailsList.forEach(f => {
+            this.fileToUpload = new File([''], f.AttachmentName, { type: f.DocumentType });
+            this.fileToUploadList.push(this.fileToUpload);
+          });
+        }
+
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  handleFileInput(evt): void {
+    if (evt.target.files && evt.target.files.length > 0) {
+      this.fileToUpload = evt.target.files[0];
+      this.fileToUploadList.push(this.fileToUpload);
+      this.AttachmentDetailsList.push({
+        AttachmentName: this.fileToUpload.name,
+        AttachmentNumber: 0,
+        DocumentType: this.fileToUpload.type
+      });
+      this.AttachmentDataSource = new MatTableDataSource(this.AttachmentDetailsList);
+    }
+  }
+  DeleteAttachment(row: AttachmentDetails): void {
+    const indexx = this.fileToUploadList.findIndex(x => x.name === row.AttachmentName);
+    this.fileToUploadList.splice(indexx, 1);
+    const index = this.AttachmentDetailsList.indexOf(row);
+    this.AttachmentDetailsList.splice(index, 1);
+    this.AttachmentDataSource = new MatTableDataSource(this.AttachmentDetailsList);
+    this.AttachmentTable.renderRows();
   }
 }
 

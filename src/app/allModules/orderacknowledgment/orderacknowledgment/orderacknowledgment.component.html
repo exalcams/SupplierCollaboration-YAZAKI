@@ -4,8 +4,8 @@
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
     <!-- <div class="page-layout blank">
       <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px"> -->
-    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px"
-      fxLayoutGap.xs="10">
+    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center"
+      fxLayoutGap="10px" fxLayoutGap.xs="10">
       <div fxLayout class="layoutclass">
         <div fxFlex fxLayout="column">
           <div fxFlex>
@@ -117,156 +117,155 @@
     <div fxFlex>
       <mat-card>
         <div>
-            <div style="text-align: end">
-                <mat-icon (click)="BackToDashboard()">arrow_back</mat-icon>
-              </div>
+          <div style="text-align: end">
+            <mat-icon (click)="BackToDashboard()">arrow_back</mat-icon>
+          </div>
           <mat-card-header>
             <mat-card-title fxFlex style="margin-left: 10px;margin-top:-25px"><strong>Order Acknowledgment </strong>
             </mat-card-title>
           </mat-card-header>
-          <mat-divider ></mat-divider>
+          <mat-divider></mat-divider>
           <mat-card-content>
             <div style="margin-top: 20px">
-              <!-- <div style="margin-top: 15px;margin-bottom: 15px">
-                    <strong class="sub-Title">Order Acknowledgment</strong>
-                  </div> -->
               <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px">Purchase Order</span>
+                <div fxFlex="15" fxLayoutAlign="end start">
+                  Purchase Order :
                 </div>
                 <div fxFlex="25" fxLayoutAlign="start center">
-                  <mat-form-field style="max-width: 120px;" appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
+                  {{AcknowledgementDetails.PO}}
                 </div>
 
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px">Company Code</span>
+                <div fxFlex="15" fxLayoutAlign="end start">
+                  Company Code :
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-form-field style="max-width: 70px;" appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
-                  <span style="margin-top: -23px;margin-left: 5px">India Model Company, IN</span>
+                  {{AcknowledgementDetails.CompanyCode}}(India Model Company, IN)
                 </div>
               </div>
-              <div class="input-row" style="margin-top: -10px;" fxLayout="row" fxLayout.lt-md="column"
-                fxLayoutGap.lt-md="0px">
-
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px">Dalivery Date</span>
+              <div class="input-row" fxLayout="row" style="margin-top: 5px;" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
+                <div fxFlex="15" fxLayoutAlign="end start">
+                  Dalivery Date :
                 </div>
                 <div fxFlex="25" fxLayoutAlign="start center">
-                  <mat-form-field style="max-width: 100px;" appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
+                  {{AcknowledgementDetails.PODate}}
                 </div>
 
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px">Payterm</span>
+                <div fxFlex="15" fxLayoutAlign="end start">
+                  Payment Terms :
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-form-field style="max-width: 50px" appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
+                  {{AcknowledgementDetails.CompanyCode}}
                 </div>
               </div>
-              <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column"
-                fxLayoutGap.lt-md="0px">
-
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px;">Currency</span>
-                </div>
-                <div fxFlex="35" fxLayoutAlign="start center">
-                  <mat-form-field style="max-width: 110px;" appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
-                </div>
-
-                <div fxFlex="5" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px;text-align: right">Plant+GST</span>
-                </div>
-                <div fxFlex="10" fxLayoutAlign="start center">
-                  <mat-form-field style="max-width: 90px" appearance="outline">
-                    <input matInput placeholder="0:000">
-                  </mat-form-field>
-                </div>
-                <div fxFlex="15" class="text" fxLayoutAlign="start start">
-                  <mat-form-field style="max-width: 150px;margin-left: -6px" appearance="outline">
-                    <input matInput placeholder="">
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="input-row" style="margin-top: -10px;" fxLayout="row" fxLayout.lt-md="column"
-                fxLayoutGap.lt-md="0px">
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px">Buyer:</span>
+              <div class="input-row" fxLayout="row" style="margin-top: 5px;" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
+                <div fxFlex="15" fxLayoutAlign="end start">
+                  Currency :
                 </div>
                 <div fxFlex="25" fxLayoutAlign="start center">
-                  <span>AZN</span>
+                  {{AcknowledgementDetails.Currency}}
                 </div>
 
-                <div fxFlex="15" class="pt-8 pr-8" fxLayoutAlign="end start">
-                  <span style="font-size: 13px">
-                    <mat-icon>phone_iphone</mat-icon>
-                  </span>
+                <div fxFlex="15" fxLayoutAlign="end start">
+                  Plant+GST :
                 </div>
                 <div fxFlex="35" fxLayoutAlign="start center">
-                  <span>0123456845</span>
+                  {{AcknowledgementDetails.PlantGST}}
+                </div>
+              </div>
+              <div class="input-row" fxLayout="row" style="margin-top: 5px;" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
+                <div fxFlex="15" fxLayoutAlign="end start">
+                  Buyer :
+                </div>
+                <div fxFlex="25" fxLayoutAlign="start center">
+                  {{AcknowledgementDetails.Buyer}}
+                </div>
+                <div fxFlex="15" fxLayoutAlign="end start">
+                  <mat-icon>phone_iphone</mat-icon> :
+                </div>
+                <div fxFlex="35" fxLayoutAlign="start center">
+                  {{AcknowledgementDetails.BuyerPhNo}}
                 </div>
               </div>
               <div>
-                <table style="margin-top: 35px" mat-table [dataSource]="dataSource" matSort>
+                <table style="margin-top: 35px" mat-table [dataSource]="OrderAcknowledgmentDataSource" matSort>
 
                   <ng-container matColumnDef="select">
                     <th mat-header-cell *matHeaderCellDef>
-                      <mat-checkbox (change)="$event ? masterToggle() : null"
+                        <mat-checkbox>
+                        
+                          </mat-checkbox>
+                      <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
                         [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()" style="margin-left: -18px;">
-                      </mat-checkbox>
-                      <!-- Select -->
-                      <!-- Select All/Deselect All -->
+                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"
+                        style="margin-left: -18px;">
+                      </mat-checkbox> -->
                     </th>
                     <td mat-cell *matCellDef="let row">
-                      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                      <mat-checkbox>
+
                       </mat-checkbox>
+                      <!-- <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                      </mat-checkbox> -->
                     </td>
                   </ng-container>
 
-                  <ng-container matColumnDef="Remarks" >
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Remarks </th>
-                    <td mat-cell *matCellDef="let element">
-                      <mat-form-field class="example-full-width">
-                        <input matInput>
-                      </mat-form-field>
-                    </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="Item" >
+                  <ng-container matColumnDef="Item">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Item</th>
                     <td mat-cell *matCellDef="let element"> {{element.Item}} </td>
                   </ng-container>
 
-                  <ng-container matColumnDef="PurchaseOrderQuantity" >
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Purchase Order Quantity</th>
-                    <td mat-cell *matCellDef="let element"> {{element.PurchaseOrderQuantity}} </td>
+                  <ng-container matColumnDef="SLine">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Schedule Line</th>
+                    <td mat-cell *matCellDef="let element"> {{element.ScheduleLine}} </td>
                   </ng-container>
 
-                  <ng-container matColumnDef="UnitOfMeasurement">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Unit Of Measurement </th>
-                    <td mat-cell *matCellDef="let element"> {{element.UnitOfMeasurement}} </td>
+                  <ng-container matColumnDef="UOM">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>UOM</th>
+                    <td mat-cell *matCellDef="let element"> {{element.UOM}} </td>
                   </ng-container>
 
-                  <ng-container matColumnDef="NetPrice" >
+                  <ng-container matColumnDef="Material">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Material</th>
+                    <td mat-cell *matCellDef="let element"> {{element.Material}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="MaterialDescription">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Material Description</th>
+                    <td mat-cell *matCellDef="let element"> {{element.MaterialDescription}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="DeliveryDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Delivery Date</th>
+                    <td mat-cell *matCellDef="let element"> {{element.DeliveryDate}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="AcceptedDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Accepted Date</th>
+                    <td mat-cell *matCellDef="let element"> {{element.AcceptedDate}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="AcceptedQuantity">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Accepted Quantity</th>
+                    <td mat-cell *matCellDef="let element"> {{element.AcceptedQuantity}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="POQuantity">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Order Quantity</th>
+                    <td mat-cell *matCellDef="let element"> {{element.OrderQuantity}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="NetPrice">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Net Price</th>
                     <td mat-cell *matCellDef="let element"> {{element.NetPrice}} </td>
                   </ng-container>
 
-                  <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+                  <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
+                    *matHeaderRowDef="displayedColumns"></tr>
                   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
-                <div *ngIf="!dataSource.data.length">
+                <div *ngIf="!OrderAcknowledgmentDataSource.data.length">
                   <mat-icon style="    color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
                   <span style="margin-left: 10px;">The table does not contain any data</span>
                 </div>
@@ -298,19 +297,26 @@
               </div>
               <div style="margin-top: 10px;">
                 <span>Note:Attachment supports files like:JPEG,GIF,XLS,TXT,JPG.</span>
+                <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background"
+                  style="margin-top: -21px;margin-left: 20px;" (click)="fileInput1.click()"> <span
+                    style="color: white">Browse</span></button>
+                <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput($event)" />
+
               </div>
               <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
-                <div fxFlex="50">
+                <div fxFlex="100">
                   <!-- <div style="margin-top: 10px;">
-                        <strong>Uploaded Files</strong>
-                      </div> -->
-                  <table style="margin-top: 10px" mat-table [dataSource]="dataSource1" matSort>
+                    <strong>Uploaded Files</strong>
+                  </div> -->
+
+                  <table style="margin-top: 10px" mat-table #AttachmentTable [dataSource]="AttachmentDataSource"
+                    matSort>
                     <ng-container matColumnDef="AttachmentNumber">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Attachment Number</th>
                       <td mat-cell *matCellDef="let element"> {{element.AttachmentNumber}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="AttachmentName" >
+                    <ng-container matColumnDef="AttachmentName">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Attachment Name</th>
                       <td mat-cell *matCellDef="let element"> {{element.AttachmentName}} </td>
                     </ng-container>
@@ -321,26 +327,27 @@
                     </ng-container>
 
                     <ng-container matColumnDef="Delete">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Delete</th>
-                      <td mat-cell *matCellDef="let row" (click)="DeleteConfiguration(row)">
+                      <th mat-header-cell *matHeaderCellDef> Delete</th>
+                      <td mat-cell *matCellDef="let row" (click)="DeleteAttachment(row)">
                         <mat-icon aria-label="file_download">delete</mat-icon>
                       </td>
                     </ng-container>
 
 
-                    <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+                    <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
+                      *matHeaderRowDef="attachmentColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: attachmentColumns;"></tr>
 
                   </table>
-                  <div *ngIf="!dataSource1.data.length">
+                  <div *ngIf="!AttachmentDetailsList?.length">
                     <mat-icon style="    color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
                     <span style="margin-left: 10px;">The table does not contain any data</span>
                   </div>
                 </div>
-                <div fxFlex="50" class="divclass">
+                <!-- <div fxFlex="50" class="divclass">
                   <div class="input-row" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap.lt-md="0px">
                     <div fxFlex="20" class="pt-8 pr-8" fxLayoutAlign="end start">
-                      <span style="font-size: 13px">Document Type</span>
+                      <span style="font-size: 13px; text-align:right">Document Type</span>
                     </div>
                     <div fxFlex="30" fxLayoutAlign="start center">
                       <mat-form-field style="max-width: 100px;" appearance="outline">
@@ -348,7 +355,7 @@
                       </mat-form-field>
                     </div>
                   </div>
-                  <div class="input-row" style="margin-top: -10px;" fxLayout="row" fxLayout.lt-md="column"
+                  <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column"
                     fxLayoutGap.lt-md="0px">
                     <div fxFlex="20" class="pt-8 pr-8" fxLayoutAlign="end start">
                       <span style="font-size: 13px">Upload File</span>
@@ -358,17 +365,12 @@
                         <input matInput #fileInput>
                       </mat-form-field>
                       <input hidden type="file" #fileInput />
-                      <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-top: -21px;margin-left: 20px;"
-                        (click)="fileInput.click()"> <span style="color: white">Browser</span></button>
+                      <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background"
+                        style="margin-top: -21px;margin-left: 20px;" (click)="fileInput.click()"> <span
+                          style="color: white">Browse</span></button>
                     </div>
-                    <!-- <div class="form-group">
-                              <label for="file">Choose File</label>
-                              <input type="file"
-                                     id="file"
-                                     (change)="handleFileInput($event.target.files)">
-                          </div> -->
                   </div>
-                  <div class="input-row" style="margin-top: -10px;" fxLayout="row" fxLayout.lt-md="column"
+                  <div class="input-row" style="margin-top: -13px;" fxLayout="row" fxLayout.lt-md="column"
                     fxLayoutGap.lt-md="0px">
                     <div fxFlex="20" class="pt-8 pr-8" fxLayoutAlign="end start">
                       <span style="font-size: 13px">Tag Name</span>
@@ -377,23 +379,19 @@
                       <mat-form-field style="max-width: 140px;" appearance="outline">
                         <input matInput #fileInput>
                       </mat-form-field>
-                      <!-- <input hidden type="file" #fileInput />
-                      <button mat-raised-button style="background-color: #1b56ca;margin-top: -21px;margin-left: 20px"
-                        (click)="fileInput.click()">
-                        <mat-icon style="color: white;margin-left: -25px;font-size: 18px;margin-top: 5px">attach_file
-                        </mat-icon> <span style="color: white">Attach</span>
-                      </button> -->
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
             <div style="text-align: end;margin-top: 15px">
-              <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-top: -21px;margin-left: 20px;">
+              <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background"
+                style="margin-top: -21px;margin-left: 20px;">
                 <mat-icon style="color: gray;margin-left: -13px">drafts</mat-icon> <span
                   style="color: white;margin-left: 5px">Save as Draft</span>
               </button>
-              <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background" style="margin-top: -21px;margin-left: 20px;">
+              <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background"
+                style="margin-top: -21px;margin-left: 20px;">
                 <mat-icon style="color: lightgreen;margin-left: -15px">check</mat-icon>
                 <span style="color: white">Submit</span>
               </button>

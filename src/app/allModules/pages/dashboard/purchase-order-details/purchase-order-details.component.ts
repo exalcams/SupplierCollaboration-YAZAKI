@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PO_PurchaseOrderDetails, PO_Item } from 'app/models/dashboard';
+import { PO_PurchaseOrderDetails, PO_Item, PO_ScheduleDetails, PO_AdvanceShipmentNotification, PO_GRN, PO_OrderLookUpDetails } from 'app/models/dashboard';
 import { DashboardService } from 'app/services/dashboard.service';
 
 @Component({
@@ -13,11 +13,19 @@ import { DashboardService } from 'app/services/dashboard.service';
 })
 export class PurchaseOrderDetailsComponent implements OnInit {
 
-  displayedColumns: string[] = ['select', 'Item', 'Material', 'Description', 'PurchaseQuantity', 'OrderUnit', 'Currency'];
+  displayedColumns: string[] = ['Item', 'Material', 'Description', 'PurchaseQuantity', 'OrderUnit', 'Currency'];
   displayedColumns1: string[] = ['Item', 'Description', 'ScheduleLine', 'DeliveryDate', 'ScheduleQuantity', 'UOM'];
+  ScheduleDisplayedColumns:string[]=['Item', 'Description', 'ScheduleLine', 'DeliveryDate', 'ScheduleQuantity', 'UOM'];
+  AdvanceShipmentDisplayedColumns:string[]=['Item', 'Material','Description', 'UOM','ShipmentQuantity','ASNStatus'];
+  GRNDisplayedColumns:string[]=['Item', 'Material','Description', 'UOM','PostingDate','DeliveredQuantity','Status'];
   POItemList: MatTableDataSource<PO_Item>;
+  PO_ScheduleDetailsList: MatTableDataSource<PO_ScheduleDetails>;
+  PO_AdvanceShipmentNotificationList: MatTableDataSource<PO_AdvanceShipmentNotification>;
+  PO_GRNList: MatTableDataSource<PO_GRN>;
   dataSource1: MatTableDataSource<ItemDetails1>;
+  PO_OrderLookUpDetails: PO_OrderLookUpDetails = new PO_OrderLookUpDetails();
   selection: SelectionModel<PO_Item>;
+  selectedPORow: PO_Item = new PO_Item();
   POId: any;
   POPurchaseOrderDetails: PO_PurchaseOrderDetails = new PO_PurchaseOrderDetails();
   BGClassName: any;
@@ -40,6 +48,10 @@ export class PurchaseOrderDetailsComponent implements OnInit {
   ngOnInit() {
     this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
     this.selection = new SelectionModel(true, []);
+    this.PO_OrderLookUpDetails;
+    this.PO_ScheduleDetailsList = new MatTableDataSource(this.PO_OrderLookUpDetails.PO_ScheduleDetails);
+    this.PO_AdvanceShipmentNotificationList = new MatTableDataSource(this.PO_OrderLookUpDetails.PO_AdvanceShipmentNotification);
+    this.PO_GRNList = new MatTableDataSource(this.PO_OrderLookUpDetails.PO_GRN);
     this._fuseConfigService.config
       .subscribe((config) => {
         this.BGClassName = config;
@@ -48,7 +60,24 @@ export class PurchaseOrderDetailsComponent implements OnInit {
   BackToDashboard(): void {
     this._router.navigate(['/dashboard']);
     // , { queryParams: { id: this.POId } }
-    
+
+  }
+  Checked(data) {
+    this.selectedPORow = data;
+    this.dashboardService.GetPOOrderLookUpDetails(this.selectedPORow.PO_Item_PO, this.selectedPORow.Item).subscribe((data1) => {
+      if (data1) {
+        this.PO_OrderLookUpDetails = data1 as PO_OrderLookUpDetails;
+        this.PO_ScheduleDetailsList = new MatTableDataSource(this.PO_OrderLookUpDetails.PO_ScheduleDetails);
+        this.PO_AdvanceShipmentNotificationList = new MatTableDataSource(this.PO_OrderLookUpDetails.PO_AdvanceShipmentNotification);
+        this.PO_GRNList = new MatTableDataSource(this.PO_OrderLookUpDetails.PO_GRN);
+        // console.log(this.PO_ScheduleDetailsList);
+        // console.log(this.PO_AdvanceShipmentNotificationList);
+        // console.log(this.PO_GRNList);
+      }
+    },
+      (err) => {
+        console.error(err);
+      });
   }
 }
 
