@@ -271,14 +271,14 @@ export class LoginComponent implements OnInit, OnDestroy {
                 url: '/rfq/prvendor'
             });
         }
-        if (this.MenuItems.indexOf('RFQResponse') >= 0) {
-            this.subChildren2.push({
-                id: 'response',
-                title: 'Response',
-                type: 'item',
-                url: '/rfq/response'
-            });
-        }
+        // if (this.MenuItems.indexOf('RFQResponse') >= 0) {
+        //     this.subChildren2.push({
+        //         id: 'response',
+        //         title: 'Response',
+        //         type: 'item',
+        //         url: '/rfq/response'
+        //     });
+        // }
         if (
             this.MenuItems.indexOf('RFQCreation') >= 0 ||
             this.MenuItems.indexOf('RFQPublish') >= 0 ||
