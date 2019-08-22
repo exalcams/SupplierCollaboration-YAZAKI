@@ -201,9 +201,14 @@
                   <td mat-cell *matCellDef="let element"> {{element.PaymentDate | date: 'dd/MM/yyyy'}} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="InvoiceReference">
+                <ng-container matColumnDef="PaymentReference">
+                  <th mat-header-cell *matHeaderCellDef>Payment Reference</th>
+                  <td mat-cell *matCellDef="let element">{{element.PaymentReference}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="VendorInvoice">
                   <th mat-header-cell *matHeaderCellDef>Invoice Reference</th>
-                  <td mat-cell *matCellDef="let element"> {{element.InvoiceReference}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.VendorInvoice}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="ClearingDoc">
