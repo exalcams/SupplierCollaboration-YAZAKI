@@ -16,11 +16,10 @@ export class PaymentReportReferenceComponent implements OnInit, OnDestroy {
     subscription: Subscription = new Subscription();
     BGClassName: any;
     displayedColumns: string[] = [
-        'PO',
-        'PODate',
         'PaymentDoc',
         'PaymentDate',
-        'InvoiceReference',
+        'PaymentReference',
+        'VendorInvoice',
         'ClearingDoc',
         'ClearingDate',
         'PaymentAdviceNo',
