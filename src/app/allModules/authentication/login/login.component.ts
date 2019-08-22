@@ -7,15 +7,16 @@ import { Router } from '@angular/router';
 import { AuthService } from 'app/services/auth.service';
 // import { LoginService } from 'app/services/login.service';
 // import { UserDetails } from 'app/models/user-details';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog, MatSnackBar, MatDialogConfig } from '@angular/material';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigation } from '@fuse/types';
 import { MenuUpdataionService } from 'app/services/menu-update.service';
-import { AuthenticationDetails, UserPreference } from 'app/models/master';
+import { AuthenticationDetails, UserPreference, EMailModel } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { takeUntil } from 'rxjs/operators';
+import { ForgetPasswordLinkDialogComponent } from '../forget-password-link-dialog/forget-password-link-dialog.component';
 
 @Component({
     selector: 'login',
@@ -174,6 +175,36 @@ export class LoginComponent implements OnInit, OnDestroy {
                 }
             });
         this._fuseConfigService.config = this.fuseConfig;
+    }
+
+    OpenForgetPasswordLinkDialog(): void {
+        const dialogConfig: MatDialogConfig = {
+            data: null,
+            panelClass: 'forget-password-link-dialog'
+        };
+        const dialogRef = this.dialog.open(ForgetPasswordLinkDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(
+            result => {
+                if (result) {
+                    const emailModel = result as EMailModel;
+                    this.IsProgressBarVisibile = true;
+                    this._authService.SendResetLinkToMail(emailModel).subscribe(
+                        (data) => {
+                            const res = data as string;
+                            this.notificationSnackBarComponent.openSnackBar(res, SnackBarStatus.success);
+                            // this.notificationSnackBarComponent.openSnackBar(`Reset password link sent successfully to ${emailModel.EmailAddress}`, SnackBarStatus.success);
+                            // this.ResetControl();
+                            this.IsProgressBarVisibile = false;
+                            // this._router.navigate(['auth/login']);
+                        },
+                        (err) => {
+                            console.error(err);
+                            this.IsProgressBarVisibile = false;
+                            this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger); console.error(err);
+                        }
+                    );
+                }
+            });
     }
 
     UpdateMenu(): void {

@@ -26,7 +26,6 @@ export class RoleMainContentComponent implements OnInit, OnChanges {
   MenuAppIDListAllID: number;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   authenticationDetails: AuthenticationDetails;
-  MenuItems: string[];
   constructor(
     private _masterService: MasterService,
     private _router: Router,
@@ -42,6 +41,26 @@ export class RoleMainContentComponent implements OnInit, OnChanges {
     this.MenuAppIDListAllID = 0;
     this.role = new RoleWithMenuApp();
     this.authenticationDetails = new AuthenticationDetails();
+  }
+
+  ngOnInit(): void {
+    // Retrive authorizationData
+    const retrievedObject = localStorage.getItem('authorizationData');
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+    } else {
+      this._router.navigate(['/auth/login']);
+    }
+    this.GetAllMenuApps();
+    this.ResetControl();
+  }
+  ResetControl(): void {
+    this.role = new RoleWithMenuApp();
+    this.roleMainFormGroup.reset();
+    Object.keys(this.roleMainFormGroup.controls).forEach(key => {
+      this.roleMainFormGroup.get(key).markAsUntouched();
+    });
+
   }
 
   GetAllMenuApps(): void {
@@ -60,31 +79,6 @@ export class RoleMainContentComponent implements OnInit, OnChanges {
         console.log(err);
       }
     );
-  }
-
-  ngOnInit(): void {
-    // Retrive authorizationData
-    const retrievedObject = localStorage.getItem('authorizationData');
-    if (retrievedObject) {
-      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-      this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
-      if (this.MenuItems.indexOf('Role') < 0) {
-        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
-        this._router.navigate(['/auth/login']);
-      }
-    } else {
-      this._router.navigate(['/auth/login']);
-    }
-    this.GetAllMenuApps();
-    this.ResetControl();
-  }
-  ResetControl(): void {
-    this.role = new RoleWithMenuApp();
-    this.roleMainFormGroup.reset();
-    Object.keys(this.roleMainFormGroup.controls).forEach(key => {
-      this.roleMainFormGroup.get(key).markAsUntouched();
-    });
-
   }
 
   SaveClicked(): void {

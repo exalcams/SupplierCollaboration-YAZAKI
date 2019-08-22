@@ -19,12 +19,13 @@ export class MenuAppComponent implements OnInit {
   BGClassName: any;
   AllMenuApps: MenuApp[] = [];
   SelectedMenuApp: MenuApp;
-    authenticationDetails: AuthenticationDetails;
-    notificationSnackBarComponent: NotificationSnackBarComponent;
-    IsProgressBarVisibile: boolean;
+  authenticationDetails: AuthenticationDetails;
+  MenuItems: string[];
+  notificationSnackBarComponent: NotificationSnackBarComponent;
+  IsProgressBarVisibile: boolean;
   constructor(private _fuseConfigService: FuseConfigService,
-    private _masterService: MasterService, 
-    private _router: Router, 
+    private _masterService: MasterService,
+    private _router: Router,
     public snackBar: MatSnackBar) {
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
@@ -36,15 +37,20 @@ export class MenuAppComponent implements OnInit {
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
+      if (this.MenuItems.indexOf('MenuApp') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
+        this._router.navigate(['/auth/login']);
+      }
       this.GetAllMenuApps();
     } else {
       this._router.navigate(['/auth/login']);
     }
     this._fuseConfigService.config
-    // .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((config) => {
+      // .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config) => {
         this.BGClassName = config;
-    });
+      });
 
   }
   GetAllMenuApps(): void {
@@ -57,7 +63,8 @@ export class MenuAppComponent implements OnInit {
       (err) => {
         console.log(err);
         this.IsProgressBarVisibile = false;
-        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);      }
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
     );
   }
   OnMenuAppSelectionChanged(selectedMenuApp: MenuApp): void {

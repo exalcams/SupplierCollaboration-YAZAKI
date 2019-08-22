@@ -20,6 +20,7 @@ import { NotificationSnackBarComponent } from './notifications/notification-snac
 import { DatePipe } from '@angular/common';
 import { NotificationDialogComponent } from './notifications/notification-dialog/notification-dialog.component';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { WINDOW_PROVIDERS } from './window.providers';
 // import { GateEntryExitModule } from './allModules/gate-entry-exit/gate-entry-exit.module';
 
 const appRoutes: Routes = [
@@ -98,10 +99,11 @@ const appRoutes: Routes = [
     ],
     providers: [
         DatePipe,
+        WINDOW_PROVIDERS,
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
         { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
     ],
     bootstrap: [AppComponent],
     entryComponents: [NotificationDialogComponent]
 })
-export class AppModule {}
+export class AppModule { }

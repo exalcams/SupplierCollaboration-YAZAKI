@@ -8,11 +8,12 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 import { navigation } from 'app/navigation/navigation';
 import { Router } from '@angular/router';
 import { AuthService } from 'app/services/auth.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { MasterService } from 'app/services/master.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { AuthenticationDetails, UserNotification } from 'app/models/master';
+import { AuthenticationDetails, UserNotification, ChangePassword } from 'app/models/master';
+import { ChangePassDialogComponent } from './change-pass-dialog/change-pass-dialog.component';
 
 @Component({
     selector: 'toolbar',
@@ -54,6 +55,7 @@ export class ToolbarComponent implements OnInit, OnDestroy, OnChanges {
         private _router: Router,
         private _authService: AuthService,
         private _compiler: Compiler,
+        public dialog: MatDialog,
         public snackBar: MatSnackBar,
         private _masterService: MasterService
     ) {
@@ -134,9 +136,9 @@ export class ToolbarComponent implements OnInit, OnDestroy, OnChanges {
         if (retrievedObject) {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
             this.CurrentLoggedInUser = this.authenticationDetails.displayName;
-            if (this.authenticationDetails.profile && this.authenticationDetails.profile !== 'Empty') {
-                this.CurrentLoggedInUserProfile = this.authenticationDetails.profile;
-            }
+            // if (this.authenticationDetails.profile && this.authenticationDetails.profile !== 'Empty') {
+            //     this.CurrentLoggedInUserProfile = this.authenticationDetails.profile;
+            // }
         }
 
         // Getting Notification
@@ -254,6 +256,33 @@ export class ToolbarComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ChangePasswordClick(): void {
-        this._router.navigate(['auth/changePassword']);
+        // this._router.navigate(['auth/changePassword']);
+        const dialogConfig: MatDialogConfig = {
+            data: null,
+            panelClass: 'change-pass-dialog'
+        };
+        const dialogRef = this.dialog.open(ChangePassDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(
+            result => {
+                if (result) {
+                    const changePassword = result as ChangePassword;
+                    changePassword.UserID = this.authenticationDetails.userID;
+                    changePassword.UserName = this.authenticationDetails.userName;
+                    this._authService.ChangePassword(changePassword).subscribe(
+                        (res) => {
+                            console.log(res);
+                            this.notificationSnackBarComponent.openSnackBar('Password updated successfully, please log with new password', SnackBarStatus.success);
+                            localStorage.removeItem('authorizationData');
+                            localStorage.removeItem('menuItemsData');
+                            this._compiler.clearCache();
+                            this._router.navigate(['auth/login']);
+                        }, (err) => {
+                            this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+                            // this._router.navigate(['/auth/login']);
+                            console.error(err);
+                        }
+                    );
+                }
+            });
     }
 }

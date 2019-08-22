@@ -30,7 +30,6 @@ export class UserMainContentComponent implements OnInit, OnChanges {
   notificationSnackBarComponent: NotificationSnackBarComponent;
   baseAddress: string;
   authenticationDetails: AuthenticationDetails;
-  MenuItems: string[];
   isVendor: boolean;
   constructor(private _masterService: MasterService,
     private _router: Router,
@@ -72,11 +71,6 @@ export class UserMainContentComponent implements OnInit, OnChanges {
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-      this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
-      if (this.MenuItems.indexOf('User') < 0) {
-        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
-        this._router.navigate(['/auth/login']);
-      }
     } else {
       this._router.navigate(['/auth/login']);
     }

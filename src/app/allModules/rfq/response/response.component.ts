@@ -21,8 +21,8 @@ import { Location } from '@angular/common';
   styleUrls: ['./response.component.scss']
 })
 export class ResponseComponent implements OnInit {
-
   authenticationDetails: AuthenticationDetails;
+  MenuItems: string[];
   CurrentUserName: string;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
@@ -70,6 +70,11 @@ export class ResponseComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.CurrentUserName = this.authenticationDetails.userName;
+      this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
+      if (this.MenuItems.indexOf('RFQResponse') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
+        this._router.navigate(['/auth/login']);
+      }
     } else {
       this._router.navigate(['/auth/login']);
     }

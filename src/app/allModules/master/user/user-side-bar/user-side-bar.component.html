@@ -1,47 +1,60 @@
 <div class="sidenav-header">
-  <mat-toolbar>
-      <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
-          <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
-              <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
-                  <mat-icon>search</mat-icon>
-                  <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
-              </div>
-          </div>
-          <div fxFlex fxLayout="row" fxLayoutAlign="end center">
-                  <button class="mat-mini-fab mat-accent" (click)="clearUser()">
-                      <span class="mat-button-wrapper">
-                          <mat-icon>add_outline</mat-icon>
-                      </span>
-                  </button>
-              </div>
-      </mat-toolbar-row>
-  </mat-toolbar>
+    <mat-toolbar>
+        <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
+                </div>
+            </div>
+            <div fxFlex fxLayout="row" fxLayoutAlign="end center">
+                <button class="mat-mini-fab mat-accent" (click)="clearUser()">
+                    <span class="mat-button-wrapper">
+                        <mat-icon>add_outline</mat-icon>
+                    </span>
+                </button>
+            </div>
+        </mat-toolbar-row>
+    </mat-toolbar>
 </div>
 <div class="sidenav-content" fusePerfectScrollbar fxFlex>
-  <div *fuseIfOnDom [@animateStagger]="{value:'50'}">
-      <div class="chat-list" fxLayout="column">
-          <!-- <div matSubheader style="background-color:#039be5">
-              Apps
-          </div> -->
-          <button mat-button class="contact" *ngFor="let usr of AllUsers | filter: searchText" (click)="loadSelectedUser(usr)"
-              ngClass="{'unread':contact.unread}" [@animate]="{value:'*',params:{y:'100%'}}" [class.borderLeft]="selectID==usr.UserID">
-              <div fxLayout="row" fxLayoutAlign="start center">
-                  <div fxLayout="row" fxFlex>
-                      <div class="" fxFlex fxLayout="column" fxLayoutAlign="center start">
-                          <div class="contact-name">{{usr.UserName}}</div>
-                      </div>
-                      <div fxLayout="column" fxLayoutAlign="center end">
-                          <div class="contact-last-message-time">
-                              {{usr.CreatedOn | date}}
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </button>
-      </div>
-      <div *ngIf="(AllUsers | filter: searchText).length === 0" class="no-results-message">
-          No results..
-      </div>
-  </div>
+    <div *ngFor="let usr of AllUsers | filter: searchText">
+        <div [attr.aria-label]="usr.UserName">
+            <div fxLayout="row" fxLayoutAlign="start center" class="side-bar-items" matRipple
+                (click)="loadSelectedUser(usr)" [class.borderLeft]="selectID==usr.UserID">
+                <div fxFlex="50%" fxLayoutAlign="start center">
+                    {{usr.UserName}}
+                </div>
+                <div fxFlex="50%" fxLayoutAlign="end center">
+                    {{usr.CreatedOn | date}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="(AllUsers | filter: searchText).length === 0" class="no-results-message">
+        No results..
+    </div>
+    <!-- <div *fuseIfOnDom [@animateStagger]="{value:'50'}">
+        <div class="chat-list" fxLayout="column">
+            <button mat-button class="contact" *ngFor="let usr of AllUsers | filter: searchText"
+                (click)="loadSelectedUser(usr)" ngClass="{'unread':contact.unread}"
+                [@animate]="{value:'*',params:{y:'100%'}}" [class.borderLeft]="selectID==usr.UserID">
+                <div fxLayout="row" fxLayoutAlign="start center">
+                    <div fxLayout="row" fxFlex>
+                        <div class="" fxFlex fxLayout="column" fxLayoutAlign="center start">
+                            <div class="contact-name">{{usr.UserName}}</div>
+                        </div>
+                        <div fxLayout="column" fxLayoutAlign="center end">
+                            <div class="contact-last-message-time">
+                                {{usr.CreatedOn | date}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </button>
+        </div>
+        <div *ngIf="(AllUsers | filter: searchText).length === 0" class="no-results-message">
+            No results..
+        </div>
+    </div> -->
 </div>
-
