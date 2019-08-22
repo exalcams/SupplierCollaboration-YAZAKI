@@ -51,7 +51,7 @@ export class AuthenticationDetails {
     userRole: string;
     // vendorCode: string;
     menuItemNames: string;
-    profile: string;
+    // profile: string;
     refreahToken: string;
     expires: string;
     issued: string;

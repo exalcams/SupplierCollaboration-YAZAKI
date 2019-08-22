@@ -45,9 +45,9 @@
         </mat-form-field>
 
         <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center">
-          <a class="forgot-password" [routerLink]="'/auth/linkForgotPassword'">
+          <span class="forgot-password" (click)="OpenForgetPasswordLinkDialog()">
             Forgot Password?
-          </a>
+          </span>
         </div>
 
         <button mat-raised-button color="accent" class="submit-button" aria-label="LOGIN" (click)="LoginClicked()">

@@ -21,7 +21,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
     CurrentLoggedInUser: string;
     CurrentLoggedInUserProfile: string;
     CurrentLoggedInUserEmailAddress: string;
-    isShowIcon:boolean;
+    isShowIcon: boolean;
 
     // Private
     private _fusePerfectScrollbar: FusePerfectScrollbarDirective;
@@ -46,7 +46,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
         this.CurrentLoggedInUser = 'Support';
         this.CurrentLoggedInUserEmailAddress = 'support@exalca.com';
         this.CurrentLoggedInUserProfile = 'assets/images/avatars/support.png';
-        this.isShowIcon=true;
+        this.isShowIcon = true;
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -137,9 +137,9 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
             this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
             this.CurrentLoggedInUser = this.authenticationDetails.displayName;
             this.CurrentLoggedInUserEmailAddress = this.authenticationDetails.emailAddress;
-            if (this.authenticationDetails.profile && this.authenticationDetails.profile !== 'Empty') {
-                this.CurrentLoggedInUserProfile = this.authenticationDetails.profile;
-            }
+            // if (this.authenticationDetails.profile && this.authenticationDetails.profile !== 'Empty') {
+            //     this.CurrentLoggedInUserProfile = this.authenticationDetails.profile;
+            // }
         }
     }
 
@@ -171,14 +171,14 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy {
     toggleSidebarFolded(): void {
         // if(this.isShowIcon=false){
         //     this.isShowIcon=true;
-         this._fuseSidebarService.getSidebar('navbar').toggleFold();
+        this._fuseSidebarService.getSidebar('navbar').toggleFold();
 
-           //console.log(test.folded());
+        //console.log(test.folded());
         // }
         // else{
         //     this.isShowIcon=false;
         //     this._fuseSidebarService.getSidebar('navbar').toggleFold();
         // }
-        
+
     }
 }

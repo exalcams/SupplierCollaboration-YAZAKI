@@ -16,8 +16,8 @@ import { Guid } from 'guid-typescript';
   styleUrls: ['./purchase-requisition-vendor.component.scss']
 })
 export class PurchaseRequisitionVendorComponent implements OnInit {
-
   authenticationDetails: AuthenticationDetails;
+  MenuItems: string[];
   CurrentUserName: string;
   CurrentUserID: Guid;
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -48,6 +48,11 @@ export class PurchaseRequisitionVendorComponent implements OnInit {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.CurrentUserName = this.authenticationDetails.userName;
       this.CurrentUserID = this.authenticationDetails.userID;
+      this.MenuItems = this.authenticationDetails.menuItemNames.split(',')
+      if (this.MenuItems.indexOf('PurchaseRequisitionVendor') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
+        this._router.navigate(['/auth/login']);
+      }
     } else {
       this._router.navigate(['/auth/login']);
     }

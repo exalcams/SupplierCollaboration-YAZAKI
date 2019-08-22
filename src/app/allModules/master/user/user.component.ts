@@ -20,12 +20,14 @@ export class UserComponent implements OnInit {
   AllUsers: UserWithRole[] = [];
   SelectedUser: UserWithRole;
   authenticationDetails: AuthenticationDetails;
+  MenuItems: string[];
+
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
 
   constructor(private _fuseConfigService: FuseConfigService,
-    private _masterService: MasterService, 
-    private _router: Router, 
+    private _masterService: MasterService,
+    private _router: Router,
     public snackBar: MatSnackBar) {
     this.authenticationDetails = new AuthenticationDetails();
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
@@ -38,15 +40,20 @@ export class UserComponent implements OnInit {
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
+      if (this.MenuItems.indexOf('User') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
+        this._router.navigate(['/auth/login']);
+      }
       this.GetAllUsers();
     } else {
       this._router.navigate(['/auth/login']);
     }
     this._fuseConfigService.config
-    // .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((config) => {
+      // .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((config) => {
         this.BGClassName = config;
-    });
+      });
   }
 
   GetAllUsers(): void {
@@ -59,7 +66,8 @@ export class UserComponent implements OnInit {
       (err) => {
         console.error(err);
         this.IsProgressBarVisibile = false;
-        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);      }
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
     );
   }
   OnUserSelectionChanged(selectedUser: UserWithRole): void {

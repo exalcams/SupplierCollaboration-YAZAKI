@@ -20,6 +20,7 @@ export class RoleComponent implements OnInit {
   AllRoles: RoleWithMenuApp[] = [];
   SelectedRole: RoleWithMenuApp;
   authenticationDetails: AuthenticationDetails;
+  MenuItems: string[];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
   constructor(private _fuseConfigService: FuseConfigService,
@@ -32,11 +33,15 @@ export class RoleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     // Retrive authorizationData
     const retrievedObject = localStorage.getItem('authorizationData');
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+      this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
+      if (this.MenuItems.indexOf('Role') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
+        this._router.navigate(['/auth/login']);
+      }
       this.GetAllRoles();
     } else {
       this._router.navigate(['/auth/login']);

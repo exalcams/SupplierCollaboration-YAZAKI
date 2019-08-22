@@ -1,10 +1,9 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { AuthService } from 'app/services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Guid } from 'guid-typescript';
 import { MatSnackBar } from '@angular/material';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { CustomValidator } from 'app/shared/custom-validator';
@@ -68,7 +67,6 @@ export class ForgotPasswordComponent implements OnInit {
     this.resetPasswordForm.reset();
     this.resetPasswordForm.markAsUntouched();
     Object.keys(this.resetPasswordForm.controls).forEach(key => {
-      const control = this.resetPasswordForm.get(key);
       // control.setErrors(null);
       // this.menuAppMainFormGroup.get(key).markAsUntouched();
       // this.menuAppMainFormGroup.get(key).updateValueAndValidity();
@@ -84,10 +82,10 @@ export class ForgotPasswordComponent implements OnInit {
       this.forgotPassword.Token = this._activatedRoute.snapshot.queryParamMap.get('token');
       this.forgotPassword.NewPassword = this.resetPasswordForm.get('newPassword').value;
       this._authService.ForgotPassword(this.forgotPassword).subscribe(
-        (data) => {
+        () => {
           this.ResetControl();
           this.IsProgressBarVisibile = false;
-          this.notificationSnackBarComponent.openSnackBar('Password changed successfully', SnackBarStatus.success);
+          this.notificationSnackBarComponent.openSnackBar('Password resetted successfully', SnackBarStatus.success);
           this._router.navigate(['auth/login']);
         },
         (err) => {

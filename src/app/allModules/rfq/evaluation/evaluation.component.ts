@@ -19,6 +19,7 @@ import { RFQAllocationView } from 'app/models/rfq.model';
 })
 export class EvaluationComponent implements OnInit {
   authenticationDetails: AuthenticationDetails;
+  MenuItems: string[];
   CurrentUserName: string;
   SelectedPurchaseRequisitionID: number;
   SelectedRFQStatus = '';
@@ -51,6 +52,11 @@ export class EvaluationComponent implements OnInit {
       this.SelectedPurchaseRequisitionID = CurrentPurchaseRequisition.PurchaseRequisitionID;
       this.SelectedRFQID = CurrentPurchaseRequisition.RFQID;
       this.SelectedRFQStatus = CurrentPurchaseRequisition.RFQStatus;
+      this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
+      if (this.MenuItems.indexOf('RFQEvaluation') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
+        this._router.navigate(['/auth/login']);
+      }
     } else {
       this._router.navigate(['/rfq/publish']);
     }
