@@ -184,7 +184,8 @@ export class MasterService {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
         })
-      });
+      })
+      .pipe(catchError(this.errorHandler));
   }
 
   GetAllRoles(): Observable<RoleWithMenuApp[] | string> {
