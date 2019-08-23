@@ -19,7 +19,7 @@
 </div>
 <div class="sidenav-content" fusePerfectScrollbar fxFlex>
     <div *ngFor="let rol of AllRoles | filter: searchText">
-        <div [attr.aria-label]="rol.RoleName">
+        <div *ngIf="rol.RoleName!='Administrator'" [attr.aria-label]="rol.RoleName">
             <div fxLayout="row" fxLayoutAlign="start center" class="side-bar-items" matRipple
                 (click)="loadSelectedRole(rol)" [class.borderLeft]="selectID==rol.RoleID">
                 <div fxFlex="50%" fxLayoutAlign="start center">

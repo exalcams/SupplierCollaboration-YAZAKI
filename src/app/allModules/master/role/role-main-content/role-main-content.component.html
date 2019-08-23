@@ -9,7 +9,7 @@
         Name required</mat-error>
     </mat-form-field>
   </div>
-  <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" *ngIf="roleMainFormGroup.get('roleName').value!=='Administrator'">
+  <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto">
     <mat-form-field class="p-12" fxFlex="100">
       <mat-select placeholder="App Name" formControlName="menuAppIDList" multiple (selectionChange)="OnAppNameChanged()">
         <mat-option *ngFor="let mp of AllMenuApps" [value]="mp.MenuAppID">{{mp.MenuAppName}}</mat-option>
@@ -27,12 +27,11 @@
       Clear
     </button>
     <button mat-raised-button color="warn" type="button" (click)="DeleteClicked()" *ngIf="role.RoleID"
-      [disabled]="roleMainFormGroup.get('roleName').value==='Administrator'"
       style="margin-right:10px">
       Delete
     </button>
     <button mat-raised-button color="accent" type="button" (click)="SaveClicked()"
-      [disabled]="roleMainFormGroup.get('roleName').value==='Administrator'">
+      >
       {{role.RoleID?'Update':'Create'}}
     </button>
   </div>
