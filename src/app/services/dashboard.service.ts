@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { PO_Notifications, DashboardStatus, PO_DeliveryStatus, PO_PurchaseOrderDetails, POView, PO_OrderAcknowledgement, PO_OrderLookUpDetails } from 'app/models/dashboard';
 import { catchError } from 'rxjs/operators';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { AttachmentDetails } from 'app/allModules/orderacknowledgment/orderacknowledgment/orderacknowledgment.component';
 import { Auxiliary, ASN } from 'app/models/asn';
 
@@ -51,8 +51,24 @@ export class DashboardService {
     // alert(PO_Id);
     return this._httpClient.get<PO_OrderLookUpDetails>(`${this.baseAddress}api/DashBoardController/GetPOOrderLookUpItemDetails?PO_Id=${PO_Id}&Item=${Item}`).pipe(catchError(this.errorHandler));
   }
-  GetAttachmentViewsByAppID(APPID: number, APPNumber: number): Observable<AttachmentDetails[] | string> {
-    return this._httpClient.get<AttachmentDetails[]>(`${this.baseAddress}api/DashBoardController/GetAttachmentViewsByAppID?APPID=${APPID}&APPNumber=${APPNumber}`)
+
+  CreateOrderAcknowledgement(Acknowledgement: PO_OrderAcknowledgement): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/DashBoardController/CreateOrderAcknowledgement`, Acknowledgement)
+      .pipe(catchError(this.errorHandler));
+  }
+  // UpdateOrderAcknowledgement(asn: PO_OrderAcknowledgement): Observable<any> {
+  //   return this._httpClient.post<any>(`${this.baseAddress}api/DashBoardController/UpdateOrderAcknowledgement`,
+  //     asn,
+  //     {
+  //       headers: new HttpHeaders({
+  //         'Content-Type': 'application/json'
+  //       })
+  //     })
+  //     .pipe(catchError(this.errorHandler));
+  // }
+
+  GetAttachmentViewsByAppID(APPID: number, item: string, PO: string): Observable<AttachmentDetails[] | string> {
+    return this._httpClient.get<AttachmentDetails[]>(`${this.baseAddress}api/DashBoardController/GetAttachmentViewsByAppID?APPID=${APPID}&item=${item}&PO=${PO}`)
       .pipe(catchError(this.errorHandler));
   }
   AddOrderAcknowledgementAttachment(auxiliary: Auxiliary, selectedFiles: File[]): Observable<any> {
@@ -64,6 +80,7 @@ export class DashboardService {
     }
     formData.append('APPID', auxiliary.APPID.toString());
     formData.append('APPNumber', auxiliary.APPNumber.toString());
+    formData.append('PO', auxiliary.HeaderNumber);
     formData.append('CreatedBy', auxiliary.CreatedBy);
     return this._httpClient.post<any>(`${this.baseAddress}api/DashBoardController/AddOrderAcknowledgementAttachment`,
       formData,

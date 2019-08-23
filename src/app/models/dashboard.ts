@@ -96,15 +96,16 @@ export class Acknowledgement {
     TransID: number;
     Acknowledgement_PO: string;
     Item: string;
+    ScheduleLine: string;
     Status: string;
     OrderedQuantity: string;
     AcknowledgedQuantity: string;
     OrderedDeliveryDate: string;
     AcknowledgedDeliveryDate: string;
-    CreatedBy_On: Date;
+    Created_On: Date;
     Approved_By: string;
     Approved_On: Date;
-    CreatedBy: string;
+    Created_By: string;
     IsActive: boolean;
 }
 export class PO_ScheduleLine {
@@ -132,12 +133,15 @@ export class PO_OrderAcknowledgement {
     Currency: string;
     Buyer: string;
     BuyerPhNo: string;
-  //  POItemList: PO_Item[];
-    // AcknowledgementDetails: Acknowledgement[];
+    Status:string;
+    Remarks:string;
+    //  POItemList: PO_Item[];
+    AcknowledgementDetails: Acknowledgement[];
     POOrderScheduleDetails: PO_ScheduleLine[];
     POOrderScheduleLine: POOrderScheduleLine[];
 }
 export class POOrderScheduleLine {
+    TransID: number;
     PO: string;
     Item: string;
     ScheduleLine: string;
@@ -149,4 +153,10 @@ export class POOrderScheduleLine {
     AcceptedQuantity: string;
     UOM: string;
     NetPrice: string;
+    Status: string;
+    Created_On: Date;
+    Approved_On: Date;
+    Approved_By: string;
+    Created_By: string;
+    IsActive: string;
 }
