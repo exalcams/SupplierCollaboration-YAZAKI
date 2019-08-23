@@ -180,8 +180,8 @@
                   <div fxFlex="15" fxLayoutAlign="end start">
                     Buyer :
                   </div>
-                  <div fxFlex="25" fxLayoutAlign="start center">
-                    {{AcknowledgementDetails.Buyer}}
+                  <div fxFlex="25"  fxLayoutAlign="start center">
+                  <span style="margin-top: -4px;">  {{AcknowledgementDetails.Buyer}}</span> 
                   </div>
                   <div fxFlex="15" fxLayoutAlign="end start">
                     <mat-icon>phone_iphone</mat-icon> :
@@ -266,7 +266,7 @@
                     <ng-container matColumnDef="AcceptedQuantity">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Accepted Quantity</th>
                       <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                        <input matInput formControlName="AcceptedQuantity">
+                        <input matInput formControlName="AcceptedQuantity" style="text-align: right">
                         <span class="pl-4 errorClass"
                           *ngIf="OrderAcknowlegmentGroup.get('POOrderScheduleLine').controls[index].get('AcceptedDate').touched && 
                           OrderAcknowlegmentGroup.get('POOrderScheduleLine').controls[index].get('AcceptedDate').hasError('required')">

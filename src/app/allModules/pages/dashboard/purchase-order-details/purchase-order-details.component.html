@@ -143,7 +143,7 @@
                 {{POPurchaseOrderDetails.PODate}}
               </div>
             </div>
-            <div class="row" style="margin-top: 25px" fxLayoutAlign="start">
+            <div class="row" style="margin-top: 10px" fxLayoutAlign="start">
               <div fxFlex="15" style="text-align: right">
                 Company Code :
               </div>
@@ -163,8 +163,8 @@
                 {{POPurchaseOrderDetails.Buyer}} (ANZ)
               </div>
             </div>
-            <div style="margin-top: 30px">
-              <strong>Item Details</strong>
+            <div style="margin-top: 10px">
+              <strong style="margin-left: 19px">Item Details</strong>
               <mat-divider [inset]="true"></mat-divider>
               <div style="margin-top: 20px;">
                 <mat-card fxFlex="50">
@@ -294,7 +294,7 @@
                         </table>
                       </div>
                     </mat-tab>
-                    <mat-tab matTooltip="Goods Reciept Note" label="GRT">
+                    <mat-tab matTooltip="Goods Reciept Note" label="GRN">
                       <div class="p-12">
                         <table mat-table [dataSource]="PO_GRNList">
                           <ng-container matColumnDef="Item">
