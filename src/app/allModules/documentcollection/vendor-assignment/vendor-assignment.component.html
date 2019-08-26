@@ -1,8 +1,7 @@
 <div id="chat" class=" page-layout carded fullwidth" fusePerfectScrollbar>
   <div class="top-bg" [ngClass]="BGClassName?.layout?.toolbar?.background"></div>
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
-    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center"
-      fxLayoutGap="10px" fxLayoutGap.xs="10">
+    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
       <div fxLayout class="layoutclass">
         <div fxFlex fxLayout="column">
           <div fxFlex>
@@ -124,52 +123,59 @@
               <span class="boldClass">Vendor Assignment</span>
               <div class="borderTop" style="margin-top: 15px;margin-right: -9px;margin-left: -24px">
               </div>
-              <div fxLayout class="my-4 mt-24">
-                <div fxFlex>
-                  <div class="pt-8 pr-8">
+              <form [formGroup]="vendorAssignmentForm">
+                <div fxLayout class="my-4 mt-24">
+                  <div fxFlex="10" class="pt-8 pr-8" fxLayoutAlign="end start">
                     <span style="font-size: 13px;">Vendor ID</span>
                   </div>
-                  <mat-form-field style="max-width: 140px" appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
-                </div>
-                <div fxFlex>
-                  <div class="pt-8 pr-8">
-                    <span style="font-size: 13px;">Vendor Name</span>
+                  <div fxFlex="10" fxLayoutAlign="start center">
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="vendorID">
+                    </mat-form-field>
                   </div>
-                  <mat-form-field style="max-width: 140px" appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
-                </div>
-                <div fxFlex>
-                  <div class="pt-8 pr-8">
-                    <span style="font-size: 13px;">GST No.</span>
+                  <div fxFlex>
+                    <div class="pt-8 pr-8">
+                      <span style="font-size: 13px;">Vendor Name</span>
+                    </div>
+                    <mat-form-field style="max-width: 140px" appearance="outline">
+                      <input matInput formControlName="vendorName">
+                    </mat-form-field>
                   </div>
-                  <mat-form-field style="max-width: 140px" appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
-                </div>
-                <div fxFlex>
-                  <div class="pt-8 pr-8">
-                    <span style="font-size: 13px;">State</span>
+                  <div fxFlex>
+                    <div class="pt-8 pr-8">
+                      <span style="font-size: 13px;">GST No.</span>
+                    </div>
+                    <mat-form-field style="max-width: 140px" appearance="outline">
+                      <input matInput formControlName="gstNo">
+                    </mat-form-field>
                   </div>
-                  <mat-form-field style="max-width: 140px" appearance="outline">
-                    <input matInput>
-                  </mat-form-field>
+                  <div fxFlex>
+                    <div class="pt-8 pr-8">
+                      <span style="font-size: 13px;">State</span>
+                    </div>
+                    <mat-form-field style="max-width: 140px" appearance="outline">
+                      <input matInput formControlName="state">
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex>
+                    <button [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button>
+                      Search
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <div fxLayout FxLayoutAlign="center">
-                <div fxFlex></div>
-                <div fxFlex>
-                  <button [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button>
-                    Search
-                  </button>
+                <div fxLayout FxLayoutAlign="center">
+                  <div fxFlex></div>
+                  <div fxFlex>
+                    <button [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button>
+                      Search
+                    </button>
+                  </div>
+                  <div fxFlex></div>
                 </div>
-                <div fxFlex></div>
-              </div>
+              </form>
               <div class="mt-12 borderTop" style="margin-right: 150px;margin-left: 120px;"></div>
               <div fxLayout class="m-8 mt-16">
-                <div fxFlex class="boldClass" style="color: #4a77fb" >VendorList</div>
+                <div fxFlex class="boldClass" style="color: #4a77fb">VendorList</div>
                 <div fxFlex align="end">
                   <button class="blueText" mat-stroked-button>
                     <mat-icon>add_circle_outline</mat-icon>
@@ -178,15 +184,7 @@
                 </div>
               </div>
               <table mat-table [dataSource]="dataSource">
-                <ng-container matColumnDef="select">
-                  <th mat-header-cell *matHeaderCellDef>
-                  </th>
-                  <td mat-cell *matCellDef="let row">
-                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                      [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
-                    </mat-checkbox>
-                  </td>
-                </ng-container>
+
                 <ng-container matColumnDef="VendorName">
                   <th mat-header-cell *matHeaderCellDef>Vendor Name</th>
                   <td mat-cell *matCellDef="let element">{{element.VendorName}}</td>
