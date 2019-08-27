@@ -268,8 +268,8 @@
                       <mat-icon>clear</mat-icon>
                     </span>
                   </button> -->
-                  <div class="round ml-4" *ngIf="(SelectedRFQStatus | lowercase)!=='completed'">
-                    <mat-icon class="customIcon" (click)="RemoveSelectedVendor(sup.VendorCode)">clear</mat-icon>
+                  <div class="ml-4" *ngIf="(SelectedRFQStatus | lowercase)!=='completed'">
+                    <mat-icon class="customIcon" (click)="RemoveSelectedVendor(sup.VendorCode)">delete</mat-icon>
                   </div>
 
                 </div>

@@ -120,25 +120,34 @@
         </mat-card-header>
         <mat-divider></mat-divider>
         <mat-card-content>
-          <div fxLayout class="my-4 mt-24">
-            <div fxFlex="15" style="padding-top: 18px;" class="pr-8" fxLayoutAlign="end start">
-              <span style="font-size: 13px;">Purchase Order</span>
-            </div>
-            <div fxFlex="35" fxLayoutAlign="start center">
-              <mat-form-field appearance="outline">
-                <input matInput>
-              </mat-form-field>
-            </div>
+          <form name="form" [formGroup]="CAPAFormGroup">
+            <div fxLayout class="my-4 mt-24">
+              <div fxFlex="15" style="padding-top: 18px;" class="pr-8" fxLayoutAlign="end start">
+                <span style="font-size: 13px;">Title</span>
+                <span class="pl-4 errorClass" *ngIf="CAPAFormGroup.get('Title').touched && 
+                CAPAFormGroup.get('Title').hasError('required')">
+                  *
+                </span>
+              </div>
+              <div fxFlex="35" fxLayoutAlign="start center">
+                <mat-form-field appearance="outline">
+                  <input matInput formControlName="Title">
+                </mat-form-field>
+              </div>
 
-            <div fxFlex="8" style="padding-top: 18px;" class=" pr-8" fxLayoutAlign="start start">
-              <span style="font-size: 13px;text-align: right">Long Text</span>
-            </div>
-            <div fxFlex="35" fxLayoutAlign="start center">
-              <mat-form-field style="width: 100%" appearance="outline">
-                <textarea matInput></textarea>
-              </mat-form-field>
-            </div>
-            <!-- <div fxFlex>
+              <div fxFlex="8" style="padding-top: 18px;" class=" pr-8" fxLayoutAlign="start start">
+                <span style="font-size: 13px;text-align: right">Long Text</span>
+                <span class="pl-4 errorClass" *ngIf="CAPAFormGroup.get('LongText').touched && 
+                CAPAFormGroup.get('LongText').hasError('required')">
+                  *
+                </span>
+              </div>
+              <div fxFlex="35" fxLayoutAlign="start center">
+                <mat-form-field style="width: 100%" appearance="outline">
+                  <textarea matInput formControlName="LongText"></textarea>
+                </mat-form-field>
+              </div>
+              <!-- <div fxFlex>
               <div class="pt-8 pr-8">
                 <span style="font-size: 13px;">Title</span>
               </div>
@@ -154,19 +163,23 @@
                 <textarea matInput></textarea>
               </mat-form-field>
             </div> -->
-          </div>
-          <div fxLayout>
-            <div fxFlex="15" style="padding-top: 18px;" class="pr-8" fxLayoutAlign="end start">
-              <span style="font-size: 13px;">Due Date</span>
             </div>
-            <div fxFlex="35" fxLayoutAlign="start center">
-              <mat-form-field style="max-width: 205px;" appearance="outline">
-                <input matInput [matDatepicker]="picker">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
-            </div>
-            <!-- <div fxFlex>
+            <div fxLayout>
+              <div fxFlex="15" style="padding-top: 18px;" class="pr-8" fxLayoutAlign="end start">
+                <span style="font-size: 13px;">Due Date</span>
+                <span class="pl-4 errorClass" *ngIf="CAPAFormGroup.get('DueDate').touched && 
+                CAPAFormGroup.get('DueDate').hasError('required')">
+                  *
+                </span>
+              </div>
+              <div fxFlex="35" fxLayoutAlign="start center">
+                <mat-form-field style="max-width: 205px;" appearance="outline">
+                  <input matInput [matDatepicker]="picker" formControlName="DueDate">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <!-- <div fxFlex>
               <div class="pt-8 pr-8">
                 <span style="font-size: 13px;">Due Date</span>
               </div>
@@ -176,22 +189,24 @@
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
             </div> -->
-          </div>
-          <div fxLayout>
-            <div fxFlex="30" class="pr-8" fxLayoutAlign="end start">
-              Attachment(s):
-              <mat-icon style="color: #1b56ca;font-size: 17px;">attach_file</mat-icon>
-              (Transport-Bill)
             </div>
-          </div>
-          <div style="text-align: end">
-            <button mat-stroked-button>
-              Save
-            </button>
-            <button [ngClass]="BGClassName?.layout?.toolbar?.background" class=" ml-8" mat-raised-button>
-              Save & Assign
-            </button>
-          </div>
+            <div fxLayout>
+              <div fxFlex="30" class="pr-8" fxLayoutAlign="end start">
+                Attachment(s):
+                <mat-icon style="color: #1b56ca;font-size: 17px;">attach_file</mat-icon>
+                (Transport-Bill)
+              </div>
+            </div>
+            <div style="text-align: end">
+              <button mat-stroked-button (click)="SaveCAPA()">
+                Save
+              </button>
+              <button (click)="CreateAndAssignCAPA()" [ngClass]="BGClassName?.layout?.toolbar?.background" class="ml-8"
+                mat-raised-button>
+                Save & Assign
+              </button>
+            </div>
+          </form>
         </mat-card-content>
       </mat-card>
     </div>
@@ -202,69 +217,83 @@
             <span class="boldClass borderBottom">CAPA-ID : 0123456</span>
             <!-- <div class="borderTop" style="margin-top: 15px;margin-right: -9px;margin-left: -24px">
             </div> -->
-            <div fxLayout class="my-4 mt-24">
-              <div fxFlex>
-                <div class="pt-8 pr-8">
-                  <span style="font-size: 13px;">Vendor ID</span>
+            <form name="form" [formGroup]="VendorSearchFormGroup">
+              <div fxLayout class="mt-4 pl-24">
+                <div fxFlex>
+                  <div class="pt-8 pr-8">
+                    <span style="font-size: 13px;">Vendor ID</span>
+                  </div>
+                  <mat-form-field appearance="outline">
+                    <input matInput formControlName="VendorCode">
+                  </mat-form-field>
                 </div>
-                <mat-form-field style="max-width: 140px" appearance="outline">
-                  <input matInput>
-                </mat-form-field>
-              </div>
-              <div fxFlex>
-                <div class="pt-8 pr-8">
-                  <span style="font-size: 13px;">Vendor Name</span>
+                <div fxFlex>
+                  <div class="pt-8 pr-8">
+                    <span style="font-size: 13px;">Vendor Name</span>
+                  </div>
+                  <mat-form-field appearance="outline">
+                    <input matInput formControlName="VendorName">
+                  </mat-form-field>
                 </div>
-                <mat-form-field style="max-width: 140px" appearance="outline">
-                  <input matInput>
-                </mat-form-field>
-              </div>
-              <div fxFlex>
-                <div class="pt-8 pr-8">
-                  <span style="font-size: 13px;">GST No.</span>
+                <div fxFlex>
+                  <div class="pr-8">
+                    <span style="font-size: 13px;">GST No.</span>
+                  </div>
+                  <mat-form-field appearance="outline">
+                    <input matInput formControlName="GSTNumber">
+                  </mat-form-field>
                 </div>
-                <mat-form-field style="max-width: 140px" appearance="outline">
-                  <input matInput>
-                </mat-form-field>
               </div>
-              <div fxFlex>
-                <div class="pt-8 pr-8">
-                  <span style="font-size: 13px;">State</span>
+              <div fxLayout class="mb-4 pl-24">
+                <div fxFlex>
+                  <div class="pr-8">
+                    <span style="font-size: 13px;">State</span>
+                  </div>
+                  <mat-form-field appearance="outline">
+                    <input matInput formControlName="State">
+                  </mat-form-field>
                 </div>
-                <mat-form-field style="max-width: 140px" appearance="outline">
-                  <input matInput>
-                </mat-form-field>
               </div>
-            </div>
-            <div fxLayout FxLayoutAlign="center">
-              <div fxFlex></div>
-              <div fxFlex>
-                <button [ngClass]="BGClassName?.layout?.toolbar?.background"  mat-raised-button>
-                  Search
-                </button>
+              <div fxLayout FxLayoutAlign="center">
+                <div fxFlex></div>
+                <div fxFlex class="pl-120">
+                  <button [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="GetVendorsBasedOnConditions()"
+                    class="SearchBtnClass" mat-raised-button>
+                    Search
+                  </button>
+                </div>
+                <div fxFlex></div>
               </div>
-              <div fxFlex></div>
-            </div>
+            </form>
             <div class="mt-12 borderTop" style="margin-right: 150px;margin-left: 120px;"></div>
             <div fxLayout class="m-8 mt-16">
               <div fxFlex class="boldClass" style="color: #4a77fb">VendorList</div>
               <div fxFlex align="end">
-                <button class="blueText" mat-stroked-button>
+                <button class="blueText" (click)="AddSelectedVendors()" mat-stroked-button>
                   <mat-icon>add_circle_outline</mat-icon>
                   Add vendor
                 </button>
               </div>
             </div>
-            <table mat-table [dataSource]="dataSource">
+            <table mat-table [dataSource]="vendorDataSource">
               <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef>
                 </th>
                 <td mat-cell *matCellDef="let row">
+                  <!-- <mat-checkbox [checked]="selection.isSelected(row)" 
+                    (change)="CheckBoxEvent($event,row)">
+                    </mat-checkbox> -->
                   <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
                     [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
                   </mat-checkbox>
                 </td>
               </ng-container>
+
+              <ng-container matColumnDef="VendorCode">
+                <th mat-header-cell *matHeaderCellDef>Vendor ID</th>
+                <td mat-cell *matCellDef="let element">{{element.VendorCode}}</td>
+              </ng-container>
+
               <ng-container matColumnDef="VendorName">
                 <th mat-header-cell *matHeaderCellDef>Vendor Name</th>
                 <td mat-cell *matCellDef="let element">{{element.VendorName}}</td>
@@ -275,9 +304,9 @@
                 <td mat-cell *matCellDef="let element"> {{element.GSTNumber}} </td>
               </ng-container>
 
-              <ng-container matColumnDef="VendorType">
+              <ng-container matColumnDef="Type">
                 <th mat-header-cell *matHeaderCellDef>Vendor Type</th>
-                <td mat-cell *matCellDef="let element"> {{element.VendorType}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.Type}} </td>
               </ng-container>
 
               <ng-container matColumnDef="City">
@@ -285,8 +314,14 @@
                 <td mat-cell *matCellDef="let element"> {{element.City}} </td>
               </ng-container>
 
-              <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              <ng-container matColumnDef="State">
+                <th mat-header-cell *matHeaderCellDef>State</th>
+                <td mat-cell *matCellDef="let element"> {{element.State}} </td>
+              </ng-container>
+
+              <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
+                *matHeaderRowDef="vendorDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: vendorDisplayedColumns;"></tr>
             </table>
           </div>
           <div fxFlex="30" class="borderLeftClass pl-12" style="margin-top: -24px;margin-bottom: -21px">
@@ -295,16 +330,22 @@
               </button>
             </div>
             <div class="borderTop" style="margin-top: 10px;margin-right: 40px;margin-left: 40px"></div>
-            <div fxLayout fxLayoutAlign="center" class="borderClass m-8" *ngFor="let sup of SupplierInviteClassList">
-              <div fxFlex="15" class="borderRightClass pt-12">
-                <mat-radio-group aria-label="Select an option">
-                  <mat-radio-button value="1" class="mt-24 ml-16"></mat-radio-button>
-                </mat-radio-group>
+            <div fxLayout fxLayoutAlign="center" class="borderClass m-8" *ngFor="let sup of SelectedVendorList">
+              <div fxFlex="10" fxLayoutAlign="start center" class="borderRightClass pt-12">
+                <!-- <button class="mat-mini-fab mat-accent" (click)="RemoveSelectedVendor(sup.VendorCode)">
+                    <span class="mat-button-wrapper">
+                      <mat-icon>clear</mat-icon>
+                    </span>
+                  </button> -->
+                <div class="ml-4" *ngIf="(SelectedRFQStatus | lowercase)!=='completed'">
+                  <mat-icon class="customIcon" (click)="RemoveSelectedVendor(sup.VendorCode)">delete</mat-icon>
+                </div>
+
               </div>
-              <div fxFlex="85" class="p-12">
+              <div fxFlex="90" class="p-12">
                 <div class="boldClass">{{sup.VendorName}}</div>
                 <div>GST No : {{sup.GSTNumber}}</div>
-                <div>Vendor type : {{sup.VendorType}}</div>
+                <div>Vendor type : {{sup.Type}}</div>
                 <div>{{sup.City}}</div>
               </div>
             </div>
