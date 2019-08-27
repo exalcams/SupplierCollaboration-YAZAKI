@@ -52,11 +52,6 @@ export class EvaluationComponent implements OnInit {
       this.SelectedPurchaseRequisitionID = CurrentPurchaseRequisition.PurchaseRequisitionID;
       this.SelectedRFQID = CurrentPurchaseRequisition.RFQID;
       this.SelectedRFQStatus = CurrentPurchaseRequisition.RFQStatus;
-      this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
-      if (this.MenuItems.indexOf('RFQEvaluation') < 0) {
-        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
-        this._router.navigate(['/auth/login']);
-      }
     } else {
       this._router.navigate(['/rfq/publish']);
     }
@@ -70,6 +65,11 @@ export class EvaluationComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.CurrentUserName = this.authenticationDetails.userName;
+      this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
+      if (this.MenuItems.indexOf('RFQEvaluation') < 0) {
+        this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
+        this._router.navigate(['/auth/login']);
+      }
     } else {
       this._router.navigate(['/auth/login']);
     }
