@@ -15,9 +15,9 @@ export class PurchaseOrderDetailsComponent implements OnInit {
 
   displayedColumns: string[] = ['Item', 'Material', 'Description', 'PurchaseQuantity', 'OrderUnit', 'Currency'];
   displayedColumns1: string[] = ['Item', 'Description', 'ScheduleLine', 'DeliveryDate', 'ScheduleQuantity', 'UOM'];
-  ScheduleDisplayedColumns:string[]=['Item', 'Description', 'ScheduleLine', 'DeliveryDate', 'ScheduleQuantity', 'UOM'];
-  AdvanceShipmentDisplayedColumns:string[]=['Item', 'Material','Description', 'UOM','ShipmentQuantity','ASNStatus'];
-  GRNDisplayedColumns:string[]=['Item', 'Material','Description', 'UOM','PostingDate','DeliveredQuantity','Status'];
+  ScheduleDisplayedColumns: string[] = ['Item', 'Description', 'ScheduleLine', 'DeliveryDate', 'ScheduleQuantity', 'UOM'];
+  AdvanceShipmentDisplayedColumns: string[] = ['Item', 'Material', 'Description', 'UOM', 'ShipmentQuantity', 'ASNStatus'];
+  GRNDisplayedColumns: string[] = ['Item', 'Material', 'Description', 'UOM', 'PostingDate', 'DeliveredQuantity', 'Status'];
   POItemList: MatTableDataSource<PO_Item>;
   PO_ScheduleDetailsList: MatTableDataSource<PO_ScheduleDetails>;
   PO_AdvanceShipmentNotificationList: MatTableDataSource<PO_AdvanceShipmentNotification>;
@@ -36,19 +36,22 @@ export class PurchaseOrderDetailsComponent implements OnInit {
         if (data) {
           this.POPurchaseOrderDetails = <PO_PurchaseOrderDetails>data;
           this.POItemList = new MatTableDataSource(this.POPurchaseOrderDetails.POItemList);
-          console.log(this.POPurchaseOrderDetails)
+          if (this.POPurchaseOrderDetails.POItemList && this.POPurchaseOrderDetails.POItemList.length) {
+            this.Checked(this.POPurchaseOrderDetails.POItemList[0]);
+          }
+          // console.log(this.POPurchaseOrderDetails);
         }
       },
         (err) => {
           console.error(err);
-        })
-    })
+        });
+    });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
     this.selection = new SelectionModel(true, []);
-    this.PO_OrderLookUpDetails;
+    // this.PO_OrderLookUpDetails;
     this.PO_ScheduleDetailsList = new MatTableDataSource(this.PO_OrderLookUpDetails.PO_ScheduleDetails);
     this.PO_AdvanceShipmentNotificationList = new MatTableDataSource(this.PO_OrderLookUpDetails.PO_AdvanceShipmentNotification);
     this.PO_GRNList = new MatTableDataSource(this.PO_OrderLookUpDetails.PO_GRN);
@@ -62,7 +65,7 @@ export class PurchaseOrderDetailsComponent implements OnInit {
     // , { queryParams: { id: this.POId } }
 
   }
-  Checked(data) {
+  Checked(data): void {
     this.selectedPORow = data;
     this.dashboardService.GetPOOrderLookUpDetails(this.selectedPORow.PO_Item_PO, this.selectedPORow.Item).subscribe((data1) => {
       if (data1) {

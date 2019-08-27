@@ -960,6 +960,10 @@ export class ShipmentnotificationComponent implements OnInit {
         // const itemsShowed1 = this.ASNItemTable.nativeElement;
         // this._excelService.exportTableToExcel(itemsShowed1, 'ASN Item');
     }
+    BackToDashboard(): void {
+        this._router.navigate(['/dashboard']);
+        // { queryParams: { id: this.POId } }
+    }
 }
 
 export interface Shipment {
