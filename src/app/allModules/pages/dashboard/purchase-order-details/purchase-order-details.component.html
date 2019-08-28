@@ -276,6 +276,16 @@
                             <td mat-cell *matCellDef="let element"> {{element.ShipmentQuantity}} </td>
                           </ng-container>
 
+                          <ng-container matColumnDef="ShipId">
+                            <th mat-header-cell *matHeaderCellDef>ShipId</th>
+                            <td mat-cell *matCellDef="let element"> {{element.ShipmentId}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="CargoType">
+                            <th mat-header-cell *matHeaderCellDef>CargoType</th>
+                            <td mat-cell *matCellDef="let element"> {{element.CargoType}} </td>
+                          </ng-container>
+
                           <ng-container matColumnDef="ASNStatus">
                             <th mat-header-cell *matHeaderCellDef>ASNStatus</th>
                             <td mat-cell *matCellDef="let element">

@@ -1,5 +1,4 @@
 export class POView {
-
     PO: string;
     Item: string;
     PODate: Date;
@@ -78,7 +77,7 @@ export class PO_AdvanceShipmentNotification {
     ASNStatus: string;
     ShipmentQuantity: number;
     UOM: string;
-    cargoType: string;
+    CargoType: string;
 }
 export class PO_GRN {
     Item: string;
@@ -90,7 +89,6 @@ export class PO_GRN {
     PostingDate: Date;
     DeliveredQuantity: number;
     RejectQuantity: number;
-
 }
 export class Acknowledgement {
     TransID: number;
@@ -133,8 +131,8 @@ export class PO_OrderAcknowledgement {
     Currency: string;
     Buyer: string;
     BuyerPhNo: string;
-    Status:string;
-    Remarks:string;
+    Status: string;
+    Remarks: string;
     //  POItemList: PO_Item[];
     AcknowledgementDetails: Acknowledgement[];
     POOrderScheduleDetails: PO_ScheduleLine[];
