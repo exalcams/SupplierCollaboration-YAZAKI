@@ -83,9 +83,16 @@ body.theme-default .mat-radio-button.mat-accent .mat-radio-inner-circle {
   cursor: pointer;
   // color: white !important;
 }
+.errorClass {
+  color: red !important;
+}
 .round {
   height: 24px;
   width: 24px;
   background-color: #1565c0;
   border-radius: 25px;
+}
+.assignButton{
+  background-color: #d05a43 !important;
+  color: white !important;
 }

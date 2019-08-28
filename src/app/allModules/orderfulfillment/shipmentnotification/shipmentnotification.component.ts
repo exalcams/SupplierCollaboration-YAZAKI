@@ -4,7 +4,7 @@ import { MatTableDataSource, MatSort, MatDialogConfig, MatDialog, MatSnackBar, M
 import { SelectionModel } from '@angular/cdk/collections';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
-import { VendorLocation, ASN, ASNHeaderView, ASNItem, ASNPackageDetail, Auxiliary, POView } from 'app/models/asn';
+import { VendorLocation, ASN, ASNHeaderView, ASNItem, ASNPackageDetail, Auxiliary, POView, AcknowledgementView } from 'app/models/asn';
 import { ASNService } from 'app/services/asn.service';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
@@ -18,6 +18,7 @@ import { AuthenticationDetails, App } from 'app/models/master';
 import { MasterService } from 'app/services/master.service';
 import { Location } from '@angular/common';
 import { ExcelService } from 'app/services/excel.service';
+import { Acknowledgement } from 'app/models/dashboard';
 
 
 @Component({
@@ -51,6 +52,7 @@ export class ShipmentnotificationComponent implements OnInit {
     isDisable = true;
     ASNItemColumns: string[] = [
         'Item',
+        'ScheduleLine',
         'OrderedQuantity',
         'UOM',
         'ApprovedQuantity',
@@ -459,6 +461,7 @@ export class ShipmentnotificationComponent implements OnInit {
         ASNItemsFormArr.controls.forEach((x, i) => {
             const item: ASNItem = new ASNItem();
             item.Item = x.get('Item').value;
+            item.ScheduleLine = x.get('ScheduleLine').value;
             item.OrderedQuantity = x.get('OrderedQuantity').value;
             item.UOM = x.get('UOM').value;
             item.ApprovedQuantity = x.get('ApprovedQuantity').value;
@@ -670,17 +673,19 @@ export class ShipmentnotificationComponent implements OnInit {
             this.ASNFormGroup.get('ASN_Header_PO').disable();
             this.ASNFormGroup.get('ASN_Header_PO').patchValue(this.ASNClass.ASN_Header_PO);
             this.ASNClass.ASNItems = [];
-            const ASNIte = new ASNItem();
-            ASNIte.Item = this.SelectedPOItem;
-            ASNIte.MaterialDescription = SelectPOView.MaterialDescription;
-            ASNIte.OrderedQuantity = SelectPOView.OrderedQuantity;
-            ASNIte.UOM = SelectPOView.UnitOfMeasure;
-            this.ASNClass.ASNItems.push(ASNIte);
-            // this.ASNItemsDataSource = new MatTableDataSource(this.ASNClass.ASNItems);
             this.ClearFormArray(this.ASNItemsFormArray);
-            this.ASNClass.ASNItems.forEach(x => {
-                this.InsertASNItemsFormGroup(x);
-            });
+            this.GetAcknowledgementsByPOAndItem(this.SelectedPO, this.SelectedPOItem);
+            // const ASNIte = new ASNItem();
+            // ASNIte.Item = this.SelectedPOItem;
+            // ASNIte.MaterialDescription = SelectPOView.MaterialDescription;
+            // ASNIte.OrderedQuantity = SelectPOView.OrderedQuantity;
+            // ASNIte.UOM = SelectPOView.UnitOfMeasure;
+            // this.ASNClass.ASNItems.push(ASNIte);
+            // // this.ASNItemsDataSource = new MatTableDataSource(this.ASNClass.ASNItems);
+            // this.ClearFormArray(this.ASNItemsFormArray);
+            // this.ASNClass.ASNItems.forEach(x => {
+            //     this.InsertASNItemsFormGroup(x);
+            // });
 
         } else {
             this.GetASNByPO(this.SelectedPO, this.SelectedPOItem);
@@ -738,6 +743,7 @@ export class ShipmentnotificationComponent implements OnInit {
     InsertASNItemsFormGroup(item: ASNItem): void {
         const row = this._formBuilder.group({
             Item: [item.Item],
+            ScheduleLine: [item.ScheduleLine],
             OrderedQuantity: [item.OrderedQuantity],
             UOM: [item.UOM],
             ApprovedQuantity: [item.ApprovedQuantity],
@@ -842,6 +848,30 @@ export class ShipmentnotificationComponent implements OnInit {
             },
             (err) => {
                 console.log(err);
+            }
+        );
+    }
+
+    GetAcknowledgementsByPOAndItem(PO: string, Item: string): void {
+        this._asnService.GetAcknowledgementsByPOAndItem(PO, Item).subscribe(
+            (data) => {
+                if (data) {
+                    const AllAcknowledgements = data as AcknowledgementView[];
+                    AllAcknowledgements.forEach(x => {
+                        const ASNIte = new ASNItem();
+                        ASNIte.Item = this.SelectedPOItem;
+                        ASNIte.ScheduleLine = x.ScheduleLine;
+                        ASNIte.MaterialDescription = x.MaterialDescription;
+                        ASNIte.OrderedQuantity = x.OrderedQuantity;
+                        ASNIte.ApprovedQuantity = x.ApprovedQuantity;
+                        ASNIte.UOM = x.UOM;
+                        this.ASNClass.ASNItems.push(ASNIte);
+                        this.InsertASNItemsFormGroup(ASNIte);
+                    });
+                }
+            },
+            (err) => {
+                console.error(err);
             }
         );
     }
