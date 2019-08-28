@@ -47,7 +47,7 @@ export class EvaluationComponent implements OnInit {
     public snackBar: MatSnackBar,
   ) {
     const CurrentPurchaseRequisition = this._shareParameterService.GetPurchaseRequisition();
-    console.log(CurrentPurchaseRequisition);
+    // console.log(CurrentPurchaseRequisition);
     if (CurrentPurchaseRequisition) {
       this.SelectedPurchaseRequisitionID = CurrentPurchaseRequisition.PurchaseRequisitionID;
       this.SelectedRFQID = CurrentPurchaseRequisition.RFQID;

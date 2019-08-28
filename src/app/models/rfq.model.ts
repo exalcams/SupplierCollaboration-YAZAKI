@@ -128,3 +128,67 @@ export class RFQAllocationView {
     ModifiedOn?: Date;
     ModifiedBy: string;
 }
+
+
+export class RFQResponseHeader {
+    RFQID: number;
+    VendorID: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
+export class RFQResponseItem {
+    RFQID: number;
+    VendorID: string;
+    ItemID: number;
+    MaterialCode: string;
+    MaterialDescription: string;
+    OrderQuantity: number;
+    DelayDays: number;
+    UOM: string;
+    Price: number;
+    SupplierPartNumber: string;
+    Schedule: number;
+    NumberOfAttachments: number;
+    TechRating: string;
+    DeliveryDate?: Date;
+    SelfLifeDays: number;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
+export class RFQResponseView {
+    PurchaseRequisitionID: number;
+    RFQID: number;
+    VendorID: string;
+    RFQResponseItems: RFQResponseItemView[];
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
+export class RFQResponseItemView {
+    RFQID: number;
+    VendorID: string;
+    ItemID: number;
+    MaterialCode: string;
+    MaterialDescription: string;
+    OrderQuantity: number;
+    DelayDays: number;
+    UOM: string;
+    Price: number;
+    SupplierPartNumber: string;
+    Schedule: number;
+    NumberOfAttachments: number;
+    AttachmentNames: string[];
+    TechRating: string;
+    DeliveryDate?: Date;
+    SelfLifeDays: string;
+    APPID: number;
+}
+

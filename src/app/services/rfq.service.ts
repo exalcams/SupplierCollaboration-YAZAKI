@@ -5,7 +5,7 @@ import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { AttachmentDetails } from 'app/allModules/orderacknowledgment/orderacknowledgment/orderacknowledgment.component';
-import { RFQView, PurchaseRequisition, RFQAllocationView } from 'app/models/rfq.model';
+import { RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView } from 'app/models/rfq.model';
 import { Auxiliary } from 'app/models/asn';
 import { Guid } from 'guid-typescript';
 
@@ -112,4 +112,46 @@ export class RFQService {
             .pipe(catchError(this.errorHandler));
     }
 
+
+    CreateRFQResponse(RFQResponse: RFQResponseView): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}api/RFQ/CreateRFQResponse`,
+            RFQResponse,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+    UpdateRFQResponse(RFQResponse: RFQResponseView): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}api/RFQ/UpdateRFQResponse`,
+            RFQResponse,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+
+    AddRFQResponseAttachment(auxiliary: Auxiliary, selectedFiles: File[]): Observable<any> {
+        const formData: FormData = new FormData();
+        if (selectedFiles && selectedFiles.length) {
+            selectedFiles.forEach(x => {
+                formData.append(x.name, x, x.name);
+            });
+        }
+        formData.append('APPID', auxiliary.APPID.toString());
+        formData.append('HeaderNumber', auxiliary.HeaderNumber.toString());
+
+        return this._httpClient.post<any>(`${this.baseAddress}api/RFQ/AddRFQResponseAttachment`,
+            formData,
+            // {
+            //   headers: new HttpHeaders({
+            //     'Content-Type': 'application/json'
+            //   })
+            // }
+        ).pipe(catchError(this.errorHandler));
+
+    }
 }

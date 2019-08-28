@@ -35,6 +35,7 @@ export class ASN {
 export class ASNItem {
     TransID: number;
     Item: string;
+    ScheduleLine: string;
     MaterialDescription: string;
     OrderedQuantity: number;
     UOM: string;
@@ -107,6 +108,15 @@ export class POView {
     AcknowledgementStatus: string;
     ASNStatus: string;
 }
+export class AcknowledgementView {
+    PO: string;
+    Item: string;
+    ScheduleLine: string;
+    OrderedQuantity: number;
+    ApprovedQuantity: number;
+    UOM: string;
+    MaterialDescription: string;
+}
 export class ASNHeaderView {
     TransID: number;
     ASN_Header_PO: string;
@@ -121,8 +131,8 @@ export class Auxiliary {
     AttachmentNumber: number;
     AttachmentName: string;
     DocumentType: string;
-    IsHeaderExist:boolean;
-    HeaderNumber:string;
+    IsHeaderExist: boolean;
+    HeaderNumber: string;
     CreatedOn: Date;
     CreatedBy: string;
     ModifiedOn?: Date;

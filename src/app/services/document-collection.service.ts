@@ -23,12 +23,12 @@ export class DocumentCollectionService {
         return throwError(error.error || error.message || 'Server Error');
     }
 
-    CreateCAPA(capaHeader: CAPAHeader, file: File): Observable<any> {
+    CreateCAPA(capaHeader: CAPAHeader, CAPAAppID: number, file: File): Observable<any> {
         const formData: FormData = new FormData();
         if (file && file.name) {
             formData.append('uploadFile', file, file.name);
         }
-        formData.append('APPID', '4');
+        formData.append('APPID', CAPAAppID.toString());
         formData.append('Title', capaHeader.Title);
         formData.append('LongText', capaHeader.LongText);
         formData.append('DueDate', this._datePipe.transform(capaHeader.DueDate, 'yyyy-MM-dd'));
@@ -43,12 +43,12 @@ export class DocumentCollectionService {
         )
             .pipe(catchError(this.errorHandler));
     }
-    UpdateCAPA(capaHeader: CAPAHeader, file: File): Observable<any> {
+    UpdateCAPA(capaHeader: CAPAHeader,CAPAAppID: number, file: File): Observable<any> {
         const formData: FormData = new FormData();
         if (file && file.name) {
             formData.append('uploadFile', file, file.name);
         }
-
+        formData.append('APPID', CAPAAppID.toString());
         formData.append('Title', capaHeader.Title);
         formData.append('LongText', capaHeader.LongText);
         formData.append('DueDate', this._datePipe.transform(capaHeader.DueDate, 'yyyy-MM-dddd'));

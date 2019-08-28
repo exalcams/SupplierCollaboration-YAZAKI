@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { MatTableDataSource, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { AuthenticationDetails, Vendor, VendorSearchCondition } from 'app/models/master';
+import { AuthenticationDetails, Vendor, VendorSearchCondition, App } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,7 +27,10 @@ export class CapaAssignmentComponent implements OnInit {
   CAPAFormGroup: FormGroup;
   fileToUpload: File;
   fileToUploadList: File[] = [];
+  CAPAAppID: number;
   SelectedCAPAID: number;
+  ShowCAPAAllocation: boolean;
+  ShowCAPAAllocationTag: boolean;
   CAPAAllocations: CAPAAllocation[] = [];
   BGClassName: any;
   VendorSearchFormGroup: FormGroup;
@@ -50,6 +53,8 @@ export class CapaAssignmentComponent implements OnInit {
     this.CAPA = new CAPAHeader();
     this.conditions = new VendorSearchCondition();
     this.IsProgressBarVisibile = false;
+    this.ShowCAPAAllocation = false;
+    this.ShowCAPAAllocationTag = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
   }
 
@@ -80,8 +85,8 @@ export class CapaAssignmentComponent implements OnInit {
       State: [''],
       // Type: [''],
     });
-
-    this.GetAllVendors();
+    this.GetAppByName();
+    // this.GetAllVendors();
     this.isAllSelected();
     this.masterToggle();
     this.checkboxLabel();
@@ -97,14 +102,38 @@ export class CapaAssignmentComponent implements OnInit {
     Object.keys(this.CAPAFormGroup.controls).forEach(key => {
       this.CAPAFormGroup.get(key).markAsUntouched();
     });
+    this.VendorSearchFormGroup.reset();
+    Object.keys(this.VendorSearchFormGroup.controls).forEach(key => {
+      this.VendorSearchFormGroup.get(key).markAsUntouched();
+    });
     this.SelectedVendorList = [];
     this.ResetCheckbox();
-
+    if (!this.ShowCAPAAllocationTag) {
+      this.ShowCAPAAllocation = false;
+    }
+    this.fileToUploadList = [];
+    this.fileToUpload = null;
   }
   ResetCheckbox(): void {
     this.selection.clear();
-    this.vendorDataSource.data.forEach(row => this.selection.deselect(row));
+    if (this.vendorDataSource) {
+      this.vendorDataSource.data.forEach(row => this.selection.deselect(row));
+    }
+  }
 
+  GetAppByName(): void {
+    const AppName = 'CAPA';
+    this._masterService.GetAppByName(AppName).subscribe(
+      (data) => {
+        const ASNAPP = data as App;
+        if (ASNAPP) {
+          this.CAPAAppID = ASNAPP.AppID;
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
 
   GetAllVendors(): void {
@@ -167,10 +196,12 @@ export class CapaAssignmentComponent implements OnInit {
   }
 
   SaveCAPA(): void {
+    this.ShowCAPAAllocationTag = false;
     this.CreateCAPA();
   }
 
   CreateAndAssignCAPA(): void {
+    this.ShowCAPAAllocationTag = true;
     this.CreateCAPA();
   }
 
@@ -190,7 +221,7 @@ export class CapaAssignmentComponent implements OnInit {
               this.IsProgressBarVisibile = true;
               this.GetCAPAHeaderValues();
               this.CAPA.ModifiedBy = this.CurrentUserName;
-              this._documentCollectionService.UpdateCAPA(this.CAPA, this.fileToUpload).subscribe(
+              this._documentCollectionService.UpdateCAPA(this.CAPA, this.CAPAAppID, this.fileToUpload).subscribe(
                 (data) => {
                   this.IsProgressBarVisibile = false;
                   this.notificationSnackBarComponent.openSnackBar('CAPA details updated successfully', SnackBarStatus.success);
@@ -222,17 +253,22 @@ export class CapaAssignmentComponent implements OnInit {
               this.IsProgressBarVisibile = true;
               this.GetCAPAHeaderValues();
               this.CAPA.CreatedBy = this.CurrentUserName;
-              this._documentCollectionService.CreateCAPA(this.CAPA, this.fileToUpload).subscribe(
+              this._documentCollectionService.CreateCAPA(this.CAPA, this.CAPAAppID, this.fileToUpload).subscribe(
                 (data) => {
                   const CAPAID = data as number;
                   this.SelectedCAPAID = CAPAID;
                   this.IsProgressBarVisibile = false;
+                  if (this.ShowCAPAAllocationTag) {
+                    this.ShowCAPAAllocation = true;
+                    this.GetAllVendors();
+                  }
                   this.notificationSnackBarComponent.openSnackBar('CAPA details created successfully', SnackBarStatus.success);
                   this.ResetControl();
                 },
                 (err) => {
                   console.error(err);
                   this.IsProgressBarVisibile = false;
+                  this.ShowCAPAAllocation = false;
                   this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
                   // this.ResetControl();
                 }
@@ -296,8 +332,8 @@ export class CapaAssignmentComponent implements OnInit {
         (data) => {
           this.IsProgressBarVisibile = false;
           this.notificationSnackBarComponent.openSnackBar('Allocation created successfully', SnackBarStatus.success);
+          this.ShowCAPAAllocationTag = false;
           this.ResetControl();
-          this._router.navigate(['/CAPA/publish']);
         },
         (err) => {
           console.error(err);

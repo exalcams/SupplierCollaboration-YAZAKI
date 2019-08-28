@@ -4,8 +4,9 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { ASN, VendorLocation, ASNHeaderView, Auxiliary, POView } from 'app/models/asn';
+import { ASN, VendorLocation, ASNHeaderView, Auxiliary, POView, AcknowledgementView } from 'app/models/asn';
 import { AttachmentDetails } from 'app/allModules/orderacknowledgment/orderacknowledgment/orderacknowledgment.component';
+import { Acknowledgement } from 'app/models/dashboard';
 
 @Injectable({
     providedIn: 'root'
@@ -77,6 +78,10 @@ export class ASNService {
     }
     GetAcknowledgedPOByPO(PO: string, Item: string): Observable<POView | string> {
         return this._httpClient.get<POView>(`${this.baseAddress}api/ASN/GetAcknowledgedPOByPO?PO=${PO}&Item=${Item}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetAcknowledgementsByPOAndItem(PO: string, Item: string): Observable<AcknowledgementView[] | string> {
+        return this._httpClient.get<AcknowledgementView[]>(`${this.baseAddress}api/ASN/GetAcknowledgementsByPOAndItem?PO=${PO}&Item=${Item}`)
             .pipe(catchError(this.errorHandler));
     }
     GetASNByPO(PO: string, Item: string): Observable<ASN | string> {

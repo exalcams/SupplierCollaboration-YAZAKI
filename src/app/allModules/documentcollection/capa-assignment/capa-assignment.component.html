@@ -112,7 +112,7 @@
       </div>
     </div>
     <div fxFlex class="mt-20">
-      <mat-card class="my-12">
+      <mat-card class="my-12 p-12" *ngIf="!ShowCAPAAllocation">
         <mat-card-header>
           <mat-card-title>
             <span class="boldClass">CAPA-Assignment</span>
@@ -190,11 +190,16 @@
               </mat-form-field>
             </div> -->
             </div>
-            <div fxLayout>
-              <div fxFlex="30" class="pr-8" fxLayoutAlign="end start">
+            <div fxLayout class="mt-12">
+              <div fxFlex="20" class="pr-8" fxLayoutAlign="end start">
                 Attachment(s):
-                <mat-icon style="color: #1b56ca;font-size: 17px;">attach_file</mat-icon>
-                (Transport-Bill)
+                <mat-icon (click)="fileInput1.click()" class="customIcon">attach_file</mat-icon>
+                <!-- (Transport-Bill) -->
+              </div>
+              <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput($event)" />
+              <div fxFlex="80" fxLayoutAlign="start center">
+                <span
+                  *ngIf="fileToUploadList && fileToUploadList.length && fileToUpload && fileToUpload.name">{{fileToUpload.name}}</span>
               </div>
             </div>
             <div style="text-align: end">
@@ -211,10 +216,10 @@
       </mat-card>
     </div>
     <div>
-      <mat-card class="mt-10" style="margin-bottom: 15px;">
+      <mat-card *ngIf="ShowCAPAAllocation" class="mt-10" style="margin-bottom: 15px;">
         <div fxLayout="row">
           <div fxFlex="70" class="mr-8">
-            <span class="boldClass borderBottom">CAPA-ID : 0123456</span>
+            <span class="boldClass borderBottom">CAPA-ID : {{SelectedCAPAID}}</span>
             <!-- <div class="borderTop" style="margin-top: 15px;margin-right: -9px;margin-left: -24px">
             </div> -->
             <form name="form" [formGroup]="VendorSearchFormGroup">
@@ -236,7 +241,7 @@
                   </mat-form-field>
                 </div>
                 <div fxFlex>
-                  <div class="pr-8">
+                  <div class="pt-8 pr-8">
                     <span style="font-size: 13px;">GST No.</span>
                   </div>
                   <mat-form-field appearance="outline">
@@ -326,7 +331,8 @@
           </div>
           <div fxFlex="30" class="borderLeftClass pl-12" style="margin-top: -24px;margin-bottom: -21px">
             <div style="text-align: end;margin-top: 15px;">
-              <button class="ml-8" style="background-color: #d05a43 !important;color: white;" mat-raised-button>Assign
+              <button class="ml-8 assignButton" (click)="CreateCAPAAllocation()" mat-raised-button>
+                Assign
               </button>
             </div>
             <div class="borderTop" style="margin-top: 10px;margin-right: 40px;margin-left: 40px"></div>
@@ -337,7 +343,7 @@
                       <mat-icon>clear</mat-icon>
                     </span>
                   </button> -->
-                <div class="ml-4" *ngIf="(SelectedRFQStatus | lowercase)!=='completed'">
+                <div class="ml-4">
                   <mat-icon class="customIcon" (click)="RemoveSelectedVendor(sup.VendorCode)">delete</mat-icon>
                 </div>
 
@@ -353,6 +359,10 @@
         </div>
       </mat-card>
     </div>
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion1" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+    <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
+
   </div>
 
 </div>
