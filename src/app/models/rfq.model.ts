@@ -1,3 +1,5 @@
+import { Guid } from 'guid-typescript';
+
 export class PurchaseRequisition {
     PurchaseRequisitionID: number;
     PurchaseRequirement: string;
@@ -165,6 +167,7 @@ export class RFQResponseView {
     PurchaseRequisitionID: number;
     RFQID: number;
     VendorID: string;
+    UserID: Guid;
     RFQResponseItems: RFQResponseItemView[];
     IsActive: boolean;
     CreatedOn: Date;

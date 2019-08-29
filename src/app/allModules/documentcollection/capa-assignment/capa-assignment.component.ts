@@ -11,6 +11,7 @@ import { DocumentCollectionService } from 'app/services/document-collection.serv
 import { CAPAHeader, CAPAAllocation } from 'app/models/document-collection.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { MasterService } from 'app/services/master.service';
+import { Guid } from 'guid-typescript';
 
 @Component({
   selector: 'app-capa-assignment',
@@ -21,8 +22,10 @@ export class CapaAssignmentComponent implements OnInit {
   authenticationDetails: AuthenticationDetails;
   MenuItems: string[];
   CurrentUserName: string;
+  CurrentUserID: Guid;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
+  BGClassName: any;
   CAPA: CAPAHeader;
   CAPAFormGroup: FormGroup;
   fileToUpload: File;
@@ -32,7 +35,6 @@ export class CapaAssignmentComponent implements OnInit {
   ShowCAPAAllocation: boolean;
   ShowCAPAAllocationTag: boolean;
   CAPAAllocations: CAPAAllocation[] = [];
-  BGClassName: any;
   VendorSearchFormGroup: FormGroup;
   conditions: VendorSearchCondition;
   VendorList: Vendor[] = [];
@@ -63,6 +65,7 @@ export class CapaAssignmentComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.CurrentUserName = this.authenticationDetails.userName;
+      this.CurrentUserID = this.authenticationDetails.userID;
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
       if (this.MenuItems.indexOf('CAPACreation') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
@@ -220,7 +223,7 @@ export class CapaAssignmentComponent implements OnInit {
             if (result) {
               this.IsProgressBarVisibile = true;
               this.GetCAPAHeaderValues();
-              this.CAPA.ModifiedBy = this.CurrentUserName;
+              this.CAPA.ModifiedBy = this.CurrentUserID.toString();
               this._documentCollectionService.UpdateCAPA(this.CAPA, this.CAPAAppID, this.fileToUpload).subscribe(
                 (data) => {
                   this.IsProgressBarVisibile = false;
@@ -252,7 +255,7 @@ export class CapaAssignmentComponent implements OnInit {
             if (result) {
               this.IsProgressBarVisibile = true;
               this.GetCAPAHeaderValues();
-              this.CAPA.CreatedBy = this.CurrentUserName;
+              this.CAPA.CreatedBy = this.CurrentUserID.toString();
               this._documentCollectionService.CreateCAPA(this.CAPA, this.CAPAAppID, this.fileToUpload).subscribe(
                 (data) => {
                   const CAPAID = data as number;

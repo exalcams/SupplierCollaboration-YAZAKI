@@ -328,7 +328,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 children: this.subChildren2
             });
         }
-        if (true) {
+        if (this.MenuItems.indexOf('VendorAssignment') >= 0) {
             this.subChildren3.push({
                 id: 'vendorAssignment',
                 title: 'Vendor Assignment',
@@ -336,7 +336,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 url: '/documentCollection/vendor_assignment'
             });
         }
-        if (true) {
+        if (this.MenuItems.indexOf('CAPACreation') >= 0) {
             this.subChildren3.push({
                 id: 'capaAssignment',
                 title: 'CAPA Assignment',
@@ -344,7 +344,18 @@ export class LoginComponent implements OnInit, OnDestroy {
                 url: '/documentCollection/capa_assignment'
             });
         }
-        if (true) {
+        if (this.MenuItems.indexOf('CAPAResponse') >= 0) {
+            this.subChildren3.push({
+                id: 'capaResponse',
+                title: 'CAPA Response',
+                type: 'item',
+                url: '/documentCollection/capaResponse'
+            });
+        }
+        if (this.MenuItems.indexOf('VendorAssignment') >= 0 ||
+            this.MenuItems.indexOf('CAPACreation') >= 0 ||
+            this.MenuItems.indexOf('CAPAResponse') >= 0
+        ) {
             this.children.push({
                 id: 'documentCollection',
                 title: 'Document Collection',

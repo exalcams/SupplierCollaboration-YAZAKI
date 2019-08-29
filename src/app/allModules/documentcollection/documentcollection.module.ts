@@ -41,30 +41,35 @@ import {
 } from '@angular/material';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {
-    FuseCountdownModule,
-    FuseHighlightModule,
-    FuseMaterialColorPickerModule,
-    FuseWidgetModule
+  FuseCountdownModule,
+  FuseHighlightModule,
+  FuseMaterialColorPickerModule,
+  FuseWidgetModule
 } from '@fuse/components';
 import { VendorAssignmentComponent } from './vendor-assignment/vendor-assignment.component';
 import { CapaAssignmentComponent } from './capa-assignment/capa-assignment.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FormsModule } from '@angular/forms';
+import { CapaResponseComponent } from './capa-response/capa-response.component';
 
-const documentCollection:Routes =[
+const documentCollection: Routes = [
   {
-    path:"vendor_assignment",
-    component:VendorAssignmentComponent
+    path: 'vendor_assignment',
+    component: VendorAssignmentComponent
   },
   {
-    path:"capa_assignment",
-    component:CapaAssignmentComponent
+    path: 'capa_assignment',
+    component: CapaAssignmentComponent
+  },
+  {
+    path: 'capaResponse',
+    component: CapaResponseComponent
   }
-]
+];
 
 @NgModule({
-  declarations: [VendorAssignmentComponent, CapaAssignmentComponent],
+  declarations: [VendorAssignmentComponent, CapaAssignmentComponent, CapaResponseComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(documentCollection),
