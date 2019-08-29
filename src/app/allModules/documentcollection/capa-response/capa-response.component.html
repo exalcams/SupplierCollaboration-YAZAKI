@@ -135,7 +135,7 @@
                 <div fxFlex="10" fxLayoutAlign="start center" class="borderRightClass pt-12">
                   <div class="ml-4">
                     <div class="round" (click)="LoadSelectedCAPA(cap)"
-                      [style.background-color]="cap===SelectedCAPA?'#4cff4c':'white'"></div>
+                      [style.background-color]="cap===SelectedCAPA?'#2ecc71':'white'"></div>
                   </div>
                 </div>
                 <div fxFlex="90" class="p-12">
@@ -149,22 +149,25 @@
                 </div>
               </div>
             </div>
-            <div fxFlex *ngIf="SelectedCAPAID"  class="m-4 borderRightClass">
-              <div fxLayout fxLayoutAlign="center" class="m-8"
+            <div fxFlex *ngIf="SelectedCAPAID" class="m-4 borderRightClass">
+              <div fxLayout fxLayoutAlign="center" class="m-4"
                 *ngFor="let ven of SelectedCAPAResponses;let i=index;let last = last">
-                <div fxFlex="10" fxLayoutAlign="start center">
+                <div fxFlex="8" fxLayoutAlign="start start">
                   <div class="ml-4">
-                    <div class="round1" [style.background-color]="last?'#4cff4c':'white'"></div>
+                    <div class="round1" [style.background-color]="last?'#2ecc71':'white'"></div>
+                    <div class="vertical-line"></div>
                   </div>
                 </div>
-                <div fxFlex="90" fxLayout fxLayoutAlign="center" class="p-12 borderClass">
+                <div fxFlex fxLayout class="mb-8">
+                  <div fxFlex fxLayoutAlign="center" class="arrow-left"></div>
+                  <div fxFlex="95" fxLayout fxLayoutAlign="center" class="p-12 timeline-content">
                     <div fxFlex="10">
                       <mat-icon>account_circle</mat-icon>
                     </div>
                     <div fxFlex="90" class="pl-4" fxLayout="column">
                       <div fxFlex fxLayout fxLayoutAlign="space-between center">
                         <div fxFlex>{{ven.CreatedByUser}}
-                          
+
                         </div>
                         <div fxFlex>{{ven.CreatedOn | date}}</div>
                       </div>
@@ -173,43 +176,46 @@
                       </div>
                     </div>
                     <!-- <div fxFlex>
-                      <div>{{CurrentDate | date}}</div>
-                    </div> -->
+                          <div>{{CurrentDate | date}}</div>
+                        </div> -->
                   </div>
-  
+                </div>
               </div>
-              <div fxLayout fxLayoutAlign="center" class="m-8">
-                <div fxFlex="10" fxLayoutAlign="start center">
+              <div fxLayout fxLayoutAlign="center" class="m-4">
+                <div fxFlex="8" fxLayoutAlign="start start">
                   <div class="ml-4">
                     <div class="round"></div>
                   </div>
                 </div>
-                <div fxFlex="90" fxLayout fxLayoutAlign="center" class="p-12 borderClass">
-                  <div fxFlex="10">
-                    <mat-icon>account_circle</mat-icon>
-                  </div>
-                  <div fxFlex="90" class="pl-4" fxLayout="column">
-                    <div fxFlex fxLayout fxLayoutAlign="space-between center">
-                      <div fxFlex>{{CurrentUserName}}
-                        
+                <div fxFlex fxLayout class="mb-8">
+                  <div fxFlex fxLayoutAlign="center" class="arrow-left"></div>
+                  <div fxFlex="95" fxLayout fxLayoutAlign="center" class="p-12 timeline-content">
+                    <div fxFlex="10">
+                      <mat-icon>account_circle</mat-icon>
+                    </div>
+                    <div fxFlex="90" class="pl-4" fxLayout="column">
+                      <div fxFlex fxLayout fxLayoutAlign="space-between center">
+                        <div fxFlex>{{CurrentUserName}}
+
+                        </div>
+                        <div fxFlex>{{CurrentDate | date}}</div>
                       </div>
-                      <div fxFlex>{{CurrentDate | date}}</div>
+                      <div fxFlex class="mt-8">
+                        <form name="form" [formGroup]="CAPAResponseFormGroup">
+                          <input matInput placeholder="Reply here.." formControlName="Comments">
+                        </form>
+                      </div>
                     </div>
-                    <div fxFlex class="mt-8">
-                      <form name="form" [formGroup]="CAPAResponseFormGroup">
-                        <input matInput formControlName="Comments">
-                      </form>
-                    </div>
-                  </div>
-                  <!-- <div fxFlex>
+                    <!-- <div fxFlex>
                     <div>{{CurrentDate | date}}</div>
                   </div> -->
+                  </div>
                 </div>
               </div>
               <div fxLayout fxLayoutAlign="space-between center" class="m-8">
                 <div fxFlex *ngIf="SelectedCAPAStaus!=='Closed'">
                   <button mat-stroked-button (click)="ValidateCAPAResponse()">
-                    Replay
+                    Reply
                   </button>
                 </div>
                 <div fxFlex align="end" *ngIf="CurrentUserRole !== 'Vendor' && SelectedCAPAStaus!=='Closed'">
@@ -219,29 +225,14 @@
                   </button>
                 </div>
                 <div fxFlex align="end" *ngIf="CurrentUserRole !== 'Vendor' && SelectedCAPAStaus==='Closed'">
-                    <button (click)="ReOpenCloseTicket()" [ngClass]="BGClassName?.layout?.toolbar?.background" class="ml-8"
-                      mat-raised-button>
-                      Reopen
-                    </button>
-                  </div>
-              </div>
-              <!-- <div class="sidebar">
-                <div class="content" fusePerfectScrollbar>
-                  <div class="steps">
-                    <div class="step completed"
-                      *ngFor="let ven of SelectedCAPAAllocationVendors; let i = index; let last = last; let first = first"
-                      (click)="gotoStep(i)"
-                      >
-                      <div class="index">
-                        <span>{{i + 1}}</span>
-                      </div>
-                      <div class="title">{{ven.VendorName}}</div>
-                    </div>
-                  </div>
+                  <button (click)="ReOpenCloseTicket()" [ngClass]="BGClassName?.layout?.toolbar?.background"
+                    class="ml-8" mat-raised-button>
+                    Reopen
+                  </button>
                 </div>
-              </div> -->
+              </div>
             </div>
-            <div fxFlex *ngIf="!SelectedCAPAID"  class="m-4 borderRightClass"></div>
+            <div fxFlex *ngIf="!SelectedCAPAID" class="m-4 borderRightClass"></div>
             <div fxFlex class="m-4">
               <div class="boldClass p-4 mt-16">Assigned To:</div>
               <div *ngFor="let ven of SelectedCAPAAllocationVendors;let i=index">

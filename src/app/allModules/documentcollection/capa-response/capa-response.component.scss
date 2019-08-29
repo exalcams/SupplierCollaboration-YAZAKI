@@ -86,7 +86,7 @@ body.theme-default .mat-radio-button.mat-accent .mat-radio-inner-circle {
 .round1 {
   @extend .roundCommon;
   background-color: rgb(187, 185, 185);
-  border: 2px solid #4cff4c;
+  border: 2px solid #2ecc71;
 }
 .SearchClass {
   background-color: whitesmoke;
@@ -114,98 +114,23 @@ body.theme-default .mat-radio-button.mat-accent .mat-radio-inner-circle {
   -webkit-overflow-scrolling: touch;
 }
 
-.sidebar {
-  .steps {
-    padding: 16px 0;
-
-    .step {
-      position: relative;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      padding: 16px;
-      cursor: pointer;
-
-      &.current {
-        .index {
-          span {
-            border: 2px solid;
-          }
-        }
-
-        .title {
-          font-weight: bold;
-        }
-      }
-
-      &.completed {
-        .index {
-          span {
-            border: 2px solid;
-          }
-        }
-      }
-
-      &.first {
-        .index {
-          &:before {
-            display: none;
-          }
-        }
-      }
-
-      &.last {
-        .index {
-          &:after {
-            display: none;
-          }
-        }
-      }
-
-      .index {
-        display: flex;
-        margin-right: 12px;
-
-        &:before,
-        &:after {
-          position: absolute;
-          display: block;
-          content: " ";
-          border-left: 1px solid;
-          width: 1px;
-          height: 50%;
-          left: 29px;
-          z-index: 8;
-        }
-
-        &:before {
-          top: 0;
-        }
-
-        &:after {
-          bottom: 0;
-        }
-
-        span {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-          width: 28px;
-          min-width: 28px;
-          max-width: 28px;
-          height: 28px;
-          border-radius: 100%;
-          border: 2px solid;
-          font-weight: bold;
-          font-size: 12px;
-          z-index: 10;
-        }
-      }
-
-      .title {
-        display: flex;
-      }
-    }
+.timeline-content {
+  background-color: #DCDCDC !important;
+  // border:1px solid gray;
+  input {
+    background-color: #DCDCDC;
   }
+}
+.arrow-left {
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #DCDCDC !important;
+}
+.vertical-line {
+  width: 3px;
+  min-height: 50px;
+  background: #2ecc71;
+  margin: 5px auto -5px auto;
 }

@@ -116,13 +116,18 @@ export class CapaResponseComponent implements OnInit {
     this.GetCAPAResponseByCAPA();
     this.GetCAPAAllocationVendorViewByCAPA();
   }
-  ResetControl(): void {
+
+  ResetForm(): void {
     this.CAPAResponseFormGroup.reset();
     Object.keys(this.CAPAResponseFormGroup.controls).forEach(key => {
       this.CAPAResponseFormGroup.get(key).markAsUntouched();
     });
+  }
+  ResetControl(): void {
+    this.ResetForm();
     this.SelectedCAPAID = 0;
     this.SelectedCAPAStaus = '';
+    this.SelectedCAPA = new CAPAHeaderView();
     this.SelectedCAPAResponses = [];
     this.SelectedCAPAAllocationVendors = [];
   }
@@ -191,7 +196,7 @@ export class CapaResponseComponent implements OnInit {
       (data) => {
         this.IsProgressBarVisibile = false;
         this.notificationSnackBarComponent.openSnackBar('CAPA Response details updated successfully', SnackBarStatus.success);
-        this.ResetControl();
+        this.ResetForm();
         this.GetCAPAResponseByCAPA();
       },
       (err) => {
