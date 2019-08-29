@@ -48,7 +48,7 @@ export class PurchaseRequisitionVendorComponent implements OnInit {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.CurrentUserName = this.authenticationDetails.userName;
       this.CurrentUserID = this.authenticationDetails.userID;
-      this.MenuItems = this.authenticationDetails.menuItemNames.split(',')
+      this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
       if (this.MenuItems.indexOf('PurchaseRequisitionVendor') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
         this._router.navigate(['/auth/login']);
@@ -85,10 +85,10 @@ export class PurchaseRequisitionVendorComponent implements OnInit {
 
   GoToRFQResponse(): void {
     if (this.SelectedPurchaseRequisition && this.SelectedPurchaseRequisition.PurchaseRequisitionID) {
-      let PurchaseRequisition: PurchaseRequisitionView = new PurchaseRequisitionView();
-      PurchaseRequisition.PurchaseRequisitionID = this.SelectedPurchaseRequisition.PurchaseRequisitionID;
-      PurchaseRequisition.RFQStatus = this.SelectedPurchaseRequisition.RFQStatus;
-      this._shareParameterService.SetPurchaseRequisition(PurchaseRequisition);
+      const PurchaseRequisitionV: PurchaseRequisitionView = new PurchaseRequisitionView();
+      PurchaseRequisitionV.PurchaseRequisitionID = this.SelectedPurchaseRequisition.PurchaseRequisitionID;
+      PurchaseRequisitionV.RFQStatus = this.SelectedPurchaseRequisition.RFQStatus;
+      this._shareParameterService.SetPurchaseRequisition(PurchaseRequisitionV);
       this._router.navigate(['/rfq/response'], {
       });
     } else {
