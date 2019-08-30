@@ -124,6 +124,7 @@ export class PO_ScheduleLine {
 }
 export class PO_OrderAcknowledgement {
     PO: string;
+    Item: string;
     CompanyCode: string;
     PODate: Date;
     PlantGST: string;

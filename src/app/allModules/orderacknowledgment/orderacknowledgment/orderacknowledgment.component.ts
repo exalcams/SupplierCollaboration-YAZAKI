@@ -90,9 +90,9 @@ export class OrderacknowledgmentComponent implements OnInit {
         // this.dataSource.sort = this.sort;
         // this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
         // this.dataSource1.sort = this.sort;
-        // this.isAllSelected();
-        // this.masterToggle();
-        // this.checkboxLabel();
+        this.isAllSelected();
+        this.masterToggle();
+        this.checkboxLabel();
         this._fuseConfigService.config
             // .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(config => {
@@ -158,8 +158,18 @@ export class OrderacknowledgmentComponent implements OnInit {
     // masterToggle() {
     //   this.isAllSelected() ?
     //     this.selection.clear() :
-    //     this.OrderAcknowledgmentDataSource.data.forEach(row => this.selection.select(row));
+    //     this.OrderAcknowledgmentDataSource..foreach(function (this.selection.select(row)))
+    // //  this.OrderAcknowlegmentFormArray.data.forEach(row => this.selection.select(row));
     // }
+    masterToggle() {
+        this.isAllSelected()? // this.selection.clear() :
+              this.selection.clear()
+            : FormArray;
+        {
+            return this.OrderAcknowlegmentFormArray.value.forEach(row => this.selection.select(row));
+        }
+        //  this.OrderAcknowledgmentDataSource.data.forEach(row => this.selection.select(row));
+    }
     /** The label for the checkbox on the passed row */
     checkboxLabel(row?: POOrderScheduleLine): string {
         if (!row) {
@@ -204,7 +214,7 @@ export class OrderacknowledgmentComponent implements OnInit {
         }
 
         this.OrderAcknowlegmentFormArray.push(row);
-        console.log(this.OrderAcknowlegmentFormArray);
+      //  console.log(this.OrderAcknowlegmentFormArray);
         this.OrderAcknowledgmentDataSource.next(this.OrderAcknowlegmentFormArray.controls);
         this.OrderAcknowlegmentGroup.patchValue({
             PO: item.PO,
@@ -242,6 +252,7 @@ export class OrderacknowledgmentComponent implements OnInit {
             if (result) {
                 // this.AcknowledgementDetails.POOrderScheduleLine.forEach(element => {
                 this.AcknowledgementDetails.Status = status;
+                this.AcknowledgementDetails.Item = this.Item;
                 this.AcknowledgementDetails.Remarks = this.OrderAcknowlegmentGroup.get('Remarks').value;
                 // this.GetAcknowledgmentDetailvalues();
                 this.dashboardService.CreateOrderAcknowledgement(this.AcknowledgementDetails).subscribe(

@@ -6,8 +6,7 @@
 
   <!-- CENTER  margin-top: 20px;-->
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
-    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center"
-      fxLayoutGap="10px" fxLayoutGap.xs="10">
+    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
       <div fxLayout>
         <div fxFlex fxLayout="column">
           <div fxFlex>
@@ -48,7 +47,7 @@
             <div fxFlex="60%" style="color:white;">
               <div>
                 <span style="color:#dddbdb">Open:</span>
-                <span>{{DashbordStatus.ShipOpen}}</span>
+                <span (click)="ShipOpen()">{{DashbordStatus.ShipOpen}}</span>
               </div>
               <div style="margin-top: 5px">
                 <span style="color:#dddbdb">Week:</span>
@@ -120,8 +119,8 @@
     </div>
 
     <div fxFlex>
-      <div style="margin-top: 40px" fxLayout fxLayout.xs="column" fxLayout.sm="column" fxLayoutAlign="center"
-        fxLayoutGap="20px" fxLayoutGap.xs="20px">
+      <div style="margin-top: 40px" fxLayout fxLayout.xs="column" fxLayout.sm="column" fxLayoutAlign="center" fxLayoutGap="20px"
+        fxLayoutGap.xs="20px">
         <mat-card fxFlex=60% fxFlex.ls="60">
           <div class="container" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="5px">
             <mat-card-header class="toolbar px-24 py-8">
@@ -137,8 +136,8 @@
               </div>
             </mat-card-header>
             <mat-card-content>
-              <canvas *ngIf="showChart" width="565px " height="130px " baseChart [datasets]="widget5.data.datasets"
-                [labels]="widget5.data.labels" [options]="widget5.options">
+              <canvas *ngIf="showChart" width="565px " height="130px " baseChart [datasets]="widget5.data.datasets" [labels]="widget5.data.labels"
+                [options]="widget5.options">
               </canvas>
             </mat-card-content>
           </div>
@@ -290,8 +289,8 @@
     </div>
 
     <div fxFlex>
-      <div style="margin-top: 10px" fxLayout fxLayout.xs="column" fxLayout.sm="column" fxLayoutAlign="center"
-        fxLayoutGap="20px" fxLayoutGap.xs="20px">
+      <div style="margin-top: 10px" fxLayout fxLayout.xs="column" fxLayout.sm="column" fxLayoutAlign="center" fxLayoutGap="20px"
+        fxLayoutGap.xs="20px">
         <mat-card class="tableCard" fxFlex=74% fxFlex.ls="74">
           <mat-card-header>
             <mat-card-title style="margin-left: 10px;margin-top:-5px"><strong>Order Fullfillment Status</strong>
@@ -300,28 +299,25 @@
           <mat-divider></mat-divider>
           <mat-card-content>
             <div style="text-align: start;margin-top: 10px;margin-bottom: -12px;background-color: #eaf2ff; ">
-              <img class="m-8" style="height: 20px" matTooltip="ePurchase Order Download"
-                src="assets/images/dashboard/po-download.png">
+              <img class="m-8" style="height: 20px" matTooltip="ePurchase Order Download" src="assets/images/dashboard/po-download.png">
               <!-- <mat-icon svgIcon="shipment" [class.disabled]="POID" (click)="OrderAcknowledgement()"></mat-icon> [class.disabled]="POID"-->
               <img class="m-8" style="height: 20px" matTooltip="Purchase Order Look Up" (click)="PurchaseOrder()"
                 src="assets/images/dashboard/po-lookup.png">
               <img class="m-8" style="height: 20px" matTooltip="Order Acknowledgement" (click)="OrderAcknowledgement()"
                 src="assets/images/dashboard/order-acknowledgement.png">
-              <img class="m-8" style="height: 20px" matTooltip="Create Advance Shipment Notification"
-                (click)="AdvanceShipment()" src="assets/images/dashboard/create-asn.png">
+              <img class="m-8" style="height: 20px" matTooltip="Create Advance Shipment Notification" (click)="AdvanceShipment()"
+                src="assets/images/dashboard/create-asn.png">
               <!-- <img class="m-8" style="height: 20px" matTooltip="Inspection Check"
                 src="assets/images/dashboard/inspection-check.png">
               <img class="m-8" style="height: 20px" matTooltip="Expediting Event"
                 src="assets/images/dashboard/expediting-event.png"> -->
               <img class="m-8" style="height: 20px" matTooltip="Export Excel" src="assets/images/dashboard/excel.png">
             </div>
-            <div style="text-align: end;margin-top: -40px;background-color: #eaf2ff;">
-              <img class="m-8" style="height: 20px" matTooltip="Invoice Upload"
-                src="assets/images/dashboard/ivoice-upload.png">
-              <img class="m-8" style="height: 20px" matTooltip="DisPute Management"
-                src="assets/images/dashboard/dispute-management.png">
-              <!-- <img class="m-8" style="height: 20px" matTooltip="Expand All" src="assets/images/dashboard/resize.png"> -->
-            </div>
+            <!-- <div style="text-align: end;margin-top: -40px;background-color: #eaf2ff;">
+              <img class="m-8" style="height: 20px" matTooltip="Invoice Upload" src="assets/images/dashboard/ivoice-upload.png">
+              <img class="m-8" style="height: 20px" matTooltip="DisPute Management" src="assets/images/dashboard/dispute-management.png">
+              <img class="m-8" style="height: 20px" matTooltip="Expand All" src="assets/images/dashboard/resize.png">
+            </div> -->
             <table style="margin-top: 10px;" mat-table [dataSource]="POListDataSource" matSort>
 
               <!-- <ng-container matColumnDef="select">
@@ -395,10 +391,8 @@
                   <mat-icon>attach_file</mat-icon>
                 </td>
               </ng-container>
-              <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
-                *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="Checked(row)"
-                [class.highlight]="row === selectedPORow"></tr>
+              <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="Checked(row)" [class.highlight]="row === selectedPORow"></tr>
             </table>
           </mat-card-content>
         </mat-card>
@@ -457,8 +451,7 @@
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount</th>
                   <td mat-cell *matCellDef="let element"> {{element.Amount}} </td>
                 </ng-container> -->
-                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
-                  *matHeaderRowDef="displayedColumns1"></tr>
+                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns1"></tr>
               </table>
             </mat-card>

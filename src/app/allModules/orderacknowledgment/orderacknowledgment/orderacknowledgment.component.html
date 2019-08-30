@@ -199,10 +199,10 @@
                         <!-- <mat-checkbox>
                           (change)="$event ? masterToggle() : null"
                         </mat-checkbox> -->
-                        <!-- <mat-checkbox [checked]="selection.hasValue() && isAllSelected()"
+                        <mat-checkbox name="check" [checked]="selection.hasValue() && isAllSelected()" (change)="$event ? masterToggle() : null"
                           [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"
                           style="margin-left: -18px;">
-                        </mat-checkbox> -->
+                        </mat-checkbox>
                       </th>
                       <td mat-cell *matCellDef="let row">
                         <!-- <mat-checkbox>
