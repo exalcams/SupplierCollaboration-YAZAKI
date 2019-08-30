@@ -107,18 +107,27 @@ body.theme-default .mat-radio-button.mat-accent .mat-radio-inner-circle {
       border: none;
       background-color: whitesmoke;
     }
+    ::placeholder {
+      /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: gray;
+    }
   }
 }
-.sidenav-content {
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
+.side-bar {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  .sidenav-content {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 .timeline-content {
-  background-color: #DCDCDC !important;
+  background-color: #dcdcdc !important;
   // border:1px solid gray;
   input {
-    background-color: #DCDCDC;
+    background-color: #dcdcdc;
   }
 }
 .arrow-left {
@@ -126,11 +135,18 @@ body.theme-default .mat-radio-button.mat-accent .mat-radio-inner-circle {
   height: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid #DCDCDC !important;
+  border-right: 10px solid #dcdcdc !important;
 }
 .vertical-line {
   width: 3px;
   min-height: 50px;
+  border: 2px solid #2ecc71;
   background: #2ecc71;
-  margin: 5px auto -5px auto;
+  margin: 5px auto 0px auto;
+}
+.ProgressBarPostion1 {
+  position: absolute !important;
+  top: 350px;
+  z-index: 1;
+  left: 55%;
 }

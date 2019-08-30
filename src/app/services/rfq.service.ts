@@ -93,8 +93,8 @@ export class RFQService {
             .pipe(catchError(this.errorHandler));
     }
 
-    SaveRFQAllocationTemp(RFQAllocations: RFQAllocationView[]): Observable<any> {
-        return this._httpClient.post<any>(`${this.baseAddress}api/RFQ/SaveRFQAllocationTemp`,
+    CreateRFQAllocationTemp(RFQAllocations: RFQAllocationView[]): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}api/RFQ/CreateRFQAllocationTemp`,
             RFQAllocations,
             {
                 headers: new HttpHeaders({

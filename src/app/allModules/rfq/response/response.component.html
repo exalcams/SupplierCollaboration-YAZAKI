@@ -216,7 +216,7 @@
                   <mat-datepicker #picker3></mat-datepicker>
                 </mat-form-field>
               </div>
-              <div class="mt-16">
+              <div class="mt-16 m-8">
                 <strong class="sub-Title">Auto Evalution RFQ's</strong>
                 <!-- <div fxLayout="row">
                   <div fxFlex align="end">
@@ -318,17 +318,42 @@
                       *
                     </span>
                   </td>
-  
                 </ng-container>
+
+                <ng-container matColumnDef="DeliveryDate">
+                    <th mat-header-cell *matHeaderCellDef>Delivery Date</th>
+                    <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                      <input matInput [matDatepicker]="picker21" (click)="picker21.open()"
+                      formControlName="DeliveryDate">
+                      <!-- <mat-datepicker-toggle matSuffix [for]="picker21"></mat-datepicker-toggle> -->
+                      <mat-datepicker #picker21></mat-datepicker>
+                      <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('DeliveryDate').touched && 
+                  RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('DeliveryDate').hasError('required')">
+                        *
+                      </span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="SelfLifeDays">
+                      <th mat-header-cell *matHeaderCellDef>Self Life Days</th>
+                      <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                        <input matInput formControlName="SelfLifeDays">
+                        <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('SelfLifeDays').touched && 
+                    RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('SelfLifeDays').hasError('required')">
+                          *
+                        </span>
+                      </td>
+                    </ng-container>
   
                 <ng-container matColumnDef="Attachment">
                   <th mat-header-cell *matHeaderCellDef>Attachment</th>
                   <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                    <mat-icon [ngClass]="RFQResponseFormGroup.enabled?'CursorPointer':'AttachIconDisable'"
-                      (click)="RFQResponseFormGroup.enabled?fileInput1.click():false">attach_file
+                    <mat-icon 
+                    [ngClass]="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').enabled?'CursorPointer':'AttachIconDisable'"
+                      (click)="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').enabled?fileInput1.click():false">attach_file
                     </mat-icon>
                     <span *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value"
-                      [style.color]="RFQResponseFormGroup.enabled?'inherit':'rgba(0, 0, 0, 0.38)'">
+                      [style.color]="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').enabled?'inherit':'rgba(0, 0, 0, 0.38)'">
                       ({{RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value}})
                     </span>
                     <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput($event,index)" />
@@ -351,7 +376,7 @@
                 <div fxFlex class="mt-12" align="end">
                   <button 
                   [ngClass]="BGClassName?.layout?.toolbar?.background" class="SaveBtnClass" mat-raised-button
-                  (click)="CreateRFQResponse()">
+                  (click)="ValidateRFQResponse()">
                   Respond
                 </button>
                 </div>

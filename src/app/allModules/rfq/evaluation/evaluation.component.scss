@@ -100,3 +100,9 @@ body.theme-default .mat-radio-button.mat-accent .mat-radio-inner-circle {
   background-color: #1565c0;
   border-radius: 25px;
 }
+.ProgressBarPostion1 {
+  position: absolute !important;
+  top: 350px;
+  z-index: 1;
+  left: 55%;
+}

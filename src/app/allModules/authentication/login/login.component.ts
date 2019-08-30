@@ -360,6 +360,8 @@ export class LoginComponent implements OnInit, OnDestroy {
                 id: 'documentCollection',
                 title: 'Document Collection',
                 type: 'collapsable',
+                icon: 'docCol',
+                isSvgIcon: true,
                 children: this.subChildren3
             });
         }

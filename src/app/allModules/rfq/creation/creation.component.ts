@@ -210,6 +210,165 @@ export class CreationComponent implements OnInit {
     // console.log(index);
   }
 
+  SubmitRFQDetails(): void {
+    // this.RFQResponseFormGroup.enable();
+    if (this.RFQFormGroup.valid) {
+      if (this.RFQ.RFQID) {
+        const Actiontype = 'Update';
+        const Catagory = 'RFQ Details';
+        this.OpenConfirmationDialog(Actiontype, Catagory);
+      } else {
+        const Actiontype = 'Create';
+        const Catagory = 'RFQ Details';
+        this.OpenConfirmationDialog(Actiontype, Catagory);
+      }
+    } else {
+      this.ShowValidationErrors();
+    }
+  }
+
+  ShowValidationErrors(): void {
+    Object.keys(this.RFQFormGroup.controls).forEach(key => {
+      if (!this.RFQFormGroup.get(key).valid) {
+        console.log(key);
+      }
+      this.RFQFormGroup.get(key).markAsTouched();
+      this.RFQFormGroup.get(key).markAsDirty();
+      if (this.RFQFormGroup.get(key) instanceof FormArray) {
+        const FormArrayControls = this.RFQFormGroup.get(key) as FormArray;
+        Object.keys(FormArrayControls.controls).forEach(key1 => {
+          if (FormArrayControls.get(key1) instanceof FormGroup) {
+            const FormGroupControls = FormArrayControls.get(key1) as FormGroup;
+            Object.keys(FormGroupControls.controls).forEach(key2 => {
+              FormGroupControls.get(key2).markAsTouched();
+              FormGroupControls.get(key2).markAsDirty();
+              if (!FormGroupControls.get(key2).valid) {
+                console.log(key2);
+              }
+            });
+          } else {
+            FormArrayControls.get(key1).markAsTouched();
+            FormArrayControls.get(key1).markAsDirty();
+          }
+        });
+      }
+    });
+  }
+
+  OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
+    const dialogConfig: MatDialogConfig = {
+      data: {
+        Actiontype: Actiontype,
+        Catagory: Catagory
+      },
+    };
+    const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+          this.SaveRFQ();
+        }
+      });
+  }
+
+  SaveRFQ(): void {
+    if (this.RFQ.RFQID) {
+      this.UpdateRFQ();
+    } else {
+      this.CreateRFQ();
+    }
+  }
+
+  UpdateRFQ(): void {
+    this.IsProgressBarVisibile = true;
+    this.RFQ.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
+    this.GetRFQHeaderValues();
+    this.GetRFQItems();
+    this.RFQ.ModifiedBy = this.CurrentUserName;
+    this._rfqService.UpdateRFQ(this.RFQ).subscribe(
+      (data) => {
+        const TransID = data as number;
+        this.RFQ.RFQID = TransID;
+        const aux = new Auxiliary();
+        aux.APPID = this.RFQItemAppID;
+        aux.HeaderNumber = TransID.toString();
+        aux.CreatedBy = this.CurrentUserName;
+        if (this.fileToUploadList && this.fileToUploadList.length) {
+          this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
+            (dat) => {
+              this.IsProgressBarVisibile = false;
+              this.notificationSnackBarComponent.openSnackBar('RFQ details updated successfully', SnackBarStatus.success);
+              this.GoToAllocateRFQ();
+              this.ResetControl();
+            },
+            (err) => {
+              console.error(err);
+              this.IsProgressBarVisibile = false;
+              this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+          );
+        } else {
+          this.IsProgressBarVisibile = false;
+          this.notificationSnackBarComponent.openSnackBar('RFQ details updated successfully', SnackBarStatus.success);
+          this.GoToAllocateRFQ();
+          this.ResetControl();
+        }
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        this.ResetControl();
+      }
+    );
+  }
+
+  CreateRFQ(): void {
+    this.IsProgressBarVisibile = true;
+    this.RFQ.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
+    this.GetRFQHeaderValues();
+    this.GetRFQItems();
+    this.RFQ.CreatedBy = this.CurrentUserName;
+    this._rfqService.CreateRFQ(this.RFQ).subscribe(
+      (data) => {
+        const TransID = data as number;
+        this.RFQ.RFQID = TransID;
+        const aux = new Auxiliary();
+        aux.APPID = this.RFQItemAppID;
+        aux.HeaderNumber = TransID.toString();
+        aux.CreatedBy = this.CurrentUserName;
+        if (this.fileToUploadList && this.fileToUploadList.length) {
+          this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
+            (dat) => {
+              this.IsProgressBarVisibile = false;
+              this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
+              this.GoToAllocateRFQ();
+              this.ResetControl();
+            },
+            (err) => {
+              console.error(err);
+              this.IsProgressBarVisibile = false;
+              this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+          );
+        } else {
+          this.IsProgressBarVisibile = false;
+          this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
+          this.GoToAllocateRFQ();
+          this.ResetControl();
+        }
+        // this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
+        // this.ResetControl();
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        // this.ResetControl();
+      }
+    );
+  }
+
   GetRFQHeaderValues(): void {
     this.RFQ.Title = this.RFQFormGroup.get('Title').value;
     this.RFQ.SupplyPlant = this.RFQFormGroup.get('SupplyPlant').value;
@@ -240,153 +399,6 @@ export class CreationComponent implements OnInit {
       rfq.APPID = this.RFQItemAppID;
       this.RFQ.RFQItems.push(rfq);
     });
-  }
-
-
-  SubmitRFQDetails(): void {
-    // this.RFQFormGroup.enable();
-    if (this.RFQFormGroup.valid) {
-      if (this.RFQ.RFQID) {
-        const dialogConfig: MatDialogConfig = {
-          data: {
-            Actiontype: 'Update',
-            Catagory: 'RFQ Details'
-          },
-        };
-        const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
-        dialogRef.afterClosed().subscribe(
-          result => {
-            if (result) {
-              this.IsProgressBarVisibile = true;
-              this.RFQ.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
-              this.GetRFQHeaderValues();
-              this.GetRFQItems();
-              this.RFQ.ModifiedBy = this.CurrentUserName;
-              this._rfqService.UpdateRFQ(this.RFQ).subscribe(
-                (data) => {
-                  const TransID = data as number;
-                  this.RFQ.RFQID = TransID;
-                  const aux = new Auxiliary();
-                  aux.APPID = this.RFQItemAppID;
-                  aux.HeaderNumber = TransID.toString();
-                  aux.CreatedBy = this.CurrentUserName;
-                  if (this.fileToUploadList && this.fileToUploadList.length) {
-                    this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
-                      (dat) => {
-                        this.IsProgressBarVisibile = false;
-                        this.notificationSnackBarComponent.openSnackBar('RFQ details updated successfully', SnackBarStatus.success);
-                        this.GoToAllocateRFQ();
-                        this.ResetControl();
-                      },
-                      (err) => {
-                        console.error(err);
-                        this.IsProgressBarVisibile = false;
-                        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-                      }
-                    );
-                  } else {
-                    this.IsProgressBarVisibile = false;
-                    this.notificationSnackBarComponent.openSnackBar('RFQ details updated successfully', SnackBarStatus.success);
-                    this.GoToAllocateRFQ();
-                    this.ResetControl();
-                  }
-                },
-                (err) => {
-                  console.error(err);
-                  this.IsProgressBarVisibile = false;
-                  this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-                  this.ResetControl();
-                }
-              );
-            } else {
-
-            }
-          }
-        );
-      } else {
-        const dialogConfig: MatDialogConfig = {
-          data: {
-            Actiontype: 'Create',
-            Catagory: 'RFQ Details'
-          },
-        };
-        const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
-        dialogRef.afterClosed().subscribe(
-          result => {
-            if (result) {
-              this.IsProgressBarVisibile = true;
-              this.RFQ.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
-              this.GetRFQHeaderValues();
-              this.GetRFQItems();
-              this.RFQ.CreatedBy = this.CurrentUserName;
-              this._rfqService.CreateRFQ(this.RFQ).subscribe(
-                (data) => {
-                  const TransID = data as number;
-                  this.RFQ.RFQID = TransID;
-                  const aux = new Auxiliary();
-                  aux.APPID = this.RFQItemAppID;
-                  aux.HeaderNumber = TransID.toString();
-                  aux.CreatedBy = this.CurrentUserName;
-                  if (this.fileToUploadList && this.fileToUploadList.length) {
-                    this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
-                      (dat) => {
-                        this.IsProgressBarVisibile = false;
-                        this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
-                        this.GoToAllocateRFQ();
-                        this.ResetControl();
-                      },
-                      (err) => {
-                        console.error(err);
-                        this.IsProgressBarVisibile = false;
-                        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-                      }
-                    );
-                  } else {
-                    this.IsProgressBarVisibile = false;
-                    this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
-                    this.GoToAllocateRFQ();
-                    this.ResetControl();
-                  }
-                  // this.notificationSnackBarComponent.openSnackBar('RFQ details created successfully', SnackBarStatus.success);
-                  // this.ResetControl();
-                },
-                (err) => {
-                  console.error(err);
-                  this.IsProgressBarVisibile = false;
-                  this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-                  // this.ResetControl();
-                }
-              );
-            }
-          });
-      }
-    } else {
-      Object.keys(this.RFQFormGroup.controls).forEach(key => {
-        if (!this.RFQFormGroup.get(key).valid) {
-          console.log(key);
-        }
-        this.RFQFormGroup.get(key).markAsTouched();
-        this.RFQFormGroup.get(key).markAsDirty();
-        if (this.RFQFormGroup.get(key) instanceof FormArray) {
-          const FormArrayControls = this.RFQFormGroup.get(key) as FormArray;
-          Object.keys(FormArrayControls.controls).forEach(key1 => {
-            if (FormArrayControls.get(key1) instanceof FormGroup) {
-              const FormGroupControls = FormArrayControls.get(key1) as FormGroup;
-              Object.keys(FormGroupControls.controls).forEach(key2 => {
-                FormGroupControls.get(key2).markAsTouched();
-                FormGroupControls.get(key2).markAsDirty();
-                if (!FormGroupControls.get(key2).valid) {
-                  console.log(key2);
-                }
-              });
-            } else {
-              FormArrayControls.get(key1).markAsTouched();
-              FormArrayControls.get(key1).markAsDirty();
-            }
-          });
-        }
-      });
-    }
   }
 
   GoToAllocateRFQ(): void {

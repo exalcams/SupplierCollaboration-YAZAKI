@@ -2,7 +2,7 @@ import { Guid } from 'guid-typescript';
 
 export class PurchaseRequisition {
     PurchaseRequisitionID: number;
-    PurchaseRequirement: string;
+    // PurchaseRequirement: string;
     PurchaseDate: Date;
     PurchaseOrganization: string;
     PurchaseGroup: string;
@@ -13,6 +13,29 @@ export class PurchaseRequisition {
     Response: string;
     Awarded: string;
     RFQStatus: string;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+    IsActive: boolean;
+}
+
+export class PurchaseRequisitionItem{
+    PurchaseRequisitionID: number;
+    ItemID: number;
+    MaterialCode: string;
+    MaterialDescription: string;
+    OrderQuantity: number;
+    UOM: string;
+    ExpectedDeliveryDate?: Date;
+    DelayDays: number;
+    Schedule: number;
+    Price: number;
+    SupplierPartNumber: string;
+    SelfLifeDays: number;
+    NumberOfAttachments: number;
+    QuestionerID: string;
+    TechRating: string;
     CreatedOn: Date;
     CreatedBy: string;
     ModifiedOn?: Date;
@@ -48,16 +71,16 @@ export class RFQItem {
     MaterialCode: string;
     MaterialDescription: string;
     OrderQuantity: number;
-    DelayDays: number;
     UOM: string;
+    ExpectedDeliveryDate?: Date;
+    DelayDays: number;
+    Schedule: number;
     Price: number;
     SupplierPartNumber: string;
-    Schedule: number;
+    SelfLifeDays: number;
     NumberOfAttachments: number;
     QuestionerID: string;
     TechRating: string;
-    ExpectedDeliveryDate?: Date;
-    SelfLifeDays: number;
     CreatedOn: Date;
     CreatedBy: string;
     ModifiedOn?: Date;
@@ -94,11 +117,11 @@ export class RFQItemView {
     MaterialCode: string;
     MaterialDescription: string;
     OrderQuantity: number;
-    DelayDays: number;
     UOM: string;
+    DelayDays: number;
+    Schedule: number;
     Price: number;
     SupplierPartNumber: string;
-    Schedule: number;
     NumberOfAttachments: number;
     AttachmentNames: string[];
     TechRating: string;
@@ -148,15 +171,15 @@ export class RFQResponseItem {
     MaterialCode: string;
     MaterialDescription: string;
     OrderQuantity: number;
-    DelayDays: number;
     UOM: string;
+    DeliveryDate?: Date;
+    DelayDays: number;
+    Schedule: number;
     Price: number;
     SupplierPartNumber: string;
-    Schedule: number;
+    SelfLifeDays: number;
     NumberOfAttachments: number;
     TechRating: string;
-    DeliveryDate?: Date;
-    SelfLifeDays: number;
     IsActive: boolean;
     CreatedOn: Date;
     CreatedBy: string;
@@ -182,16 +205,16 @@ export class RFQResponseItemView {
     MaterialCode: string;
     MaterialDescription: string;
     OrderQuantity: number;
-    DelayDays: number;
     UOM: string;
+    DeliveryDate?: Date;
+    DelayDays: number;
+    Schedule: number;
     Price: number;
     SupplierPartNumber: string;
-    Schedule: number;
+    SelfLifeDays: string;
     NumberOfAttachments: number;
     AttachmentNames: string[];
     TechRating: string;
-    DeliveryDate?: Date;
-    SelfLifeDays: string;
     APPID: number;
 }
 
