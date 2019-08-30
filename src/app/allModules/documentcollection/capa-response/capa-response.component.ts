@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { AuthenticationDetails } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -8,16 +8,16 @@ import { Router } from '@angular/router';
 import { MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { CAPAHeader, CAPAHeaderView, CAPAAllocationVendorView, CAPAResponse, CAPAResponseView, CAPAStatusView, CAPAConfirmationStatusView } from 'app/models/document-collection.model';
+import { CAPAHeaderView, CAPAAllocationVendorView, CAPAResponse, CAPAResponseView, CAPAStatusView, CAPAConfirmationStatusView } from 'app/models/document-collection.model';
 import { Guid } from 'guid-typescript';
-import { RFQView } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { CapaConfirmationDialogComponent } from '../capa-confirmation-dialog/capa-confirmation-dialog.component';
+import { fuseAnimations } from '@fuse/animations';
 
 @Component({
   selector: 'app-capa-response',
   templateUrl: './capa-response.component.html',
-  styleUrls: ['./capa-response.component.scss']
+  styleUrls: ['./capa-response.component.scss'],
 })
 export class CapaResponseComponent implements OnInit {
   authenticationDetails: AuthenticationDetails;
@@ -41,7 +41,6 @@ export class CapaResponseComponent implements OnInit {
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _documentCollectionService: DocumentCollectionService,
-    private _masterService: MasterService,
     private _router: Router,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -70,21 +69,45 @@ export class CapaResponseComponent implements OnInit {
     this._fuseConfigService.config.subscribe((config) => {
       this.BGClassName = config;
     });
+
+    this.CAPAResponseFormGroup = this._formBuilder.group({
+      Comments: ['', Validators.required],
+    });
+    this.GetCAPADetails();
+  }
+
+  ResetForm(): void {
+    this.CAPAResponseFormGroup.reset();
+    Object.keys(this.CAPAResponseFormGroup.controls).forEach(key => {
+      this.CAPAResponseFormGroup.get(key).markAsUntouched();
+    });
+  }
+  ResetControl(): void {
+    this.ResetForm();
+    this.SelectedCAPAID = 0;
+    this.SelectedCAPAStaus = '';
+    this.SelectedCAPA = new CAPAHeaderView();
+    this.SelectedCAPAResponses = [];
+    this.SelectedCAPAAllocationVendors = [];
+  }
+
+  GetCAPADetails(): void {
     if (this.CurrentUserRole === 'Vendor') {
       this.GetCAPAByVendor();
     } else {
       this.GetCAPAByUser();
     }
-    this.CAPAResponseFormGroup = this._formBuilder.group({
-      Comments: ['', Validators.required],
-    });
   }
+
   GetCAPAByUser(): void {
     this.IsProgressBarVisibile = true;
     this._documentCollectionService.GetCAPAByUser(this.CurrentUserID).subscribe(
       (data) => {
         if (data) {
           this.AllCAPA = data as CAPAHeaderView[];
+          if (this.AllCAPA.length && this.AllCAPA.length > 0) {
+            this.LoadSelectedCAPA(this.AllCAPA[0]);
+          }
         }
         this.IsProgressBarVisibile = false;
       },
@@ -100,6 +123,9 @@ export class CapaResponseComponent implements OnInit {
       (data) => {
         if (data) {
           this.AllCAPA = data as CAPAHeaderView[];
+          if (this.AllCAPA.length && this.AllCAPA.length > 0) {
+            this.LoadSelectedCAPA(this.AllCAPA[0]);
+          }
         }
         this.IsProgressBarVisibile = false;
       },
@@ -118,20 +144,7 @@ export class CapaResponseComponent implements OnInit {
     this.GetCAPAAllocationVendorViewByCAPA();
   }
 
-  ResetForm(): void {
-    this.CAPAResponseFormGroup.reset();
-    Object.keys(this.CAPAResponseFormGroup.controls).forEach(key => {
-      this.CAPAResponseFormGroup.get(key).markAsUntouched();
-    });
-  }
-  ResetControl(): void {
-    this.ResetForm();
-    this.SelectedCAPAID = 0;
-    this.SelectedCAPAStaus = '';
-    this.SelectedCAPA = new CAPAHeaderView();
-    this.SelectedCAPAResponses = [];
-    this.SelectedCAPAAllocationVendors = [];
-  }
+
   ValidateCAPAResponse(): void {
     if (this.CAPAResponseFormGroup.valid) {
       const Actiontype = 'Update';
@@ -144,13 +157,13 @@ export class CapaResponseComponent implements OnInit {
   CloseTicket(): void {
     const Actiontype = 'Close';
     const Catagory = 'CAPA';
-    this.OpenCAPAConfirmationDialog(Actiontype, Catagory);
+    this.OpenCAPAConfirmationDialog(Actiontype);
   }
 
   ReOpenCloseTicket(): void {
     const Actiontype = 'Re-open';
     const Catagory = 'CAPA';
-    this.OpenCAPAConfirmationDialog(Actiontype, Catagory);
+    this.OpenCAPAConfirmationDialog(Actiontype);
   }
 
   ShowValidationErrors(): void {
@@ -162,30 +175,6 @@ export class CapaResponseComponent implements OnInit {
       this.CAPAResponseFormGroup.get(key).markAsDirty();
     });
   }
-
-  OpenCAPAConfirmationDialog(Actiontype: string, Catagory: string): void {
-    const dialogConfig: MatDialogConfig = {
-      data: {
-        Actiontype: Actiontype,
-        Reason: ''
-      },
-      panelClass: 'capa-confirm-dialog'
-    };
-    const dialogRef = this.dialog.open(CapaConfirmationDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(
-      result => {
-        if (result) {
-          const res = result as CAPAConfirmationStatusView;
-          if (Actiontype === 'Close') {
-            this.CloseCAPA(res.Reason);
-          }
-          if (Actiontype === 'Re-open') {
-            this.ReOpenCAPA(res.Reason);
-          }
-        }
-      });
-  }
-
 
   OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
     const dialogConfig: MatDialogConfig = {
@@ -212,7 +201,7 @@ export class CapaResponseComponent implements OnInit {
     capaResponse.Comments = this.CAPAResponseFormGroup.get('Comments').value;
     capaResponse.CreatedBy = this.CurrentUserID.toString();
     this._documentCollectionService.CreateCAPAResponse(capaResponse).subscribe(
-      (data) => {
+      () => {
         this.IsProgressBarVisibile = false;
         this.notificationSnackBarComponent.openSnackBar('CAPA Response details updated successfully', SnackBarStatus.success);
         this.ResetForm();
@@ -226,6 +215,29 @@ export class CapaResponseComponent implements OnInit {
     );
   }
 
+  OpenCAPAConfirmationDialog(Actiontype: string): void {
+    const dialogConfig: MatDialogConfig = {
+      data: {
+        Actiontype: Actiontype,
+        Reason: ''
+      },
+      panelClass: 'capa-confirm-dialog'
+    };
+    const dialogRef = this.dialog.open(CapaConfirmationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+          const res = result as CAPAConfirmationStatusView;
+          if (Actiontype === 'Close') {
+            this.CloseCAPA(res.Reason);
+          }
+          if (Actiontype === 'Re-open') {
+            this.ReOpenCAPA(res.Reason);
+          }
+        }
+      });
+  }
+
   CloseCAPA(Reason: string): void {
     const CAPAStatusVieww: CAPAStatusView = new CAPAStatusView();
     CAPAStatusVieww.CAPAID = this.SelectedCAPAID;
@@ -233,17 +245,13 @@ export class CapaResponseComponent implements OnInit {
     CAPAStatusVieww.Reason = Reason;
     CAPAStatusVieww.ModifiedBy = this.CurrentUserID.toString();
     this._documentCollectionService.UpdateCAPAStatus(CAPAStatusVieww).subscribe(
-      (data) => {
+      () => {
         this.IsProgressBarVisibile = false;
         this.notificationSnackBarComponent.openSnackBar('CAPA status updated successfully', SnackBarStatus.success);
         this.ResetControl();
         // this.GetCAPAResponseByCAPA();
         // this.SelectedCAPAStaus = 'Closed';
-        if (this.CurrentUserRole === 'Vendor') {
-          this.GetCAPAByVendor();
-        } else {
-          this.GetCAPAByUser();
-        }
+        this.GetCAPADetails();
       },
       (err) => {
         console.error(err);
@@ -260,17 +268,13 @@ export class CapaResponseComponent implements OnInit {
     CAPAStatusVieww.Reason = Reason;
     CAPAStatusVieww.ModifiedBy = this.CurrentUserID.toString();
     this._documentCollectionService.UpdateCAPAStatus(CAPAStatusVieww).subscribe(
-      (data) => {
+      () => {
         this.IsProgressBarVisibile = false;
         this.notificationSnackBarComponent.openSnackBar('CAPA status updated successfully', SnackBarStatus.success);
         this.ResetControl();
         // this.GetCAPAResponseByCAPA();
         // this.SelectedCAPAStaus = 'InProgress';
-        if (this.CurrentUserRole === 'Vendor') {
-          this.GetCAPAByVendor();
-        } else {
-          this.GetCAPAByUser();
-        }
+        this.GetCAPADetails();
       },
       (err) => {
         console.error(err);

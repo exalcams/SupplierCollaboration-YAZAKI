@@ -251,11 +251,11 @@
               <div fxLayout>
                 <div fxFlex class="p-12" align="end">
                   <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
-                  mat-stroked-button (click)="SaveRFQAllocationTemp()">
+                  mat-stroked-button (click)="SaveRFQAllocation()">
                     Save
                   </button>
                   <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
-                  (click)="CreateRFQAllocation()" class="SaveBtnClass ml-8" mat-raised-button>
+                  (click)="SubmitRFQAllocation()" class="SaveBtnClass ml-8" mat-raised-button>
                     Save & Publish
                   </button>
                 </div>

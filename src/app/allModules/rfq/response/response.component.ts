@@ -35,7 +35,8 @@ export class ResponseComponent implements OnInit {
   RFQ: RFQView;
   RFQResponse: RFQResponseView;
   BGClassName: any;
-  RFQResponseItemsColumns: string[] = ['ItemID', 'MaterialDescription', 'OrderQuantity', 'DelayDays', 'UOM', 'Price', 'SupplierPartNumber', 'Schedule', 'Attachment', 'TechRating'];
+  RFQResponseItemsColumns: string[] = ['ItemID', 'MaterialDescription', 'OrderQuantity', 'DelayDays', 'UOM', 'Price', 'SupplierPartNumber',
+    'Schedule', 'DeliveryDate', 'SelfLifeDays', 'Attachment', 'TechRating'];
   RFQResponseItemAppID: number;
   @ViewChild('fileInput1') fileInput1: ElementRef;
   fileToUpload: File;
@@ -181,18 +182,41 @@ export class ResponseComponent implements OnInit {
   //   }
   // }
 
-  // handleFileInput(evt, index: number): void {
-  //   if (evt.target.files && evt.target.files.length > 0) {
-  //     this.fileToUpload = evt.target.files[0];
-  //     this.fileToUploadList.push(this.fileToUpload);
-  //     const OldValue = +this.RFQResponseItemFormArray.controls[index].get('NumberOfAttachments').value;
-  //     this.RFQResponseItemFormArray.controls[index].get('NumberOfAttachments').patchValue(OldValue + 1);
-  //     const AttNames = this.RFQResponseItemFormArray.controls[index].get('AttachmentNames').value as string[];
-  //     AttNames.push(this.fileToUpload.name);
-  //     this.RFQResponseItemFormArray.controls[index].get('AttachmentNames').patchValue(AttNames);
-  //   }
-  // }
+  handleFileInput(evt, index: number): void {
+    if (evt.target.files && evt.target.files.length > 0) {
+      this.fileToUpload = evt.target.files[0];
+      this.fileToUploadList.push(this.fileToUpload);
+      const OldValue = +this.RFQResponseItemFormArray.controls[index].get('NumberOfAttachments').value;
+      this.RFQResponseItemFormArray.controls[index].get('NumberOfAttachments').patchValue(OldValue + 1);
+      const AttNames = this.RFQResponseItemFormArray.controls[index].get('AttachmentNames').value as string[];
+      AttNames.push(this.fileToUpload.name);
+      this.RFQResponseItemFormArray.controls[index].get('AttachmentNames').patchValue(AttNames);
+    }
+  }
 
+  OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
+    const dialogConfig: MatDialogConfig = {
+      data: {
+        Actiontype: Actiontype,
+        Catagory: Catagory
+      },
+    };
+    const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+          this.SaveRFQResponse();
+        }
+      });
+  }
+
+  SaveRFQResponse(): void {
+    if (this.RFQResponse.RFQID) {
+      this.UpdateRFQResponse();
+    } else {
+      this.CreateRFQResponse();
+    }
+  }
 
   GetRFQHeaderValues(): void {
     this.RFQ.Title = this.RFQResponseFormGroup.get('Title').value;
@@ -224,6 +248,8 @@ export class ResponseComponent implements OnInit {
       rfq.Price = x.get('Price').value;
       rfq.SupplierPartNumber = x.get('SupplierPartNumber').value;
       rfq.Schedule = x.get('Schedule').value;
+      rfq.DeliveryDate = x.get('DeliveryDate').value;
+      rfq.SelfLifeDays = x.get('SelfLifeDays').value;
       rfq.NumberOfAttachments = x.get('NumberOfAttachments').value;
       rfq.AttachmentNames = x.get('AttachmentNames').value;
       rfq.TechRating = x.get('TechRating').value;
@@ -276,30 +302,6 @@ export class ResponseComponent implements OnInit {
     });
   }
 
-  OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
-    const dialogConfig: MatDialogConfig = {
-      data: {
-        Actiontype: Actiontype,
-        Catagory: Catagory
-      },
-    };
-    const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(
-      result => {
-        if (result) {
-          this.SaveRFQResponse();
-        }
-      });
-  }
-
-  SaveRFQResponse(): void {
-    if (this.RFQResponse.RFQID) {
-      this.UpdateRFQResponse();
-    } else {
-      this.CreateRFQResponse();
-    }
-  }
-
   CreateRFQResponse(): void {
     this.IsProgressBarVisibile = true;
     // this.GetRFQHeaderValues();
@@ -312,6 +314,7 @@ export class ResponseComponent implements OnInit {
         this.IsProgressBarVisibile = false;
         this.notificationSnackBarComponent.openSnackBar('RFQ Response details created successfully', SnackBarStatus.success);
         this.ResetControl();
+        this._router.navigate(['/rfq/prvendor']);
       },
       (err) => {
         console.error(err);
@@ -334,6 +337,7 @@ export class ResponseComponent implements OnInit {
         this.IsProgressBarVisibile = false;
         this.notificationSnackBarComponent.openSnackBar('RFQ Response details updated successfully', SnackBarStatus.success);
         this.ResetControl();
+        this._router.navigate(['/rfq/prvendor']);
       },
       (err) => {
         console.error(err);
@@ -373,11 +377,18 @@ export class ResponseComponent implements OnInit {
       UOM: [RFQItem.UOM, Validators.required],
       Price: [RFQItem.Price, Validators.required],
       Schedule: [RFQItem.Schedule, Validators.required],
+      DeliveryDate: ['', Validators.required],
+      SelfLifeDays: ['', Validators.required],
       NumberOfAttachments: [RFQItem.NumberOfAttachments],
       AttachmentNames: [RFQItem.AttachmentNames],
       SupplierPartNumber: [RFQItem.SupplierPartNumber, Validators.required],
       TechRating: [RFQItem.TechRating, Validators.required],
     });
+    row.disable();
+    row.get('Price').enable();
+    row.get('Schedule').enable();
+    row.get('DeliveryDate').enable();
+    row.get('SelfLifeDays').enable();
     this.RFQResponseItemFormArray.push(row);
     this.RFQResponseItemDataSource.next(this.RFQResponseItemFormArray.controls);
     // return row;
@@ -389,6 +400,7 @@ export class ResponseComponent implements OnInit {
         this.RFQ = data as RFQView;
         if (this.RFQ) {
           this.InsertRFQHeaderValues();
+          this.RFQResponseFormGroup.disable();
           if (this.RFQ.RFQItems && this.RFQ.RFQItems.length) {
             this.ClearFormArray(this.RFQResponseItemFormArray);
             this.RFQ.RFQItems.forEach((x, i) => {
@@ -397,7 +409,7 @@ export class ResponseComponent implements OnInit {
           } else {
             this.ResetRFQResponseItems();
           }
-          this.RFQResponseFormGroup.disable();
+
         }
       },
       (err) => {

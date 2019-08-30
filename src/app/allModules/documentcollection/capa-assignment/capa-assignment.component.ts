@@ -200,94 +200,107 @@ export class CapaAssignmentComponent implements OnInit {
 
   SaveCAPA(): void {
     this.ShowCAPAAllocationTag = false;
-    this.CreateCAPA();
+    this.ValidateCAPA();
   }
 
   CreateAndAssignCAPA(): void {
     this.ShowCAPAAllocationTag = true;
-    this.CreateCAPA();
+    this.ValidateCAPA();
+  }
+
+  ValidateCAPA(): void {
+    if (this.CAPAFormGroup.valid) {
+      if (this.CAPA.CAPAID) {
+        const Actiontype = 'Update';
+        const Catagory = 'CAPA Details';
+        this.OpenConfirmationDialog(Actiontype, Catagory);
+      } else {
+        const Actiontype = 'Create';
+        const Catagory = 'CAPA Details';
+        this.OpenConfirmationDialog(Actiontype, Catagory);
+      }
+    } else {
+      this.ShowValidationErrors();
+    }
+  }
+
+  ShowValidationErrors(): void {
+    Object.keys(this.CAPAFormGroup.controls).forEach(key => {
+      if (!this.CAPAFormGroup.get(key).valid) {
+        console.log(key);
+      }
+      this.CAPAFormGroup.get(key).markAsTouched();
+      this.CAPAFormGroup.get(key).markAsDirty();
+    });
+  }
+
+  OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
+    const dialogConfig: MatDialogConfig = {
+      data: {
+        Actiontype: Actiontype,
+        Catagory: Catagory
+      },
+    };
+    const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+          if (Actiontype === 'Submit') {
+            this.CreateCAPAAllocation();
+          } else {
+            if (this.CAPA.CAPAID) {
+              this.UpdateCAPA();
+            } else {
+              this.CreateCAPA();
+            }
+          }
+        }
+      });
+  }
+
+  UpdateCAPA(): void {
+    this.IsProgressBarVisibile = true;
+    this.GetCAPAHeaderValues();
+    this.CAPA.ModifiedBy = this.CurrentUserID.toString();
+    this._documentCollectionService.UpdateCAPA(this.CAPA, this.CAPAAppID, this.fileToUpload).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar('CAPA details updated successfully', SnackBarStatus.success);
+        this.ResetControl();
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        this.ResetControl();
+      }
+    );
   }
 
   CreateCAPA(): void {
-    if (this.CAPAFormGroup.valid) {
-      if (this.CAPA.CAPAID) {
-        const dialogConfig: MatDialogConfig = {
-          data: {
-            Actiontype: 'Update',
-            Catagory: 'CAPA Details'
-          },
-        };
-        const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
-        dialogRef.afterClosed().subscribe(
-          result => {
-            if (result) {
-              this.IsProgressBarVisibile = true;
-              this.GetCAPAHeaderValues();
-              this.CAPA.ModifiedBy = this.CurrentUserID.toString();
-              this._documentCollectionService.UpdateCAPA(this.CAPA, this.CAPAAppID, this.fileToUpload).subscribe(
-                (data) => {
-                  this.IsProgressBarVisibile = false;
-                  this.notificationSnackBarComponent.openSnackBar('CAPA details updated successfully', SnackBarStatus.success);
-                  this.ResetControl();
-                },
-                (err) => {
-                  console.error(err);
-                  this.IsProgressBarVisibile = false;
-                  this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-                  this.ResetControl();
-                }
-              );
-            } else {
-
-            }
-          }
-        );
-      } else {
-        const dialogConfig: MatDialogConfig = {
-          data: {
-            Actiontype: 'Create',
-            Catagory: 'CAPA Details'
-          },
-        };
-        const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
-        dialogRef.afterClosed().subscribe(
-          result => {
-            if (result) {
-              this.IsProgressBarVisibile = true;
-              this.GetCAPAHeaderValues();
-              this.CAPA.CreatedBy = this.CurrentUserID.toString();
-              this._documentCollectionService.CreateCAPA(this.CAPA, this.CAPAAppID, this.fileToUpload).subscribe(
-                (data) => {
-                  const CAPAID = data as number;
-                  this.SelectedCAPAID = CAPAID;
-                  this.IsProgressBarVisibile = false;
-                  if (this.ShowCAPAAllocationTag) {
-                    this.ShowCAPAAllocation = true;
-                    this.GetAllVendors();
-                  }
-                  this.notificationSnackBarComponent.openSnackBar('CAPA details created successfully', SnackBarStatus.success);
-                  this.ResetControl();
-                },
-                (err) => {
-                  console.error(err);
-                  this.IsProgressBarVisibile = false;
-                  this.ShowCAPAAllocation = false;
-                  this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-                  // this.ResetControl();
-                }
-              );
-            }
-          });
-      }
-    } else {
-      Object.keys(this.CAPAFormGroup.controls).forEach(key => {
-        if (!this.CAPAFormGroup.get(key).valid) {
-          console.log(key);
+    this.IsProgressBarVisibile = true;
+    this.GetCAPAHeaderValues();
+    this.CAPA.CreatedBy = this.CurrentUserID.toString();
+    this._documentCollectionService.CreateCAPA(this.CAPA, this.CAPAAppID, this.fileToUpload).subscribe(
+      (data) => {
+        const CAPAID = data as number;
+        this.SelectedCAPAID = CAPAID;
+        this.IsProgressBarVisibile = false;
+        if (this.ShowCAPAAllocationTag) {
+          this.ShowCAPAAllocation = true;
+          this.GetAllVendors();
         }
-        this.CAPAFormGroup.get(key).markAsTouched();
-        this.CAPAFormGroup.get(key).markAsDirty();
-      });
-    }
+        this.notificationSnackBarComponent.openSnackBar('CAPA details created successfully', SnackBarStatus.success);
+        this.ResetControl();
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.ShowCAPAAllocation = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+        // this.ResetControl();
+      }
+    );
   }
 
   AddSelectedVendors(): void {
@@ -320,35 +333,45 @@ export class CapaAssignmentComponent implements OnInit {
     }
   }
 
-  CreateCAPAAllocation(): void {
+  SubmitCAPAAllocation(): void {
     if (this.SelectedVendorList && this.SelectedVendorList.length) {
-      this.IsProgressBarVisibile = true;
-      this.CAPAAllocations = [];
-      this.SelectedVendorList.forEach(x => {
-        const CAPAAllocationView: CAPAAllocation = new CAPAAllocation();
-        CAPAAllocationView.CAPAID = this.SelectedCAPAID;
-        CAPAAllocationView.VendorID = x.VendorCode;
-        CAPAAllocationView.CreatedBy = this.CurrentUserName;
-        this.CAPAAllocations.push(CAPAAllocationView);
-      });
-      this._documentCollectionService.CreateCAPAAllocation(this.CAPAAllocations).subscribe(
-        (data) => {
-          this.IsProgressBarVisibile = false;
-          this.notificationSnackBarComponent.openSnackBar('Allocation created successfully', SnackBarStatus.success);
-          this.ShowCAPAAllocationTag = false;
-          this.ResetControl();
-        },
-        (err) => {
-          console.error(err);
-          this.IsProgressBarVisibile = false;
-          this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        }
-      );
+      const Actiontype = 'Submit';
+      const Catagory = 'CAPA Allocation';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
     } else {
       this.notificationSnackBarComponent.openSnackBar('no vendor is added', SnackBarStatus.warning);
     }
   }
 
+  CreateCAPAAllocation(): void {
+    this.GetCAPAAllocationDetails();
+    this.IsProgressBarVisibile = true;
+    this._documentCollectionService.CreateCAPAAllocation(this.CAPAAllocations).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar('Allocation created successfully', SnackBarStatus.success);
+        this.ShowCAPAAllocationTag = false;
+        this.ResetControl();
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+
+  }
+
+  GetCAPAAllocationDetails(): void {
+    this.CAPAAllocations = [];
+    this.SelectedVendorList.forEach(x => {
+      const CAPAAllocationView: CAPAAllocation = new CAPAAllocation();
+      CAPAAllocationView.CAPAID = this.SelectedCAPAID;
+      CAPAAllocationView.VendorID = x.VendorCode;
+      CAPAAllocationView.CreatedBy = this.CurrentUserName;
+      this.CAPAAllocations.push(CAPAAllocationView);
+    });
+  }
 
   isAllSelected(): boolean {
     // const numSelected = this.selection.selected.length;

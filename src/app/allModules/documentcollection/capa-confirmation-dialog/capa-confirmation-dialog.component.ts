@@ -1,14 +1,17 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { DashboardService } from 'app/services/dashboard.service';
 import { MasterService } from 'app/services/master.service';
-import { CAPAStatusView, CAPAConfirmationStatusView } from 'app/models/document-collection.model';
+import { CAPAConfirmationStatusView } from 'app/models/document-collection.model';
+import { fuseAnimations } from '@fuse/animations';
 
 @Component({
   selector: 'app-capa-confirmation-dialog',
   templateUrl: './capa-confirmation-dialog.component.html',
-  styleUrls: ['./capa-confirmation-dialog.component.scss']
+  styleUrls: ['./capa-confirmation-dialog.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  animations: fuseAnimations
 })
 export class CapaConfirmationDialogComponent implements OnInit {
   CAPAConfirmationFormGroup: FormGroup;
@@ -24,6 +27,7 @@ export class CapaConfirmationDialogComponent implements OnInit {
     this.CAPAConfirmationFormGroup = this.formBuilder.group({
       Reason: ['', Validators.required],
     });
+    console.log(this.CAPAStatusViewDATA);
   }
   YesClicked(): void {
     if (this.CAPAConfirmationFormGroup.valid) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatTableDataSource, MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -11,6 +11,7 @@ import { ShareParameterService } from 'app/services/share-parameter.service';
 import { Router } from '@angular/router';
 import { RFQService } from 'app/services/rfq.service';
 import { RFQAllocationView } from 'app/models/rfq.model';
+import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 
 @Component({
   selector: 'evaluation',
@@ -45,6 +46,7 @@ export class EvaluationComponent implements OnInit {
     private _router: Router,
     private _formBuilder: FormBuilder,
     public snackBar: MatSnackBar,
+    private dialog: MatDialog,
   ) {
     const CurrentPurchaseRequisition = this._shareParameterService.GetPurchaseRequisition();
     // console.log(CurrentPurchaseRequisition);
@@ -260,64 +262,93 @@ export class EvaluationComponent implements OnInit {
     }
   }
 
-  CreateRFQAllocation(): void {
+  SubmitRFQAllocation(): void {
     if (this.SelectedVendorList && this.SelectedVendorList.length) {
-      this.IsProgressBarVisibile = true;
-      this.RFQAllocations = [];
-      this.SelectedVendorList.forEach(x => {
-        const rFQAllocationView: RFQAllocationView = new RFQAllocationView();
-        rFQAllocationView.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
-        rFQAllocationView.RFQID = this.SelectedRFQID;
-        rFQAllocationView.VendorID = x.VendorCode;
-        rFQAllocationView.CreatedBy = this.CurrentUserName;
-        this.RFQAllocations.push(rFQAllocationView);
-      });
-      this._rfqService.CreateRFQAllocation(this.RFQAllocations).subscribe(
-        (data) => {
-          this.IsProgressBarVisibile = false;
-          this.notificationSnackBarComponent.openSnackBar('Allocation created successfully', SnackBarStatus.success);
-          this.ResetControl();
-          this._router.navigate(['/rfq/publish']);
-        },
-        (err) => {
-          console.error(err);
-          this.IsProgressBarVisibile = false;
-          this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        }
-      );
+      const Actiontype = 'Submit';
+      const Catagory = 'RFQ Allocation';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
     } else {
       this.notificationSnackBarComponent.openSnackBar('no vendor is added', SnackBarStatus.warning);
     }
   }
 
-  SaveRFQAllocationTemp(): void {
+  SaveRFQAllocation(): void {
     if (this.SelectedVendorList && this.SelectedVendorList.length) {
-      this.IsProgressBarVisibile = true;
-      this.RFQAllocations = [];
-      this.SelectedVendorList.forEach(x => {
-        const rFQAllocationView: RFQAllocationView = new RFQAllocationView();
-        rFQAllocationView.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
-        rFQAllocationView.RFQID = this.SelectedRFQID;
-        rFQAllocationView.VendorID = x.VendorCode;
-        rFQAllocationView.CreatedBy = this.CurrentUserName;
-        this.RFQAllocations.push(rFQAllocationView);
-      });
-      this._rfqService.SaveRFQAllocationTemp(this.RFQAllocations).subscribe(
-        (data) => {
-          this.IsProgressBarVisibile = false;
-          this.notificationSnackBarComponent.openSnackBar('Allocation saved successfully', SnackBarStatus.success);
-          this.ResetControl();
-          this._router.navigate(['/rfq/publish']);
-        },
-        (err) => {
-          console.error(err);
-          this.IsProgressBarVisibile = false;
-          this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-        }
-      );
+      const Actiontype = 'Save';
+      const Catagory = 'RFQ Allocation';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
     } else {
       this.notificationSnackBarComponent.openSnackBar('no vendor is added', SnackBarStatus.warning);
     }
+  }
+
+  OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
+    const dialogConfig: MatDialogConfig = {
+      data: {
+        Actiontype: Actiontype,
+        Catagory: Catagory
+      },
+    };
+    const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+          if (Actiontype === 'Submit') {
+            this.CreateRFQAllocation();
+          }
+          else if (Actiontype === 'Save') {
+            this.CreateRFQAllocationTemp();
+          }
+        }
+      });
+  }
+
+  CreateRFQAllocation(): void {
+    this.GetRFQAllocationDetails();
+    this.IsProgressBarVisibile = true;
+    this._rfqService.CreateRFQAllocation(this.RFQAllocations).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar('Allocation created successfully', SnackBarStatus.success);
+        this.ResetControl();
+        this._router.navigate(['/rfq/publish']);
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
+
+  CreateRFQAllocationTemp(): void {
+    this.GetRFQAllocationDetails();
+    this.IsProgressBarVisibile = true;
+    this._rfqService.CreateRFQAllocationTemp(this.RFQAllocations).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar('Allocation saved successfully', SnackBarStatus.success);
+        this.ResetControl();
+        this._router.navigate(['/rfq/publish']);
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
+
+  GetRFQAllocationDetails(): void {
+    this.RFQAllocations = [];
+    this.SelectedVendorList.forEach(x => {
+      const rFQAllocationView: RFQAllocationView = new RFQAllocationView();
+      rFQAllocationView.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
+      rFQAllocationView.RFQID = this.SelectedRFQID;
+      rFQAllocationView.VendorID = x.VendorCode;
+      rFQAllocationView.CreatedBy = this.CurrentUserName;
+      this.RFQAllocations.push(rFQAllocationView);
+    });
   }
 
   radioChange(event: any): void {

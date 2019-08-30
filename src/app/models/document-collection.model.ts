@@ -63,6 +63,6 @@ export class CAPAStatusView {
 }
 
 export class CAPAConfirmationStatusView {
-    ActionType: string;
+    Actiontype: string;
     Reason: string;
 }
