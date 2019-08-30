@@ -8,10 +8,11 @@ import { Router } from '@angular/router';
 import { MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { CAPAHeader, CAPAHeaderView, CAPAAllocationVendorView, CAPAResponse, CAPAResponseView, CAPAStatusView } from 'app/models/document-collection.model';
+import { CAPAHeader, CAPAHeaderView, CAPAAllocationVendorView, CAPAResponse, CAPAResponseView, CAPAStatusView, CAPAConfirmationStatusView } from 'app/models/document-collection.model';
 import { Guid } from 'guid-typescript';
 import { RFQView } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
+import { CapaConfirmationDialogComponent } from '../capa-confirmation-dialog/capa-confirmation-dialog.component';
 
 @Component({
   selector: 'app-capa-response',
@@ -143,13 +144,13 @@ export class CapaResponseComponent implements OnInit {
   CloseTicket(): void {
     const Actiontype = 'Close';
     const Catagory = 'CAPA';
-    this.OpenConfirmationDialog(Actiontype, Catagory);
+    this.OpenCAPAConfirmationDialog(Actiontype, Catagory);
   }
 
   ReOpenCloseTicket(): void {
     const Actiontype = 'Re-open';
     const Catagory = 'CAPA';
-    this.OpenConfirmationDialog(Actiontype, Catagory);
+    this.OpenCAPAConfirmationDialog(Actiontype, Catagory);
   }
 
   ShowValidationErrors(): void {
@@ -161,6 +162,30 @@ export class CapaResponseComponent implements OnInit {
       this.CAPAResponseFormGroup.get(key).markAsDirty();
     });
   }
+
+  OpenCAPAConfirmationDialog(Actiontype: string, Catagory: string): void {
+    const dialogConfig: MatDialogConfig = {
+      data: {
+        Actiontype: Actiontype,
+        Reason: ''
+      },
+      panelClass: 'capa-confirm-dialog'
+    };
+    const dialogRef = this.dialog.open(CapaConfirmationDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+          const res = result as CAPAConfirmationStatusView;
+          if (Actiontype === 'Close') {
+            this.CloseCAPA(res.Reason);
+          }
+          if (Actiontype === 'Re-open') {
+            this.ReOpenCAPA(res.Reason);
+          }
+        }
+      });
+  }
+
 
   OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
     const dialogConfig: MatDialogConfig = {
@@ -175,12 +200,6 @@ export class CapaResponseComponent implements OnInit {
         if (result) {
           if (Actiontype === 'Update') {
             this.CreateCAPAResponse();
-          }
-          if (Actiontype === 'Close') {
-            this.CloseCAPA();
-          }
-          if (Actiontype === 'Re-open') {
-            this.ReOpenCAPA();
           }
         }
       });
@@ -207,10 +226,11 @@ export class CapaResponseComponent implements OnInit {
     );
   }
 
-  CloseCAPA(): void {
+  CloseCAPA(Reason: string): void {
     const CAPAStatusVieww: CAPAStatusView = new CAPAStatusView();
     CAPAStatusVieww.CAPAID = this.SelectedCAPAID;
     CAPAStatusVieww.CAPAStatus = 'Closed';
+    CAPAStatusVieww.Reason = Reason;
     CAPAStatusVieww.ModifiedBy = this.CurrentUserID.toString();
     this._documentCollectionService.UpdateCAPAStatus(CAPAStatusVieww).subscribe(
       (data) => {
@@ -233,10 +253,11 @@ export class CapaResponseComponent implements OnInit {
     );
   }
 
-  ReOpenCAPA(): void {
+  ReOpenCAPA(Reason: string): void {
     const CAPAStatusVieww: CAPAStatusView = new CAPAStatusView();
     CAPAStatusVieww.CAPAID = this.SelectedCAPAID;
     CAPAStatusVieww.CAPAStatus = 'InProgress';
+    CAPAStatusVieww.Reason = Reason;
     CAPAStatusVieww.ModifiedBy = this.CurrentUserID.toString();
     this._documentCollectionService.UpdateCAPAStatus(CAPAStatusVieww).subscribe(
       (data) => {

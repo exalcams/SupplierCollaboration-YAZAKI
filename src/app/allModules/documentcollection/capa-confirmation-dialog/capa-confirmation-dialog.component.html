@@ -1,0 +1,27 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar class="mat-accent m-0 hbgg">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">CAPA {{CAPAStatusViewDATA.ActionType}} Confirmation</span>
+      <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <form name="CAPAConfigurationForm" [formGroup]="CAPAConfirmationFormGroup" fxLayout="column" fxFlex>
+      <mat-form-field>
+        <input matInput placeholder="Reason" formControlName="Reason">
+        <mat-error
+          *ngIf="CAPAConfirmationFormGroup.get('Reason').touched && CAPAConfirmationFormGroup.get('Reason').hasError('required')">
+          Reason is required
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+
+  <mat-dialog-actions class="m-0 p-16" fxLayoutAlign="space-between center">
+    <button mat-raised-button (click)="CloseClicked()">Cancel</button>
+    <button mat-raised-button color="accent" (click)="YesClicked()">Yes</button>
+  </mat-dialog-actions>
+</div>

@@ -52,6 +52,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FormsModule } from '@angular/forms';
 import { CapaResponseComponent } from './capa-response/capa-response.component';
+import { CapaConfirmationDialogComponent } from './capa-confirmation-dialog/capa-confirmation-dialog.component';
 
 const documentCollection: Routes = [
   {
@@ -69,7 +70,7 @@ const documentCollection: Routes = [
 ];
 
 @NgModule({
-  declarations: [VendorAssignmentComponent, CapaAssignmentComponent, CapaResponseComponent],
+  declarations: [VendorAssignmentComponent, CapaAssignmentComponent, CapaResponseComponent, CapaConfirmationDialogComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(documentCollection),
@@ -120,6 +121,9 @@ const documentCollection: Routes = [
     FuseWidgetModule,
 
     FormsModule,
+  ],
+  entryComponents: [
+    CapaConfirmationDialogComponent
   ]
 })
 export class DocumentcollectionModule { }
