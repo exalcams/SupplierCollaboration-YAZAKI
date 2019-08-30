@@ -58,5 +58,11 @@ export class CAPAResponseView {
 export class CAPAStatusView {
     CAPAID: number;
     CAPAStatus: string;
+    Reason: string;
     ModifiedBy: string;
+}
+
+export class CAPAConfirmationStatusView {
+    ActionType: string;
+    Reason: string;
 }
