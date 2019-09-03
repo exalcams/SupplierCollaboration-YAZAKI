@@ -55,8 +55,14 @@ import { EvaluationComponent } from './evaluation/evaluation.component';
 import { AwardedComponent } from './awarded/awarded.component';
 import { PurchaseRequisitionVendorComponent } from './purchase-requisition-vendor/purchase-requisition-vendor.component';
 import { ResponseComponent } from './response/response.component';
+import { PurchaseRequisitionComponent } from './purchase-requisition/purchase-requisition.component';
+import { RFQVendorComponent } from './rfq-vendor/rfq-vendor.component';
 
 const routes: Routes = [
+    {
+        path: 'pr',
+        component: PurchaseRequisitionComponent
+    },
     {
         path: 'creation',
         component: CreationComponent,
@@ -70,9 +76,13 @@ const routes: Routes = [
         component: EvaluationComponent
     },
     {
-        path: 'prvendor',
-        component: PurchaseRequisitionVendorComponent
+        path: 'rfqvendor',
+        component: RFQVendorComponent
     },
+    // {
+    //     path: 'prvendor',
+    //     component: PurchaseRequisitionVendorComponent
+    // },
     {
         path: 'response',
         component: ResponseComponent
@@ -140,7 +150,14 @@ const routes: Routes = [
 
         FormsModule,
     ],
-    declarations: [CreationComponent, PublishComponent, EvaluationComponent, AwardedComponent, PurchaseRequisitionVendorComponent,ResponseComponent],
+    declarations: [PurchaseRequisitionComponent,
+        CreationComponent, 
+        PublishComponent, 
+        EvaluationComponent, 
+        AwardedComponent, 
+        PurchaseRequisitionVendorComponent,
+        RFQVendorComponent, 
+        ResponseComponent],
     providers: [],
     entryComponents: [
     ]

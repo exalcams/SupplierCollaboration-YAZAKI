@@ -14,6 +14,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Auxiliary } from 'app/models/asn';
 import { Location } from '@angular/common';
+import { Guid } from 'guid-typescript';
 
 @Component({
   selector: 'app-response',
@@ -24,19 +25,21 @@ export class ResponseComponent implements OnInit {
   authenticationDetails: AuthenticationDetails;
   MenuItems: string[];
   CurrentUserName: string;
+  CurrentUserID: Guid;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
   RFQResponseFormGroup: FormGroup;
   RFQResponseItemFormArray: FormArray = this._formBuilder.array([]);
   RFQResponseItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
   VendorID: string;
-  SelectedPurchaseRequisitionID: number;
+  SelectedRFQID: number;
+  // SelectedPurchaseRequisitionID: number;
   SelectedRFQStatus = '';
   RFQ: RFQView;
   RFQResponse: RFQResponseView;
   BGClassName: any;
-  RFQResponseItemsColumns: string[] = ['ItemID', 'MaterialDescription', 'OrderQuantity', 'DelayDays', 'UOM', 'Price', 'SupplierPartNumber',
-    'Schedule', 'DeliveryDate', 'SelfLifeDays', 'Attachment', 'TechRating'];
+  RFQResponseItemsColumns: string[] = ['ItemID', 'MaterialDescription', 'OrderQuantity', 'UOM', 'DeliveryDate', 'DelayDays', 'Schedule',
+    'Price', 'SupplierPartNumber', 'SelfLifeDays', 'Attachment', 'TechRating'];
   RFQResponseItemAppID: number;
   @ViewChild('fileInput1') fileInput1: ElementRef;
   fileToUpload: File;
@@ -57,7 +60,8 @@ export class ResponseComponent implements OnInit {
     const CurrentPurchaseRequisition = this._shareParameterService.GetPurchaseRequisition();
     // console.log(CurrentPurchaseRequisition);
     if (CurrentPurchaseRequisition) {
-      this.SelectedPurchaseRequisitionID = CurrentPurchaseRequisition.PurchaseRequisitionID;
+      // this.SelectedPurchaseRequisitionID = CurrentPurchaseRequisition.PurchaseRequisitionID;
+      this.SelectedRFQID = CurrentPurchaseRequisition.RFQID;
       this.SelectedRFQStatus = CurrentPurchaseRequisition.RFQStatus;
     } else {
       this._router.navigate(['/rfq/prvendor']);
@@ -74,6 +78,7 @@ export class ResponseComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.CurrentUserName = this.authenticationDetails.userName;
+      this.CurrentUserID = this.authenticationDetails.userID;
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
       if (this.MenuItems.indexOf('RFQResponse') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
@@ -100,7 +105,9 @@ export class ResponseComponent implements OnInit {
         this.BGClassName = config;
       });
     this.GetAppByName();
-    this.GetRFQByPurchaseRequisitionID();
+    // this.GetRFQByPurchaseRequisitionID();
+    this.GetRFQByID();
+
   }
   AddRFQResponseItemFormGroup(): void {
     const row = this._formBuilder.group({
@@ -230,7 +237,7 @@ export class ResponseComponent implements OnInit {
   }
 
   GetRFQResponseHeaderValues(): void {
-    this.RFQResponse.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
+    // this.RFQResponse.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
     this.RFQResponse.RFQID = this.RFQ.RFQID;
     this.RFQResponse.UserID = this.authenticationDetails.userID;
   }
@@ -307,7 +314,7 @@ export class ResponseComponent implements OnInit {
     // this.GetRFQHeaderValues();
     this.GetRFQResponseHeaderValues();
     this.GetRFQResponseItems();
-    this.RFQResponse.CreatedBy = this.CurrentUserName;
+    this.RFQResponse.CreatedBy = this.CurrentUserID.toString();
     this._rfqService.CreateRFQResponse(this.RFQResponse).subscribe(
       (data) => {
         const TransID = data as number;
@@ -330,7 +337,7 @@ export class ResponseComponent implements OnInit {
     // this.GetRFQHeaderValues();
     this.GetRFQResponseHeaderValues();
     this.GetRFQResponseItems();
-    this.RFQResponse.ModifiedBy = this.CurrentUserName;
+    this.RFQResponse.ModifiedBy = this.CurrentUserID.toString();
     this._rfqService.UpdateRFQResponse(this.RFQResponse).subscribe(
       (data) => {
         const TransID = data as number;
@@ -378,7 +385,7 @@ export class ResponseComponent implements OnInit {
       Price: [RFQItem.Price, Validators.required],
       Schedule: [RFQItem.Schedule, Validators.required],
       DeliveryDate: ['', Validators.required],
-      SelfLifeDays: ['', Validators.required],
+      SelfLifeDays: [RFQItem.SelfLifeDays, Validators.required],
       NumberOfAttachments: [RFQItem.NumberOfAttachments],
       AttachmentNames: [RFQItem.AttachmentNames],
       SupplierPartNumber: [RFQItem.SupplierPartNumber, Validators.required],
@@ -394,8 +401,31 @@ export class ResponseComponent implements OnInit {
     // return row;
   }
 
-  GetRFQByPurchaseRequisitionID(): void {
-    this._rfqService.GetRFQByPurchaseRequisitionID(this.SelectedPurchaseRequisitionID).subscribe(
+  // GetRFQByPurchaseRequisitionID(): void {
+  //   this._rfqService.GetRFQByPurchaseRequisitionID(this.SelectedPurchaseRequisitionID).subscribe(
+  //     (data) => {
+  //       this.RFQ = data as RFQView;
+  //       if (this.RFQ) {
+  //         this.InsertRFQHeaderValues();
+  //         this.RFQResponseFormGroup.disable();
+  //         if (this.RFQ.RFQItems && this.RFQ.RFQItems.length) {
+  //           this.ClearFormArray(this.RFQResponseItemFormArray);
+  //           this.RFQ.RFQItems.forEach((x, i) => {
+  //             this.InsertRFQResponseItemsFormGroup(x);
+  //           });
+  //         } else {
+  //           this.ResetRFQResponseItems();
+  //         }
+
+  //       }
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //     }
+  //   );
+  // }
+  GetRFQByID(): void {
+    this._rfqService.GetRFQByID(this.SelectedRFQID).subscribe(
       (data) => {
         this.RFQ = data as RFQView;
         if (this.RFQ) {

@@ -8,7 +8,7 @@ export class PurchaseRequisition {
     PurchaseGroup: string;
     CompanyCode: string;
     Buyer: string;
-    Station: string;
+    State: string;
     Publishing: string;
     Response: string;
     Awarded: string;
@@ -20,7 +20,7 @@ export class PurchaseRequisition {
     IsActive: boolean;
 }
 
-export class PurchaseRequisitionItem{
+export class PurchaseRequisitionItem {
     PurchaseRequisitionID: number;
     ItemID: number;
     MaterialCode: string;
@@ -63,6 +63,20 @@ export class RFQHeader {
     CreatedBy: string;
     ModifiedOn?: Date;
     ModifiedBy: string;
+    IsActive: boolean;
+}
+
+export class RFQHeaderView {
+    RFQID: number;
+    Title: string;
+    SupplyPlant: string;
+    Currency: string;
+    RFQStartDate: Date;
+    RFQResponseStartDate?: Date;
+    IncoTerm: string;
+    RFQEndDate?: Date;
+    RFQResponseEndDate?: Date;
+    Status: string;
     IsActive: boolean;
 }
 export class RFQItem {
@@ -118,10 +132,12 @@ export class RFQItemView {
     MaterialDescription: string;
     OrderQuantity: number;
     UOM: string;
+    ExpectedDeliveryDate?: Date;
     DelayDays: number;
     Schedule: number;
     Price: number;
     SupplierPartNumber: string;
+    SelfLifeDays: string;
     NumberOfAttachments: number;
     AttachmentNames: string[];
     TechRating: string;

@@ -6,7 +6,7 @@ import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '
 import { BehaviorSubject } from 'rxjs';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { RFQView, RFQItem, RFQItemView } from 'app/models/rfq.model';
+import { RFQView, RFQItem, RFQItemView, PurchaseRequisitionItem } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AuthenticationDetails, App } from 'app/models/master';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -15,6 +15,7 @@ import { Location } from '@angular/common';
 import { Auxiliary } from 'app/models/asn';
 import { MasterService } from 'app/services/master.service';
 import { ShareParameterService } from 'app/services/share-parameter.service';
+import { Guid } from 'guid-typescript';
 
 @Component({
   selector: 'creation',
@@ -27,8 +28,10 @@ export class CreationComponent implements OnInit {
   authenticationDetails: AuthenticationDetails;
   MenuItems: string[];
   CurrentUserName: string;
+  CurrentUserID: Guid;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
+  PurchaseRequestionItems: PurchaseRequisitionItem[] = [];
   RFQFormGroup: FormGroup;
   RFQItemFormArray: FormArray = this._formBuilder.array([]);
   RFQItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
@@ -36,7 +39,7 @@ export class CreationComponent implements OnInit {
   SelectedRFQStatus = '';
   RFQ: RFQView;
   BGClassName: any;
-  RFQItemsColumns: string[] = ['ItemID', 'MaterialDescription', 'OrderQuantity', 'DelayDays', 'UOM', 'Price', 'SupplierPartNumber', 'Schedule', 'Attachment', 'TechRating'];
+  RFQItemsColumns: string[] = ['ItemID', 'MaterialDescription', 'OrderQuantity', 'UOM', 'ExpectedDeliveryDate', 'DelayDays', 'Schedule', 'Price', 'SupplierPartNumber', 'SelfLifeDays', 'Attachment', 'TechRating'];
   RFQItemAppID: number;
   @ViewChild('fileInput1') fileInput1: ElementRef;
   fileToUpload: File;
@@ -67,7 +70,7 @@ export class CreationComponent implements OnInit {
       this.SelectedPurchaseRequisitionID = CurrentPurchaseRequisition.PurchaseRequisitionID;
       this.SelectedRFQStatus = CurrentPurchaseRequisition.RFQStatus;
     } else {
-      this._router.navigate(['/rfq/publish']);
+      this._router.navigate(['/rfq/pr']);
     }
 
 
@@ -84,6 +87,7 @@ export class CreationComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.CurrentUserName = this.authenticationDetails.userName;
+      this.CurrentUserID = this.authenticationDetails.userID;
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
       if (this.MenuItems.indexOf('RFQCreation') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
@@ -110,7 +114,10 @@ export class CreationComponent implements OnInit {
         this.BGClassName = config;
       });
     this.GetAppByName();
-    if (this.SelectedRFQStatus.toLocaleLowerCase() !== 'open') {
+    if (this.SelectedRFQStatus.toLocaleLowerCase() === 'open') {
+      this.GetPurchaseRequisitionItemsByPRID();
+    }
+    else {
       this.GetRFQByPurchaseRequisitionID();
     }
   }
@@ -283,8 +290,8 @@ export class CreationComponent implements OnInit {
     this.IsProgressBarVisibile = true;
     this.RFQ.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
     this.GetRFQHeaderValues();
-    this.GetRFQItems();
-    this.RFQ.ModifiedBy = this.CurrentUserName;
+    this.GetRFQItemValues();
+    this.RFQ.ModifiedBy = this.CurrentUserID.toString();
     this._rfqService.UpdateRFQ(this.RFQ).subscribe(
       (data) => {
         const TransID = data as number;
@@ -292,7 +299,7 @@ export class CreationComponent implements OnInit {
         const aux = new Auxiliary();
         aux.APPID = this.RFQItemAppID;
         aux.HeaderNumber = TransID.toString();
-        aux.CreatedBy = this.CurrentUserName;
+        aux.CreatedBy = this.CurrentUserID.toString();
         if (this.fileToUploadList && this.fileToUploadList.length) {
           this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
             (dat) => {
@@ -327,8 +334,8 @@ export class CreationComponent implements OnInit {
     this.IsProgressBarVisibile = true;
     this.RFQ.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
     this.GetRFQHeaderValues();
-    this.GetRFQItems();
-    this.RFQ.CreatedBy = this.CurrentUserName;
+    this.GetRFQItemValues();
+    this.RFQ.CreatedBy = this.CurrentUserID.toString();
     this._rfqService.CreateRFQ(this.RFQ).subscribe(
       (data) => {
         const TransID = data as number;
@@ -336,7 +343,7 @@ export class CreationComponent implements OnInit {
         const aux = new Auxiliary();
         aux.APPID = this.RFQItemAppID;
         aux.HeaderNumber = TransID.toString();
-        aux.CreatedBy = this.CurrentUserName;
+        aux.CreatedBy = this.CurrentUserID.toString();
         if (this.fileToUploadList && this.fileToUploadList.length) {
           this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
             (dat) => {
@@ -380,7 +387,7 @@ export class CreationComponent implements OnInit {
     this.RFQ.RFQResponseEndDate = this.RFQFormGroup.get('RFQResponseEndDate').value;
   }
 
-  GetRFQItems(): void {
+  GetRFQItemValues(): void {
     this.RFQ.RFQItems = [];
     const RFQItemsFormArray = this.RFQFormGroup.get('RFQItems') as FormArray;
     RFQItemsFormArray.controls.forEach((x, i) => {
@@ -388,11 +395,13 @@ export class CreationComponent implements OnInit {
       rfq.ItemID = x.get('ItemID').value;
       rfq.MaterialDescription = x.get('MaterialDescription').value;
       rfq.OrderQuantity = x.get('OrderQuantity').value;
-      rfq.DelayDays = x.get('DelayDays').value;
       rfq.UOM = x.get('UOM').value;
+      rfq.ExpectedDeliveryDate = x.get('ExpectedDeliveryDate').value;
+      rfq.DelayDays = x.get('DelayDays').value;
+      rfq.Schedule = x.get('Schedule').value;
       rfq.Price = x.get('Price').value;
       rfq.SupplierPartNumber = x.get('SupplierPartNumber').value;
-      rfq.Schedule = x.get('Schedule').value;
+      rfq.SelfLifeDays = x.get('SelfLifeDays').value;
       rfq.NumberOfAttachments = x.get('NumberOfAttachments').value;
       rfq.AttachmentNames = x.get('AttachmentNames').value;
       rfq.TechRating = x.get('TechRating').value;
@@ -405,7 +414,7 @@ export class CreationComponent implements OnInit {
     const CurrentPurchaseRequisition = this._shareParameterService.GetPurchaseRequisition();
     CurrentPurchaseRequisition.RFQID = this.RFQ.RFQID;
     this._shareParameterService.SetPurchaseRequisition(CurrentPurchaseRequisition);
-    this._router.navigate(['/rfq/evaluation']);
+    this._router.navigate(['/rfq/publish']);
   }
 
   InsertRFQHeaderValues(): void {
@@ -421,23 +430,67 @@ export class CreationComponent implements OnInit {
     });
   }
 
+  InsertPurchaseRequisitionItemsFormGroup(prItem: PurchaseRequisitionItem): void {
+    const row = this._formBuilder.group({
+      ItemID: [prItem.ItemID, Validators.required],
+      MaterialDescription: [prItem.MaterialDescription, Validators.required],
+      OrderQuantity: [prItem.OrderQuantity, Validators.required],
+      UOM: [prItem.UOM, Validators.required],
+      ExpectedDeliveryDate: [prItem.ExpectedDeliveryDate, Validators.required],
+      DelayDays: [prItem.DelayDays, Validators.required],
+      Schedule: [prItem.Schedule, Validators.required],
+      Price: [prItem.Price, Validators.required],
+      SupplierPartNumber: [prItem.SupplierPartNumber, Validators.required],
+      SelfLifeDays: [prItem.SelfLifeDays, Validators.required],
+      NumberOfAttachments: [''],
+      AttachmentNames: [[]],
+      TechRating: [prItem.TechRating, Validators.required],
+    });
+    row.disable();
+    this.RFQItemFormArray.push(row);
+    this.RFQItemDataSource.next(this.RFQItemFormArray.controls);
+    // return row;
+  }
+
   InsertRFQItemsFormGroup(rFQItem: RFQItemView): void {
     const row = this._formBuilder.group({
       ItemID: [rFQItem.ItemID, Validators.required],
       MaterialDescription: [rFQItem.MaterialDescription, Validators.required],
       OrderQuantity: [rFQItem.OrderQuantity, Validators.required],
-      DelayDays: [rFQItem.DelayDays, Validators.required],
       UOM: [rFQItem.UOM, Validators.required],
-      Price: [rFQItem.Price, Validators.required],
+      ExpectedDeliveryDate: [rFQItem.ExpectedDeliveryDate, Validators.required],
+      DelayDays: [rFQItem.DelayDays, Validators.required],
       Schedule: [rFQItem.Schedule, Validators.required],
+      Price: [rFQItem.Price, Validators.required],
+      SupplierPartNumber: [rFQItem.SupplierPartNumber, Validators.required],
+      SelfLifeDays: [rFQItem.SelfLifeDays, Validators.required],
       NumberOfAttachments: [rFQItem.NumberOfAttachments],
       AttachmentNames: [rFQItem.AttachmentNames],
-      SupplierPartNumber: [rFQItem.SupplierPartNumber, Validators.required],
       TechRating: [rFQItem.TechRating, Validators.required],
     });
     this.RFQItemFormArray.push(row);
     this.RFQItemDataSource.next(this.RFQItemFormArray.controls);
     // return row;
+  }
+
+  GetPurchaseRequisitionItemsByPRID(): void {
+    this._rfqService.GetPurchaseRequisitionItemsByPRID(this.SelectedPurchaseRequisitionID).subscribe(
+      (data) => {
+        this.PurchaseRequestionItems = data as PurchaseRequisitionItem[];
+        if (this.PurchaseRequestionItems && this.PurchaseRequestionItems.length) {
+          this.ClearFormArray(this.RFQItemFormArray);
+          this.PurchaseRequestionItems.forEach((x, i) => {
+            this.InsertPurchaseRequisitionItemsFormGroup(x);
+          });
+        } else {
+          this.ResetRFQItems();
+        }
+        // this.RFQFormGroup.disable();
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
 
   GetRFQByPurchaseRequisitionID(): void {

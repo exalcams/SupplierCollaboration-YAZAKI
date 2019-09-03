@@ -5,7 +5,7 @@ import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { AttachmentDetails } from 'app/allModules/orderacknowledgment/orderacknowledgment/orderacknowledgment.component';
-import { RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView } from 'app/models/rfq.model';
+import { RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView, PurchaseRequisitionItem, RFQHeaderView } from 'app/models/rfq.model';
 import { Auxiliary } from 'app/models/asn';
 import { Guid } from 'guid-typescript';
 
@@ -53,8 +53,20 @@ export class RFQService {
         return this._httpClient.get<PurchaseRequisition[]>(`${this.baseAddress}api/RFQ/GetPurchaseRequisitionsByRFQStatus?RFQStatus=${RFQStatus}`)
             .pipe(catchError(this.errorHandler));
     }
+    GetPurchaseRequisitionItemsByPRID(PRID: number): Observable<PurchaseRequisitionItem[] | string> {
+        return this._httpClient.get<PurchaseRequisitionItem[]>(`${this.baseAddress}api/RFQ/GetPurchaseRequisitionItemsByPRID?PRID=${PRID}`)
+            .pipe(catchError(this.errorHandler));
+    }
     GetRFQByPurchaseRequisitionID(PurchaseRequisitionID: number): Observable<RFQView | string> {
         return this._httpClient.get<RFQView>(`${this.baseAddress}api/RFQ/GetRFQByPurchaseRequisitionID?PurchaseRequisitionID=${PurchaseRequisitionID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetRFQByID(RFQID: number): Observable<RFQView | string> {
+        return this._httpClient.get<RFQView>(`${this.baseAddress}api/RFQ/GetRFQByID?RFQID=${RFQID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetAllCompletedRFQByVendor(UserID: Guid): Observable<RFQHeaderView[] | string> {
+        return this._httpClient.get<RFQHeaderView[]>(`${this.baseAddress}api/RFQ/GetAllCompletedRFQByVendor?UserID=${UserID}`)
             .pipe(catchError(this.errorHandler));
     }
     GetAllCompletedPurchaseRequisitionByVendor(UserID: Guid): Observable<PurchaseRequisition[] | string> {
