@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { RFQService } from 'app/services/rfq.service';
 import { RFQAllocationView } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
+import { Guid } from 'guid-typescript';
 
 @Component({
   selector: 'evaluation',
@@ -22,6 +23,7 @@ export class EvaluationComponent implements OnInit {
   authenticationDetails: AuthenticationDetails;
   MenuItems: string[];
   CurrentUserName: string;
+  CurrentUserID: Guid;
   SelectedPurchaseRequisitionID: number;
   SelectedRFQStatus = '';
   SelectedRFQID: number;
@@ -67,6 +69,7 @@ export class EvaluationComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.CurrentUserName = this.authenticationDetails.userName;
+      this.CurrentUserID = this.authenticationDetails.userID;
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
       if (this.MenuItems.indexOf('RFQEvaluation') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
@@ -346,7 +349,7 @@ export class EvaluationComponent implements OnInit {
       rFQAllocationView.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
       rFQAllocationView.RFQID = this.SelectedRFQID;
       rFQAllocationView.VendorID = x.VendorCode;
-      rFQAllocationView.CreatedBy = this.CurrentUserName;
+      rFQAllocationView.CreatedBy = this.CurrentUserID.toString();
       this.RFQAllocations.push(rFQAllocationView);
     });
   }

@@ -130,71 +130,73 @@
             <div fxFlex align="end" class="pb-8">
               <button [ngClass]="BGClassName?.layout?.toolbar?.background" class="SaveBtnClass" mat-raised-button
                 (click)="GoToRFQResponse()">
-                Review RFQ
+                Respond
               </button>
             </div>
           </div>
           <mat-divider></mat-divider>
           <div fxLayout="row" class="mt-24">
             <div fxFlex="100">
-              <table mat-table [dataSource]="PurchaseRequisitionDataSource">
+              <table mat-table [dataSource]="RFQDataSource">
 
-                <ng-container matColumnDef="PurchaseRequisitionID">
-                  <th mat-header-cell *matHeaderCellDef>Purchase Requirement</th>
-                  <td mat-cell *matCellDef="let element">{{element.PurchaseRequisitionID}}</td>
+                <ng-container matColumnDef="RFQID">
+                  <th mat-header-cell *matHeaderCellDef>RFQ ID</th>
+                  <td mat-cell *matCellDef="let element">{{element.RFQID}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="PurchaseDate">
-                  <th mat-header-cell *matHeaderCellDef>Purchase Date</th>
-                  <td mat-cell *matCellDef="let element"> {{element.PurchaseDate | date:'dd-MM-yyyy hh:mm:ss a'}} </td>
+                <ng-container matColumnDef="Title">
+                  <th mat-header-cell *matHeaderCellDef>Title</th>
+                  <td mat-cell *matCellDef="let element">{{element.Title}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="PurchaseOrganization">
-                  <th mat-header-cell *matHeaderCellDef>PurchaseOrganization</th>
-                  <td mat-cell *matCellDef="let element"> {{element.PurchaseOrganization}} </td>
+                <ng-container matColumnDef="SupplyPlant">
+                  <th mat-header-cell *matHeaderCellDef>Supply Plant</th>
+                  <td mat-cell *matCellDef="let element">{{element.SupplyPlant}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="PurchaseGroup">
-                  <th mat-header-cell *matHeaderCellDef>Purchase Group</th>
-                  <td mat-cell *matCellDef="let element"> {{element.PurchaseGroup}} </td>
+                <ng-container matColumnDef="Currency">
+                  <th mat-header-cell *matHeaderCellDef>Currency</th>
+                  <td mat-cell *matCellDef="let element">{{element.Currency}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="CompanyCode">
-                  <th mat-header-cell *matHeaderCellDef>Company Code</th>
-                  <td mat-cell *matCellDef="let element"> {{element.CompanyCode}} </td>
+                <!-- <ng-container matColumnDef="RFQStartDate">
+                  <th mat-header-cell *matHeaderCellDef>Start Date</th>
+                  <td mat-cell *matCellDef="let element"> {{element.RFQStartDate | date:'dd-MM-yyyy hh:mm:ss a'}} </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="RFQResponseStartDate">
+                  <th mat-header-cell *matHeaderCellDef>Validity Start Date</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element.RFQResponseStartDate | date:'dd-MM-yyyy hh:mm:ss a'}} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="Buyer">
-                  <th mat-header-cell *matHeaderCellDef>Buyer</th>
-                  <td mat-cell *matCellDef="let element"> {{element.Buyer}} </td>
+                <ng-container matColumnDef="IncoTerm">
+                  <th mat-header-cell *matHeaderCellDef>Inco Term</th>
+                  <td mat-cell *matCellDef="let element"> {{element.IncoTerm}} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="Station">
-                  <th mat-header-cell *matHeaderCellDef>Station</th>
-                  <td mat-cell *matCellDef="let element"> {{element.Station}} </td>
+                <!-- <ng-container matColumnDef="RFQEndDate">
+                  <th mat-header-cell *matHeaderCellDef>End Date</th>
+                  <td mat-cell *matCellDef="let element"> {{element.RFQEndDate | date:'dd-MM-yyyy hh:mm:ss a'}} </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="RFQResponseEndDate">
+                  <th mat-header-cell *matHeaderCellDef>Validity End Date</th>
+                  <td mat-cell *matCellDef="let element"> {{element.RFQResponseEndDate | date:'dd-MM-yyyy hh:mm:ss a'}}
+                  </td>
                 </ng-container>
 
-                <ng-container matColumnDef="Publishing">
-                  <th mat-header-cell *matHeaderCellDef>Publishing</th>
-                  <td mat-cell *matCellDef="let element"> {{element.Publishing}} </td>
+                <ng-container matColumnDef="Status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let element"> {{element.Status}} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="Response">
-                  <th mat-header-cell *matHeaderCellDef>Response</th>
-                  <td mat-cell *matCellDef="let element"> {{element.Response}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="Awarded">
-                  <th mat-header-cell *matHeaderCellDef>Awarded</th>
-                  <td mat-cell *matCellDef="let element"> {{element.Awarded}} </td>
-                </ng-container>
-
-                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
-                  *matHeaderRowDef="PurchaseRequisitionColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: PurchaseRequisitionColumns;" (click)="RowSelected(row)"
-                  [class.highlight]="row === SelectedPurchaseRequisition"></tr>
+                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="RFQColumns">
+                </tr>
+                <tr mat-row *matRowDef="let row; columns: RFQColumns;" (click)="RowSelected(row)"
+                  [class.highlight]="row === SelectedRFQ"></tr>
               </table>
-              <div *ngIf="!PurchaseRequisitions?.length">
+              <div *ngIf="!RFQs?.length">
                 <mat-icon style="    color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
                 <span style="margin-left: 10px;">The table does not contain any data</span>
               </div>

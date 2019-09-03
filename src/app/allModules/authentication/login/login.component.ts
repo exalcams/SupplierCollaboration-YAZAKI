@@ -259,14 +259,22 @@ export class LoginComponent implements OnInit, OnDestroy {
         //         url: '/orderacknowledgment/acknowledgment'
         //     });
         // }
-        if (this.MenuItems.indexOf('RFQPublish') >= 0) {
+        if (this.MenuItems.indexOf('PurchaseRequisition') >= 0) {
             this.subChildren2.push({
-                id: 'publish',
+                id: 'pr',
                 title: 'PR to RFQ',
                 type: 'item',
-                url: '/rfq/publish'
+                url: '/rfq/pr'
             });
         }
+        // if (this.MenuItems.indexOf('RFQPublish') >= 0) {
+        //     this.subChildren2.push({
+        //         id: 'publish',
+        //         title: 'PR to RFQ',
+        //         type: 'item',
+        //         url: '/rfq/publish'
+        //     });
+        // }
 
         // if (this.MenuItems.indexOf('RFQCreation') >= 0) {
         //     this.subChildren2.push({
@@ -294,12 +302,12 @@ export class LoginComponent implements OnInit, OnDestroy {
                 url: '/rfq/awarded'
             });
         }
-        if (this.MenuItems.indexOf('PurchaseRequisitionVendor') >= 0) {
+        if (this.MenuItems.indexOf('RFQVendor') >= 0) {
             this.subChildren2.push({
-                id: 'prvendor',
-                title: 'PR-Vendor',
+                id: 'rfqvendor',
+                title: 'RFQ-Vendor',
                 type: 'item',
-                url: '/rfq/prvendor'
+                url: '/rfq/rfqvendor'
             });
         }
         // if (this.MenuItems.indexOf('RFQResponse') >= 0) {
@@ -311,11 +319,12 @@ export class LoginComponent implements OnInit, OnDestroy {
         //     });
         // }
         if (
+            this.MenuItems.indexOf('PurchaseRequisition') >= 0 ||
             this.MenuItems.indexOf('RFQCreation') >= 0 ||
             this.MenuItems.indexOf('RFQPublish') >= 0 ||
             this.MenuItems.indexOf('RFQEvaluation') >= 0 ||
             this.MenuItems.indexOf('RFQAwareded') >= 0 ||
-            this.MenuItems.indexOf('PurchaseRequisitionVendor') >= 0 ||
+            this.MenuItems.indexOf('RFQVendor') >= 0 ||
             this.MenuItems.indexOf('RFQResponse') >= 0
         ) {
             this.children.push({

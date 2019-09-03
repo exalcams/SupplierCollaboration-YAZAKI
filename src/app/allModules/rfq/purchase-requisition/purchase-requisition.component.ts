@@ -1,32 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { MatTableDataSource, MatSnackBar } from '@angular/material';
+import { fuseAnimations } from '@fuse/animations';
+import { FuseConfigService } from '@fuse/services/config.service';
+import { PurchaseRequisition, PurchaseRequisitionView } from 'app/models/rfq.model';
+import { RFQService } from 'app/services/rfq.service';
 import { AuthenticationDetails } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { PurchaseRequisition, PurchaseRequisitionView } from 'app/models/rfq.model';
-import { MatTableDataSource, MatSnackBar } from '@angular/material';
-import { FuseConfigService } from '@fuse/services/config.service';
-import { RFQService } from 'app/services/rfq.service';
-import { ShareParameterService } from 'app/services/share-parameter.service';
 import { Router } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { Guid } from 'guid-typescript';
+import { ShareParameterService } from 'app/services/share-parameter.service';
 
 @Component({
-  selector: 'app-purchase-requisition-vendor',
-  templateUrl: './purchase-requisition-vendor.component.html',
-  styleUrls: ['./purchase-requisition-vendor.component.scss']
+  selector: 'purchase-requisition',
+  templateUrl: './purchase-requisition.component.html',
+  styleUrls: ['./purchase-requisition.component.scss'],
+  // encapsulation: ViewEncapsulation.None,
+  // animations: fuseAnimations
 })
-export class PurchaseRequisitionVendorComponent implements OnInit {
+export class PurchaseRequisitionComponent implements OnInit {
   authenticationDetails: AuthenticationDetails;
   MenuItems: string[];
   CurrentUserName: string;
-  CurrentUserID: Guid;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
   RFQStatus: string;
   SelectedPurchaseRequisition: PurchaseRequisition;
   PurchaseRequisitions: PurchaseRequisition[];
   BGClassName: any;
-  PurchaseRequisitionColumns: string[] = ['PurchaseRequisitionID', 'PurchaseDate', 'PurchaseOrganization', 'PurchaseGroup', 'CompanyCode', 'Buyer', 'Station', 'Publishing', 'Response', 'Awarded'];
+  PurchaseRequisitionColumns: string[] = ['PurchaseRequisitionID', 'PurchaseDate', 'PurchaseOrganization', 'PurchaseGroup', 'CompanyCode', 'Buyer', 'State', 'Publishing', 'Response', 'Awarded'];
   PurchaseRequisitionDataSource: MatTableDataSource<PurchaseRequisition>;
 
   constructor(
@@ -47,26 +48,25 @@ export class PurchaseRequisitionVendorComponent implements OnInit {
     if (retrievedObject) {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.CurrentUserName = this.authenticationDetails.userName;
-      this.CurrentUserID = this.authenticationDetails.userID;
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
-      if (this.MenuItems.indexOf('PurchaseRequisitionVendor') < 0) {
+      if (this.MenuItems.indexOf('PurchaseRequisition') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
         this._router.navigate(['/auth/login']);
       }
     } else {
       this._router.navigate(['/auth/login']);
     }
-    this.GetAllCompletedPurchaseRequisitionByVendor();
+    this.GetPurchaseRequisitionsByRFQStatus();
     this._fuseConfigService.config
       // .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config) => {
         this.BGClassName = config;
       });
   }
-  GetAllCompletedPurchaseRequisitionByVendor(): void {
+  GetPurchaseRequisitionsByRFQStatus(): void {
     this.SelectedPurchaseRequisition = new PurchaseRequisition();
     this.IsProgressBarVisibile = true;
-    this._rfqService.GetAllCompletedPurchaseRequisitionByVendor(this.CurrentUserID).subscribe(
+    this._rfqService.GetPurchaseRequisitionsByRFQStatus(this.RFQStatus).subscribe(
       (data) => {
         this.PurchaseRequisitions = data as PurchaseRequisition[];
         this.PurchaseRequisitionDataSource = new MatTableDataSource(this.PurchaseRequisitions);
@@ -78,18 +78,28 @@ export class PurchaseRequisitionVendorComponent implements OnInit {
       }
     );
   }
+  RFQStatusChange(): void {
+    this.GetPurchaseRequisitionsByRFQStatus();
+  }
 
   RowSelected(data: PurchaseRequisition): void {
     this.SelectedPurchaseRequisition = data;
   }
 
-  GoToRFQResponse(): void {
+  CreateRFQClicked(): void {
     if (this.SelectedPurchaseRequisition && this.SelectedPurchaseRequisition.PurchaseRequisitionID) {
-      const PurchaseRequisitionV: PurchaseRequisitionView = new PurchaseRequisitionView();
-      PurchaseRequisitionV.PurchaseRequisitionID = this.SelectedPurchaseRequisition.PurchaseRequisitionID;
-      PurchaseRequisitionV.RFQStatus = this.SelectedPurchaseRequisition.RFQStatus;
-      this._shareParameterService.SetPurchaseRequisition(PurchaseRequisitionV);
-      this._router.navigate(['/rfq/response'], {
+      let PurchaseRequisition: PurchaseRequisitionView = new PurchaseRequisitionView();
+      PurchaseRequisition.PurchaseRequisitionID = this.SelectedPurchaseRequisition.PurchaseRequisitionID;
+      PurchaseRequisition.RFQStatus = this.SelectedPurchaseRequisition.RFQStatus;
+
+      this._shareParameterService.SetPurchaseRequisition(PurchaseRequisition);
+      this._router.navigate(['/rfq/creation'], {
+        // queryParams:
+        // {
+        //   id: this.SelectedPurchaseRequisition.PurchaseRequisitionID,
+        //   status: this.SelectedPurchaseRequisition.RFQStatus
+        // },
+        // skipLocationChange: true
       });
     } else {
       this.notificationSnackBarComponent.openSnackBar('Please select a purchase requisition', SnackBarStatus.danger);
@@ -97,3 +107,4 @@ export class PurchaseRequisitionVendorComponent implements OnInit {
   }
 
 }
+

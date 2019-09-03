@@ -7,24 +7,15 @@
 .sub-Title {
   color: #4a77fb;
 }
-
-.icon-style {
-  background-color: #eaf2ff;
-  margin-left: 272px;
-  // margin-top: -4px;
-  // margin-bottom: 2px;
-  height: 35px;
-  //border-radius: 26px;
-}
-.icon-style1 {
-  background-color: #eaf2ff;
-  height: 35px;
-}
-
 .borderRightClass {
   border-right: 1px solid #dce1e9;
 }
-
+.fullHeight {
+  height: 90%;
+}
+.roundedBorder {
+  border-radius: 10px !important;
+}
 table {
   width: 100%;
   th {
@@ -35,7 +26,7 @@ table {
   }
   td {
     padding-left: 8px !important;
-    padding-left: 8px !important;
+    padding-right: 8px !important;
     border: 1px solid #1b56ca !important;
     // border-right: 1px solid #1b56ca;
   }
@@ -56,11 +47,14 @@ td {
   border: 1px solid #082f7d;
 }
 .SaveBtnClass {
-  background-color: #1b56ca !important;
+  // background-color: #1b56ca !important;
   color: white !important;
 }
-.errorClass {
-  color: red !important;
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #082f7d !important;
+}
+.mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color: #082f7d !important;
 }
 .ProgressBarPostion1 {
   position: absolute !important;
@@ -68,10 +62,6 @@ td {
   z-index: 1;
   left: 55%;
 }
-.AttachIconDisable {
-  color: rgba(0, 0, 0, 0.38);
-  cursor: default;
-}
-.CursorPointer {
-  cursor: pointer;
+.highlight{
+  background: lightgray !important;
 }
