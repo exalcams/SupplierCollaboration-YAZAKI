@@ -285,16 +285,16 @@ export class LoginComponent implements OnInit, OnDestroy {
         //     });
         // }
 
-        // if (this.MenuItems.indexOf('RFQEvaluation') >= 0) {
-        //     this.subChildren2.push({
-        //         id: 'evaluation',
-        //         title: 'Evaluation',
-        //         type: 'item',
-        //         url: '/rfq/evaluation'
-        //     });
-        // }
+        if (this.MenuItems.indexOf('RFQEvaluation') >= 0) {
+            this.subChildren2.push({
+                id: 'evaluation',
+                title: 'Evaluation',
+                type: 'item',
+                url: '/rfq/evaluation'
+            });
+        }
 
-        if (this.MenuItems.indexOf('RFQAwareded') >= 0) {
+        if (this.MenuItems.indexOf('RFQAwarded') >= 0) {
             this.subChildren2.push({
                 id: 'awarded',
                 title: 'Awarded',

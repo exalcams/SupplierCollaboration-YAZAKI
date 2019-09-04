@@ -114,7 +114,7 @@
     <div fxFlex class="mt-20">
       <mat-card class="mb-16">
         <mat-card-header>
-          <mat-card-title><strong>REQ ID : {{SelectedPurchaseRequisitionID}}</strong>
+          <mat-card-title><strong>RFQ ID : {{SelectedRFQID?SelectedRFQID:''}}</strong>
           </mat-card-title>
         </mat-card-header>
         <!-- <mat-divider style="margin-left: -25px" [inset]="true"></mat-divider> -->
@@ -381,7 +381,7 @@
 
             <div fxLayout="row">
               <div fxFlex class="mt-12" align="end">
-                <button [ngClass]="BGClassName?.layout?.toolbar?.background" class="SaveBtnClass" mat-raised-button
+                <button [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
                   (click)="ValidateRFQResponse()">
                   Respond
                 </button>

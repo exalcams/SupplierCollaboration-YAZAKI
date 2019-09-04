@@ -77,6 +77,32 @@ export class RFQHeaderView {
     RFQEndDate?: Date;
     RFQResponseEndDate?: Date;
     Status: string;
+    CreatedOn: Date;
+    CreatedBy: string;
+    Buyer: string;
+    IsActive: boolean;
+}
+
+export class RFQResponseReceivedView {
+    RFQID: number;
+    VendorID: string;
+    VendorName: string;
+    TotalPrice: number;
+}
+
+export class RFQHeaderVendorView {
+    RFQID: number;
+    VendorID: string;
+    Title: string;
+    SupplyPlant: string;
+    Currency: string;
+    RFQStartDate: Date;
+    RFQResponseStartDate?: Date;
+    IncoTerm: string;
+    RFQEndDate?: Date;
+    RFQResponseEndDate?: Date;
+    Status: string;
+    RFQResponseStatus: string;
     IsActive: boolean;
 }
 export class RFQItem {
@@ -123,6 +149,22 @@ export class RFQView {
     CreatedBy: string;
     ModifiedOn?: Date;
     ModifiedBy: string;
+    IsActive: boolean;
+}
+export class RFQWithResponseView {
+    RFQID: number;
+    VendorID: string;
+    Title: string;
+    SupplyPlant: string;
+    Currency: string;
+    RFQStartDate: Date;
+    RFQResponseStartDate?: Date;
+    IncoTerm: string;
+    RFQEndDate?: Date;
+    RFQResponseEndDate?: Date;
+    Status: string;
+    RFQResponseStatus: string;
+    RFQResponseItems: RFQResponseItemView[];
     IsActive: boolean;
 }
 export class RFQItemView {

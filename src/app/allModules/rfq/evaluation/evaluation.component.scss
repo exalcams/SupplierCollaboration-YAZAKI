@@ -94,15 +94,44 @@ body.theme-default .mat-radio-button.mat-accent .mat-radio-inner-circle {
   cursor: pointer;
   // color: white !important;
 }
+.roundCommon {
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+}
+
 .round {
-  height: 24px;
-  width: 24px;
-  background-color: #1565c0;
-  border-radius: 25px;
+  @extend .roundCommon;
+  background-color: rgb(187, 185, 185);
+  border: 2px solid gray;
+  cursor: pointer !important;
+}
+.round1 {
+  @extend .roundCommon;
+  background-color: rgb(187, 185, 185);
+  border: 2px solid #2ecc71;
 }
 .ProgressBarPostion1 {
   position: absolute !important;
   top: 350px;
   z-index: 1;
   left: 55%;
+}
+.Header {
+  text-decoration: underline;
+  font-weight: bold;
+}
+.BlueHeader {
+  @extend .Header;
+  font-weight: normal;
+  color: #082f7d;
+}
+.side-bar {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  .sidenav-content {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }

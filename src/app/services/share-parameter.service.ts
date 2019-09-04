@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
-import { PurchaseRequisitionView } from 'app/models/rfq.model';
+import { PurchaseRequisitionView, RFQHeaderVendorView } from 'app/models/rfq.model';
 
 @Injectable({
     providedIn: 'root'
@@ -8,6 +8,7 @@ import { PurchaseRequisitionView } from 'app/models/rfq.model';
 export class ShareParameterService {
     // private PurchaseRequisitionEvent = new Subject<any>();
     public CurrentPurchaseRequisition: PurchaseRequisitionView;
+    public CurrentRFQHeaderVendor: RFQHeaderVendorView;
     // constructor() {
     //     this.PurchaseRequisitionEvent = new Subject(null);
     // }
@@ -19,5 +20,14 @@ export class ShareParameterService {
         this.CurrentPurchaseRequisition = PurchaseRequisition;
     }
 
-    
+    SetRFQHeaderVendor(RFQHeaderVendor: RFQHeaderVendorView): void {
+        this.CurrentRFQHeaderVendor = RFQHeaderVendor;
+    }
+
+    GetRFQHeaderVendor(): RFQHeaderVendorView {
+        return this.CurrentRFQHeaderVendor;
+    }
+
+
+
 }
