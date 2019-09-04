@@ -175,7 +175,7 @@
                   <div fxFlex></div>
                   <div fxFlex class="pl-120">
                     <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
-                    [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="GetVendorsBasedOnConditions()"
+                      [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="GetVendorsBasedOnConditions()"
                       class="SearchBtnClass" mat-raised-button>
                       Search
                     </button>
@@ -187,8 +187,8 @@
               <div fxLayout class="pr-16 px-24 pt-16">
                 <div fxFlex class="boldClass">VendorList</div>
                 <div fxFlex align="end">
-                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
-                  class="blueText" (click)="AddSelectedVendors()" mat-stroked-button>
+                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'" class="blueText"
+                    (click)="AddSelectedVendors()" mat-stroked-button>
                     <mat-icon>add_circle_outline</mat-icon>
                     Add vendor
                   </button>
@@ -204,7 +204,7 @@
                       (change)="CheckBoxEvent($event,row)">
                       </mat-checkbox> -->
                       <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                        [checked]="selection.isSelected(row)">
                       </mat-checkbox>
                     </td>
                   </ng-container>
@@ -250,12 +250,12 @@
             <div fxFlex="30" class="pb-8">
               <div fxLayout>
                 <div fxFlex class="p-12" align="end">
-                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
-                  mat-stroked-button (click)="SaveRFQAllocation()">
+                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'" mat-stroked-button
+                    (click)="SaveRFQAllocation()">
                     Save
                   </button>
-                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
-                  (click)="SubmitRFQAllocation()" class="SaveBtnClass ml-8" mat-raised-button>
+                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'" (click)="SubmitRFQAllocation()"
+                    [ngClass]="BGClassName?.layout?.toolbar?.background" class="ml-8" mat-raised-button>
                     Save & Publish
                   </button>
                 </div>

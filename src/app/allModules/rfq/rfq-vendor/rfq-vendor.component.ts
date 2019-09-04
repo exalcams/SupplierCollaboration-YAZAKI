@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationDetails } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { PurchaseRequisition, PurchaseRequisitionView, RFQHeaderView } from 'app/models/rfq.model';
+import { PurchaseRequisition, PurchaseRequisitionView, RFQHeaderVendorView } from 'app/models/rfq.model';
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { RFQService } from 'app/services/rfq.service';
@@ -25,11 +25,11 @@ export class RFQVendorComponent implements OnInit {
   RFQStatus: string;
   // SelectedPurchaseRequisition: PurchaseRequisition;
   // PurchaseRequisitions: PurchaseRequisition[];
-  SelectedRFQ: RFQHeaderView;
-  RFQs: RFQHeaderView[];
+  SelectedRFQ: RFQHeaderVendorView;
+  RFQs: RFQHeaderVendorView[];
   BGClassName: any;
-  RFQColumns: string[] = ['RFQID', 'Title', 'SupplyPlant', 'Currency', 'RFQResponseStartDate', 'IncoTerm', 'RFQResponseEndDate', 'Status'];
-  RFQDataSource: MatTableDataSource<RFQHeaderView>;
+  RFQColumns: string[] = ['RFQID', 'Title', 'SupplyPlant', 'Currency', 'RFQResponseStartDate', 'IncoTerm', 'RFQResponseEndDate', 'RFQResponseStatus'];
+  RFQDataSource: MatTableDataSource<RFQHeaderVendorView>;
 
   constructor(
     private _fuseConfigService: FuseConfigService,
@@ -40,7 +40,7 @@ export class RFQVendorComponent implements OnInit {
   ) {
     this.RFQStatus = 'Open';
     // this.SelectedPurchaseRequisition = new PurchaseRequisition();
-    this.SelectedRFQ = new RFQHeaderView();
+    this.SelectedRFQ = new RFQHeaderVendorView();
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
   }
@@ -83,11 +83,11 @@ export class RFQVendorComponent implements OnInit {
   //   );
   // }
   GetAllCompletedRFQByVendor(): void {
-    this.SelectedRFQ = new RFQHeaderView();
+    this.SelectedRFQ = new RFQHeaderVendorView();
     this.IsProgressBarVisibile = true;
     this._rfqService.GetAllCompletedRFQByVendor(this.CurrentUserID).subscribe(
       (data) => {
-        this.RFQs = data as RFQHeaderView[];
+        this.RFQs = data as RFQHeaderVendorView[];
         this.RFQDataSource = new MatTableDataSource(this.RFQs);
         this.IsProgressBarVisibile = false;
       },
@@ -98,7 +98,7 @@ export class RFQVendorComponent implements OnInit {
     );
   }
 
-  RowSelected(data: RFQHeaderView): void {
+  RowSelected(data: RFQHeaderVendorView): void {
     this.SelectedRFQ = data;
   }
 
@@ -111,11 +111,7 @@ export class RFQVendorComponent implements OnInit {
       else if (Today >  new Date(this.SelectedRFQ.RFQResponseEndDate)) {
         this.notificationSnackBarComponent.openSnackBar('Validity date is already over', SnackBarStatus.danger);
       } else {
-        const PurchaseRequisitionV: PurchaseRequisitionView = new PurchaseRequisitionView();
-        // PurchaseRequisitionV.PurchaseRequisitionID = this.SelectedPurchaseRequisition.PurchaseRequisitionID;
-        PurchaseRequisitionV.RFQID = this.SelectedRFQ.RFQID;
-        PurchaseRequisitionV.RFQStatus = this.SelectedRFQ.Status;
-        this._shareParameterService.SetPurchaseRequisition(PurchaseRequisitionV);
+        this._shareParameterService.SetRFQHeaderVendor(this.SelectedRFQ);
         this._router.navigate(['/rfq/response'], {
         });
       }

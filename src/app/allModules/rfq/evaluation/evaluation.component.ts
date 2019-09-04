@@ -10,7 +10,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { ShareParameterService } from 'app/services/share-parameter.service';
 import { Router } from '@angular/router';
 import { RFQService } from 'app/services/rfq.service';
-import { RFQAllocationView } from 'app/models/rfq.model';
+import { RFQAllocationView, RFQHeaderView, RFQResponseReceivedView } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Guid } from 'guid-typescript';
 
@@ -24,19 +24,13 @@ export class EvaluationComponent implements OnInit {
   MenuItems: string[];
   CurrentUserName: string;
   CurrentUserID: Guid;
-  SelectedPurchaseRequisitionID: number;
-  SelectedRFQStatus = '';
-  SelectedRFQID: number;
-  RFQAllocations: RFQAllocationView[] = [];
-  VendorSearchFormGroup: FormGroup;
-  conditions: VendorSearchCondition;
-  VendorList: Vendor[] = [];
-  SelectedVendorList: Vendor[] = [];
-  CheckedVendorList: Vendor[] = [];
   BGClassName: any;
-  vendorDisplayedColumns: string[] = ['select', 'VendorCode', 'VendorName', 'GSTNumber', 'Type', 'City', 'State'];
-  vendorDataSource: MatTableDataSource<Vendor>;
-  selection = new SelectionModel<Vendor>(true, []);
+  SelectedPurchaseRequisitionID: number;
+  SelectedRFQ: RFQHeaderView;
+  SelectedRFQStatus = '';
+  SelectedRFQID = 0;
+  RFQHeaders: RFQHeaderView[] = [];
+  RFQResponsesReceived: RFQResponseReceivedView[] = [];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
 
@@ -50,18 +44,9 @@ export class EvaluationComponent implements OnInit {
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
   ) {
-    const CurrentPurchaseRequisition = this._shareParameterService.GetPurchaseRequisition();
-    // console.log(CurrentPurchaseRequisition);
-    if (CurrentPurchaseRequisition) {
-      this.SelectedPurchaseRequisitionID = CurrentPurchaseRequisition.PurchaseRequisitionID;
-      this.SelectedRFQID = CurrentPurchaseRequisition.RFQID;
-      this.SelectedRFQStatus = CurrentPurchaseRequisition.RFQStatus;
-    } else {
-      this._router.navigate(['/rfq/publish']);
-    }
+    this.SelectedRFQ = new RFQHeaderView();
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
-    this.conditions = new VendorSearchCondition();
   }
 
   ngOnInit(): void {
@@ -78,52 +63,19 @@ export class EvaluationComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
-    this.VendorSearchFormGroup = this._formBuilder.group({
-      VendorCode: [''],
-      VendorName: [''],
-      GSTNumber: [''],
-      State: [''],
-      Type: [''],
+    this._fuseConfigService.config.subscribe((config) => {
+      this.BGClassName = config;
     });
-    this.GetAllVendors();
-    if (this.SelectedRFQStatus.toLocaleLowerCase() === 'inprogress') {
-      this.GetRFQAllocationTempByRFQID();
-    }
-    if (this.SelectedRFQStatus.toLocaleLowerCase() === 'completed') {
-      this.GetRFQAllocationByRFQID();
-    }
-    this.isAllSelected();
-    this.masterToggle();
-    this.checkboxLabel();
-    this._fuseConfigService.config
-      // .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((config) => {
-        this.BGClassName = config;
-      });
+    this.GetAllCompletedRFQByBuyer();
   }
 
-  ResetControl(): void {
-    this.conditions = new VendorSearchCondition();
-    this.VendorSearchFormGroup.reset();
-    Object.keys(this.VendorSearchFormGroup.controls).forEach(key => {
-      this.VendorSearchFormGroup.get(key).markAsUntouched();
-    });
-    this.SelectedVendorList = [];
-    this.ResetCheckbox();
-  }
-
-  ResetCheckbox(): void {
-    this.selection.clear();
-    this.vendorDataSource.data.forEach(row => this.selection.deselect(row));
-
-  }
-
-  GetAllVendors(): void {
+  GetAllCompletedRFQByBuyer(): void {
     this.IsProgressBarVisibile = true;
-    this._masterService.GetAllVendors().subscribe(
+    this._rfqService.GetAllCompletedRFQByBuyer(this.CurrentUserID).subscribe(
       (data) => {
-        this.VendorList = data as Vendor[];
-        this.vendorDataSource = new MatTableDataSource(this.VendorList);
+        if (data) {
+          this.RFQHeaders = data as RFQHeaderView[];
+        }
         this.IsProgressBarVisibile = false;
       },
       (err) => {
@@ -132,30 +84,16 @@ export class EvaluationComponent implements OnInit {
       }
     );
   }
-
-  GetRFQAllocationTempByRFQID(): void {
+  GetRFQResponse(rfq: RFQHeaderView): void {
+    this.SelectedRFQ = rfq;
+    this.SelectedRFQID = this.SelectedRFQ.RFQID;
     this.IsProgressBarVisibile = true;
-    this._rfqService.GetRFQAllocationTempByRFQID(this.SelectedRFQID).subscribe(
+    this._rfqService.GetRFQResponseReceivedByRFQID(this.SelectedRFQID).subscribe(
       (data) => {
-        if (data && data.length > 0) {
-          const rFQAllocationViews = data as RFQAllocationView[];
-          const VendorCodes = rFQAllocationViews.map(x => x.VendorID);
-          this._masterService.GetVendorsByVendorCodes(VendorCodes).subscribe(
-            (data1) => {
-              const AlreadySelectedVendors = data1 as Vendor[];
-              if (AlreadySelectedVendors && AlreadySelectedVendors.length) {
-                this.SelectedVendorList = AlreadySelectedVendors;
-              }
-              this.IsProgressBarVisibile = false;
-            },
-            (err1) => {
-              console.error(err1);
-              this.IsProgressBarVisibile = false;
-            }
-          );
-        } else {
-          this.IsProgressBarVisibile = false;
+        if (data) {
+          this.RFQResponsesReceived = data as RFQResponseReceivedView[];
         }
+        this.IsProgressBarVisibile = false;
       },
       (err) => {
         console.error(err);
@@ -163,222 +101,8 @@ export class EvaluationComponent implements OnInit {
       }
     );
   }
-
-  GetRFQAllocationByRFQID(): void {
-    this.IsProgressBarVisibile = true;
-    this._rfqService.GetRFQAllocationByRFQID(this.SelectedRFQID).subscribe(
-      (data) => {
-        if (data && data.length > 0) {
-          const rFQAllocationViews = data as RFQAllocationView[];
-          const VendorCodes = rFQAllocationViews.map(x => x.VendorID);
-          this._masterService.GetVendorsByVendorCodes(VendorCodes).subscribe(
-            (data1) => {
-              const AlreadySelectedVendors = data1 as Vendor[];
-              if (AlreadySelectedVendors && AlreadySelectedVendors.length) {
-                this.SelectedVendorList = AlreadySelectedVendors;
-              }
-              this.IsProgressBarVisibile = false;
-            },
-            (err1) => {
-              console.error(err1);
-              this.IsProgressBarVisibile = false;
-            }
-          );
-        } else {
-          this.IsProgressBarVisibile = false;
-        }
-      },
-      (err) => {
-        console.error(err);
-        this.IsProgressBarVisibile = false;
-      }
-    );
-  }
-
-  GetVendorsBasedOnConditions(): void {
-    if (this.VendorSearchFormGroup.valid) {
-      this.CheckedVendorList = [];
-      this.ResetCheckbox();
-      this.IsProgressBarVisibile = true;
-      this.conditions.VendorCode = this.VendorSearchFormGroup.get('VendorCode').value;
-      this.conditions.VendorName = this.VendorSearchFormGroup.get('VendorName').value;
-      this.conditions.GSTNumber = this.VendorSearchFormGroup.get('GSTNumber').value;
-      this.conditions.State = this.VendorSearchFormGroup.get('State').value;
-      this.conditions.Type = this.VendorSearchFormGroup.get('Type').value;
-      this._masterService.GetVendorsBasedOnConditions(this.conditions).subscribe(
-        (data) => {
-          this.VendorList = data as Vendor[];
-          this.vendorDataSource = new MatTableDataSource(this.VendorList);
-          this.IsProgressBarVisibile = false;
-        },
-        (err) => {
-          console.error(err);
-          this.IsProgressBarVisibile = false;
-        }
-      );
-    } else {
-      Object.keys(this.VendorSearchFormGroup.controls).forEach(key => {
-        this.VendorSearchFormGroup.get(key).markAsTouched();
-        this.VendorSearchFormGroup.get(key).markAsDirty();
-      });
-    }
-  }
-
-  // CheckBoxEvent(event: any, selectedVendor: Vendor): void {
-  //   if (event.checked) {
-  //     this.CheckedVendorList.push(selectedVendor);
-  //   } else {
-  //     const index = this.CheckedVendorList.findIndex(x => x.ID === selectedVendor.ID);
-  //     if (index >= 0) {
-  //       this.CheckedVendorList.splice(index, 1);
-  //     }
-  //   }
-  // }
-
-  AddSelectedVendors(): void {
-    // if (this.CheckedVendorList && this.CheckedVendorList.length) {
-    //   this.CheckedVendorList.forEach(x => {
-    //     const index = this.SelectedVendorList.findIndex(y => y.ID === x.ID);
-    //     if (index < 0) {
-    //       this.SelectedVendorList.push(x);
-    //     }
-    //   });
-    // } else {
-    //   this.notificationSnackBarComponent.openSnackBar('no items selected', SnackBarStatus.warning);
-    // }
-    if (this.selection && this.selection.selected.length) {
-      this.selection.selected.forEach(x => {
-        const index = this.SelectedVendorList.findIndex(y => y.ID === x.ID);
-        if (index < 0) {
-          this.SelectedVendorList.push(x);
-        }
-      });
-    } else {
-      this.notificationSnackBarComponent.openSnackBar('no items selected', SnackBarStatus.warning);
-    }
-
-  }
-  RemoveSelectedVendor(VendorCode: string): void {
-    const indexx = this.SelectedVendorList.findIndex(x => x.VendorCode === VendorCode);
-    if (indexx >= 0) {
-      this.SelectedVendorList.splice(indexx, 1);
-    }
-  }
-
-  SubmitRFQAllocation(): void {
-    if (this.SelectedVendorList && this.SelectedVendorList.length) {
-      const Actiontype = 'Submit';
-      const Catagory = 'RFQ Allocation';
-      this.OpenConfirmationDialog(Actiontype, Catagory);
-    } else {
-      this.notificationSnackBarComponent.openSnackBar('no vendor is added', SnackBarStatus.warning);
-    }
-  }
-
-  SaveRFQAllocation(): void {
-    if (this.SelectedVendorList && this.SelectedVendorList.length) {
-      const Actiontype = 'Save';
-      const Catagory = 'RFQ Allocation';
-      this.OpenConfirmationDialog(Actiontype, Catagory);
-    } else {
-      this.notificationSnackBarComponent.openSnackBar('no vendor is added', SnackBarStatus.warning);
-    }
-  }
-
-  OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
-    const dialogConfig: MatDialogConfig = {
-      data: {
-        Actiontype: Actiontype,
-        Catagory: Catagory
-      },
-    };
-    const dialogRef = this.dialog.open(NotificationDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(
-      result => {
-        if (result) {
-          if (Actiontype === 'Submit') {
-            this.CreateRFQAllocation();
-          }
-          else if (Actiontype === 'Save') {
-            this.CreateRFQAllocationTemp();
-          }
-        }
-      });
-  }
-
-  CreateRFQAllocation(): void {
-    this.GetRFQAllocationDetails();
-    this.IsProgressBarVisibile = true;
-    this._rfqService.CreateRFQAllocation(this.RFQAllocations).subscribe(
-      (data) => {
-        this.IsProgressBarVisibile = false;
-        this.notificationSnackBarComponent.openSnackBar('Allocation created successfully', SnackBarStatus.success);
-        this.ResetControl();
-        this._router.navigate(['/rfq/publish']);
-      },
-      (err) => {
-        console.error(err);
-        this.IsProgressBarVisibile = false;
-        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-      }
-    );
-  }
-
-  CreateRFQAllocationTemp(): void {
-    this.GetRFQAllocationDetails();
-    this.IsProgressBarVisibile = true;
-    this._rfqService.CreateRFQAllocationTemp(this.RFQAllocations).subscribe(
-      (data) => {
-        this.IsProgressBarVisibile = false;
-        this.notificationSnackBarComponent.openSnackBar('Allocation saved successfully', SnackBarStatus.success);
-        this.ResetControl();
-        this._router.navigate(['/rfq/publish']);
-      },
-      (err) => {
-        console.error(err);
-        this.IsProgressBarVisibile = false;
-        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-      }
-    );
-  }
-
-  GetRFQAllocationDetails(): void {
-    this.RFQAllocations = [];
-    this.SelectedVendorList.forEach(x => {
-      const rFQAllocationView: RFQAllocationView = new RFQAllocationView();
-      rFQAllocationView.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
-      rFQAllocationView.RFQID = this.SelectedRFQID;
-      rFQAllocationView.VendorID = x.VendorCode;
-      rFQAllocationView.CreatedBy = this.CurrentUserID.toString();
-      this.RFQAllocations.push(rFQAllocationView);
-    });
-  }
-
-  radioChange(event: any): void {
-    console.log(event);
-  }
-
-  isAllSelected(): boolean {
-    // const numSelected = this.selection.selected.length;
-    // const numRows = this.vendorDataSource.data.length;
-    // return numSelected === numRows;
-    return true;
-  }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle(): void {
-    // this.isAllSelected() ?
-    //   this.selection.clear() :
-    //   this.vendorDataSource.data.forEach(row => this.selection.select(row));
-  }
-
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: Vendor): string {
-    // if (!row) {
-    //   return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-    // }
-    // return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.GSTNumber + 1}`;
-    return '';
+  EvaluateRFQResponse(): void {
+    console.log('EvaluateRFQResponse');
   }
 
 }

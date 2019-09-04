@@ -68,6 +68,7 @@ export class CapaResponseComponent implements OnInit {
     }
     this._fuseConfigService.config.subscribe((config) => {
       this.BGClassName = config;
+      console.log(this.BGClassName.layout.toolbar.background);
     });
 
     this.CAPAResponseFormGroup = this._formBuilder.group({

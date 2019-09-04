@@ -5,7 +5,7 @@ import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { AttachmentDetails } from 'app/allModules/orderacknowledgment/orderacknowledgment/orderacknowledgment.component';
-import { RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView, PurchaseRequisitionItem, RFQHeaderView } from 'app/models/rfq.model';
+import { RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView, PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQHeaderView, RFQResponseReceivedView } from 'app/models/rfq.model';
 import { Auxiliary } from 'app/models/asn';
 import { Guid } from 'guid-typescript';
 
@@ -61,14 +61,23 @@ export class RFQService {
         return this._httpClient.get<RFQView>(`${this.baseAddress}api/RFQ/GetRFQByPurchaseRequisitionID?PurchaseRequisitionID=${PurchaseRequisitionID}`)
             .pipe(catchError(this.errorHandler));
     }
-    GetRFQByID(RFQID: number): Observable<RFQView | string> {
-        return this._httpClient.get<RFQView>(`${this.baseAddress}api/RFQ/GetRFQByID?RFQID=${RFQID}`)
+    GetRFQByIDAndVendor(RFQID: number, VendorID: string): Observable<RFQWithResponseView | string> {
+        return this._httpClient.get<RFQWithResponseView>(`${this.baseAddress}api/RFQ/GetRFQByIDAndVendor?RFQID=${RFQID}&VendorID=${VendorID}`)
             .pipe(catchError(this.errorHandler));
     }
-    GetAllCompletedRFQByVendor(UserID: Guid): Observable<RFQHeaderView[] | string> {
-        return this._httpClient.get<RFQHeaderView[]>(`${this.baseAddress}api/RFQ/GetAllCompletedRFQByVendor?UserID=${UserID}`)
+    GetAllCompletedRFQByBuyer(UserID: Guid): Observable<RFQHeaderView[] | string> {
+        return this._httpClient.get<RFQHeaderView[]>(`${this.baseAddress}api/RFQ/GetAllCompletedRFQByBuyer?UserID=${UserID}`)
             .pipe(catchError(this.errorHandler));
     }
+    GetAllCompletedRFQByVendor(UserID: Guid): Observable<RFQHeaderVendorView[] | string> {
+        return this._httpClient.get<RFQHeaderVendorView[]>(`${this.baseAddress}api/RFQ/GetAllCompletedRFQByVendor?UserID=${UserID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetRFQResponseReceivedByRFQID(RFQID: number): Observable<RFQResponseReceivedView[] | string> {
+        return this._httpClient.get<RFQResponseReceivedView[]>(`${this.baseAddress}api/RFQ/GetRFQResponseReceivedByRFQID?RFQID=${RFQID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    
     GetAllCompletedPurchaseRequisitionByVendor(UserID: Guid): Observable<PurchaseRequisition[] | string> {
         return this._httpClient.get<PurchaseRequisition[]>(`${this.baseAddress}api/RFQ/GetAllCompletedPurchaseRequisitionByVendor?UserID=${UserID}`)
             .pipe(catchError(this.errorHandler));

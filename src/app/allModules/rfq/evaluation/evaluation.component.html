@@ -1,4 +1,4 @@
-<div id="chat" class="page-layout carded fullwidth" fusePerfectScrollbar>
+<div id="chat" class=" page-layout carded fullwidth">
   <div class="top-bg" [ngClass]="BGClassName?.layout?.toolbar?.background"></div>
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
     <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center"
@@ -111,183 +111,82 @@
         </div>
       </div>
     </div>
-    <div fxFlex>
-      <mat-card class="p-0 mb-16">
+    <div fxFlex class="mt-20">
+      <mat-card class="my-12 p-12">
+        <mat-card-header>
+          <mat-card-title>
+            <span class="boldClass">Comparison Engine</span>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-divider></mat-divider>
         <mat-card-content>
-          <div fxLayout="row">
-            <div fxFlex="70" class="borderRightClass">
-              <div class="boldClass pt-16 px-24">Supplier Invite</div>
-              <div fxLayout class="borderBottom mt-12"></div>
-              <form name="form" [formGroup]="VendorSearchFormGroup">
-                <div fxLayout class="mt-4 pl-24">
-                  <div fxFlex>
-                    <div class="pt-8 pr-8">
-                      <span style="font-size: 13px;">Vendor ID</span>
-                    </div>
-                    <mat-form-field appearance="outline">
-                      <input matInput formControlName="VendorCode">
-                    </mat-form-field>
-                  </div>
-                  <div fxFlex>
-                    <div class="pt-8 pr-8">
-                      <span style="font-size: 13px;">Material</span>
-                    </div>
-                    <mat-form-field appearance="outline">
-                      <input matInput>
-                    </mat-form-field>
-                  </div>
-                  <div fxFlex>
-                    <div class="pt-8 pr-8">
-                      <span style="font-size: 13px;">Vendor Name</span>
-                    </div>
-                    <mat-form-field appearance="outline">
-                      <input matInput formControlName="VendorName">
-                    </mat-form-field>
+          <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
+            <div fxFlex="25" fxLayout="column" class="m-4 side-bar borderRightClass">
+              <!-- <div class="SearchClass mx-8">
+                <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                  <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
+                    <mat-icon>search</mat-icon>
                   </div>
                 </div>
-                <div fxLayout class="mb-4 pl-24">
-                  <div fxFlex>
-                    <div class="pr-8">
-                      <span style="font-size: 13px;">GST No.</span>
-                    </div>
-                    <mat-form-field appearance="outline">
-                      <input matInput formControlName="GSTNumber">
-                    </mat-form-field>
-                  </div>
-                  <div fxFlex>
-                    <div class="pr-8">
-                      <span style="font-size: 13px;">State</span>
-                    </div>
-                    <mat-form-field appearance="outline">
-                      <input matInput formControlName="State">
-                    </mat-form-field>
-                  </div>
-                  <div fxFlex>
-                    <div class="pr-8">
-                      <span style="font-size: 13px;">Type</span>
-                    </div>
-                    <mat-form-field appearance="outline">
-                      <input matInput formControlName="Type">
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div fxLayout FxLayoutAlign="center">
-                  <div fxFlex></div>
-                  <div fxFlex class="pl-120">
-                    <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
-                    [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="GetVendorsBasedOnConditions()"
-                      class="SearchBtnClass" mat-raised-button>
-                      Search
-                    </button>
-                  </div>
-                  <div fxFlex></div>
-                </div>
-              </form>
-              <div fxLayout class="borderBottom mt-12 mx-160"></div>
-              <div fxLayout class="pr-16 px-24 pt-16">
-                <div fxFlex class="boldClass">VendorList</div>
-                <div fxFlex align="end">
-                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
-                  class="blueText" (click)="AddSelectedVendors()" mat-stroked-button>
-                    <mat-icon>add_circle_outline</mat-icon>
-                    Add vendor
-                  </button>
-                </div>
+              </div> -->
+              <div class="Header mb-8 mx-4 mt-4">
+                RFQ List
               </div>
-              <div fxLayout class="mt-12 px-24 pr-16 pb-16" FxLayoutAlign="center">
-                <table mat-table [dataSource]="vendorDataSource">
-                  <ng-container matColumnDef="select">
-                    <th mat-header-cell *matHeaderCellDef>
-                    </th>
-                    <td mat-cell *matCellDef="let row">
-                      <!-- <mat-checkbox [checked]="selection.isSelected(row)" 
-                      (change)="CheckBoxEvent($event,row)">
-                      </mat-checkbox> -->
-                      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
-                      </mat-checkbox>
-                    </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="VendorCode">
-                    <th mat-header-cell *matHeaderCellDef>Vendor ID</th>
-                    <td mat-cell *matCellDef="let element">{{element.VendorCode}}</td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="VendorName">
-                    <th mat-header-cell *matHeaderCellDef>Vendor Name</th>
-                    <td mat-cell *matCellDef="let element">{{element.VendorName}}</td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="GSTNumber">
-                    <th mat-header-cell *matHeaderCellDef>GST Number</th>
-                    <td mat-cell *matCellDef="let element"> {{element.GSTNumber}} </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="Type">
-                    <th mat-header-cell *matHeaderCellDef>Vendor Type</th>
-                    <td mat-cell *matCellDef="let element"> {{element.Type}} </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="City">
-                    <th mat-header-cell *matHeaderCellDef>City</th>
-                    <td mat-cell *matCellDef="let element"> {{element.City}} </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="State">
-                    <th mat-header-cell *matHeaderCellDef>State</th>
-                    <td mat-cell *matCellDef="let element"> {{element.State}} </td>
-                  </ng-container>
-
-                  <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
-                    *matHeaderRowDef="vendorDisplayedColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: vendorDisplayedColumns;"></tr>
-                </table>
-
-              </div>
-              <!-- <mat-divider></mat-divider> -->
-            </div>
-            <div fxFlex="30" class="pb-8">
-              <div fxLayout>
-                <div fxFlex class="p-12" align="end">
-                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
-                  mat-stroked-button (click)="SaveRFQAllocation()">
-                    Save
-                  </button>
-                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
-                  (click)="SubmitRFQAllocation()" class="SaveBtnClass ml-8" mat-raised-button>
-                    Save & Publish
-                  </button>
-                </div>
-              </div>
-              <div class="mt-8 mx-60 mb-16 borderTop"></div>
-              <div fxLayout fxLayoutAlign="center" class="borderClass m-8" *ngFor="let sup of SelectedVendorList">
-                <div fxFlex="10" fxLayoutAlign="start center" class="borderRightClass pt-12">
-                  <!-- <button class="mat-mini-fab mat-accent" (click)="RemoveSelectedVendor(sup.VendorCode)">
-                    <span class="mat-button-wrapper">
-                      <mat-icon>clear</mat-icon>
-                    </span>
-                  </button> -->
-                  <div class="ml-4" *ngIf="(SelectedRFQStatus | lowercase)!=='completed'">
-                    <mat-icon class="customIcon" (click)="RemoveSelectedVendor(sup.VendorCode)">delete</mat-icon>
+              <div class="sidenav-content" fusePerfectScrollbar fxFlex>
+                <div fxLayout fxLayoutAlign="center" class="borderClass mt-8 mr-8" *ngFor="let rfq of RFQHeaders">
+                  <div fxFlex="10" fxLayoutAlign="start center" class="borderRightClass pt-12">
+                    <div class="ml-4">
+                      <div class="round" (click)="GetRFQResponse(rfq)"
+                        [style.background-color]="rfq===SelectedRFQ?'#2ecc71':'white'"></div>
+                    </div>
                   </div>
-
-                </div>
-                <div fxFlex="90" class="p-12">
-                  <div class="boldClass">{{sup.VendorName}}</div>
-                  <div>GST No : {{sup.GSTNumber}}</div>
-                  <div>Vendor type : {{sup.Type}}</div>
-                  <div>{{sup.City}}</div>
+                  <div fxFlex="90" class="p-12">
+                    <div class="boldClass p-4">RFQ ID : {{rfq.RFQID}}</div>
+                    <div class="p-4">Buyer : {{rfq.Buyer}}</div>
+                  </div>
                 </div>
               </div>
             </div>
+            <div fxFlex="75" fxLayout="column" style="height: 55vh" *ngIf="SelectedRFQID" class="m-4 side-bar">
+              <div class="Header mb-8 mx-4 mt-4">Response Received ({{RFQResponsesReceived.length}})</div>
+              <div class="sidenav-content" fusePerfectScrollbar fxFlex>
+                <div fxLayout="row wrap" fxLayoutAlign="center" class="m-4">
+                  <div *ngFor="let rfqres of RFQResponsesReceived;let i=index;let even = even; let odd=odd" fxFlex="50"
+                    fxFlex.xs="100" fxFlex.sm="100" [class.borderRightClass]="even">
+                    <div [class.ml-20]="odd" class="py-8">
+                      <span class="mx-4">{{i+1}}.</span>
+                      <span class="BlueHeader">{{rfqres.VendorName}}</span>
+                      <span class="mx-12">-</span>
+                      <span class="Header">{{rfqres.TotalPrice}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="RFQResponsesReceived.length" fxLayout fxLayoutAlign="center" class="m-4">
+                  <div fxFlex fxLayout="column" fxLayoutAlign="center">
+                    <div class="my-20 borderTop" fxFlex></div>
+                    <div class="Header" fxFlex fxLayoutAlign="center">
+                      This RFQ is by Auto Reach, to trigger Auto Evaluation please click the button
+                    </div>
+                    <div fxFlex class="mt-20" fxLayoutAlign="center">
+                      <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background"
+                        (click)="EvaluateRFQResponse()">
+                        Evaluate
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div fxFlex="75" style="height: 55vh" *ngIf="!SelectedRFQID" class="m-4 borderRightClass"></div>
           </div>
         </mat-card-content>
       </mat-card>
-      <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion1" color="accent"
-        mode="indeterminate"></mat-progress-spinner>
-      <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
     </div>
+    <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion1" color="accent" mode="indeterminate">
+    </mat-progress-spinner>
+    <div id="overlay" *ngIf="IsProgressBarVisibile"></div>
+
   </div>
 
 </div>

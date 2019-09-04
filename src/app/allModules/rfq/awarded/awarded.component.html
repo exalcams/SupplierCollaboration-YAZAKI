@@ -1,8 +1,8 @@
 <div id="chat" class=" page-layout carded fullwidth" fusePerfectScrollbar>
   <div class="top-bg" [ngClass]="BGClassName?.layout?.toolbar?.background"></div>
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
-    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px"
-      fxLayoutGap.xs="10">
+    <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center"
+      fxLayoutGap="10px" fxLayoutGap.xs="10">
       <div fxLayout class="layoutclass">
         <div fxFlex fxLayout="column">
           <div fxFlex>
@@ -115,20 +115,33 @@
       <mat-card class="my-12 fullHeight">
         <mat-card-content>
           <div fxLayout="row">
-            <div fxFlex="60">
-              <mat-radio-group aria-label="Select an option">
-                <mat-radio-button value="1" class="mr-24 pr-24 borderRightClass">By Material</mat-radio-button>
-                <mat-radio-button value="2" class="mr-24 pr-24 borderRightClass">By Vendor</mat-radio-button>
-                <mat-radio-button value="1" class="mr-24 pr-24">By Technical Rationg</mat-radio-button>
+            <div fxFlex="1 1 Auto">
+              <mat-radio-group aria-label="Select an option" [(ngModel)]="FilterValue" (change)="FilterValueChange()">
+                <mat-radio-button value="All" class="borderRightClass mr-24 pr-24">All</mat-radio-button>
+                <mat-radio-button value="ByMaterial" class="borderRightClass mr-24 pr-24">By Material</mat-radio-button>
+                <mat-radio-button value="ByVendor" class="borderRightClass mr-24 pr-24">By Vendor</mat-radio-button>
+                <mat-radio-button value="ByTechnicalRating" class="mr-24 pr-24">By Technical Rating</mat-radio-button>
               </mat-radio-group>
             </div>
-            <div fxFlex="40" align="end" class="pb-8">
+            <div fxFlex align="end" class="pb-8">
+              <button [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
+                (click)="SaveClicked()">
+                Save & Asign
+              </button>
             </div>
           </div>
-          <!-- <mat-divider></mat-divider> -->
+          <mat-divider></mat-divider>
           <div fxLayout="row" class="mt-24">
             <table mat-table [dataSource]="dataSource">
-
+              <ng-container matColumnDef="Select">
+                <th mat-header-cell *matHeaderCellDef>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
               <ng-container matColumnDef="VendorName">
                 <th mat-header-cell *matHeaderCellDef>Vendor name & Vendor code</th>
                 <td mat-cell *matCellDef="let element">{{element.VendorName }} ({{element.VendorCode}})</td>
@@ -161,7 +174,8 @@
                 </td>
               </ng-container>
 
-              <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
+                *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
           </div>

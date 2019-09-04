@@ -456,17 +456,17 @@
             <div fxLayout="row">
               <div fxFlex class="mt-12" align="end">
                 <button *ngIf="(SelectedRFQStatus | lowercase)==='open'"
-                  [ngClass]="BGClassName?.layout?.toolbar?.background" class="SaveBtnClass" mat-raised-button
+                  [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
                   (click)="SubmitRFQDetails()">
                   Save
                 </button>
                 <button *ngIf="(SelectedRFQStatus | lowercase)==='inprogress'"
-                  [ngClass]="BGClassName?.layout?.toolbar?.background" class="SaveBtnClass" mat-raised-button
+                  [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
                   (click)="GoToAllocateRFQ()">
                   Allocate Vendor
                 </button>
                 <button *ngIf="(SelectedRFQStatus | lowercase)==='completed'"
-                  [ngClass]="BGClassName?.layout?.toolbar?.background" class="SaveBtnClass" mat-raised-button
+                  [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
                   (click)="GoToAllocateRFQ()">
                   Review Vendor allocation
                 </button>
