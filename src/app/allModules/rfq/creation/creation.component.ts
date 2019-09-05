@@ -402,7 +402,7 @@ export class CreationComponent implements OnInit {
       rfq.Price = x.get('Price').value;
       rfq.SupplierPartNumber = x.get('SupplierPartNumber').value;
       rfq.SelfLifeDays = x.get('SelfLifeDays').value;
-      rfq.NumberOfAttachments = x.get('NumberOfAttachments').value;
+      rfq.NumberOfAttachments = x.get('NumberOfAttachments').value ? x.get('NumberOfAttachments').value : 0;
       rfq.AttachmentNames = x.get('AttachmentNames').value;
       rfq.TechRating = x.get('TechRating').value;
       rfq.APPID = this.RFQItemAppID;

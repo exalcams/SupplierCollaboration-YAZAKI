@@ -151,7 +151,7 @@
             <div fxFlex="75" fxLayout="column" style="height: 55vh" *ngIf="SelectedRFQID" class="m-4 side-bar">
               <div class="Header mb-8 mx-4 mt-4">Response Received ({{RFQResponsesReceived.length}})</div>
               <div class="sidenav-content" fusePerfectScrollbar fxFlex>
-                <div fxLayout="row wrap" fxLayoutAlign="center" class="m-4">
+                <div fxLayout="row wrap" fxLayoutAlign="start center" class="m-4">
                   <div *ngFor="let rfqres of RFQResponsesReceived;let i=index;let even = even; let odd=odd" fxFlex="50"
                     fxFlex.xs="100" fxFlex.sm="100" [class.borderRightClass]="even">
                     <div [class.ml-20]="odd" class="py-8">

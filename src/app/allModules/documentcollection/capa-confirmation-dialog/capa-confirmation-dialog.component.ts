@@ -1,10 +1,9 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { DashboardService } from 'app/services/dashboard.service';
-import { MasterService } from 'app/services/master.service';
 import { CAPAConfirmationStatusView } from 'app/models/document-collection.model';
 import { fuseAnimations } from '@fuse/animations';
+import { FuseConfigService } from '@fuse/services/config.service';
 
 @Component({
   selector: 'app-capa-confirmation-dialog',
@@ -15,19 +14,24 @@ import { fuseAnimations } from '@fuse/animations';
 })
 export class CapaConfirmationDialogComponent implements OnInit {
   CAPAConfirmationFormGroup: FormGroup;
+  BGClassName: any;
+  compStyles: CSSStyleDeclaration;
   constructor(
     public matDialogRef: MatDialogRef<CapaConfirmationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public CAPAStatusViewDATA: CAPAConfirmationStatusView,
     private formBuilder: FormBuilder,
-    private dashboardService: DashboardService,
-    private masterService: MasterService
+    private _fuseConfigService: FuseConfigService,
   ) { }
 
   ngOnInit(): void {
     this.CAPAConfirmationFormGroup = this.formBuilder.group({
       Reason: ['', Validators.required],
     });
-    console.log(this.CAPAStatusViewDATA);
+    this._fuseConfigService.config.subscribe((config) => {
+      this.BGClassName = config;
+      const backgroundElement = document.querySelector(`.${this.BGClassName.layout.toolbar.background}`);
+      this.compStyles = window.getComputedStyle(backgroundElement);
+    });
   }
   YesClicked(): void {
     if (this.CAPAConfirmationFormGroup.valid) {

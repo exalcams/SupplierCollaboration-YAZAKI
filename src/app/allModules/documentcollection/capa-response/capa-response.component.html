@@ -215,7 +215,8 @@
                 </div>
                 <div fxLayout fxLayoutAlign="space-between center" class="m-8">
                   <div fxFlex *ngIf="SelectedCAPAStaus!=='Closed'">
-                    <button mat-stroked-button color="accent" (click)="ValidateCAPAResponse()">
+                    <button mat-stroked-button [style.color]="compStyles?.backgroundColor" 
+                    (click)="ValidateCAPAResponse()">
                       Reply
                     </button>
                   </div>

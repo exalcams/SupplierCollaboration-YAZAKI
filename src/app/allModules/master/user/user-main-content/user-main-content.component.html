@@ -58,7 +58,10 @@
   <div fxLayout="row" fxLayoutAlign="start" fxFlex="1 0 auto" [style.display]="isVendor?'inherit':'none'">
 
     <mat-form-field class="p-12" fxFlex="50">
-      <input matInput placeholder="Vendor Code" formControlName="vendorCode">
+      <!-- <input matInput placeholder="Vendor Code" formControlName="vendorCode"> -->
+      <mat-select placeholder="Vendor Code" formControlName="vendorCode">
+        <mat-option *ngFor="let ven of AllVendors" [value]="ven.VendorCode">{{ven.VendorName}}</mat-option>
+      </mat-select>
       <mat-error
         *ngIf="userMainFormGroup.get('vendorCode').touched &&  userMainFormGroup.get('vendorCode').hasError('required')">
         Vendor code is required</mat-error>

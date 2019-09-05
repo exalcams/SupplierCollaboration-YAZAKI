@@ -282,7 +282,8 @@
               <ng-container matColumnDef="DeliveryDate">
                 <th mat-header-cell *matHeaderCellDef>Delivery Date</th>
                 <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <input matInput [matDatepicker]="picker21" (click)="picker21.open()" formControlName="DeliveryDate">
+                  <input matInput [matDatepicker]="picker21" (click)="picker21.open()" (keydown)="onKeydown($event)"
+                    (dateChange)="DateSelected($event,row)" formControlName="DeliveryDate">
                   <!-- <mat-datepicker-toggle matSuffix [for]="picker21"></mat-datepicker-toggle> -->
                   <mat-datepicker #picker21></mat-datepicker>
                   <span class="pl-4 errorClass"

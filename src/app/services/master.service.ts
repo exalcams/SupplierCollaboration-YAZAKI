@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithMenuApp, UserWithRole, UserNotification, UserPreference, App, Vendor, VendorSearchCondition } from 'app/models/master';
+import { MenuApp, RoleWithMenuApp, UserWithRole, UserNotification, UserPreference, App, Vendor, VendorSearchCondition, VendorView } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 
 @Injectable({
@@ -130,6 +130,11 @@ export class MasterService {
 
   GetAllVendors(): Observable<Vendor[] | string> {
     return this._httpClient.get<Vendor[]>(`${this.baseAddress}api/Master/GetAllVendors`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllVendorViews(): Observable<VendorView[] | string> {
+    return this._httpClient.get<VendorView[]>(`${this.baseAddress}api/Master/GetAllVendorViews`)
       .pipe(catchError(this.errorHandler));
   }
 
