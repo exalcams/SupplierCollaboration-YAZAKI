@@ -34,6 +34,7 @@ export class PublishComponent implements OnInit {
   SelectedVendorList: Vendor[] = [];
   CheckedVendorList: Vendor[] = [];
   BGClassName: any;
+  compStyles: CSSStyleDeclaration;
   vendorDisplayedColumns: string[] = ['select', 'VendorCode', 'VendorName', 'GSTNumber', 'Type', 'City', 'State'];
   vendorDataSource: MatTableDataSource<Vendor>;
   selection = new SelectionModel<Vendor>(true, []);
@@ -99,6 +100,8 @@ export class PublishComponent implements OnInit {
       // .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config) => {
         this.BGClassName = config;
+        const backgroundElement = document.querySelector(`.${this.BGClassName.layout.toolbar.background}`);
+        this.compStyles = window.getComputedStyle(backgroundElement);
       });
   }
 

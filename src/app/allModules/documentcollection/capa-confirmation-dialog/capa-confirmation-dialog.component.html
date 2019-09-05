@@ -1,5 +1,5 @@
 <div class="dialog-content-wrapper normal">
-  <mat-toolbar class="mat-accent m-0">
+  <mat-toolbar class="mat-accent m-0" [ngClass]="BGClassName?.layout?.toolbar?.background">
     <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
       <span class="title dialog-title">CAPA {{CAPAStatusViewDATA?.Actiontype}} Confirmation</span>
       <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
@@ -21,7 +21,7 @@
   </div>
 
   <mat-dialog-actions class="m-0 p-16" fxLayoutAlign="space-between center">
-    <button mat-raised-button (click)="CloseClicked()">Cancel</button>
-    <button mat-raised-button color="accent" (click)="YesClicked()">Yes</button>
+    <button mat-button (click)="CloseClicked()">Cancel</button>
+    <button mat-button [style.color]="compStyles?.backgroundColor" (click)="YesClicked()">Yes</button>
   </mat-dialog-actions>
 </div>

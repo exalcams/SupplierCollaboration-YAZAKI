@@ -10,7 +10,7 @@ import { AuthService } from 'app/services/auth.service';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Router } from '@angular/router';
-import { UserWithRole, RoleWithMenuApp, AuthenticationDetails } from 'app/models/master';
+import { UserWithRole, RoleWithMenuApp, AuthenticationDetails, VendorView } from 'app/models/master';
 
 @Component({
   selector: 'user-main-content',
@@ -27,6 +27,7 @@ export class UserMainContentComponent implements OnInit, OnChanges {
   user: UserWithRole;
   userMainFormGroup: FormGroup;
   AllRoles: RoleWithMenuApp[] = [];
+  AllVendors: VendorView[] = [];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   baseAddress: string;
   authenticationDetails: AuthenticationDetails;
@@ -50,6 +51,18 @@ export class UserMainContentComponent implements OnInit, OnChanges {
     this.baseAddress = _authService.baseAddress;
     this.isVendor = false;
   }
+
+  ngOnInit(): void {
+    // Retrive authorizationData
+    const retrievedObject = localStorage.getItem('authorizationData');
+    if (retrievedObject) {
+      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
+    } else {
+      this._router.navigate(['/auth/login']);
+    }
+    this.GetAllRoles();
+    this.GetAllVendors();
+  }
   GetAllRoles(): void {
     this._masterService.GetAllRoles().subscribe(
       (data) => {
@@ -65,18 +78,18 @@ export class UserMainContentComponent implements OnInit, OnChanges {
     );
   }
 
-  ngOnInit(): void {
-
-    // Retrive authorizationData
-    const retrievedObject = localStorage.getItem('authorizationData');
-    if (retrievedObject) {
-      this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
-    } else {
-      this._router.navigate(['/auth/login']);
-    }
-    this.GetAllRoles();
-
+  GetAllVendors(): void {
+    this._masterService.GetAllVendorViews().subscribe(
+      (data) => {
+        this.AllVendors = <VendorView[]>data;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
+
+
 
   ResetControl(): void {
     this.user = new UserWithRole();

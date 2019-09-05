@@ -26,6 +26,7 @@ export class CapaAssignmentComponent implements OnInit {
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
   BGClassName: any;
+  compStyles: CSSStyleDeclaration;
   CAPA: CAPAHeader;
   CAPAFormGroup: FormGroup;
   fileToUpload: File;
@@ -95,6 +96,8 @@ export class CapaAssignmentComponent implements OnInit {
     this.checkboxLabel();
     this._fuseConfigService.config.subscribe((config) => {
       this.BGClassName = config;
+      const backgroundElement = document.querySelector(`.${this.BGClassName.layout.toolbar.background}`);
+      this.compStyles = window.getComputedStyle(backgroundElement);
     });
   }
 

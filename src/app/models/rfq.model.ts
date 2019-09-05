@@ -264,6 +264,7 @@ export class RFQResponseItemView {
     MaterialDescription: string;
     OrderQuantity: number;
     UOM: string;
+    ExpectedDeliveryDate?: Date;
     DeliveryDate?: Date;
     DelayDays: number;
     Schedule: number;

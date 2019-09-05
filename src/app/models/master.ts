@@ -109,6 +109,12 @@ export class Vendor {
     ModifiedOn?: Date;
     ModifiedBy: string;
 }
+
+export class VendorView {
+    ID: number;
+    VendorCode: string;
+    VendorName: string;
+}
 export class VendorSearchCondition {
     VendorCode: string;
     VendorName: string;

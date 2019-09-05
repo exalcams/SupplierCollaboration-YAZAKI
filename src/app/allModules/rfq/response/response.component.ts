@@ -13,7 +13,7 @@ import { MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Auxiliary } from 'app/models/asn';
-import { Location } from '@angular/common';
+import { Location, DatePipe } from '@angular/common';
 import { Guid } from 'guid-typescript';
 
 @Component({
@@ -57,7 +57,8 @@ export class ResponseComponent implements OnInit {
     private _formBuilder: FormBuilder,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private renderer: Renderer
+    private renderer: Renderer,
+    private _datePipe: DatePipe
   ) {
     const CurrentRFQHeaderVendor = this._shareParameterService.GetRFQHeaderVendor();
     if (CurrentRFQHeaderVendor) {
@@ -240,6 +241,7 @@ export class ResponseComponent implements OnInit {
       UOM: [RFQItem.UOM, Validators.required],
       Price: [RFQItem.Price, Validators.required],
       Schedule: [RFQItem.Schedule, Validators.required],
+      ExpectedDeliveryDate: [RFQItem.ExpectedDeliveryDate, Validators.required],
       DeliveryDate: [RFQItem.DeliveryDate, Validators.required],
       SelfLifeDays: [RFQItem.SelfLifeDays, Validators.required],
       NumberOfAttachments: [RFQItem.NumberOfAttachments],
@@ -267,6 +269,27 @@ export class ResponseComponent implements OnInit {
       AttNames.push(this.fileToUpload.name);
       this.RFQResponseItemFormArray.controls[index].get('AttachmentNames').patchValue(AttNames);
     }
+  }
+
+  onKeydown(event): boolean {
+    // console.log(event.key);
+    if (event.key === 'Backspace' || event.key === 'Delete') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  DateSelected(event, row: FormGroup): void {
+    // console.log(event.value);
+    // console.log(row.get('ExpectedDeliveryDate').value);
+    const DeliveryDateValue = new Date(event.value);
+    const ExpectedDeliveryDateValue = new Date(row.get('ExpectedDeliveryDate').value);
+    const diff = DeliveryDateValue.getTime() - ExpectedDeliveryDateValue.getTime();
+    let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+    if (diffDays < 0) {
+      diffDays = 0;
+    }
+    row.get('DelayDays').patchValue(diffDays);
   }
 
   ValidateRFQResponse(): void {
@@ -369,7 +392,8 @@ export class ResponseComponent implements OnInit {
       rfq.Price = x.get('Price').value;
       rfq.SupplierPartNumber = x.get('SupplierPartNumber').value;
       rfq.Schedule = x.get('Schedule').value;
-      rfq.DeliveryDate = x.get('DeliveryDate').value;
+      rfq.ExpectedDeliveryDate = x.get('ExpectedDeliveryDate').value;
+      rfq.DeliveryDate = new Date(this._datePipe.transform(x.get('DeliveryDate').value, 'yyyy-MM-dd'));
       rfq.SelfLifeDays = x.get('SelfLifeDays').value;
       rfq.NumberOfAttachments = x.get('NumberOfAttachments').value;
       rfq.AttachmentNames = x.get('AttachmentNames').value;

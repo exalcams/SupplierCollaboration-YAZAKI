@@ -187,8 +187,8 @@
               <div fxLayout class="pr-16 px-24 pt-16">
                 <div fxFlex class="boldClass">VendorList</div>
                 <div fxFlex align="end">
-                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'" class="blueText"
-                    (click)="AddSelectedVendors()" mat-stroked-button>
+                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
+                    [style.color]="compStyles?.backgroundColor" (click)="AddSelectedVendors()" mat-stroked-button>
                     <mat-icon>add_circle_outline</mat-icon>
                     Add vendor
                   </button>

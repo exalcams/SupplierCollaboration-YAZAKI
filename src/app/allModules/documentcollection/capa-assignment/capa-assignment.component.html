@@ -263,7 +263,7 @@
                 <div fxFlex></div>
                 <div fxFlex class="pl-120">
                   <button [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="GetVendorsBasedOnConditions()"
-                    class="SearchBtnClass" mat-raised-button>
+                    mat-raised-button>
                     Search
                   </button>
                 </div>
@@ -274,7 +274,7 @@
             <div fxLayout class="m-8 mt-16">
               <div fxFlex class="boldClass" style="color: #4a77fb">VendorList</div>
               <div fxFlex align="end">
-                <button class="blueText" (click)="AddSelectedVendors()" mat-stroked-button>
+                <button [style.color]="compStyles?.backgroundColor" (click)="AddSelectedVendors()" mat-stroked-button>
                   <mat-icon>add_circle_outline</mat-icon>
                   Add vendor
                 </button>

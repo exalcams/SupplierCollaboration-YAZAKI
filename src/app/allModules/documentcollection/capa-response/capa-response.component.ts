@@ -29,6 +29,7 @@ export class CapaResponseComponent implements OnInit {
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
   BGClassName: any;
+  compStyles: CSSStyleDeclaration;
   searchText = '';
   AllCAPA: CAPAHeaderView[] = [];
   SelectedCAPA = new CAPAHeaderView();
@@ -68,7 +69,8 @@ export class CapaResponseComponent implements OnInit {
     }
     this._fuseConfigService.config.subscribe((config) => {
       this.BGClassName = config;
-      console.log(this.BGClassName.layout.toolbar.background);
+      const backgroundElement = document.querySelector(`.${this.BGClassName.layout.toolbar.background}`);
+      this.compStyles = window.getComputedStyle(backgroundElement);
     });
 
     this.CAPAResponseFormGroup = this._formBuilder.group({
