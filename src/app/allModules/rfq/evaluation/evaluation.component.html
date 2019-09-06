@@ -134,7 +134,7 @@
                 RFQ List
               </div>
               <div class="sidenav-content" fusePerfectScrollbar fxFlex>
-                <div fxLayout fxLayoutAlign="center" class="borderClass mt-8 mr-8" *ngFor="let rfq of RFQHeaders">
+                <div fxLayout fxLayoutAlign="center" class="borderClass mt-8 mr-8" *ngFor="let rfq of RFQEvaluations">
                   <div fxFlex="10" fxLayoutAlign="start center" class="borderRightClass pt-12">
                     <div class="ml-4">
                       <div class="round" (click)="GetRFQResponse(rfq)"
@@ -144,6 +144,7 @@
                   <div fxFlex="90" class="p-12">
                     <div class="boldClass p-4">RFQ ID : {{rfq.RFQID}}</div>
                     <div class="p-4">Buyer : {{rfq.Buyer}}</div>
+                    <div class="p-4">Status : {{rfq.Status}}</div>
                   </div>
                 </div>
               </div>
@@ -165,13 +166,18 @@
                 <div *ngIf="RFQResponsesReceived.length" fxLayout fxLayoutAlign="center" class="m-4">
                   <div fxFlex fxLayout="column" fxLayoutAlign="center">
                     <div class="my-20 borderTop" fxFlex></div>
-                    <div class="Header" fxFlex fxLayoutAlign="center">
+                    <div class="Header" *ngIf="(SelectedRFQStatus | lowercase)!=='awarded'" fxFlex
+                      fxLayoutAlign="center">
                       This RFQ is by Auto Reach, to trigger Auto Evaluation please click the button
                     </div>
                     <div fxFlex class="mt-20" fxLayoutAlign="center">
-                      <button mat-raised-button [ngClass]="BGClassName?.layout?.toolbar?.background"
-                        (click)="EvaluateRFQResponse()">
+                      <button *ngIf="(SelectedRFQStatus | lowercase)!=='awarded'" mat-raised-button
+                        [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="EvaluateRFQResponse()">
                         Evaluate
+                      </button>
+                      <button *ngIf="(SelectedRFQStatus | lowercase)==='awarded'" mat-raised-button
+                        [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="GoToAwardedDetails()">
+                        View Awarded Details
                       </button>
                     </div>
                   </div>
