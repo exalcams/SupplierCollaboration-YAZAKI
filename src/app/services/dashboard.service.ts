@@ -166,4 +166,7 @@ export class DashboardService {
             .get<POView[]>(`${this.baseAddress}api/DashBoardController/GetPaymentReceivedList`)
             .pipe(catchError(this.errorHandler));
     }
+    GetPOQulity(): Observable<number | string> {
+        return this._httpClient.get<number>(`${this.baseAddress}api/DashBoardController/GetPOQulity`).pipe(catchError(this.errorHandler));
+    }
 }
