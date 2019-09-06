@@ -64,6 +64,7 @@ export class AwardedDetailsComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
     this.SelectedPurchaseRequisition = this._shareParameterService.GetPurchaseRequisition();
+    this._shareParameterService.SetPurchaseRequisition(null);
     if (!this.SelectedPurchaseRequisition) {
       this._router.navigate(['/rfq/evaluation']);
     } else {
