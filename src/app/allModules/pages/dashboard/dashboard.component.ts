@@ -36,6 +36,7 @@ export class DashboardComponent implements OnInit {
     AllPOList: POView[] = [];
     IsProgressBarVisibile: boolean;
     DeliveryStatus: string;
+    POQuality: number;
     ASNHeaderList: ASN[] = [];
     POListDataSource: MatTableDataSource<POView>;
     IsAllPOListCompleted: boolean;
@@ -83,6 +84,7 @@ export class DashboardComponent implements OnInit {
         this.GetAllDashboardStatus();
         this.GetAllPODeliveryStatus();
         this.GetASNHeader();
+        this.GetPOQulity();
         this.IsAllPOListCompleted = false;
         // this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
         // this.dataSource1.sort = this.sort;
@@ -271,7 +273,7 @@ export class DashboardComponent implements OnInit {
             data => {
                 if (data) {
                     this.PODeliveryStatus = <PO_DeliveryStatus>data;
-                   // console.log(this.PODeliveryStatus.Date);
+                    // console.log(this.PODeliveryStatus.Date);
                     this.widget5 = {
                         data: {
                             labels: this.PODeliveryStatus.Date,
@@ -348,6 +350,19 @@ export class DashboardComponent implements OnInit {
                 }
             },
             err => {}
+        );
+    }
+
+    GetPOQulity(): void {
+        this.dashboardService.GetPOQulity().subscribe(
+            data => {
+                if (data) {
+                    this.POQuality = data as number;
+                }
+            },
+            err => {
+                console.error(err);
+            }
         );
     }
 
@@ -521,9 +536,9 @@ export class DashboardComponent implements OnInit {
     DeliveryStatusChange(): void {
         // this.ClearChart();
         this.PODeliveryStatus.Date = [];
-       // console.log(this.PODeliveryStatus.Date);
+        // console.log(this.PODeliveryStatus.Date);
         this.GetAllPODeliveryStatus();
-       // console.log(this.PODeliveryStatus.Date);
+        // console.log(this.PODeliveryStatus.Date);
     }
 }
 
