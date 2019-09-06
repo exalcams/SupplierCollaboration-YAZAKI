@@ -34,6 +34,8 @@ export class DashboardComponent implements OnInit {
     ];
     displayedColumns1: string[] = ['TransId', 'PurchaseOrder', 'Status'];
     AllPOList: POView[] = [];
+    IsProgressBarVisibile: boolean;
+    DeliveryStatus: string;
     ASNHeaderList: ASN[] = [];
     POListDataSource: MatTableDataSource<POView>;
     IsAllPOListCompleted: boolean;
@@ -67,7 +69,7 @@ export class DashboardComponent implements OnInit {
         matIconRegistry.addSvgIcon('pdficon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/dashboard/pdf.svg'));
         matIconRegistry.addSvgIcon('questionmarkicon', sanitizer.bypassSecurityTrustResourceUrl('assets/images/dashboard/noun-help-922772.svg'));
         this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
-
+        this.DeliveryStatus = '7';
         // this.route.queryParams.subscribe(params => {
         //   this.selectedPORow.PO = params['id'];
         //   console.log(this.selectedPORow.PO);
@@ -161,6 +163,7 @@ export class DashboardComponent implements OnInit {
     ChangeVisibleStatus(SelectedOrder: Orders): void {
         SelectedOrder.IsVisible = !SelectedOrder.IsVisible;
     }
+
     CalculateSum(SelectedOrder: Orders): number {
         let sum = 0;
         SelectedOrder.LineItemsList.forEach(x => {
@@ -169,7 +172,7 @@ export class DashboardComponent implements OnInit {
         return sum;
     }
 
-    filterForeCasts(filterVal: any) {
+    filterForeCasts(filterVal: any): void {
         this.selected = filterVal;
         //alert(filterVal);
         // if (selected == "0")
@@ -177,14 +180,16 @@ export class DashboardComponent implements OnInit {
         // else
         // this.forecasts = this.cacheForecasts.filter((item) => item.summary == filterVal);
     }
-    PurchaseOrder() {
+
+    PurchaseOrder(): void {
         if (this.selectedPORow.PO != null) {
             this._router.navigate(['/dashboard/purchaseOrderDetails'], { queryParams: { id: this.selectedPORow.PO } });
         } else {
             this.notificationSnackBarComponent.openSnackBar('Please select the PO ', SnackBarStatus.danger);
         }
     }
-    OrderAcknowledgement() {
+
+    OrderAcknowledgement(): void {
         if (this.selectedPORow.PO != null) {
             this._router.navigate(['/orderacknowledgment/acknowledgment'], {
                 queryParams: { id: this.selectedPORow.PO, item: this.selectedPORow.Item }
@@ -193,7 +198,8 @@ export class DashboardComponent implements OnInit {
             this.notificationSnackBarComponent.openSnackBar('Please select the PO ', SnackBarStatus.danger);
         }
     }
-    AdvanceShipment() {
+
+    AdvanceShipment(): void {
         if (this.selectedPORow.AcknowledgementStatus && this.selectedPORow.AcknowledgementStatus.toLowerCase() === 'closed') {
             this._router.navigate(['/order/shipment'], {
                 queryParams: { id: this.selectedPORow.PO, item: this.selectedPORow.Item, status: this.selectedPORow.ASNStatus }
@@ -218,6 +224,7 @@ export class DashboardComponent implements OnInit {
             }
         );
     }
+
     GetASNHeader(): void {
         this.dashboardService.GetASNHeader().subscribe(
             data => {
@@ -232,6 +239,7 @@ export class DashboardComponent implements OnInit {
             }
         );
     }
+
     GetAllPONotifications(): void {
         this.dashboardService.GetAllPONotifications().subscribe(
             data => {
@@ -244,6 +252,7 @@ export class DashboardComponent implements OnInit {
             }
         );
     }
+
     GetAllDashboardStatus(): void {
         this.dashboardService.GetAllDashboardStatus().subscribe(
             data => {
@@ -256,11 +265,13 @@ export class DashboardComponent implements OnInit {
             }
         );
     }
+
     GetAllPODeliveryStatus(): void {
-        this.dashboardService.GetAllPODeliveryStatus().subscribe(
+        this.dashboardService.GetAllPODeliveryStatus(this.DeliveryStatus).subscribe(
             data => {
                 if (data) {
                     this.PODeliveryStatus = <PO_DeliveryStatus>data;
+                   // console.log(this.PODeliveryStatus.Date);
                     this.widget5 = {
                         data: {
                             labels: this.PODeliveryStatus.Date,
@@ -332,23 +343,28 @@ export class DashboardComponent implements OnInit {
                             }
                         }
                     };
+
                     this.showChart = true;
                 }
             },
             err => {}
         );
     }
-    Checked(data) {
+
+    Checked(data): void {
         this.selectedPORow = data;
     }
 
     exportAsXLSX(): void {
         this.dashboardService.exportAsExcelFile(this.AllPOList, 'PO_List');
     }
-    ShipOpen(): void {
+
+    GetShipOpen(): void {
+        this.IsProgressBarVisibile = true;
         this.dashboardService.GetToShipOpen().subscribe(
             data => {
                 if (data) {
+                    this.IsProgressBarVisibile = false;
                     this.AllPOList = <POView[]>data;
                     this.POListDataSource = new MatTableDataSource(this.AllPOList);
                     this.POListDataSource.sort = this.sort;
@@ -359,6 +375,155 @@ export class DashboardComponent implements OnInit {
                 console.error(err);
             }
         );
+    }
+
+    GetToShipWeek(): void {
+        this.IsProgressBarVisibile = true;
+        this.dashboardService.GetToShipWeek().subscribe(
+            data => {
+                if (data) {
+                    this.IsProgressBarVisibile = false;
+                    this.AllPOList = <POView[]>data;
+                    this.POListDataSource = new MatTableDataSource(this.AllPOList);
+                    this.POListDataSource.sort = this.sort;
+                }
+                this.IsAllPOListCompleted = true;
+            },
+            err => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetOpenPoList(): void {
+        this.IsProgressBarVisibile = true;
+        this.dashboardService.GetOpenPoList().subscribe(
+            data => {
+                if (data) {
+                    this.IsProgressBarVisibile = false;
+                    this.AllPOList = <POView[]>data;
+                    this.POListDataSource = new MatTableDataSource(this.AllPOList);
+                    this.POListDataSource.sort = this.sort;
+                }
+                this.IsAllPOListCompleted = true;
+            },
+            err => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetOpenFromPO(): void {
+        this.IsProgressBarVisibile = true;
+        this.dashboardService.GetOpenFromPO().subscribe(
+            data => {
+                if (data) {
+                    this.IsProgressBarVisibile = false;
+                    this.AllPOList = <POView[]>data;
+                    this.POListDataSource = new MatTableDataSource(this.AllPOList);
+                    this.POListDataSource.sort = this.sort;
+                    console.log(this.AllPOList);
+                    console.log(this.POListDataSource.data.length);
+                }
+                this.IsAllPOListCompleted = true;
+            },
+            err => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetInTransitList(): void {
+        this.IsProgressBarVisibile = true;
+        this.dashboardService.GetInTransitList().subscribe(
+            data => {
+                if (data) {
+                    this.IsProgressBarVisibile = false;
+                    this.AllPOList = <POView[]>data;
+                    this.POListDataSource = new MatTableDataSource(this.AllPOList);
+                    this.POListDataSource.sort = this.sort;
+                }
+                this.IsAllPOListCompleted = true;
+            },
+            err => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetInTransitReceivedList(): void {
+        this.IsProgressBarVisibile = true;
+        this.dashboardService.GetInTransitReceivedList().subscribe(
+            data => {
+                if (data) {
+                    this.IsProgressBarVisibile = false;
+                    this.AllPOList = <POView[]>data;
+                    this.POListDataSource = new MatTableDataSource(this.AllPOList);
+                    this.POListDataSource.sort = this.sort;
+                }
+                this.IsAllPOListCompleted = true;
+            },
+            err => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetPaymentDueList(): void {
+        this.IsProgressBarVisibile = true;
+        this.dashboardService.GetPaymentDueList().subscribe(
+            data => {
+                if (data) {
+                    this.IsProgressBarVisibile = false;
+                    this.AllPOList = <POView[]>data;
+                    this.POListDataSource = new MatTableDataSource(this.AllPOList);
+                    this.POListDataSource.sort = this.sort;
+                }
+                this.IsAllPOListCompleted = true;
+            },
+            err => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetPaymentReceivedList(): void {
+        this.IsProgressBarVisibile = true;
+        this.dashboardService.GetPaymentReceivedList().subscribe(
+            data => {
+                if (data) {
+                    this.IsProgressBarVisibile = false;
+                    this.AllPOList = <POView[]>data;
+                    this.POListDataSource = new MatTableDataSource(this.AllPOList);
+                    this.POListDataSource.sort = this.sort;
+                }
+                this.IsAllPOListCompleted = true;
+            },
+            err => {
+                console.error(err);
+            }
+        );
+    }
+
+    ASNDetails(data): void {
+        const transId = data.TransID;
+        this._router.navigate(['/order/shipment'], {
+            queryParams: { transID: transId }
+        });
+    }
+    // ClearChart(): void {
+    //     this.widget5 = {
+    //         data: {
+    //             labels: []
+    //         }
+    //     };
+    // }
+    DeliveryStatusChange(): void {
+        // this.ClearChart();
+        this.PODeliveryStatus.Date = [];
+       // console.log(this.PODeliveryStatus.Date);
+        this.GetAllPODeliveryStatus();
+       // console.log(this.PODeliveryStatus.Date);
     }
 }
 

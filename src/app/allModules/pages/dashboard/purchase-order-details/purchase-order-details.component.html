@@ -211,6 +211,10 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="Checked(row)"
                       [class.highlight]="row === selectedPORow"></tr>
                   </table>
+                  <div *ngIf="!POPurchaseOrderDetails.POItemList.length">
+                    <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
+                    <span style="margin-left: 10px;">The table does not contain any data</span>
+                  </div>
                 </mat-card>
                 <mat-card style="margin-left: 15px;" fxFlex="50">
                   <mat-tab-group style="margin-top: -19px;" dynamicHeight="true">
@@ -251,6 +255,10 @@
                             *matHeaderRowDef="ScheduleDisplayedColumns"></tr>
                           <tr mat-row *matRowDef="let row; columns: ScheduleDisplayedColumns;"></tr>
                         </table>
+                        <div *ngIf="!PO_OrderLookUpDetails.PO_ScheduleDetails.length">
+                          <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
+                          <span style="margin-left: 10px;">The table does not contain any data</span>
+                        </div>
                       </div>
                     </mat-tab>
                     <mat-tab matTooltip="Advance Shipment Notification" label="ASN">
@@ -302,6 +310,10 @@
                             *matHeaderRowDef="AdvanceShipmentDisplayedColumns"></tr>
                           <tr mat-row *matRowDef="let row; columns: AdvanceShipmentDisplayedColumns;"></tr>
                         </table>
+                        <div *ngIf="!PO_OrderLookUpDetails.PO_AdvanceShipmentNotification.length">
+                          <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
+                          <span style="margin-left: 10px;">The table does not contain any data</span>
+                        </div>
                       </div>
                     </mat-tab>
                     <mat-tab matTooltip="Goods Reciept Note" label="GRN">
@@ -348,6 +360,10 @@
                             *matHeaderRowDef="GRNDisplayedColumns"></tr>
                           <tr mat-row *matRowDef="let row; columns: GRNDisplayedColumns;"></tr>
                         </table>
+                        <div *ngIf="!PO_OrderLookUpDetails.PO_GRN.length">
+                          <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
+                          <span style="margin-left: 10px;">The table does not contain any data</span>
+                        </div>
                       </div>
                     </mat-tab>
                     <mat-tab matTooltip="Quentity Rejection" label="QR">

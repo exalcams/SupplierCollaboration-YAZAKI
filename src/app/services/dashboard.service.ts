@@ -50,9 +50,9 @@ export class DashboardService {
     GetAllDashboardStatus(): Observable<DashboardStatus | string> {
         return this._httpClient.get<DashboardStatus>(`${this.baseAddress}api/DashBoardController/GetDashboard`).pipe(catchError(this.errorHandler));
     }
-    GetAllPODeliveryStatus(): Observable<PO_DeliveryStatus | string> {
+    GetAllPODeliveryStatus(Value: any): Observable<PO_DeliveryStatus | string> {
         return this._httpClient
-            .get<PO_DeliveryStatus>(`${this.baseAddress}api/DashBoardController/GetPODeliveryStatus`)
+            .get<PO_DeliveryStatus>(`${this.baseAddress}api/DashBoardController/GetPODeliveryStatus?Value=${Value}`)
             .pipe(catchError(this.errorHandler));
     }
     GetPOPurchaseOrderDetails(PO_Id: any): Observable<PO_PurchaseOrderDetails | string> {
@@ -140,5 +140,30 @@ export class DashboardService {
 
     GetToShipOpen(): Observable<POView[] | string> {
         return this._httpClient.get<POView[]>(`${this.baseAddress}api/DashBoardController/GetToShipOpen`).pipe(catchError(this.errorHandler));
+    }
+    GetToShipWeek(): Observable<POView[] | string> {
+        return this._httpClient.get<POView[]>(`${this.baseAddress}api/DashBoardController/GetToShipWeek`).pipe(catchError(this.errorHandler));
+    }
+    GetOpenPoList(): Observable<POView[] | string> {
+        return this._httpClient.get<POView[]>(`${this.baseAddress}api/DashBoardController/GetOpenPoList`).pipe(catchError(this.errorHandler));
+    }
+    GetOpenFromPO(): Observable<POView[] | string> {
+        return this._httpClient.get<POView[]>(`${this.baseAddress}api/DashBoardController/GetOpenFromPO`).pipe(catchError(this.errorHandler));
+    }
+    GetInTransitList(): Observable<POView[] | string> {
+        return this._httpClient.get<POView[]>(`${this.baseAddress}api/DashBoardController/GetInTransitList`).pipe(catchError(this.errorHandler));
+    }
+    GetInTransitReceivedList(): Observable<POView[] | string> {
+        return this._httpClient
+            .get<POView[]>(`${this.baseAddress}api/DashBoardController/GetInTransitReceivedList`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetPaymentDueList(): Observable<POView[] | string> {
+        return this._httpClient.get<POView[]>(`${this.baseAddress}api/DashBoardController/GetPaymentDueList`).pipe(catchError(this.errorHandler));
+    }
+    GetPaymentReceivedList(): Observable<POView[] | string> {
+        return this._httpClient
+            .get<POView[]>(`${this.baseAddress}api/DashBoardController/GetPaymentReceivedList`)
+            .pipe(catchError(this.errorHandler));
     }
 }
