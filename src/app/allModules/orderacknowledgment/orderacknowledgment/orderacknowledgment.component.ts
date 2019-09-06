@@ -292,7 +292,8 @@ export class OrderacknowledgmentComponent implements OnInit {
                     err => {
                         // console.error(err);
                         // this.IsProgressBarVisibile = false;
-                        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+                        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? '"please select atleast one ScheduleLine' : err, SnackBarStatus.danger);
+                        this.GetPOOrderAcknowledgement();
                     }
                 );
                 // });

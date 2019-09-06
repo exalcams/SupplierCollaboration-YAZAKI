@@ -30,12 +30,12 @@
 
 .borderRight{
     border-left: 1px solid white;
-    opacity: 0.4; 
+    opacity: 0.4;
     border-radius: 1px;
 }
 .borderRight1{
     border-left: 1px solid black;
-    opacity: 0.2; 
+    opacity: 0.2;
     border-radius: 1px;
 }
 
@@ -64,10 +64,10 @@ mat-option {color: #1b56ca}
 select option {
     border-radius: 10px;
     background-color: white;
-    
+
 }
 table {
-    width: 100%; 
+    width: 100%;
     th{
      // background: #082f7d;
       color: white;
@@ -76,7 +76,7 @@ table {
       padding: 5px;
       border-right: 1px solid #e0e0e0;
       font-size: 10px;
-      
+
     }
     td{
         padding-left: 15px;
@@ -123,4 +123,13 @@ table {
   }
   .tableCard{
     margin-bottom: 20px !important;
+  }
+  .ProgressBarPostion1 {
+    position: absolute !important;
+    top: 350px;
+    z-index: 1;
+    left: 55%;
+  }
+  .borderRightClass {
+    border-right: 1px solid #dce1e9;
   }
