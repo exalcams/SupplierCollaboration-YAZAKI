@@ -67,6 +67,7 @@ export class RFQHeader {
 }
 
 export class RFQHeaderView {
+    PurchaseRequisitionID: number;
     RFQID: number;
     Title: string;
     SupplyPlant: string;
@@ -179,7 +180,7 @@ export class RFQItemView {
     Schedule: number;
     Price: number;
     SupplierPartNumber: string;
-    SelfLifeDays: string;
+    SelfLifeDays: number;
     NumberOfAttachments: number;
     AttachmentNames: string[];
     TechRating: string;
@@ -270,10 +271,41 @@ export class RFQResponseItemView {
     Schedule: number;
     Price: number;
     SupplierPartNumber: string;
-    SelfLifeDays: string;
+    SelfLifeDays: number;
     NumberOfAttachments: number;
     AttachmentNames: string[];
     TechRating: string;
     APPID: number;
+}
+
+export class RFQRankView {
+    RFQID: number;
+    VendorID: string;
+    VendorName: string;
+    ItemID: number;
+    MaterialCode: string;
+    MaterialDescription: string;
+    OrderQuantity: number;
+    UOM: string;
+    DelayDays: number;
+    Schedule: number;
+    Price: number;
+    SelfLifeDays: number;
+    TotalRank: number;
+    BestForItems: string;
+}
+
+export class RFQAwardVendorView {
+    RFQID: number;
+    VendorID: string;
+    ModifiedBy: string;
+}
+
+export class RFQEvaluationView {
+    PurchaseRequisitionID: number;
+    RFQID: number;
+    Title: string;
+    Status: string;
+    Buyer: string;
 }
 

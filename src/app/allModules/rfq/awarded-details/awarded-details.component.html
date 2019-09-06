@@ -115,18 +115,14 @@
       <mat-card class="my-12 fullHeight">
         <mat-card-content>
           <div fxLayout="row">
-            <div fxFlex="1 1 Auto">
-              <mat-radio-group aria-label="Select an option" [(ngModel)]="FilterValue" (change)="FilterValueChange()">
-                <mat-radio-button value="All" class="borderRightClass mr-24 pr-24">All</mat-radio-button>
-                <mat-radio-button value="ByMaterial" class="borderRightClass mr-24 pr-24">By Material</mat-radio-button>
-                <mat-radio-button value="ByVendor" class="borderRightClass mr-24 pr-24">By Vendor</mat-radio-button>
-                <mat-radio-button value="ByTechnicalRating" class="mr-24 pr-24">By Technical Rating</mat-radio-button>
-              </mat-radio-group>
+            <div fxFlex="30" class="boldClass">
+              <span>Purchase requisition : {{SelectedPurchaseRequisition?.PurchaseRequisitionID}}</span>
             </div>
-            <div fxFlex align="end" class="pb-8">
-              <button [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button (click)="SaveClicked()">
-                Save & Asign
-              </button>
+            <div fxFlex="25" class="boldClass">
+              <span>RFQ ID : {{SelectedPurchaseRequisition?.RFQID}}</span>
+            </div>
+            <div *ngIf="RFQRanks.length" fxFlex="45" class="boldClass">
+              <span>Vendor : {{RFQRanks[0].VendorName }} ({{RFQRanks[0].VendorID}})</span>
             </div>
           </div>
           <mat-divider></mat-divider>
@@ -141,10 +137,10 @@
                   </mat-checkbox>
                 </td>
               </ng-container> -->
-              <ng-container matColumnDef="VendorName">
+              <!-- <ng-container matColumnDef="VendorName">
                 <th mat-header-cell *matHeaderCellDef>Vendor name & Vendor code</th>
                 <td mat-cell *matCellDef="let element">{{element.VendorName }} ({{element.VendorID}})</td>
-              </ng-container>
+              </ng-container> -->
 
               <ng-container matColumnDef="MaterialDescription">
                 <th mat-header-cell *matHeaderCellDef>Item Description</th>
@@ -197,8 +193,8 @@
 
               <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
                 *matHeaderRowDef="RFQRankDisplayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: RFQRankDisplayedColumns;"(click)="RowSelected(row)"
-              [class.highlight]="row === SelectedRFQRank"></tr>
+              <tr mat-row *matRowDef="let row; columns: RFQRankDisplayedColumns;" (click)="RowSelected(row)"
+                [class.highlight]="row === SelectedRFQRank"></tr>
             </table>
           </div>
         </mat-card-content>

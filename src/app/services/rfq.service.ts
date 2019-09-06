@@ -5,7 +5,7 @@ import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { AttachmentDetails } from 'app/allModules/orderacknowledgment/orderacknowledgment/orderacknowledgment.component';
-import { RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView, PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQHeaderView, RFQResponseReceivedView } from 'app/models/rfq.model';
+import { RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView, PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQHeaderView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView } from 'app/models/rfq.model';
 import { Auxiliary } from 'app/models/asn';
 import { Guid } from 'guid-typescript';
 
@@ -65,8 +65,8 @@ export class RFQService {
         return this._httpClient.get<RFQWithResponseView>(`${this.baseAddress}api/RFQ/GetRFQByIDAndVendor?RFQID=${RFQID}&VendorID=${VendorID}`)
             .pipe(catchError(this.errorHandler));
     }
-    GetAllCompletedRFQByBuyer(UserID: Guid): Observable<RFQHeaderView[] | string> {
-        return this._httpClient.get<RFQHeaderView[]>(`${this.baseAddress}api/RFQ/GetAllCompletedRFQByBuyer?UserID=${UserID}`)
+    GetAllCompletedRFQByBuyer(UserID: Guid): Observable<RFQEvaluationView[] | string> {
+        return this._httpClient.get<RFQEvaluationView[]>(`${this.baseAddress}api/RFQ/GetAllCompletedRFQByBuyer?UserID=${UserID}`)
             .pipe(catchError(this.errorHandler));
     }
     GetAllCompletedRFQByVendor(UserID: Guid): Observable<RFQHeaderVendorView[] | string> {
@@ -77,7 +77,7 @@ export class RFQService {
         return this._httpClient.get<RFQResponseReceivedView[]>(`${this.baseAddress}api/RFQ/GetRFQResponseReceivedByRFQID?RFQID=${RFQID}`)
             .pipe(catchError(this.errorHandler));
     }
-    
+
     GetAllCompletedPurchaseRequisitionByVendor(UserID: Guid): Observable<PurchaseRequisition[] | string> {
         return this._httpClient.get<PurchaseRequisition[]>(`${this.baseAddress}api/RFQ/GetAllCompletedPurchaseRequisitionByVendor?UserID=${UserID}`)
             .pipe(catchError(this.errorHandler));
@@ -174,5 +174,25 @@ export class RFQService {
             // }
         ).pipe(catchError(this.errorHandler));
 
+    }
+
+    GetRFQRanksByRFQID(RFQID: number): Observable<RFQRankView[] | string> {
+        return this._httpClient.get<RFQRankView[]>(`${this.baseAddress}api/RFQ/GetRFQRanksByRFQID?RFQID=${RFQID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    AwardSelectedVendor(RFQAwardVendor: RFQAwardVendorView): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}api/RFQ/AwardSelectedVendor`,
+            RFQAwardVendor,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+    GetAwarderedRFQByRFQID(RFQID: number): Observable<RFQRankView[] | string> {
+        return this._httpClient.get<RFQRankView[]>(`${this.baseAddress}api/RFQ/GetAwarderedRFQByRFQID?RFQID=${RFQID}`)
+            .pipe(catchError(this.errorHandler));
     }
 }

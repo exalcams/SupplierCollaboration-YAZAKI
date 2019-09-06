@@ -28,7 +28,7 @@ export class RFQVendorComponent implements OnInit {
   SelectedRFQ: RFQHeaderVendorView;
   RFQs: RFQHeaderVendorView[];
   BGClassName: any;
-  RFQColumns: string[] = ['RFQID', 'Title', 'SupplyPlant', 'Currency', 'RFQResponseStartDate', 'IncoTerm', 'RFQResponseEndDate', 'RFQResponseStatus'];
+  RFQColumns: string[] = ['RFQID', 'Title', 'SupplyPlant', 'Currency', 'RFQResponseStartDate', 'IncoTerm', 'RFQResponseEndDate', 'Status', 'RFQResponseStatus'];
   RFQDataSource: MatTableDataSource<RFQHeaderVendorView>;
 
   constructor(
@@ -108,7 +108,7 @@ export class RFQVendorComponent implements OnInit {
       if (Today < new Date(this.SelectedRFQ.RFQResponseStartDate)) {
         this.notificationSnackBarComponent.openSnackBar('Validity is not yet started', SnackBarStatus.danger);
       }
-      else if (Today >  new Date(this.SelectedRFQ.RFQResponseEndDate)) {
+      else if (Today > new Date(this.SelectedRFQ.RFQResponseEndDate)) {
         this.notificationSnackBarComponent.openSnackBar('Validity date is already over', SnackBarStatus.danger);
       } else {
         this._shareParameterService.SetRFQHeaderVendor(this.SelectedRFQ);

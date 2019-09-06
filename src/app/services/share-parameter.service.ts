@@ -9,6 +9,7 @@ export class ShareParameterService {
     // private PurchaseRequisitionEvent = new Subject<any>();
     public CurrentPurchaseRequisition: PurchaseRequisitionView;
     public CurrentRFQHeaderVendor: RFQHeaderVendorView;
+    public CurrentRFQID: number;
     // constructor() {
     //     this.PurchaseRequisitionEvent = new Subject(null);
     // }
@@ -26,6 +27,14 @@ export class ShareParameterService {
 
     GetRFQHeaderVendor(): RFQHeaderVendorView {
         return this.CurrentRFQHeaderVendor;
+    }
+
+    SetRFQID(RFQID: number): void {
+        this.CurrentRFQID = RFQID;
+    }
+
+    GetRFQID(): number {
+        return this.CurrentRFQID;
     }
 
 

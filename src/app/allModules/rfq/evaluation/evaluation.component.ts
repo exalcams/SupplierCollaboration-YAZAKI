@@ -10,7 +10,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { ShareParameterService } from 'app/services/share-parameter.service';
 import { Router } from '@angular/router';
 import { RFQService } from 'app/services/rfq.service';
-import { RFQAllocationView, RFQHeaderView, RFQResponseReceivedView } from 'app/models/rfq.model';
+import { RFQAllocationView, RFQEvaluationView, RFQResponseReceivedView, PurchaseRequisitionView } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Guid } from 'guid-typescript';
 
@@ -26,25 +26,22 @@ export class EvaluationComponent implements OnInit {
   CurrentUserID: Guid;
   BGClassName: any;
   SelectedPurchaseRequisitionID: number;
-  SelectedRFQ: RFQHeaderView;
+  SelectedRFQ: RFQEvaluationView;
   SelectedRFQStatus = '';
   SelectedRFQID = 0;
-  RFQHeaders: RFQHeaderView[] = [];
+  RFQEvaluations: RFQEvaluationView[] = [];
   RFQResponsesReceived: RFQResponseReceivedView[] = [];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
 
   constructor(
     private _fuseConfigService: FuseConfigService,
-    private _masterService: MasterService,
     private _shareParameterService: ShareParameterService,
     private _rfqService: RFQService,
     private _router: Router,
-    private _formBuilder: FormBuilder,
     public snackBar: MatSnackBar,
-    private dialog: MatDialog,
   ) {
-    this.SelectedRFQ = new RFQHeaderView();
+    this.SelectedRFQ = new RFQEvaluationView();
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
   }
@@ -74,7 +71,10 @@ export class EvaluationComponent implements OnInit {
     this._rfqService.GetAllCompletedRFQByBuyer(this.CurrentUserID).subscribe(
       (data) => {
         if (data) {
-          this.RFQHeaders = data as RFQHeaderView[];
+          this.RFQEvaluations = data as RFQEvaluationView[];
+          if (this.RFQEvaluations && this.RFQEvaluations.length) {
+            this.GetRFQResponse(this.RFQEvaluations[0]);
+          }
         }
         this.IsProgressBarVisibile = false;
       },
@@ -84,9 +84,10 @@ export class EvaluationComponent implements OnInit {
       }
     );
   }
-  GetRFQResponse(rfq: RFQHeaderView): void {
+  GetRFQResponse(rfq: RFQEvaluationView): void {
     this.SelectedRFQ = rfq;
     this.SelectedRFQID = this.SelectedRFQ.RFQID;
+    this.SelectedRFQStatus = this.SelectedRFQ.Status;
     this.IsProgressBarVisibile = true;
     this._rfqService.GetRFQResponseReceivedByRFQID(this.SelectedRFQID).subscribe(
       (data) => {
@@ -102,7 +103,24 @@ export class EvaluationComponent implements OnInit {
     );
   }
   EvaluateRFQResponse(): void {
-    console.log('EvaluateRFQResponse');
+    // console.log('EvaluateRFQResponse');
+    const CurrentPurchaseRequisition = this.GetCurrentPurchaseRequisition();
+    // this._shareParameterService.SetRFQID(this.SelectedRFQID);
+    this._shareParameterService.SetPurchaseRequisition(CurrentPurchaseRequisition);
+    this._router.navigate(['rfq/awarded']);
+  }
+  GoToAwardedDetails(): void {
+    const CurrentPurchaseRequisition = this.GetCurrentPurchaseRequisition();
+    this._shareParameterService.SetPurchaseRequisition(CurrentPurchaseRequisition);
+    this._router.navigate(['/rfq/awardedDetails']);
+  }
+
+  GetCurrentPurchaseRequisition(): PurchaseRequisitionView {
+    const CurrentPurchaseRequisition: PurchaseRequisitionView = new PurchaseRequisitionView();
+    CurrentPurchaseRequisition.PurchaseRequisitionID = this.SelectedRFQ.PurchaseRequisitionID;
+    CurrentPurchaseRequisition.RFQID = this.SelectedRFQID;
+    CurrentPurchaseRequisition.RFQStatus = this.SelectedRFQ.Status;
+    return CurrentPurchaseRequisition;
   }
 
 }
