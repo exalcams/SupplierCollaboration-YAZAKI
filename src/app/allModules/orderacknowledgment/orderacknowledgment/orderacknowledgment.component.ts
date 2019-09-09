@@ -162,8 +162,8 @@ export class OrderacknowledgmentComponent implements OnInit {
     // //  this.OrderAcknowlegmentFormArray.data.forEach(row => this.selection.select(row));
     // }
     masterToggle() {
-        this.isAllSelected()? // this.selection.clear() :
-              this.selection.clear()
+        this.isAllSelected() // this.selection.clear() :
+            ? this.selection.clear()
             : FormArray;
         {
             return this.OrderAcknowlegmentFormArray.value.forEach(row => this.selection.select(row));
@@ -214,7 +214,7 @@ export class OrderacknowledgmentComponent implements OnInit {
         }
 
         this.OrderAcknowlegmentFormArray.push(row);
-      //  console.log(this.OrderAcknowlegmentFormArray);
+        //  console.log(this.OrderAcknowlegmentFormArray);
         this.OrderAcknowledgmentDataSource.next(this.OrderAcknowlegmentFormArray.controls);
         this.OrderAcknowlegmentGroup.patchValue({
             PO: item.PO,
@@ -292,7 +292,10 @@ export class OrderacknowledgmentComponent implements OnInit {
                     err => {
                         // console.error(err);
                         // this.IsProgressBarVisibile = false;
-                        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? '"please select atleast one ScheduleLine' : err, SnackBarStatus.danger);
+                        this.notificationSnackBarComponent.openSnackBar(
+                            err instanceof Object ? '"please select atleast one ScheduleLine' : err,
+                            SnackBarStatus.danger
+                        );
                         this.GetPOOrderAcknowledgement();
                     }
                 );

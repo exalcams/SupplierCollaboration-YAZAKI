@@ -169,4 +169,7 @@ export class DashboardService {
     GetPOQulity(): Observable<number | string> {
         return this._httpClient.get<number>(`${this.baseAddress}api/DashBoardController/GetPOQulity`).pipe(catchError(this.errorHandler));
     }
+    GetPOOTIF(): Observable<number | string> {
+        return this._httpClient.get<number>(`${this.baseAddress}api/DashBoardController/GetPOOTIF`).pipe(catchError(this.errorHandler));
+    }
 }

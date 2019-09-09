@@ -156,81 +156,78 @@
               <div class="h3">
                 <mat-card-title> <strong>Key-Order-Fulfillment-Metrics </strong></mat-card-title>
               </div>
-              <div fxFlex fxLayout style="margin-right: 9px;margin-bottom: 8px;" fxLayoutAlign="end end">
+              <!-- <div fxFlex fxLayout style="margin-right: 9px;margin-bottom: 8px;" fxLayoutAlign="end end">
                 <select class="dropdownstyle" (change)="filterForeCasts($event.target.value)">
                   <option value="Month">Month</option>
                   <option value="Year">Year</option>
                 </select>
-              </div>
+              </div> -->
             </mat-card-header>
             <mat-divider class="divider"></mat-divider>
-            <div *ngIf="selected === 'Month'">
-              <mat-card-content>
-                <div fxLayout="column" fxLayoutAlign="center">
-                  <div fxLayout style="margin-top: 20px;">
-                    <div fxFlex fxLayout="column">
-                      <div fxFlex>
+            <!-- <div *ngIf="selected === 'Month'"> -->
+            <mat-card-content>
+              <div fxLayout="column" fxLayoutAlign="center">
+                <div fxLayout style="margin-top: 20px;">
+                  <div fxFlex fxLayout="column">
+                    <div fxFlex>
+                      <div>
+                        <span style="border-bottom: 1px solid">
+                          <strong>OTIF</strong>
+                        </span>
+                      </div>
+                      <!-- <div style="margin-left: 85px;margin-top: -15px">
+                        <img style="height:18px;" src="assets/images/dashboard/selection-1.png">
+                      </div> -->
+                    </div>
+                    <div fxFlex style="margin-top: 40px;" fxLayout fxLayoutAlign="center center">
+                      <div fxFlex="60%">
                         <div>
-                          <span style="border-bottom: 1px solid">
-                            <strong>OTIF</strong>
-                          </span>
+                          <span style="font-size:25px">{{this.POOTIF}}%</span>
                         </div>
-                        <div style="margin-left: 85px;margin-top: -15px">
-                          <img style="height:18px;" src="assets/images/dashboard/selection-1.png">
+                        <div style="font-size:12px">
+                          On-Time-In-Full
                         </div>
                       </div>
-                      <div fxFlex style="margin-top: 40px;" fxLayout fxLayoutAlign="center center">
-                        <div fxFlex="60%">
-                          <div>
-                            <span style="font-size:25px">78%</span>
-                          </div>
-                          <div style="font-size:12px">
-                            On-Time-In-Full
-                          </div>
-                        </div>
-                        <div fxFlex>
-                          <div class="pr-4 ra">
-                            <img style="height: 40px;" src="assets/images/dashboard/otif.png">
-                          </div>
+                      <div fxFlex>
+                        <div class="pr-4 ra">
+                          <img style="height: 40px;" src="assets/images/dashboard/otif.png">
                         </div>
                       </div>
                     </div>
-                    <div class="borderRight1"></div>
-                    <div fxFlex fxLayout="column" style="margin-left: 11px !important">
-                      <div fxFlex>
-                        <div>
-                          <span style="border-bottom: 1px solid">
-                            <strong>Quality</strong>
-                          </span>
-                        </div>
-                        <div style="margin-left: 85px;margin-top: -15px">
-                          <img style="height:18px;" src="assets/images/dashboard/selection-1.png">
-                        </div>
+                  </div>
+                  <div class="borderRight1"></div>
+                  <div fxFlex fxLayout="column" style="margin-left: 11px !important">
+                    <div fxFlex>
+                      <div>
+                        <span style="border-bottom: 1px solid">
+                          <strong>Quality</strong>
+                        </span>
                       </div>
-                      <div fxFlex style="margin-top: 40px;" fxLayout fxLayoutAlign="center center">
-                        <div fxFlex="60%">
-                          <div>
-                            <span style="font-size:25px">{{this.POQuality}}%</span>
-                          </div>
-                          <!-- <div style="font-size:12px">
-                            2 Orders-Rejected
-                          </div> -->
-                          <div style="font-size:12px">
-                              On-Time-In-Full
-                            </div>
+                      <!-- <div style="margin-left: 85px;margin-top: -15px">
+                        <img style="height:18px;" src="assets/images/dashboard/selection-1.png">
+                      </div> -->
+                    </div>
+                    <div fxFlex style="margin-top: 40px;" fxLayout fxLayoutAlign="center center">
+                      <div fxFlex="60%">
+                        <div>
+                          <span style="font-size:25px">{{this.POQuality}}%</span>
                         </div>
-                        <div fxFlex>
-                          <div class="pr-4 ra">
-                            <img style="height: 40px;" src="assets/images/dashboard/quality.png">
+                        <div style="font-size:12px">
+                             Orders-Rejected
                           </div>
+                      </div>
+                      <div fxFlex>
+                        <div class="pr-4 ra">
+                          <img style="height: 40px;" src="assets/images/dashboard/quality.png">
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </mat-card-content>
-            </div>
-            <div *ngIf="selected === 'Year'">
+              </div>
+            </mat-card-content>
+            <!-- </div> -->
+            <!-- <div *ngIf="selected === 'Year'">
               <mat-card-content>
                 <div fxLayout="column" fxLayoutAlign="center">
                   <div fxLayout style="margin-top: 20px;">
@@ -293,7 +290,7 @@
                   </div>
                 </div>
               </mat-card-content>
-            </div>
+            </div> -->
           </div>
         </mat-card>
       </div>
