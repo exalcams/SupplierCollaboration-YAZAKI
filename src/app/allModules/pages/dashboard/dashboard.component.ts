@@ -36,7 +36,9 @@ export class DashboardComponent implements OnInit {
     AllPOList: POView[] = [];
     IsProgressBarVisibile: boolean;
     DeliveryStatus: string;
+    canvasLabels = Array<any>();
     POQuality: number;
+    POOTIF: number;
     ASNHeaderList: ASN[] = [];
     POListDataSource: MatTableDataSource<POView>;
     IsAllPOListCompleted: boolean;
@@ -83,8 +85,10 @@ export class DashboardComponent implements OnInit {
         this.GetAllPONotifications();
         this.GetAllDashboardStatus();
         this.GetAllPODeliveryStatus();
+        // this.DeliveryStatusChange();
         this.GetASNHeader();
         this.GetPOQulity();
+        this.GetPOOTIF();
         this.IsAllPOListCompleted = false;
         // this.dataSource1 = new MatTableDataSource(ELEMENT_DATA1);
         // this.dataSource1.sort = this.sort;
@@ -176,7 +180,7 @@ export class DashboardComponent implements OnInit {
 
     filterForeCasts(filterVal: any): void {
         this.selected = filterVal;
-        //alert(filterVal);
+        // alert(filterVal);
         // if (selected == "0")
         //    this.selected;
         // else
@@ -273,10 +277,13 @@ export class DashboardComponent implements OnInit {
             data => {
                 if (data) {
                     this.PODeliveryStatus = <PO_DeliveryStatus>data;
-                    // console.log(this.PODeliveryStatus.Date);
+                    this.canvasLabels = [];
+                    // console.log(this.canvasLabels);
+                    this.canvasLabels = this.PODeliveryStatus.Date;
+                    console.log(this.canvasLabels);
                     this.widget5 = {
                         data: {
-                            labels: this.PODeliveryStatus.Date,
+                            labels: this.canvasLabels,
                             datasets: [
                                 {
                                     type: 'line',
@@ -358,6 +365,19 @@ export class DashboardComponent implements OnInit {
             data => {
                 if (data) {
                     this.POQuality = data as number;
+                }
+            },
+            err => {
+                console.error(err);
+            }
+        );
+    }
+
+    GetPOOTIF(): void {
+        this.dashboardService.GetPOOTIF().subscribe(
+            data => {
+                if (data) {
+                    this.POOTIF = data as number;
                 }
             },
             err => {
@@ -535,9 +555,16 @@ export class DashboardComponent implements OnInit {
     // }
     DeliveryStatusChange(): void {
         // this.ClearChart();
-        this.PODeliveryStatus.Date = [];
-        // console.log(this.PODeliveryStatus.Date);
+        // this.canvasLabels = [];
+        // console.log('change');
+        //  console.log(this.canvasLabels);
         this.GetAllPODeliveryStatus();
+        // this.widget5 = {
+        //     data: {
+        //         labels: this.canvasLabels
+        //     }
+        // };
+        // this.canvasLabels = this.PODeliveryStatus.Date;
         // console.log(this.PODeliveryStatus.Date);
     }
 }
