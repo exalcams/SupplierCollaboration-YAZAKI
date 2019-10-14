@@ -12,9 +12,10 @@ import { MasterService } from 'app/services/master.service';
 import { MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
-import { Auxiliary } from 'app/models/asn';
+import { Auxiliary, AuxiliaryView } from 'app/models/asn';
 import { Location, DatePipe } from '@angular/common';
 import { Guid } from 'guid-typescript';
+import { AttachmentsDialogComponent } from 'app/shared/attachments-dialog/attachments-dialog.component';
 
 @Component({
   selector: 'app-response',
@@ -43,6 +44,7 @@ export class ResponseComponent implements OnInit {
   RFQResponseItemsColumns: string[] = ['ItemID', 'MaterialDescription', 'OrderQuantity', 'UOM', 'DeliveryDate', 'DelayDays', 'Schedule',
     'Price', 'SupplierPartNumber', 'SelfLifeDays', 'Attachment', 'TechRating'];
   RFQResponseItemAppID: number;
+  RFQItemAppID: number;
   @ViewChild('fileInput1') fileInput1: ElementRef;
   fileToUpload: File;
   fileToUploadList: File[] = [];
@@ -150,12 +152,24 @@ export class ResponseComponent implements OnInit {
     }
   }
   GetAppByName(): void {
-    const AppName = 'RFQResponseItem';
+    let AppName = 'RFQResponseItem';
     this._masterService.GetAppByName(AppName).subscribe(
       (data) => {
         const RFQResponseItemAPP = data as App;
         if (RFQResponseItemAPP) {
           this.RFQResponseItemAppID = RFQResponseItemAPP.AppID;
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+    AppName = 'RFQItem';
+    this._masterService.GetAppByName(AppName).subscribe(
+      (data) => {
+        const ASNAPP = data as App;
+        if (ASNAPP) {
+          this.RFQItemAppID = ASNAPP.AppID;
         }
       },
       (err) => {
@@ -447,6 +461,34 @@ export class ResponseComponent implements OnInit {
         this.ResetControl();
       }
     );
+  }
+  GetRFQItemAttachments(index: number): void {
+    const RFQItemsFormArray = this.RFQResponseFormGroup.get('RFQResponseItems') as FormArray;
+    const APPNumber: number = RFQItemsFormArray.controls[index].get('ItemID').value;
+    this._rfqService.GetRFQItemAttachments(this.RFQItemAppID, APPNumber, this.RFQ.RFQID.toString()).subscribe(
+      (data) => {
+        if (data) {
+          const dat = data as AuxiliaryView[];
+          this.OpenForgetPasswordLinkDialog(dat);
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  OpenForgetPasswordLinkDialog(data: AuxiliaryView[]): void {
+    const dialogConfig: MatDialogConfig = {
+      data: data,
+      panelClass: 'attachment-dialog'
+    };
+    const dialogRef = this.dialog.open(AttachmentsDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+
+        }
+      });
   }
   // GetRFQByPurchaseRequisitionID(): void {
   //   this._rfqService.GetRFQByPurchaseRequisitionID(this.SelectedPurchaseRequisitionID).subscribe(

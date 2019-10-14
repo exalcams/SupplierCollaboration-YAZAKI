@@ -41,6 +41,7 @@
     "@swimlane/ngx-charts": "9.0.0",
     "@swimlane/ngx-datatable": "13.1.0",
     "@swimlane/ngx-dnd": "5.0.6",
+    "@types/file-saver": "2.0.1",
     "@types/prismjs": "1.9.0",
     "angular-archwizard": "3.0.0",
     "angular-calendar": "0.25.2",

@@ -365,6 +365,8 @@
                     ({{RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value}})
                   </span>
                   <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput($event,index)" />
+                  <mat-icon *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value"
+                  (click)="GetRFQItemAttachments(index)">image</mat-icon>
                 </td>
               </ng-container>
 

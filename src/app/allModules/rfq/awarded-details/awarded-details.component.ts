@@ -85,6 +85,9 @@ export class AwardedDetailsComponent implements OnInit {
       (data) => {
         if (data) {
           this.RFQRanks = data as RFQRankView[];
+          this.RFQRanks.forEach(x => {
+            x.VendorID = x.VendorID.replace(/^0+/, '');
+          });
           this.RFQRankDataSource = new MatTableDataSource(this.RFQRanks);
         }
         this.IsProgressBarVisibile = false;
