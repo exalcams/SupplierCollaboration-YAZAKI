@@ -139,3 +139,14 @@ export class Auxiliary {
     ModifiedBy: string;
     IsActive: boolean;
 }
+
+export class AuxiliaryView {
+    APPID: number;
+    APPNumber: number;
+    AttachmentNumber: number;
+    AttachmentName: string;
+    DocumentType: string;
+    HeaderNumber: string;
+    SelectedRFQStatus: string;
+    AttachmentFile: File;
+}

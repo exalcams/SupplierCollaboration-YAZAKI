@@ -21,6 +21,7 @@ import { DatePipe } from '@angular/common';
 import { NotificationDialogComponent } from './notifications/notification-dialog/notification-dialog.component';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { WINDOW_PROVIDERS } from './window.providers';
+import { AttachmentsDialogComponent } from './shared/attachments-dialog/attachments-dialog.component';
 // import { GateEntryExitModule } from './allModules/gate-entry-exit/gate-entry-exit.module';
 
 const appRoutes: Routes = [
@@ -67,7 +68,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    declarations: [AppComponent, NotificationSnackBarComponent, NotificationDialogComponent],
+    declarations: [AppComponent, NotificationSnackBarComponent, NotificationDialogComponent, AttachmentsDialogComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -104,6 +105,6 @@ const appRoutes: Routes = [
         { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
     ],
     bootstrap: [AppComponent],
-    entryComponents: [NotificationDialogComponent]
+    entryComponents: [NotificationDialogComponent, AttachmentsDialogComponent]
 })
 export class AppModule { }

@@ -291,7 +291,7 @@
               </ng-container>
 
               <ng-container matColumnDef="DelayDays">
-                <th mat-header-cell *matHeaderCellDef> DelayDays </th>
+                <th mat-header-cell *matHeaderCellDef> Delay Days </th>
                 <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                   <input matInput formControlName="DelayDays">
                   <span class="pl-4 errorClass" *ngIf="RFQFormGroup.get('RFQItems').controls[index].get('DelayDays').touched && 
@@ -325,7 +325,7 @@
               </ng-container>
 
               <ng-container matColumnDef="SupplierPartNumber">
-                <th mat-header-cell *matHeaderCellDef> SupplierPart No. </th>
+                <th mat-header-cell *matHeaderCellDef> Supplier Part No. </th>
                 <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                   <input matInput formControlName="SupplierPartNumber">
                   <span class="pl-4 errorClass" *ngIf="RFQFormGroup.get('RFQItems').controls[index].get('SupplierPartNumber').touched && 
@@ -364,6 +364,8 @@
                     ({{RFQFormGroup.get('RFQItems').controls[index].get('NumberOfAttachments')?.value}})
                   </span>
                   <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput($event,index)" />
+                  <mat-icon *ngIf="RFQFormGroup.get('RFQItems').controls[index].get('NumberOfAttachments')?.value"
+                  (click)="GetRFQItemAttachments(index)">image</mat-icon>
                   <!-- <input matInput formControlName="NumberOfAttachments"> -->
                 </td>
               </ng-container>

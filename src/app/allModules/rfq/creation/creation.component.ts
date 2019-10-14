@@ -12,10 +12,11 @@ import { AuthenticationDetails, App } from 'app/models/master';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RFQService } from 'app/services/rfq.service';
 import { Location } from '@angular/common';
-import { Auxiliary } from 'app/models/asn';
+import { Auxiliary, AuxiliaryView } from 'app/models/asn';
 import { MasterService } from 'app/services/master.service';
 import { ShareParameterService } from 'app/services/share-parameter.service';
 import { Guid } from 'guid-typescript';
+import { AttachmentsDialogComponent } from 'app/shared/attachments-dialog/attachments-dialog.component';
 
 @Component({
   selector: 'creation',
@@ -516,4 +517,50 @@ export class CreationComponent implements OnInit {
     );
   }
 
+  GetRFQItemAttachments(index: number): void {
+    const RFQItemsFormArray = this.RFQFormGroup.get('RFQItems') as FormArray;
+    const APPNumber: number = RFQItemsFormArray.controls[index].get('ItemID').value;
+    if (this.SelectedRFQStatus.toLocaleLowerCase() === 'open') {
+      const dat: AuxiliaryView[] = [];
+      const AttNames = this.RFQItemFormArray.controls[index].get('AttachmentNames').value as string[];
+      AttNames.forEach(x => {
+        const aux = new AuxiliaryView();
+        aux.APPID = this.RFQItemAppID;
+        aux.AttachmentName = x;
+        const f = this.fileToUploadList.filter(y => y.name === x)[0];
+        if (f) {
+          aux.AttachmentFile = f;
+        }
+        aux.SelectedRFQStatus = 'open';
+        dat.push(aux);
+      });
+      this.OpenForgetPasswordLinkDialog(dat);
+    } else {
+      this._rfqService.GetRFQItemAttachments(this.RFQItemAppID, APPNumber, this.RFQ.RFQID.toString()).subscribe(
+        (data) => {
+          if (data) {
+            const dat = data as AuxiliaryView[];
+            this.OpenForgetPasswordLinkDialog(dat);
+          }
+        },
+        (err) => {
+          console.error(err);
+        }
+      );
+    }
+  }
+
+  OpenForgetPasswordLinkDialog(data: AuxiliaryView[]): void {
+    const dialogConfig: MatDialogConfig = {
+      data: data,
+      panelClass: 'attachment-dialog'
+    };
+    const dialogRef = this.dialog.open(AttachmentsDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+
+        }
+      });
+  }
 }

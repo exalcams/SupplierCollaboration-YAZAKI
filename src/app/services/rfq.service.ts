@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import { AttachmentDetails } from 'app/allModules/orderacknowledgment/orderacknowledgment/orderacknowledgment.component';
 import { RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView, PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQHeaderView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView } from 'app/models/rfq.model';
-import { Auxiliary } from 'app/models/asn';
+import { Auxiliary, AuxiliaryView } from 'app/models/asn';
 import { Guid } from 'guid-typescript';
 
 @Injectable({
@@ -101,6 +101,18 @@ export class RFQService {
             // }
         ).pipe(catchError(this.errorHandler));
 
+    }
+    GetRFQItemAttachments(APPID: number, APPNumber: number, HeaderNumber: string): Observable<AuxiliaryView[] | string> {
+        return this._httpClient.get<AuxiliaryView[]>(`${this.baseAddress}api/RFQ/GetRFQItemAttachments?APPID=${APPID}&APPNumber=${APPNumber}&HeaderNumber=${HeaderNumber}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    DownloadRFQItemAttachment(APPID: number, APPNumber: number, AttachmentNumber: number, HeaderNumber: string): Observable<Blob | string> {
+        return this._httpClient.get(`${this.baseAddress}api/RFQ/DownloadRFQItemAttachment?APPID=${APPID}&APPNumber=${APPNumber}&AttachmentNumber=${AttachmentNumber}&HeaderNumber=${HeaderNumber}`, {
+            responseType: 'blob',
+            headers: new HttpHeaders().append('Content-Type', 'application/json')
+        })
+            .pipe(catchError(this.errorHandler));
     }
 
     CreateRFQAllocation(RFQAllocations: RFQAllocationView[]): Observable<any> {
