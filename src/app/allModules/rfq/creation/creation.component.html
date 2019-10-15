@@ -151,8 +151,13 @@
                 </span>
               </div>
               <mat-form-field appearance="outline" fxFlex="20">
-                <input matInput formControlName="Currency">
-                <mat-icon style="font-size: 17px;padding-left: 10px" matSuffix>filter_none</mat-icon>
+                <input matInput formControlName="Currency" [matAutocomplete]="auto">
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                  <mat-option *ngFor="let option of filteredCurrencyOptions | async" [value]="option">
+                    {{option}}
+                  </mat-option>
+                </mat-autocomplete>
+                <!-- <mat-icon style="font-size: 17px;padding-left: 10px" matSuffix>filter_none</mat-icon> -->
               </mat-form-field>
               <div fxFlex="10" class="pt-8 pr-8" fxLayoutAlign="end start">
                 <span style="font-size: 13px;">Opening date</span>
@@ -188,8 +193,13 @@
                 </span>
               </div>
               <mat-form-field appearance="outline" fxFlex="20">
-                <input matInput formControlName="IncoTerm">
-                <mat-icon style="font-size: 17px;padding-left: 10px" matSuffix>filter_none</mat-icon>
+                <input matInput formControlName="IncoTerm" [matAutocomplete]="auto1">
+                <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
+                  <mat-option *ngFor="let option of filteredIncoTermOptions | async" [value]="option">
+                    {{option}}
+                  </mat-option>
+                </mat-autocomplete>
+                <!-- <mat-icon style="font-size: 17px;padding-left: 10px" matSuffix>filter_none</mat-icon> -->
               </mat-form-field>
               <div fxFlex="10" class="pt-8 pr-8" fxLayoutAlign="end start">
                 <span style="font-size: 13px;">Closing date</span>

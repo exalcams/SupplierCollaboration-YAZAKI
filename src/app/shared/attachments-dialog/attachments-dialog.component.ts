@@ -2,7 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AuxiliaryView } from 'app/models/asn';
 import { RFQService } from 'app/services/rfq.service';
-import { saveAs } from 'file-saver';
+// import { saveAs } from 'file-saver';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-attachments-dialog',
@@ -29,13 +30,13 @@ export class AttachmentsDialogComponent implements OnInit {
   DownloadRFQItemAttachment(dat: AuxiliaryView): void {
     if (dat.SelectedRFQStatus && dat.SelectedRFQStatus.toLowerCase() === 'open') {
       const BlobFile = dat.AttachmentFile as Blob;
-      saveAs(BlobFile, dat.AttachmentName);
+      FileSaver.saveAs(BlobFile, dat.AttachmentName);
     } else {
       this._rfqService.DownloadRFQItemAttachment(dat.APPID, dat.APPNumber, dat.AttachmentNumber, dat.HeaderNumber).subscribe(
         data => {
           if (data) {
             const BlobFile = data as Blob;
-            saveAs(BlobFile, dat.AttachmentName);
+            FileSaver.saveAs(BlobFile, dat.AttachmentName);
           }
           // this.IsProgressBarVisibile = false;
         },

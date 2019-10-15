@@ -3,7 +3,7 @@ import { MatTableDataSource, MatSnackBar, MatDialog, MatDialogConfig } from '@an
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { RFQView, RFQItem, RFQItemView, PurchaseRequisitionItem } from 'app/models/rfq.model';
@@ -17,6 +17,7 @@ import { MasterService } from 'app/services/master.service';
 import { ShareParameterService } from 'app/services/share-parameter.service';
 import { Guid } from 'guid-typescript';
 import { AttachmentsDialogComponent } from 'app/shared/attachments-dialog/attachments-dialog.component';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'creation',
@@ -45,6 +46,10 @@ export class CreationComponent implements OnInit {
   @ViewChild('fileInput1') fileInput1: ElementRef;
   fileToUpload: File;
   fileToUploadList: File[] = [];
+  CurrencyList: string[];
+  filteredCurrencyOptions: Observable<string[]>;
+  IncoTermList: string[];
+  filteredIncoTermOptions: Observable<string[]>;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _router: Router,
@@ -121,6 +126,26 @@ export class CreationComponent implements OnInit {
     else {
       this.GetRFQByPurchaseRequisitionID();
     }
+    this.CurrencyList = ['INR', 'USD', 'EUR', 'GBR', 'JPY'];
+    this.filteredCurrencyOptions = this.RFQFormGroup.get('Currency').valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+    this.IncoTermList = ['Y001', 'Y002', 'Y003'];
+    this.filteredIncoTermOptions = this.RFQFormGroup.get('IncoTerm').valueChanges
+    .pipe(
+      startWith(''),
+      map(value => this._filter1(value))
+    );
+  }
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.CurrencyList.filter(option => option.toLowerCase().includes(filterValue));
+  }
+  private _filter1(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.IncoTermList.filter(option => option.toLowerCase().includes(filterValue));
   }
   AddRFQItemFormGroup(): void {
     const row = this._formBuilder.group({
