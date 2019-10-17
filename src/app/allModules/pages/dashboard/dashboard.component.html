@@ -379,7 +379,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>QA Status </th>
                 <td mat-cell *matCellDef="let element">
                   <span
-                    [ngClass]="{'statusNotDone': element.AcknowledgementStatus == 'New' || element.AcknowledgementStatus == 'Open','statusDone':element.AcknowledgementStatus == 'Closed'}"></span>
+                    [ngClass]="{'statusNotDone': element.AcknowledgementStatus == 'New' || element.AcknowledgementStatus == 'Open','statusDone':element.AcknowledgementStatus == 'Closed'}" (click)="OrderAcknowledgement()"></span>
                 </td>
                 <!-- {{element.QAStatus}} -->
               </ng-container>
@@ -388,7 +388,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>ASN Status </th>
                 <td mat-cell *matCellDef="let element">
                   <span
-                    [ngClass]="{'statusDone': element.ASNStatus == 'ASNCompleted' || element.ASNStatus == 'FrightCompleted','statusNotDone':element.ASNStatus == 'Cancelled' || element.ASNStatus == 'Open','statusPartiallyDone':element.ASNStatus == 'Draft'}"></span>
+                    [ngClass]="{'statusDone': element.ASNStatus == 'ASNCompleted' || element.ASNStatus == 'FrightCompleted','statusNotDone':element.ASNStatus == 'Cancelled' || element.ASNStatus == 'Open','statusPartiallyDone':element.ASNStatus == 'Draft'}" (click)="AdvanceShipment()"></span>
                 </td>
               </ng-container>
               <ng-container matColumnDef="Attechment">
