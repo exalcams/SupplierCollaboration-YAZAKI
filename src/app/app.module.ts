@@ -22,6 +22,7 @@ import { NotificationDialogComponent } from './notifications/notification-dialog
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { WINDOW_PROVIDERS } from './window.providers';
 import { AttachmentsDialogComponent } from './shared/attachments-dialog/attachments-dialog.component';
+// import { SupportTicketModule } from './allModules/support-ticket/support-ticket.module';
 // import { GateEntryExitModule } from './allModules/gate-entry-exit/gate-entry-exit.module';
 
 const appRoutes: Routes = [
@@ -60,6 +61,10 @@ const appRoutes: Routes = [
     {
         path: 'orderacknowledgment',
         loadChildren: './allModules/orderacknowledgment/orderacknowledgment.module#OrderacknowledgmentModule'
+    },
+    {
+        path: 'supportTicket',
+        loadChildren: './allModules/support-ticket/support-ticket.module#SupportTicketModule'
     },
     {
         path: '**',

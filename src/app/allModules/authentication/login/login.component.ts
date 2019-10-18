@@ -374,6 +374,17 @@ export class LoginComponent implements OnInit, OnDestroy {
                 children: this.subChildren3
             });
         }
+        if (this.MenuItems.indexOf('SupportTicket') >= 0) {
+            this.children.push({
+                id: 'supportTicket',
+                title: 'Support Ticket',
+                translate: 'NAV.SAMPLE.TITLE',
+                type: 'item',
+                icon: 'assignment',
+                isSvgIcon: false,
+                url: '/supportTicket'
+            });
+        }
         if (this.MenuItems.indexOf('PaymentReportPO') >= 0) {
             this.subChildren1.push({
                 id: 'paymentReportPO',
