@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationDetails } from 'app/models/master';
+import { AuthenticationDetails, App } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { Router } from '@angular/router';
@@ -7,11 +7,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { FuseConfigService } from '@fuse/services/config.service';
-import { SupportTicketWithEmails, SupportTicketResponseView, SupportTicketResponse, SupportTicketStatusView, 
-  SupportTicketConfirmationStatusView, STCategoryView, STExpectedResultView, STReasonView } from 'app/models/supportTicket.model';
+import {
+  SupportTicketWithEmails, SupportTicketResponseView, SupportTicketResponse, SupportTicketStatusView,
+  SupportTicketConfirmationStatusView, STCategoryView, STExpectedResultView, STReasonView
+} from 'app/models/supportTicket.model';
 import { SupportTicketService } from 'app/services/support-ticket.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { SupportTicketConfirmationDialogComponent } from './support-ticket-confirmation-dialog/support-ticket-confirmation-dialog.component';
+import { Auxiliary } from 'app/models/asn';
+import { MasterService } from 'app/services/master.service';
 // import { SupportTicketConfirmationDialogComponent } from '../documentcollection/SupportTicket-confirmation-dialog/SupportTicket-confirmation-dialog.component';
 
 @Component({
@@ -30,8 +34,8 @@ export class SupportTicketComponent implements OnInit {
   BGClassName: any;
   compStyles: CSSStyleDeclaration;
   AllCategories: STCategoryView[];
-  AllResons: STReasonView[];
-  AllExpectedResult: STExpectedResultView[];
+  AllReasons: STReasonView[];
+  AllExpectedResults: STExpectedResultView[];
   searchText = '';
   AllSupportTicketWithEmails: SupportTicketWithEmails[] = [];
   SelectedSupportTicket: SupportTicketWithEmails;
@@ -40,10 +44,14 @@ export class SupportTicketComponent implements OnInit {
   SupportTicketFormGroup: FormGroup;
   SupportTicketResponseFormGroup: FormGroup;
   SelectedSupportTicketResponses: SupportTicketResponseView[] = [];
+  fileToUpload: File;
+  fileToUploadList: File[] = [];
+  SupportTicketAppID: number;
 
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _supportTicketService: SupportTicketService,
+    private _masterService: MasterService,
     private _router: Router,
     private _formBuilder: FormBuilder,
     public snackBar: MatSnackBar,
@@ -85,6 +93,7 @@ export class SupportTicketComponent implements OnInit {
     this.SupportTicketResponseFormGroup = this._formBuilder.group({
       Comments: ['', Validators.required],
     });
+    this.GetAppByName();
     this.GetAllCategories();
     this.GetAllReasons();
     this.GetAllExpectedResults();
@@ -92,6 +101,16 @@ export class SupportTicketComponent implements OnInit {
   }
 
   ResetForm(): void {
+    this.ResetSupportTicketForm();
+    this.ResetSupportTicketResponseForm();
+  }
+  ResetSupportTicketForm(): void {
+    this.SupportTicketFormGroup.reset();
+    Object.keys(this.SupportTicketFormGroup.controls).forEach(key => {
+      this.SupportTicketFormGroup.get(key).markAsUntouched();
+    });
+  }
+  ResetSupportTicketResponseForm(): void {
     this.SupportTicketResponseFormGroup.reset();
     Object.keys(this.SupportTicketResponseFormGroup.controls).forEach(key => {
       this.SupportTicketResponseFormGroup.get(key).markAsUntouched();
@@ -103,6 +122,8 @@ export class SupportTicketComponent implements OnInit {
     this.SelectedSupportTicketStaus = '';
     this.SelectedSupportTicket = new SupportTicketWithEmails();
     this.SelectedSupportTicketResponses = [];
+    this.fileToUpload = null;
+    this.fileToUploadList = [];
   }
 
   GetAllCategories(): void {
@@ -122,7 +143,7 @@ export class SupportTicketComponent implements OnInit {
     this._supportTicketService.GetAllReasons().subscribe(
       (data) => {
         if (data) {
-          this.AllResons = data as STReasonView[];
+          this.AllReasons = data as STReasonView[];
         }
       },
       (err) => {
@@ -135,7 +156,22 @@ export class SupportTicketComponent implements OnInit {
     this._supportTicketService.GetAllExpectedResults().subscribe(
       (data) => {
         if (data) {
-          this.AllExpectedResult = data as STExpectedResultView[];
+          this.AllExpectedResults = data as STExpectedResultView[];
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  GetAppByName(): void {
+    const AppName = 'RFQItem';
+    this._masterService.GetAppByName(AppName).subscribe(
+      (data) => {
+        const SupportTicketAPP = data as App;
+        if (SupportTicketAPP) {
+          this.SupportTicketAppID = SupportTicketAPP.AppID;
         }
       },
       (err) => {
@@ -194,18 +230,40 @@ export class SupportTicketComponent implements OnInit {
     this.SelectedSupportTicket = selectedSupportTicket;
     this.SelectedTicketID = +selectedSupportTicket.TicketID;
     this.SelectedSupportTicketStaus = selectedSupportTicket.SupportTicketStatus;
+    this.GetSupportTicketByTicketID();
     this.GetSupportTicketResponseByTicketID();
     // this.GetSupportTicketAllocationVendorViewBySupportTicket();
   }
 
+  AddNewSupportTicket(): void {
+    this.ResetControl();
+  }
+
+  handleFileInput(evt, index: number): void {
+    if (evt.target.files && evt.target.files.length > 0) {
+      this.fileToUpload = evt.target.files[0];
+      this.fileToUploadList.push(this.fileToUpload);
+    }
+  }
+
+
+  ValidateSupportTicket(): void {
+    if (this.SupportTicketFormGroup.valid) {
+      const Actiontype = 'Create';
+      const Catagory = 'Support ticket';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
+    } else {
+      this.ShowValidationErrors(this.SupportTicketFormGroup);
+    }
+  }
 
   ValidateSupportTicketResponse(): void {
     if (this.SupportTicketResponseFormGroup.valid) {
       const Actiontype = 'Update';
-      const Catagory = 'SupportTicket Response';
+      const Catagory = 'Support ticket Response';
       this.OpenConfirmationDialog(Actiontype, Catagory);
     } else {
-      this.ShowValidationErrors();
+      this.ShowValidationErrors(this.SupportTicketResponseFormGroup);
     }
   }
   CloseTicket(): void {
@@ -220,13 +278,13 @@ export class SupportTicketComponent implements OnInit {
     this.OpenSupportTicketConfirmationDialog(Actiontype);
   }
 
-  ShowValidationErrors(): void {
-    Object.keys(this.SupportTicketResponseFormGroup.controls).forEach(key => {
-      if (!this.SupportTicketResponseFormGroup.get(key).valid) {
+  ShowValidationErrors(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      if (!formGroup.get(key).valid) {
         console.log(key);
       }
-      this.SupportTicketResponseFormGroup.get(key).markAsTouched();
-      this.SupportTicketResponseFormGroup.get(key).markAsDirty();
+      formGroup.get(key).markAsTouched();
+      formGroup.get(key).markAsDirty();
     });
   }
 
@@ -244,8 +302,69 @@ export class SupportTicketComponent implements OnInit {
           if (Actiontype === 'Update') {
             this.CreateSupportTicketResponse();
           }
+          else if (Actiontype === 'Create') {
+            this.CreateSupportTicket();
+          }
         }
       });
+  }
+  CreateSupportTicket(): void {
+    this.IsProgressBarVisibile = true;
+    this.GetSupportTicketValues();
+    this._supportTicketService.CreateSupportTicket(this.SelectedSupportTicket).subscribe(
+      (data) => {
+        const TransID = data as number;
+        this.SelectedSupportTicket.TicketID = TransID;
+        const aux = new Auxiliary();
+        aux.APPID = this.SupportTicketAppID;
+        aux.APPNumber = TransID;
+        aux.CreatedBy = this.CurrentUserID.toString();
+        if (this.fileToUploadList && this.fileToUploadList.length) {
+          this._supportTicketService.AddSupportTicketAttachment(aux, this.fileToUploadList).subscribe(
+            (dat) => {
+              this.IsProgressBarVisibile = false;
+              this.notificationSnackBarComponent.openSnackBar('Support ticket details created successfully', SnackBarStatus.success);
+              this.ResetControl();
+              this.GetSupportTicketDetails();
+            },
+            (err) => {
+              console.error(err);
+              this.IsProgressBarVisibile = false;
+              this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+            }
+          );
+        } else {
+          this.IsProgressBarVisibile = false;
+          this.notificationSnackBarComponent.openSnackBar('Support ticket details created successfully', SnackBarStatus.success);
+          this.GetSupportTicketDetails();
+          this.ResetControl();
+        }
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
+
+  GetSupportTicketValues(): void {
+    this.SelectedSupportTicket = new SupportTicketWithEmails();
+    this.SelectedSupportTicket.Category = this.SupportTicketFormGroup.get('Category').value;
+    this.SelectedSupportTicket.ReferenceNumber = this.SupportTicketFormGroup.get('ReferenceNumber').value;
+    this.SelectedSupportTicket.Reason = this.SupportTicketFormGroup.get('Reason').value;
+    this.SelectedSupportTicket.ExpectedResult = this.SupportTicketFormGroup.get('ExpectedResult').value;
+    this.SelectedSupportTicket.Query = this.SupportTicketFormGroup.get('Query').value;
+    this.SelectedSupportTicket.CreatedBy = this.CurrentUserID.toString();
+    const emc = this.SupportTicketFormGroup.get('CC').value as string;
+    if (emc) {
+      this.SelectedSupportTicket.EmailAddresses = emc.split(',');
+      if (this.SelectedSupportTicket.EmailAddresses.length && this.SelectedSupportTicket.EmailAddresses.length > 0) {
+        this.SelectedSupportTicket.EmailAddresses.forEach(x => {
+          x.trim();
+        });
+      }
+    }
   }
 
   CreateSupportTicketResponse(): void {
@@ -275,7 +394,7 @@ export class SupportTicketComponent implements OnInit {
         Actiontype: Actiontype,
         Reason: ''
       },
-      panelClass: 'SupportTicket-confirm-dialog'
+      panelClass: 'support-ticket-confirm-dialog'
     };
     const dialogRef = this.dialog.open(SupportTicketConfirmationDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(
@@ -337,7 +456,21 @@ export class SupportTicketComponent implements OnInit {
       }
     );
   }
-
+  GetSupportTicketByTicketID(): void {
+    this._supportTicketService.GetSupportTicketByTicketID(this.SelectedTicketID).subscribe(
+      (data) => {
+        if (data) {
+          this.SelectedSupportTicket = data as SupportTicketWithEmails;
+          this.InsertSupportTicketValue();
+        }
+        this.IsProgressBarVisibile = false;
+      },
+      (err) => {
+        console.log(err);
+        this.IsProgressBarVisibile = false;
+      }
+    );
+  }
   GetSupportTicketResponseByTicketID(): void {
     this._supportTicketService.GetSupportTicketResponseByTicketID(this.SelectedTicketID).subscribe(
       (data) => {
@@ -351,6 +484,19 @@ export class SupportTicketComponent implements OnInit {
         this.IsProgressBarVisibile = false;
       }
     );
+  }
+
+  InsertSupportTicketValue(): void {
+    this.SupportTicketFormGroup.patchValue({
+      Category: this.SelectedSupportTicket.Category,
+      ReferenceNumber: this.SelectedSupportTicket.ReferenceNumber,
+      Reason: this.SelectedSupportTicket.Reason,
+      ExpectedResult: this.SelectedSupportTicket.ExpectedResult,
+      Query: this.SelectedSupportTicket.Query
+    });
+    if (this.SelectedSupportTicket.EmailAddresses && this.SelectedSupportTicket.EmailAddresses.length) {
+      this.SupportTicketFormGroup.get('CC').patchValue(this.SelectedSupportTicket.EmailAddresses.join());
+    }
   }
 
 }

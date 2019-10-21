@@ -69,6 +69,7 @@ export class SupportTicketWithEmails {
     Query: string;
     SupportTicketStatus: string;
     EmailAddresses: string[];
+    SupportTicketAttachments: string[];
     CreatedOn: Date;
     CreatedBy: string;
     CreatedByUser: string;
@@ -101,7 +102,7 @@ export class STCategoryView {
 }
 export class STReasonView {
     ID: number;
-    Reson: string;
+    Reason: string;
 }
 export class STExpectedResultView {
     ID: number;

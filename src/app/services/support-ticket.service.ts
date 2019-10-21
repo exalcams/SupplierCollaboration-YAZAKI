@@ -3,8 +3,10 @@ import { AuthService } from './auth.service';
 import { HttpErrorResponse, HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { STCategoryView, STExpectedResultView, STReasonView, SupportTicketWithEmails, 
-  SupportTicketResponseView, SupportTicketResponse, SupportTicketStatusView } from 'app/models/supportTicket.model';
+import {
+  STCategoryView, STExpectedResultView, STReasonView, SupportTicketWithEmails,
+  SupportTicketResponseView, SupportTicketResponse, SupportTicketStatusView
+} from 'app/models/supportTicket.model';
 import { Auxiliary } from 'app/models/asn';
 import { Guid } from 'guid-typescript';
 
@@ -85,13 +87,17 @@ export class SupportTicketService {
       })
       .pipe(catchError(this.errorHandler));
   }
+  GetSupportTicketByTicketID(TicketID: number): Observable<SupportTicketWithEmails | string> {
+    return this._httpClient.get<SupportTicketWithEmails>(`${this.baseAddress}api/SupportTicket/GetSupportTicketByTicketID?TicketID=${TicketID}`)
+      .pipe(catchError(this.errorHandler));
+  }
   GetSupportTicketResponseByTicketID(TicketID: number): Observable<SupportTicketResponseView[] | string> {
     return this._httpClient.get<SupportTicketResponseView[]>(`${this.baseAddress}api/SupportTicket/GetSupportTicketResponseByTicketID?TicketID=${TicketID}`)
       .pipe(catchError(this.errorHandler));
   }
   UpdateSupportTicketStatus(StatusView: SupportTicketStatusView): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/SupportTicket/SupportTicketStatusView`,
-    StatusView,
+      StatusView,
       {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
