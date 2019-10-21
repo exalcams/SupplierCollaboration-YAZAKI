@@ -122,7 +122,7 @@ const routes: Routes = [
     ],
     providers: [],
     entryComponents: [
-
+        SupportTicketConfirmationDialogComponent
     ]
 })
 export class SupportTicketModule { }
