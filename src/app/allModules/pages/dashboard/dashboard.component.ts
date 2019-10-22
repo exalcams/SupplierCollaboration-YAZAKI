@@ -11,6 +11,7 @@ import { DashboardService } from 'app/services/dashboard.service';
 import { PO_Notifications, DashboardStatus, PO_DeliveryStatus, PO_PurchaseOrderDetails, POView } from 'app/models/dashboard';
 import { ASNService } from 'app/services/asn.service';
 import { ASN } from 'app/models/asn';
+import { ShareParameterService } from 'app/services/share-parameter.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -61,6 +62,7 @@ export class DashboardComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
     constructor(
         private _fuseConfigService: FuseConfigService,
+        private _shareParameterService: ShareParameterService,
         private _router: Router,
         matIconRegistry: MatIconRegistry,
         sanitizer: DomSanitizer,
@@ -215,6 +217,15 @@ export class DashboardComponent implements OnInit {
         }
     }
 
+    CreateSupportTicketClicked(): void {
+        if (this.selectedPORow.PO != null) {
+            this._shareParameterService.SetPONumber(this.selectedPORow.PO);
+            this._router.navigate(['/supportTicket']);
+        } else {
+            this.notificationSnackBarComponent.openSnackBar('Please select the PO ', SnackBarStatus.danger);
+        }
+    }
+
     GetAllPOList(): void {
         this.dashboardService.GetAllPoList().subscribe(
             data => {
@@ -356,7 +367,7 @@ export class DashboardComponent implements OnInit {
                     this.showChart = true;
                 }
             },
-            err => {}
+            err => { }
         );
     }
 

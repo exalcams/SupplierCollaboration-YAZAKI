@@ -10,6 +10,7 @@ export class ShareParameterService {
     public CurrentPurchaseRequisition: PurchaseRequisitionView;
     public CurrentRFQHeaderVendor: RFQHeaderVendorView;
     public CurrentRFQID: number;
+    public CurrentPONumber: string;
     // constructor() {
     //     this.PurchaseRequisitionEvent = new Subject(null);
     // }
@@ -37,6 +38,13 @@ export class ShareParameterService {
         return this.CurrentRFQID;
     }
 
+    SetPONumber(PONumber: string): void {
+        this.CurrentPONumber = PONumber;
+    }
+
+    GetPONumber(): string {
+        return this.CurrentPONumber;
+    }
 
 
 }
