@@ -115,21 +115,21 @@
       <mat-card class="my-12 p-0">
         <mat-card-header fxLayout>
           <!-- <mat-card-title fxLayout> -->
-            <span fxFlex class="boldClass pt-12">Support Ticket</span>
-            <div fxFlex fxLayoutAlign="end center" class="p-4 pr-8" *ngIf="CurrentUserRole === 'Vendor'">
-              <button class="mat-mini-fab mat-accent" (click)="AddNewSupportTicket()">
-                <span class="mat-button-wrapper">
-                  <mat-icon>add_outline</mat-icon>
-                </span>
-              </button>
-            </div>
+          <span fxFlex class="boldClass pt-12 pb-4">Support Ticket</span>
+          <div fxFlex fxLayoutAlign="end center" class="p-4 pr-8" *ngIf="CurrentUserRole === 'Vendor'">
+            <button class="mat-mini-fab mat-accent" (click)="AddNewSupportTicket()">
+              <span class="mat-button-wrapper">
+                <mat-icon>add_outline</mat-icon>
+              </span>
+            </button>
+          </div>
           <!-- </mat-card-title> -->
         </mat-card-header>
         <mat-divider></mat-divider>
         <mat-card-content>
           <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
             <div fxFlex="33" class="m-4 side-bar borderRightClass">
-              <div class="SearchClass mx-8">
+              <div class="SearchClass m-8">
                 <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
                   <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
                     <input [(ngModel)]="searchText" type="text" placeholder="Search" fxFlex>
@@ -147,14 +147,16 @@
                     </div>
                   </div>
                   <div fxFlex="90" class="p-12">
-                    <div class="boldClass p-4">Ticket ID : {{sup.TicketID}}</div>
-                    <div class="p-4">Category : {{sup.Category}}</div>
+                    <div class="boldClass p-4">Support Ticket ID : {{sup.TicketID}}</div>
+                    <div class="p-4"><span class="boldClass">Category : </span>{{sup.Category}}</div>
                     <div class="borderTop mx-36 my-8"></div>
-                    <div class="p-4">Created on : {{sup.CreatedOn | date}}</div>
-                    <div class="p-4">By : {{sup.CreatedByUser}}</div>
-                    <div class="borderTop mx-36 my-4"></div>
-                    <div class="p-4">Last Updated : {{sup.ModifiedOn | date}}</div>
-                    <div class="p-4">By : {{sup.ModifiedByUser}}</div>
+                    <div class="p-4"><span class="boldClass">Created on : </span>{{sup.CreatedOn | date}}</div>
+                    <div class="p-4"><span class="boldClass">By : </span>{{sup.CreatedByUser}}</div>
+                    <div *ngIf="sup.ModifiedByUser">
+                      <div class="borderTop mx-36 my-4"></div>
+                      <div class="p-4"><span class="boldClass">Last Updated : </span>{{sup.ModifiedOn | date}}</div>
+                      <div class="p-4"><span class="boldClass">By : </span>{{sup.ModifiedByUser}}</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -210,8 +212,14 @@
                           <div fxFlex>{{CurrentDate | date}}</div>
                         </div>
                         <div fxFlex class="mt-8">
-                          <form name="form" [formGroup]="SupportTicketResponseFormGroup">
+                          <form name="form" class="normal" [formGroup]="SupportTicketResponseFormGroup">
+                            <!-- <mat-form-field> -->
                             <input matInput placeholder="Reply here.." formControlName="Comments">
+                            <mat-error *ngIf="SupportTicketResponseFormGroup.get('Comments').touched && 
+                              SupportTicketResponseFormGroup.get('Comments').hasError('required')">
+                              Comment is required.
+                            </mat-error>
+                            <!-- </mat-form-field> -->
                           </form>
                         </div>
                       </div>
@@ -222,19 +230,19 @@
                   </div>
                 </div>
                 <div fxLayout fxLayoutAlign="space-between center" class="m-8">
-                  <div fxFlex *ngIf="SelectedTicketID!=='Closed'">
+                  <div fxFlex *ngIf="SelectedSupportTicketStaus!=='Closed'">
                     <button mat-stroked-button [style.color]="compStyles?.backgroundColor"
                       (click)="ValidateSupportTicketResponse()">
                       Reply
                     </button>
                   </div>
-                  <div fxFlex align="end" *ngIf="CurrentUserRole === 'Vendor' && SelectedTicketID!=='Closed'">
+                  <div fxFlex align="end" *ngIf="CurrentUserRole === 'Vendor' && SelectedSupportTicketStaus!=='Closed'">
                     <button (click)="CloseTicket()" [ngClass]="BGClassName?.layout?.toolbar?.background" class="ml-8"
                       mat-raised-button>
                       Close ticket
                     </button>
                   </div>
-                  <div fxFlex align="end" *ngIf="CurrentUserRole === 'Vendor' && SelectedTicketID==='Closed'">
+                  <div fxFlex align="end" *ngIf="CurrentUserRole === 'Vendor' && SelectedSupportTicketStaus==='Closed'">
                     <button (click)="ReOpenCloseTicket()" [ngClass]="BGClassName?.layout?.toolbar?.background"
                       class="ml-8" mat-raised-button>
                       Reopen
@@ -244,7 +252,7 @@
               </div>
             </div>
             <div fxFlex="33" style="height: 55vh" *ngIf="!SelectedTicketID" class="m-4 borderRightClass"></div>
-            <div fxFlex="33.9" class="m-4" style="height: 55vh" class="m-4 side-bar">
+            <div fxFlex="33.9" class="m-4 pb-12 side-bar" style="height: 55vh">
               <div class="sidenav-content" fusePerfectScrollbar fxFlex>
                 <form name="form" [formGroup]="SupportTicketFormGroup">
                   <div fxLayout>
@@ -267,7 +275,7 @@
                       <input matInput cdkTextareaAutosize cdkAutosizeMinRows="5" formControlName="ReferenceNumber" />
                       <mat-error *ngIf="SupportTicketFormGroup.get('ReferenceNumber').touched &&
                     SupportTicketFormGroup.get('ReferenceNumber').hasError('required')">
-                        CC is required
+                        Reference Number is required
                       </mat-error>
                     </mat-form-field>
                   </div>
@@ -323,28 +331,31 @@
                 </form>
                 <div fxLayout *ngIf="!SelectedTicketID && CurrentUserRole === 'Vendor'">
                   <div fxFlex align="end">
-                    <button mat-raised-button color="accent" (click)="fileInput1.click()()">Add attachment</button>
+                    <button mat-raised-button color="accent" (click)="fileInput1.click()">Add attachment</button>
                     <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput($event,index)" />
                   </div>
                 </div>
                 <div fxLayout *ngIf="fileToUploadList && fileToUploadList.length && !SelectedTicketID">
-                  <div class="labelClass" fxFlex="30" fxLayoutAlign="end start">Attachments</div>
+                  <div class="labelClass" fxFlex="30" fxLayoutAlign="end start">Attachment(s) : </div>
                   <div fxFlex="70" fxLayout="column" class="mt-8">
-                    <div fxFlex *ngFor="let fil of fileToUploadList">
-                      <mat-icon class="mr-4">attach_file</mat-icon>
-                      <span>{{fil.name}}</span>
+                    <div fxFlex class="mb-4" *ngFor="let fil of fileToUploadList; let last=last">
+                      <!-- <mat-icon class="mr-4" (click)="DownloadSelectedFile(fil.name)">attach_file</mat-icon> -->
+                      <img class="mx-8" style="height: 20px" src="assets/images/attachment.png">
+                      <span>( {{fil.name}} )</span><span *ngIf="!last">,</span>
                     </div>
                   </div>
                 </div>
-                <div fxLayout *ngIf="SelectedTicketID && SelectedSupportTicket.SupportTicketAttachments">
-                    <div class="labelClass" fxFlex="30" fxLayoutAlign="end start">Attachments</div>
-                    <div fxFlex="70" fxLayout="column" class="mt-8">
-                      <div fxFlex *ngFor="let filName of SelectedSupportTicket.SupportTicketAttachments">
-                        <mat-icon class="mr-4">attach_file</mat-icon>
-                        <span>{{filName}}</span>
-                      </div>
+                <div fxLayout
+                  *ngIf="SelectedTicketID && SelectedSupportTicket.SupportTicketAttachments && SelectedSupportTicket.SupportTicketAttachments.length">
+                  <div class="labelClass" fxFlex="30" fxLayoutAlign="end start">Attachment(s) : </div>
+                  <div fxFlex="70" fxLayout="column" class="mt-8">
+                    <div fxFlex class="mb-4" *ngFor="let filName of SelectedSupportTicket.SupportTicketAttachments;let last=last">
+                      <!-- <mat-icon class="mr-4" (click)="DownloadSelectedFile(filName)">attach_file</mat-icon> -->
+                      <img class="mx-8" style="height: 20px" src="assets/images/attachment.png">
+                      <span>( {{filName}} )</span><span *ngIf="!last">,</span>
                     </div>
                   </div>
+                </div>
                 <div fxLayout class="mt-8" *ngIf="!SelectedTicketID && CurrentUserRole === 'Vendor'">
                   <div fxFlex align="end">
                     <button mat-raised-button color="accent" (click)="ValidateSupportTicket()">Save ticket</button>

@@ -3,7 +3,7 @@ import { AuthenticationDetails, App } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, Form } from '@angular/forms';
 import { MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -17,6 +17,8 @@ import { SupportTicketConfirmationDialogComponent } from './support-ticket-confi
 import { Auxiliary } from 'app/models/asn';
 import { MasterService } from 'app/services/master.service';
 // import { SupportTicketConfirmationDialogComponent } from '../documentcollection/SupportTicket-confirmation-dialog/SupportTicket-confirmation-dialog.component';
+import * as FileSaver from 'file-saver';
+import { ShareParameterService } from 'app/services/share-parameter.service';
 
 @Component({
   selector: 'app-support-ticket',
@@ -47,10 +49,12 @@ export class SupportTicketComponent implements OnInit {
   fileToUpload: File;
   fileToUploadList: File[] = [];
   SupportTicketAppID: number;
-
+  CurrentPONumber: string;
+  IsSupportTicketResponseUpdated = false;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _supportTicketService: SupportTicketService,
+    private _shareParameterService: ShareParameterService,
     private _masterService: MasterService,
     private _router: Router,
     private _formBuilder: FormBuilder,
@@ -60,6 +64,11 @@ export class SupportTicketComponent implements OnInit {
     this.SelectedSupportTicket = new SupportTicketWithEmails();
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    const PON = this._shareParameterService.GetPONumber();
+    if (PON) {
+      this.CurrentPONumber = PON;
+      this._shareParameterService.SetPONumber('');
+    }
   }
 
   ngOnInit(): void {
@@ -117,11 +126,14 @@ export class SupportTicketComponent implements OnInit {
     });
   }
   ResetControl(): void {
+    this.CurrentPONumber = '';
     this.ResetForm();
+    this.EnableFormControls(this.SupportTicketFormGroup);
     this.SelectedTicketID = 0;
     this.SelectedSupportTicketStaus = '';
     this.SelectedSupportTicket = new SupportTicketWithEmails();
     this.SelectedSupportTicketResponses = [];
+    this.IsSupportTicketResponseUpdated = false;
     this.fileToUpload = null;
     this.fileToUploadList = [];
   }
@@ -131,6 +143,9 @@ export class SupportTicketComponent implements OnInit {
       (data) => {
         if (data) {
           this.AllCategories = data as STCategoryView[];
+          if (this.CurrentUserRole === 'Vendor' && this.CurrentPONumber) {
+            this.InsertSupportTicketPONumber();
+          }
         }
       },
       (err) => {
@@ -166,7 +181,7 @@ export class SupportTicketComponent implements OnInit {
   }
 
   GetAppByName(): void {
-    const AppName = 'RFQItem';
+    const AppName = 'SupportTicket';
     this._masterService.GetAppByName(AppName).subscribe(
       (data) => {
         const SupportTicketAPP = data as App;
@@ -195,7 +210,18 @@ export class SupportTicketComponent implements OnInit {
         if (data) {
           this.AllSupportTicketWithEmails = data as SupportTicketWithEmails[];
           if (this.AllSupportTicketWithEmails.length && this.AllSupportTicketWithEmails.length > 0) {
-            this.LoadSelectedSupportTicket(this.AllSupportTicketWithEmails[0]);
+            if (this.CurrentPONumber) {
+              this.InsertSupportTicketPONumber();
+            } else {
+              if (!this.IsSupportTicketResponseUpdated) {
+                this.LoadSelectedSupportTicket(this.AllSupportTicketWithEmails[0]);
+              } else {
+                const x = this.AllSupportTicketWithEmails.filter(xy => xy.TicketID === this.SelectedTicketID)[0];
+                if (x) {
+                  this.LoadSelectedSupportTicket(x);
+                }
+              }
+            }
           }
         }
         this.IsProgressBarVisibile = false;
@@ -213,7 +239,14 @@ export class SupportTicketComponent implements OnInit {
         if (data) {
           this.AllSupportTicketWithEmails = data as SupportTicketWithEmails[];
           if (this.AllSupportTicketWithEmails.length && this.AllSupportTicketWithEmails.length > 0) {
-            this.LoadSelectedSupportTicket(this.AllSupportTicketWithEmails[0]);
+            if (!this.IsSupportTicketResponseUpdated) {
+              this.LoadSelectedSupportTicket(this.AllSupportTicketWithEmails[0]);
+            } else {
+              const x = this.AllSupportTicketWithEmails.filter(xy => xy.TicketID === this.SelectedTicketID)[0];
+              if (x) {
+                this.LoadSelectedSupportTicket(x);
+              }
+            }
           }
 
         }
@@ -227,6 +260,7 @@ export class SupportTicketComponent implements OnInit {
   }
 
   LoadSelectedSupportTicket(selectedSupportTicket: SupportTicketWithEmails): void {
+    this.ResetForm();
     this.SelectedSupportTicket = selectedSupportTicket;
     this.SelectedTicketID = +selectedSupportTicket.TicketID;
     this.SelectedSupportTicketStaus = selectedSupportTicket.SupportTicketStatus;
@@ -242,7 +276,12 @@ export class SupportTicketComponent implements OnInit {
   handleFileInput(evt, index: number): void {
     if (evt.target.files && evt.target.files.length > 0) {
       this.fileToUpload = evt.target.files[0];
-      this.fileToUploadList.push(this.fileToUpload);
+      const FileExist = this.fileToUploadList.filter(x => x.name === this.fileToUpload.name);
+      if (FileExist.length > 0) {
+        this.notificationSnackBarComponent.openSnackBar('This file is already added', SnackBarStatus.danger);
+      } else {
+        this.fileToUploadList.push(this.fileToUpload);
+      }
     }
   }
 
@@ -377,6 +416,8 @@ export class SupportTicketComponent implements OnInit {
       () => {
         this.IsProgressBarVisibile = false;
         this.notificationSnackBarComponent.openSnackBar('Support Ticket Response details updated successfully', SnackBarStatus.success);
+        this.IsSupportTicketResponseUpdated = true;
+        this.GetSupportTicketDetails();
         this.ResetForm();
         this.GetSupportTicketResponseByTicketID();
       },
@@ -486,6 +527,11 @@ export class SupportTicketComponent implements OnInit {
     );
   }
 
+  InsertSupportTicketPONumber(): void {
+    this.SupportTicketFormGroup.get('Category').patchValue('Purchase order');
+    this.SupportTicketFormGroup.get('ReferenceNumber').patchValue(this.CurrentPONumber);
+  }
+
   InsertSupportTicketValue(): void {
     this.SupportTicketFormGroup.patchValue({
       Category: this.SelectedSupportTicket.Category,
@@ -496,6 +542,43 @@ export class SupportTicketComponent implements OnInit {
     });
     if (this.SelectedSupportTicket.EmailAddresses && this.SelectedSupportTicket.EmailAddresses.length) {
       this.SupportTicketFormGroup.get('CC').patchValue(this.SelectedSupportTicket.EmailAddresses.join());
+    }
+    this.DisableFormControls(this.SupportTicketFormGroup);
+  }
+
+  EnableFormControls(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      formGroup.get(key).enable();
+    });
+  }
+
+  DisableFormControls(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      formGroup.get(key).disable();
+    });
+  }
+
+  DownloadSelectedFile(fileName: string): void {
+    if (this.fileToUploadList && this.fileToUploadList.length && !this.SelectedTicketID) {
+      const selectedFile = this.fileToUploadList.filter(x => x.name === fileName)[0];
+      if (selectedFile) {
+        const BlobFile = selectedFile as Blob;
+        FileSaver.saveAs(BlobFile, fileName);
+      }
+    } else if (this.SelectedTicketID && this.SelectedSupportTicket.SupportTicketAttachments) {
+      this._supportTicketService.DownloadSupportTicketAttachment(this.SupportTicketAppID, this.SelectedTicketID, fileName).subscribe(
+        data => {
+          if (data) {
+            const BlobFile = data as Blob;
+            FileSaver.saveAs(BlobFile, fileName);
+          }
+          // this.IsProgressBarVisibile = false;
+        },
+        error => {
+          console.error(error);
+          // this.IsProgressBarVisibile = false;
+        }
+      );
     }
   }
 

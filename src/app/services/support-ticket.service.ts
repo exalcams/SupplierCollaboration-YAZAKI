@@ -69,6 +69,14 @@ export class SupportTicketService {
 
   }
 
+  DownloadSupportTicketAttachment(APPID: number, APPNumber: number, AttachmentName: string): Observable<Blob | string> {
+    return this._httpClient.get(`${this.baseAddress}api/SupportTicket/DownloadSupportTicketAttachment?APPID=${APPID}&APPNumber=${APPNumber}&AttachmentName=${AttachmentName}`, {
+      responseType: 'blob',
+      headers: new HttpHeaders().append('Content-Type', 'application/json')
+    })
+      .pipe(catchError(this.errorHandler));
+  }
+
   GetSupportTicketByVendor(UserID: Guid): Observable<SupportTicketWithEmails[] | string> {
     return this._httpClient.get<SupportTicketWithEmails[]>(`${this.baseAddress}api/SupportTicket/GetSupportTicketByVendor?UserID=${UserID}`)
       .pipe(catchError(this.errorHandler));
@@ -96,7 +104,7 @@ export class SupportTicketService {
       .pipe(catchError(this.errorHandler));
   }
   UpdateSupportTicketStatus(StatusView: SupportTicketStatusView): Observable<any> {
-    return this._httpClient.post<any>(`${this.baseAddress}api/SupportTicket/SupportTicketStatusView`,
+    return this._httpClient.post<any>(`${this.baseAddress}api/SupportTicket/UpdateSupportTicketStatus`,
       StatusView,
       {
         headers: new HttpHeaders({

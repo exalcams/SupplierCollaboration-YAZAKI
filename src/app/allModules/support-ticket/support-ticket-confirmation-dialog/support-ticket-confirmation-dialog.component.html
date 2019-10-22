@@ -1,7 +1,7 @@
 <div class="dialog-content-wrapper normal">
   <mat-toolbar class="mat-accent m-0" [ngClass]="BGClassName?.layout?.toolbar?.background">
     <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-      <span class="title dialog-title">CAPA {{SupportTicketStatusViewDATA?.Actiontype}} Confirmation</span>
+      <span class="title dialog-title mr-12">Support ticket {{SupportTicketStatusViewDATA?.Actiontype}} Confirmation</span>
       <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
         <mat-icon>close</mat-icon>
       </button>
@@ -9,7 +9,7 @@
   </mat-toolbar>
 
   <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
-    <form name="CAPAConfigurationForm" [formGroup]="SupportTicketConfirmationFormGroup" fxLayout="column" fxFlex>
+    <form name="SupportTicketConfirmationForm" [formGroup]="SupportTicketConfirmationFormGroup" fxLayout="column" fxFlex>
       <mat-form-field>
         <input matInput placeholder="Reason" formControlName="Reason">
         <mat-error
