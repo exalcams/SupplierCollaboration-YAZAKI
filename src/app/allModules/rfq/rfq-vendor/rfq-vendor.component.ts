@@ -22,7 +22,8 @@ export class RFQVendorComponent implements OnInit {
   CurrentUserID: Guid;
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
-  RFQStatus: string;
+  // RFQStatus: string;
+  RFQByVendorStatus: string;
   // SelectedPurchaseRequisition: PurchaseRequisition;
   // PurchaseRequisitions: PurchaseRequisition[];
   SelectedRFQ: RFQHeaderVendorView;
@@ -38,7 +39,7 @@ export class RFQVendorComponent implements OnInit {
     private _router: Router,
     public snackBar: MatSnackBar
   ) {
-    this.RFQStatus = 'Open';
+    this.RFQByVendorStatus = 'Allocated';
     // this.SelectedPurchaseRequisition = new PurchaseRequisition();
     this.SelectedRFQ = new RFQHeaderVendorView();
     this.IsProgressBarVisibile = false;
@@ -83,19 +84,36 @@ export class RFQVendorComponent implements OnInit {
   //   );
   // }
   GetAllCompletedRFQByVendor(): void {
-    this.SelectedRFQ = new RFQHeaderVendorView();
-    this.IsProgressBarVisibile = true;
-    this._rfqService.GetAllCompletedRFQByVendor(this.CurrentUserID).subscribe(
-      (data) => {
-        this.RFQs = data as RFQHeaderVendorView[];
-        this.RFQDataSource = new MatTableDataSource(this.RFQs);
-        this.IsProgressBarVisibile = false;
-      },
-      (err) => {
-        console.error(err);
-        this.IsProgressBarVisibile = false;
-      }
-    );
+    if (this.RFQByVendorStatus === 'Allocated') {
+      this.SelectedRFQ = new RFQHeaderVendorView();
+      this.IsProgressBarVisibile = true;
+      this._rfqService.GetAllAllocatedRFQByVendor(this.CurrentUserID).subscribe(
+        (data) => {
+          this.RFQs = data as RFQHeaderVendorView[];
+          this.RFQDataSource = new MatTableDataSource(this.RFQs);
+          this.IsProgressBarVisibile = false;
+        },
+        (err) => {
+          console.error(err);
+          this.IsProgressBarVisibile = false;
+        }
+      );
+    }
+    if (this.RFQByVendorStatus === 'Responded') {
+      this.SelectedRFQ = new RFQHeaderVendorView();
+      this.IsProgressBarVisibile = true;
+      this._rfqService.GetAllRespondedRFQByVendor(this.CurrentUserID).subscribe(
+        (data) => {
+          this.RFQs = data as RFQHeaderVendorView[];
+          this.RFQDataSource = new MatTableDataSource(this.RFQs);
+          this.IsProgressBarVisibile = false;
+        },
+        (err) => {
+          console.error(err);
+          this.IsProgressBarVisibile = false;
+        }
+      );
+    }
   }
 
   RowSelected(data: RFQHeaderVendorView): void {
@@ -117,6 +135,15 @@ export class RFQVendorComponent implements OnInit {
       }
     } else {
       this.notificationSnackBarComponent.openSnackBar('Please select a purchase requisition', SnackBarStatus.danger);
+    }
+  }
+
+  RFQByVendorStatusChange(): void {
+    if (this.RFQByVendorStatus === 'Allocated') {
+      this.GetAllCompletedRFQByVendor();
+    }
+    if (this.RFQByVendorStatus === 'Responded') {
+      this.GetAllCompletedRFQByVendor();
     }
   }
 

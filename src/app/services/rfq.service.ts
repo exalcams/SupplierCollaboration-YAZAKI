@@ -73,6 +73,14 @@ export class RFQService {
         return this._httpClient.get<RFQHeaderVendorView[]>(`${this.baseAddress}api/RFQ/GetAllCompletedRFQByVendor?UserID=${UserID}`)
             .pipe(catchError(this.errorHandler));
     }
+    GetAllAllocatedRFQByVendor(UserID: Guid): Observable<RFQHeaderVendorView[] | string> {
+        return this._httpClient.get<RFQHeaderVendorView[]>(`${this.baseAddress}api/RFQ/GetAllAllocatedRFQByVendor?UserID=${UserID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetAllRespondedRFQByVendor(UserID: Guid): Observable<RFQHeaderVendorView[] | string> {
+        return this._httpClient.get<RFQHeaderVendorView[]>(`${this.baseAddress}api/RFQ/GetAllRespondedRFQByVendor?UserID=${UserID}`)
+            .pipe(catchError(this.errorHandler));
+    }
     GetRFQResponseReceivedByRFQID(RFQID: number): Observable<RFQResponseReceivedView[] | string> {
         return this._httpClient.get<RFQResponseReceivedView[]>(`${this.baseAddress}api/RFQ/GetRFQResponseReceivedByRFQID?RFQID=${RFQID}`)
             .pipe(catchError(this.errorHandler));

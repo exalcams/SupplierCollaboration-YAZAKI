@@ -126,14 +126,28 @@
             </mat-card-title>
           </mat-card-header> -->
         <mat-card-content>
-          <div fxLayout="row">
+            <div fxLayout="row">
+                <div fxFlex="1 1 Auto">
+                  <mat-radio-group aria-label="Select an option" [(ngModel)]="RFQByVendorStatus" (change)="RFQByVendorStatusChange()">
+                    <mat-radio-button value="Allocated" class="borderRightClass mr-24 pr-24">Allocated</mat-radio-button>
+                    <mat-radio-button value="Responded" class="mr-24 pr-24">Responded</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <div fxFlex align="end" class="pb-8">
+                    <button [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
+                      (click)="GoToRFQResponse()">
+                      Respond
+                    </button>
+                  </div>
+              </div>
+          <!-- <div fxLayout="row">
             <div fxFlex align="end" class="pb-8">
               <button [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
                 (click)="GoToRFQResponse()">
                 Respond
               </button>
             </div>
-          </div>
+          </div> -->
           <mat-divider></mat-divider>
           <div fxLayout="row" class="mt-24">
             <div fxFlex="100">
