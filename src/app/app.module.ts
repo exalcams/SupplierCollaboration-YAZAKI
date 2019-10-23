@@ -73,7 +73,12 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    declarations: [AppComponent, NotificationSnackBarComponent, NotificationDialogComponent, AttachmentsDialogComponent],
+    declarations: [
+        AppComponent, 
+        NotificationSnackBarComponent, 
+        NotificationDialogComponent, 
+        AttachmentsDialogComponent,
+    ],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -101,7 +106,7 @@ const appRoutes: Routes = [
         // GateEntryExitModule
 
         // App modules
-        LayoutModule
+        LayoutModule,
     ],
     providers: [
         DatePipe,

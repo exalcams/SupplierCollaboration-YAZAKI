@@ -143,7 +143,7 @@
               </ng-container> -->
               <ng-container matColumnDef="VendorName">
                 <th mat-header-cell *matHeaderCellDef>Vendor name & Vendor code</th>
-                <td mat-cell *matCellDef="let element">{{element.VendorName }} ({{element.VendorID}})</td>
+                <td mat-cell *matCellDef="let element">{{element.VendorName }} ({{element.VendorID | removeLeadingZero}})</td>
               </ng-container>
 
               <ng-container matColumnDef="MaterialDescription">

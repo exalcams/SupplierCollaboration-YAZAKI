@@ -302,6 +302,8 @@ export class ResponseComponent implements OnInit {
     let diffDays = Math.ceil(diff / (1000 * 3600 * 24));
     if (diffDays < 0) {
       diffDays = 0;
+      row.get('DeliveryDate').patchValue(ExpectedDeliveryDateValue);
+      this.notificationSnackBarComponent.openSnackBar('Should not be less than expected delivery date', SnackBarStatus.danger);
     }
     row.get('DelayDays').patchValue(diffDays);
   }
@@ -310,12 +312,16 @@ export class ResponseComponent implements OnInit {
     // this.RFQResponseFormGroup.enable();
     if (this.RFQResponseFormGroup.valid) {
       if (this.RFQ.RFQResponseStatus.toLocaleLowerCase() === 'responded') {
-        const Actiontype = 'Update';
-        const Catagory = 'RFQ Response';
+        // const Actiontype = 'Update';
+        // const Catagory = 'RFQ Response';
+        const Actiontype = 'Response';
+        const Catagory = 'RFQ';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       } else {
-        const Actiontype = 'Create';
-        const Catagory = 'RFQ Response';
+        // const Actiontype = 'Create';
+        // const Catagory = 'RFQ Response';
+        const Actiontype = 'Response';
+        const Catagory = 'RFQ';
         this.OpenConfirmationDialog(Actiontype, Catagory);
       }
     } else {

@@ -122,7 +122,7 @@
               <span>RFQ ID : {{SelectedPurchaseRequisition?.RFQID}}</span>
             </div>
             <div *ngIf="RFQRanks.length" fxFlex="45" class="boldClass">
-              <span>Vendor : {{RFQRanks[0].VendorName }} ({{RFQRanks[0].VendorID}})</span>
+              <span>Vendor : {{RFQRanks[0].VendorName }} ({{RFQRanks[0].VendorID | removeLeadingZero}})</span>
             </div>
           </div>
           <mat-divider></mat-divider>

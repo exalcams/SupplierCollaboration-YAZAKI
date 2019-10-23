@@ -158,3 +158,15 @@ body.theme-default .mat-radio-button.mat-accent .mat-radio-inner-circle {
   z-index: 1;
   left: 55%;
 }
+// input[disabled]{
+//   color: #808080 !important;
+// }
+::ng-deep .mat-select-disabled {
+  .mat-select-value {
+    color: #808080 !important;
+  }
+}
+
+::ng-deep .mat-input-element:disabled {
+  color: #808080 !important;
+}

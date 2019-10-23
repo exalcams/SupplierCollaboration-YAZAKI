@@ -120,7 +120,7 @@ export class VendorSearchCondition {
     VendorName: string;
     GSTNumber: string;
     State: string;
-    Type: string;
+    City: string;
 }
 
 

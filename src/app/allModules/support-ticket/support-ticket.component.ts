@@ -51,6 +51,7 @@ export class SupportTicketComponent implements OnInit {
   SupportTicketAppID: number;
   CurrentPONumber: string;
   IsSupportTicketResponseUpdated = false;
+  ReferenceValue = 'Ref. ';
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _supportTicketService: SupportTicketService,
@@ -93,7 +94,7 @@ export class SupportTicketComponent implements OnInit {
     });
     this.SupportTicketFormGroup = this._formBuilder.group({
       Category: ['', Validators.required],
-      ReferenceNumber: ['', Validators.required],
+      ReferenceNumber: [''],
       Reason: ['', Validators.required],
       ExpectedResult: ['', Validators.required],
       Query: ['', Validators.required],
@@ -136,6 +137,7 @@ export class SupportTicketComponent implements OnInit {
     this.IsSupportTicketResponseUpdated = false;
     this.fileToUpload = null;
     this.fileToUploadList = [];
+    this.ReferenceValue = 'Ref .';
   }
 
   GetAllCategories(): void {
@@ -284,7 +286,27 @@ export class SupportTicketComponent implements OnInit {
       }
     }
   }
+  CategorySelected(event): void {
+    // console.log(event.value);
+    const SelectedCategoryValue = event.value;
+    this.CheckSelectedCategoryValue(SelectedCategoryValue);
+  }
 
+  CheckSelectedCategoryValue(SelectedCategoryValue: string): void {
+    if (SelectedCategoryValue === 'Document upload' || SelectedCategoryValue === 'General') {
+      this.SupportTicketFormGroup.get('ReferenceNumber').clearValidators();
+      this.SupportTicketFormGroup.get('ReferenceNumber').updateValueAndValidity();
+      this.ReferenceValue = 'Ref .';
+    } else {
+      this.SupportTicketFormGroup.get('ReferenceNumber').setValidators([Validators.required]);
+      this.SupportTicketFormGroup.get('ReferenceNumber').updateValueAndValidity();
+      if (SelectedCategoryValue === 'Purchase order') {
+        this.ReferenceValue = 'PO';
+      } else {
+        this.ReferenceValue = SelectedCategoryValue;
+      }
+    }
+  }
 
   ValidateSupportTicket(): void {
     if (this.SupportTicketFormGroup.valid) {
@@ -530,6 +552,7 @@ export class SupportTicketComponent implements OnInit {
   InsertSupportTicketPONumber(): void {
     this.SupportTicketFormGroup.get('Category').patchValue('Purchase order');
     this.SupportTicketFormGroup.get('ReferenceNumber').patchValue(this.CurrentPONumber);
+    this.CheckSelectedCategoryValue('Purchase order');
   }
 
   InsertSupportTicketValue(): void {
@@ -544,6 +567,7 @@ export class SupportTicketComponent implements OnInit {
       this.SupportTicketFormGroup.get('CC').patchValue(this.SelectedSupportTicket.EmailAddresses.join());
     }
     this.DisableFormControls(this.SupportTicketFormGroup);
+    this.CheckSelectedCategoryValue(this.SelectedSupportTicket.Category);
   }
 
   EnableFormControls(formGroup: FormGroup): void {
