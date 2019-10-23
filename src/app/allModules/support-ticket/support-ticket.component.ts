@@ -320,8 +320,8 @@ export class SupportTicketComponent implements OnInit {
 
   ValidateSupportTicketResponse(): void {
     if (this.SupportTicketResponseFormGroup.valid) {
-      const Actiontype = 'Update';
-      const Catagory = 'Support ticket Response';
+      const Actiontype = 'Reply';
+      const Catagory = 'Support ticket';
       this.OpenConfirmationDialog(Actiontype, Catagory);
     } else {
       this.ShowValidationErrors(this.SupportTicketResponseFormGroup);
@@ -360,7 +360,7 @@ export class SupportTicketComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          if (Actiontype === 'Update') {
+          if (Actiontype === 'Reply') {
             this.CreateSupportTicketResponse();
           }
           else if (Actiontype === 'Create') {

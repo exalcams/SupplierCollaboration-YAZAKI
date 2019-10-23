@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MatButtonModule, MatIconModule, MatMenuModule, MatToolbarModule, MatBadgeModule, MatInputModule, MatFormFieldModule, MatRippleModule, MatDialogModule } from '@angular/material';
+import { MatButtonModule, MatIconModule, MatMenuModule, MatToolbarModule, 
+    MatBadgeModule, MatInputModule, MatFormFieldModule, MatRippleModule, MatDialogModule } from '@angular/material';
 
 import { FuseSearchBarModule, FuseShortcutsModule } from '@fuse/components';
 import { FuseSharedModule } from '@fuse/shared.module';
 
 import { ToolbarComponent } from 'app/layout/components/toolbar/toolbar.component';
 import { ChangePassDialogComponent } from './change-pass-dialog/change-pass-dialog.component';
+import { SharedModule } from 'app/shared/shared-module';
 
 @NgModule({
     declarations: [
@@ -26,7 +28,8 @@ import { ChangePassDialogComponent } from './change-pass-dialog/change-pass-dial
         MatDialogModule,
         FuseSharedModule,
         FuseSearchBarModule,
-        FuseShortcutsModule
+        FuseShortcutsModule,
+        SharedModule
     ],
     exports: [
         ToolbarComponent

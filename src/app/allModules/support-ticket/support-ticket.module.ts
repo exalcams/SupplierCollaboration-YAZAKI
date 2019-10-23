@@ -51,6 +51,7 @@ import { FormsModule } from '@angular/forms';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { SupportTicketComponent } from './support-ticket.component';
 import { SupportTicketConfirmationDialogComponent } from './support-ticket-confirmation-dialog/support-ticket-confirmation-dialog.component';
+import { SharedModule } from 'app/shared/shared-module';
 
 const routes: Routes = [
     {
@@ -115,6 +116,7 @@ const routes: Routes = [
         FuseWidgetModule,
 
         FormsModule,
+        SharedModule
     ],
     declarations: [
         SupportTicketComponent,
