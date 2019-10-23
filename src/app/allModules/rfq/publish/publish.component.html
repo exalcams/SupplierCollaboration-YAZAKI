@@ -128,14 +128,14 @@
                       <input matInput formControlName="VendorCode">
                     </mat-form-field>
                   </div>
-                  <div fxFlex>
+                  <!-- <div fxFlex>
                     <div class="pt-8 pr-8">
                       <span style="font-size: 13px;">Material</span>
                     </div>
                     <mat-form-field appearance="outline">
                       <input matInput>
                     </mat-form-field>
-                  </div>
+                  </div> -->
                   <div fxFlex>
                     <div class="pt-8 pr-8">
                       <span style="font-size: 13px;">Vendor Name</span>
@@ -144,8 +144,6 @@
                       <input matInput formControlName="VendorName">
                     </mat-form-field>
                   </div>
-                </div>
-                <div fxLayout class="mb-4 pl-24">
                   <div fxFlex>
                     <div class="pr-8">
                       <span style="font-size: 13px;">GST No.</span>
@@ -154,6 +152,8 @@
                       <input matInput formControlName="GSTNumber">
                     </mat-form-field>
                   </div>
+                </div>
+                <div fxLayout class="mb-4 pl-24">
                   <div fxFlex>
                     <div class="pr-8">
                       <span style="font-size: 13px;">State</span>
@@ -164,17 +164,18 @@
                   </div>
                   <div fxFlex>
                     <div class="pr-8">
-                      <span style="font-size: 13px;">Type</span>
+                      <span style="font-size: 13px;">City</span>
                     </div>
                     <mat-form-field appearance="outline">
-                      <input matInput formControlName="Type">
+                      <input matInput formControlName="City">
                     </mat-form-field>
                   </div>
+                  <div fxFlex></div>
                 </div>
                 <div fxLayout FxLayoutAlign="center">
                   <div fxFlex></div>
                   <div fxFlex class="pl-120">
-                    <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
+                    <button *ngIf="(SelectedRFQStatus | lowercase)!=='allocated'"
                       [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="GetVendorsBasedOnConditions()"
                       class="SearchBtnClass" mat-raised-button>
                       Search
@@ -187,7 +188,7 @@
               <div fxLayout class="pr-16 px-24 pt-16">
                 <div fxFlex class="boldClass">VendorList</div>
                 <div fxFlex align="end">
-                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'"
+                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='allocated'"
                     [style.color]="compStyles?.backgroundColor" (click)="AddSelectedVendors()" mat-stroked-button>
                     <mat-icon>add_circle_outline</mat-icon>
                     Add vendor
@@ -211,7 +212,7 @@
 
                   <ng-container matColumnDef="VendorCode">
                     <th mat-header-cell *matHeaderCellDef>Vendor ID</th>
-                    <td mat-cell *matCellDef="let element">{{element.VendorCode}}</td>
+                    <td mat-cell *matCellDef="let element">{{element.VendorCode | removeLeadingZero}}</td>
                   </ng-container>
 
                   <ng-container matColumnDef="VendorName">
@@ -224,10 +225,10 @@
                     <td mat-cell *matCellDef="let element"> {{element.GSTNumber}} </td>
                   </ng-container>
 
-                  <ng-container matColumnDef="Type">
+                  <!-- <ng-container matColumnDef="Type">
                     <th mat-header-cell *matHeaderCellDef>Vendor Type</th>
                     <td mat-cell *matCellDef="let element"> {{element.Type}} </td>
-                  </ng-container>
+                  </ng-container> -->
 
                   <ng-container matColumnDef="City">
                     <th mat-header-cell *matHeaderCellDef>City</th>
@@ -250,11 +251,11 @@
             <div fxFlex="30" class="pb-8">
               <div fxLayout>
                 <div fxFlex class="p-12" align="end">
-                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'" mat-stroked-button
+                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='allocated'" mat-stroked-button
                     (click)="SaveRFQAllocation()">
                     Save
                   </button>
-                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='completed'" (click)="SubmitRFQAllocation()"
+                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='allocated'" (click)="SubmitRFQAllocation()"
                     [ngClass]="BGClassName?.layout?.toolbar?.background" class="ml-8" mat-raised-button>
                     Save & Publish
                   </button>
@@ -268,15 +269,16 @@
                       <mat-icon>clear</mat-icon>
                     </span>
                   </button> -->
-                  <div class="ml-4" *ngIf="(SelectedRFQStatus | lowercase)!=='completed'">
+                  <div class="ml-4" *ngIf="(SelectedRFQStatus | lowercase)!=='allocated'">
                     <mat-icon class="customIcon" (click)="RemoveSelectedVendor(sup.VendorCode)">delete</mat-icon>
                   </div>
 
                 </div>
                 <div fxFlex="90" class="p-12">
                   <div class="boldClass">{{sup.VendorName}}</div>
+                  <div class="boldClass">{{sup.VendorCode | removeLeadingZero}}</div>
                   <div>GST No : {{sup.GSTNumber}}</div>
-                  <div>Vendor type : {{sup.Type}}</div>
+                  <!-- <div>Vendor type : {{sup.Type}}</div> -->
                   <div>{{sup.City}}</div>
                 </div>
               </div>

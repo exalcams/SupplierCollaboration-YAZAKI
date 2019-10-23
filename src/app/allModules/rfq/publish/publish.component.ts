@@ -35,7 +35,7 @@ export class PublishComponent implements OnInit {
   CheckedVendorList: Vendor[] = [];
   BGClassName: any;
   compStyles: CSSStyleDeclaration;
-  vendorDisplayedColumns: string[] = ['select', 'VendorCode', 'VendorName', 'GSTNumber', 'Type', 'City', 'State'];
+  vendorDisplayedColumns: string[] = ['select', 'VendorCode', 'VendorName', 'GSTNumber', 'City', 'State'];
   vendorDataSource: MatTableDataSource<Vendor>;
   selection = new SelectionModel<Vendor>(true, []);
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -84,13 +84,13 @@ export class PublishComponent implements OnInit {
       VendorName: [''],
       GSTNumber: [''],
       State: [''],
-      Type: [''],
+      City: [''],
     });
     this.GetAllVendors();
     if (this.SelectedRFQStatus.toLocaleLowerCase() === 'inprogress') {
       this.GetRFQAllocationTempByRFQID();
     }
-    if (this.SelectedRFQStatus.toLocaleLowerCase() === 'completed') {
+    if (this.SelectedRFQStatus.toLocaleLowerCase() === 'allocated') {
       this.GetRFQAllocationByRFQID();
     }
     this.isAllSelected();
@@ -126,6 +126,9 @@ export class PublishComponent implements OnInit {
     this._masterService.GetAllVendors().subscribe(
       (data) => {
         this.VendorList = data as Vendor[];
+        // this.VendorList.forEach(x => {
+        //   x.VendorCode = x.VendorCode.replace(/^0+/, '');
+        // });
         this.vendorDataSource = new MatTableDataSource(this.VendorList);
         this.IsProgressBarVisibile = false;
       },
@@ -207,10 +210,13 @@ export class PublishComponent implements OnInit {
       this.conditions.VendorName = this.VendorSearchFormGroup.get('VendorName').value;
       this.conditions.GSTNumber = this.VendorSearchFormGroup.get('GSTNumber').value;
       this.conditions.State = this.VendorSearchFormGroup.get('State').value;
-      this.conditions.Type = this.VendorSearchFormGroup.get('Type').value;
+      this.conditions.City = this.VendorSearchFormGroup.get('City').value;
       this._masterService.GetVendorsBasedOnConditions(this.conditions).subscribe(
         (data) => {
           this.VendorList = data as Vendor[];
+          // this.VendorList.forEach(x => {
+          //   x.VendorCode = x.VendorCode.replace(/^0+/, '');
+          // });
           this.vendorDataSource = new MatTableDataSource(this.VendorList);
           this.IsProgressBarVisibile = false;
         },

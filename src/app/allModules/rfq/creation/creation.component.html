@@ -477,7 +477,7 @@
                   (click)="GoToAllocateRFQ()">
                   Allocate Vendor
                 </button>
-                <button *ngIf="(SelectedRFQStatus | lowercase)==='completed'"
+                <button *ngIf="(SelectedRFQStatus | lowercase)==='allocated'"
                   [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
                   (click)="GoToAllocateRFQ()">
                   Review Vendor allocation

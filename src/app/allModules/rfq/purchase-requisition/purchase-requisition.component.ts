@@ -88,11 +88,11 @@ export class PurchaseRequisitionComponent implements OnInit {
 
   CreateRFQClicked(): void {
     if (this.SelectedPurchaseRequisition && this.SelectedPurchaseRequisition.PurchaseRequisitionID) {
-      let PurchaseRequisition: PurchaseRequisitionView = new PurchaseRequisitionView();
-      PurchaseRequisition.PurchaseRequisitionID = this.SelectedPurchaseRequisition.PurchaseRequisitionID;
-      PurchaseRequisition.RFQStatus = this.SelectedPurchaseRequisition.RFQStatus;
+      const PurchaseRequisition1: PurchaseRequisitionView = new PurchaseRequisitionView();
+      PurchaseRequisition1.PurchaseRequisitionID = this.SelectedPurchaseRequisition.PurchaseRequisitionID;
+      PurchaseRequisition1.RFQStatus = this.SelectedPurchaseRequisition.RFQStatus;
 
-      this._shareParameterService.SetPurchaseRequisition(PurchaseRequisition);
+      this._shareParameterService.SetPurchaseRequisition(PurchaseRequisition1);
       this._router.navigate(['/rfq/creation'], {
         // queryParams:
         // {

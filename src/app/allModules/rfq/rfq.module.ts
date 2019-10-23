@@ -58,6 +58,7 @@ import { ResponseComponent } from './response/response.component';
 import { PurchaseRequisitionComponent } from './purchase-requisition/purchase-requisition.component';
 import { RFQVendorComponent } from './rfq-vendor/rfq-vendor.component';
 import { AwardedDetailsComponent } from './awarded-details/awarded-details.component';
+import { SharedModule } from 'app/shared/shared-module';
 
 const routes: Routes = [
     {
@@ -154,6 +155,7 @@ const routes: Routes = [
         FuseWidgetModule,
 
         FormsModule,
+        SharedModule,
     ],
     declarations: [
         PurchaseRequisitionComponent,

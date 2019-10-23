@@ -69,9 +69,17 @@ td {
   left: 55%;
 }
 .AttachIconDisable {
-  color: rgba(0, 0, 0, 0.38);
+  color: #808080;
   cursor: default;
 }
 .CursorPointer {
   cursor: pointer;
 }
+
+input[disabled]{
+  color: #808080 !important;
+  // background-color: rgba(0, 0, 0, 0.38) !important;
+}
+// mat-input-element:disabled {
+//   color: red;
+// }
