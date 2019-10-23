@@ -305,7 +305,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (this.MenuItems.indexOf('RFQVendor') >= 0) {
             this.subChildren2.push({
                 id: 'rfqvendor',
-                title: 'RFQ-Vendor',
+                title: 'Supplier response',
                 type: 'item',
                 url: '/rfq/rfqvendor'
             });

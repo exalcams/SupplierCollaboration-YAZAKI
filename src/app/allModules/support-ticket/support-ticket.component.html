@@ -151,11 +151,11 @@
                     <div class="p-4"><span class="boldClass">Category : </span>{{sup.Category}}</div>
                     <div class="borderTop mx-36 my-8"></div>
                     <div class="p-4"><span class="boldClass">Created on : </span>{{sup.CreatedOn | date}}</div>
-                    <div class="p-4"><span class="boldClass">By : </span>{{sup.CreatedByUser}}</div>
+                    <div class="p-4"><span class="boldClass">By : </span>{{sup.CreatedByUser | removeLeadingZero}}</div>
                     <div *ngIf="sup.ModifiedByUser">
                       <div class="borderTop mx-36 my-4"></div>
                       <div class="p-4"><span class="boldClass">Last Updated : </span>{{sup.ModifiedOn | date}}</div>
-                      <div class="p-4"><span class="boldClass">By : </span>{{sup.ModifiedByUser}}</div>
+                      <div class="p-4"><span class="boldClass">By : </span>{{sup.ModifiedByUser | removeLeadingZero}}</div>
                     </div>
                   </div>
                 </div>
@@ -177,7 +177,7 @@
                       </div>
                       <div fxFlex="90" class="pl-4" fxLayout="column">
                         <div fxFlex fxLayout fxLayoutAlign="space-between center">
-                          <div fxFlex>{{ven.CreatedByUser}}
+                          <div fxFlex>{{ven.CreatedByUser | removeLeadingZero}}
 
                           </div>
                           <div fxFlex>{{ven.CreatedOn | date}}</div>
@@ -206,7 +206,7 @@
                       </div>
                       <div fxFlex="90" class="pl-4" fxLayout="column">
                         <div fxFlex fxLayout fxLayoutAlign="space-between center">
-                          <div fxFlex>{{CurrentUserName}}
+                          <div fxFlex>{{CurrentUserName | removeLeadingZero}}
 
                           </div>
                           <div fxFlex>{{CurrentDate | date}}</div>
