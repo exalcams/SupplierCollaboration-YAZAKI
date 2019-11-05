@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithMenuApp, UserWithRole, UserNotification, UserPreference, App, Vendor, VendorSearchCondition, VendorView } from 'app/models/master';
+import { MenuApp, RoleWithMenuApp, UserWithRole, UserNotification, UserPreference, App, Vendor, VendorSearchCondition, VendorView, CurrencyMaster, CurrencyMasterView, IncoTermMaster, IncoTermMasterView } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 
 @Injectable({
@@ -329,6 +329,84 @@ export class MasterService {
   UpdateNotification(SelectedNotification: UserNotification): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Notification/UpdateNotification`,
       SelectedNotification, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  // CurrencyMaster
+  CreateCurrencyMaster(app: CurrencyMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateCurrencyMaster`,
+      app,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllCurrencyMasters(): Observable<CurrencyMasterView[] | string> {
+    return this._httpClient.get<CurrencyMasterView[]>(`${this.baseAddress}api/Master/GetAllCurrencyMasters`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateCurrencyMaster(app: CurrencyMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateCurrencyMaster`,
+      app,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DeleteCurrencyMaster(app: CurrencyMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteCurrencyMaster`,
+      app,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  // IncoTermMaster
+  CreateIncoTermMaster(app: IncoTermMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateIncoTermMaster`,
+      app,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllIncoTermMasters(): Observable<IncoTermMasterView[] | string> {
+    return this._httpClient.get<IncoTermMaster[]>(`${this.baseAddress}api/Master/GetAllIncoTermMasters`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdateIncoTermMaster(app: IncoTermMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdateIncoTermMaster`,
+      app,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DeleteIncoTermMaster(app: IncoTermMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteIncoTermMaster`,
+      app,
+      {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
         })

@@ -123,4 +123,36 @@ export class VendorSearchCondition {
     City: string;
 }
 
+export class CurrencyMaster {
+    ID: number;
+    CurrencyCode: string;
+    Description: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
+export class IncoTermMaster {
+    ID: number;
+    IncoTermCode: string;
+    Description: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
+export class CurrencyMasterView {
+    ID: number;
+    CurrencyCode: string;
+    Description: string;
+}
+export class IncoTermMasterView {
+    ID: number;
+    IncoTermCode: string;
+    Description: string;
+}
+
+
 

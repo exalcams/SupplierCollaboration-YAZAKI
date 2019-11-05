@@ -8,7 +8,7 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { RFQView, RFQItem, RFQItemView, PurchaseRequisitionItem } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
-import { AuthenticationDetails, App } from 'app/models/master';
+import { AuthenticationDetails, App, CurrencyMasterView, IncoTermMasterView } from 'app/models/master';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RFQService } from 'app/services/rfq.service';
 import { Location } from '@angular/common';
@@ -120,33 +120,17 @@ export class CreationComponent implements OnInit {
         this.BGClassName = config;
       });
     this.GetAppByName();
+    this.GetAllCurrencyMasters();
+    this.GetAllIncoTermMasters();
     if (this.SelectedRFQStatus.toLocaleLowerCase() === 'open') {
       this.GetPurchaseRequisitionItemsByPRID();
     }
     else {
       this.GetRFQByPurchaseRequisitionID();
     }
-    this.CurrencyList = ['INR', 'USD', 'EUR', 'GBR', 'JPY'];
-    this.filteredCurrencyOptions = this.RFQFormGroup.get('Currency').valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      );
-    this.IncoTermList = ['Y001', 'Y002', 'Y003'];
-    this.filteredIncoTermOptions = this.RFQFormGroup.get('IncoTerm').valueChanges
-    .pipe(
-      startWith(''),
-      map(value => this._filter1(value))
-    );
+
   }
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.CurrencyList.filter(option => option.toLowerCase().includes(filterValue));
-  }
-  private _filter1(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.IncoTermList.filter(option => option.toLowerCase().includes(filterValue));
-  }
+
   AddRFQItemFormGroup(): void {
     const row = this._formBuilder.group({
       ItemID: ['', Validators.required],
@@ -196,6 +180,54 @@ export class CreationComponent implements OnInit {
         console.error(err);
       }
     );
+  }
+
+  GetAllCurrencyMasters(): void {
+    this._masterService.GetAllCurrencyMasters().subscribe(
+      (data) => {
+        const dat = data as CurrencyMasterView[];
+        if (dat && dat.length && dat.length > 0) {
+          this.CurrencyList = dat.map(x => x.CurrencyCode);
+          this.filteredCurrencyOptions = this.RFQFormGroup.get('Currency').valueChanges
+            .pipe(
+              startWith(''),
+              map(value => this._filter(value))
+            );
+        }
+
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  GetAllIncoTermMasters(): void {
+    this._masterService.GetAllIncoTermMasters().subscribe(
+      (data) => {
+        const dat = data as IncoTermMasterView[];
+        if (dat && dat.length && dat.length > 0) {
+          this.IncoTermList = dat.map(x => x.IncoTermCode);
+          this.filteredIncoTermOptions = this.RFQFormGroup.get('IncoTerm').valueChanges
+            .pipe(
+              startWith(''),
+              map(value => this._filter1(value))
+            );
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.CurrencyList.filter(option => option.toLowerCase().includes(filterValue));
+  }
+  private _filter1(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.IncoTermList.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   AddRFQItem(): void {
