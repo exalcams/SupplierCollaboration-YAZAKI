@@ -86,7 +86,7 @@ export class PublishComponent implements OnInit {
       State: [''],
       City: [''],
     });
-    this.GetAllVendors();
+    // this.GetAllVendors();
     if (this.SelectedRFQStatus.toLocaleLowerCase() === 'inprogress') {
       this.GetRFQAllocationTempByRFQID();
     }
@@ -117,8 +117,9 @@ export class PublishComponent implements OnInit {
 
   ResetCheckbox(): void {
     this.selection.clear();
-    this.vendorDataSource.data.forEach(row => this.selection.deselect(row));
-
+    if (this.vendorDataSource && this.vendorDataSource.data) {
+      this.vendorDataSource.data.forEach(row => this.selection.deselect(row));
+    }
   }
 
   GetAllVendors(): void {

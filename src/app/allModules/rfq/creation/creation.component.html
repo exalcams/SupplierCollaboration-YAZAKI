@@ -167,7 +167,8 @@
                 </span>
               </div>
               <mat-form-field appearance="outline" fxFlex="25">
-                <input matInput [matDatepicker]="picker" formControlName="RFQStartDate">
+                <input matInput [matDatepicker]="picker" formControlName="RFQStartDate" (keydown)="onKeydown($event)"
+                  (dateChange)="RFQDateSelected()">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
@@ -179,7 +180,8 @@
                 </span>
               </div>
               <mat-form-field appearance="outline" fxFlex="25">
-                <input matInput [matDatepicker]="picker1" formControlName="RFQResponseStartDate">
+                <input matInput [matDatepicker]="picker1" formControlName="RFQResponseStartDate"
+                  (keydown)="onKeydown($event)" (dateChange)="RFQResponseDateSelected()">
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
               </mat-form-field>
@@ -208,11 +210,17 @@
                   *
                 </span>
               </div>
-              <mat-form-field appearance="outline" fxFlex="25">
-                <input matInput [matDatepicker]="picker2" formControlName="RFQEndDate">
-                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                <mat-datepicker #picker2></mat-datepicker>
-              </mat-form-field>
+              <div fxFlex="25" fxLayout="column">
+                <mat-form-field appearance="outline" fxFlex>
+                  <input matInput [matDatepicker]="picker2" formControlName="RFQEndDate" (keydown)="onKeydown($event)"
+                    (dateChange)="RFQDateSelected()">
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+                <span *ngIf="isRFQDateError" class="errorClass negativeMargin" fxFlex>
+                  Closing date should not less than Opening date
+                </span>
+              </div>
               <div fxFlex="10" class="pt-8 pr-8 pl-8" fxLayoutAlign="end start">
                 <span style="font-size: 13px;">Validity end date</span>
                 <span class="pl-4 errorClass" *ngIf="RFQFormGroup.get('RFQResponseEndDate').touched && 
@@ -220,11 +228,17 @@
                   *
                 </span>
               </div>
-              <mat-form-field appearance="outline" fxFlex="25">
-                <input matInput [matDatepicker]="picker3" formControlName="RFQResponseEndDate">
-                <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-                <mat-datepicker #picker3></mat-datepicker>
-              </mat-form-field>
+              <div fxFlex="25" fxLayout="column">
+                <mat-form-field appearance="outline">
+                  <input matInput [matDatepicker]="picker3" formControlName="RFQResponseEndDate"
+                    (keydown)="onKeydown($event)" (dateChange)="RFQResponseDateSelected()">
+                  <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                  <mat-datepicker #picker3></mat-datepicker>
+                </mat-form-field>
+                <span *ngIf="isRFQResponseDateError" class="errorClass negativeMargin" fxFlex>
+                  Validity end date should not less than start date
+                </span>
+              </div>
             </div>
             <div class="mt-16 m-8">
               <strong class="sub-Title">Auto Evalution RFQ's</strong>
@@ -375,7 +389,7 @@
                   </span>
                   <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput($event,index)" />
                   <mat-icon *ngIf="RFQFormGroup.get('RFQItems').controls[index].get('NumberOfAttachments')?.value"
-                  (click)="GetRFQItemAttachments(index)">image</mat-icon>
+                    (click)="GetRFQItemAttachments(index)">image</mat-icon>
                   <!-- <input matInput formControlName="NumberOfAttachments"> -->
                 </td>
               </ng-container>
@@ -468,18 +482,15 @@
             <div fxLayout="row">
               <div fxFlex class="mt-12" align="end">
                 <button *ngIf="(SelectedRFQStatus | lowercase)==='open'"
-                  [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
-                  (click)="SubmitRFQDetails()">
+                  [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button (click)="SubmitRFQDetails()">
                   Save
                 </button>
                 <button *ngIf="(SelectedRFQStatus | lowercase)==='inprogress'"
-                  [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
-                  (click)="GoToAllocateRFQ()">
+                  [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button (click)="GoToAllocateRFQ()">
                   Allocate Vendor
                 </button>
                 <button *ngIf="(SelectedRFQStatus | lowercase)==='allocated'"
-                  [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
-                  (click)="GoToAllocateRFQ()">
+                  [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button (click)="GoToAllocateRFQ()">
                   Review Vendor allocation
                 </button>
               </div>

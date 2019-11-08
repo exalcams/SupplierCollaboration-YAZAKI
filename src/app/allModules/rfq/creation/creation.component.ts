@@ -50,6 +50,8 @@ export class CreationComponent implements OnInit {
   filteredCurrencyOptions: Observable<string[]>;
   IncoTermList: string[];
   filteredIncoTermOptions: Observable<string[]>;
+  isRFQDateError: boolean;
+  isRFQResponseDateError: boolean;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _router: Router,
@@ -86,6 +88,8 @@ export class CreationComponent implements OnInit {
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.RFQ = new RFQView();
+    this.isRFQDateError = false;
+    this.isRFQResponseDateError = false;
   }
 
   ngOnInit(): void {
@@ -129,6 +133,34 @@ export class CreationComponent implements OnInit {
       this.GetRFQByPurchaseRequisitionID();
     }
 
+  }
+
+  onKeydown(event): boolean {
+    // console.log(event.key);
+    if (event.key === 'Backspace' || event.key === 'Delete') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  RFQDateSelected(): void {
+    const FROMDATEVAL = this.RFQFormGroup.get('RFQStartDate').value as Date;
+    const TODATEVAL = this.RFQFormGroup.get('RFQEndDate').value as Date;
+    if (FROMDATEVAL && TODATEVAL && FROMDATEVAL > TODATEVAL) {
+      this.isRFQDateError = true;
+    } else {
+      this.isRFQDateError = false;
+    }
+  }
+  RFQResponseDateSelected(): void {
+    const FROMDATEVAL = this.RFQFormGroup.get('RFQResponseStartDate').value as Date;
+    const TODATEVAL = this.RFQFormGroup.get('RFQResponseEndDate').value as Date;
+    if (FROMDATEVAL && TODATEVAL && FROMDATEVAL > TODATEVAL) {
+      this.isRFQResponseDateError = true;
+    } else {
+      this.isRFQResponseDateError = false;
+    }
   }
 
   AddRFQItemFormGroup(): void {
@@ -278,14 +310,16 @@ export class CreationComponent implements OnInit {
   SubmitRFQDetails(): void {
     // this.RFQResponseFormGroup.enable();
     if (this.RFQFormGroup.valid) {
-      if (this.RFQ.RFQID) {
-        const Actiontype = 'Update';
-        const Catagory = 'RFQ Details';
-        this.OpenConfirmationDialog(Actiontype, Catagory);
-      } else {
-        const Actiontype = 'Create';
-        const Catagory = 'RFQ Details';
-        this.OpenConfirmationDialog(Actiontype, Catagory);
+      if (!this.isRFQDateError && !this.isRFQResponseDateError) {
+        if (this.RFQ.RFQID) {
+          const Actiontype = 'Update';
+          const Catagory = 'RFQ Details';
+          this.OpenConfirmationDialog(Actiontype, Catagory);
+        } else {
+          const Actiontype = 'Create';
+          const Catagory = 'RFQ Details';
+          this.OpenConfirmationDialog(Actiontype, Catagory);
+        }
       }
     } else {
       this.ShowValidationErrors();
