@@ -157,7 +157,7 @@
                     fxFlex.xs="100" fxFlex.sm="100" [class.borderRightClass]="even">
                     <div [class.ml-20]="odd" class="py-8">
                       <span class="mx-4">{{i+1}}.</span>
-                      <span class="BlueHeader">{{rfqres.VendorName}}</span>
+                      <span class="BlueHeader">{{rfqres.VendorName}} ({{rfqres.VendorID | removeLeadingZero}})</span>
                       <span class="mx-12">-</span>
                       <span class="Header">{{rfqres.TotalPrice}}</span>
                     </div>
@@ -166,10 +166,10 @@
                 <div *ngIf="RFQResponsesReceived.length" fxLayout fxLayoutAlign="center" class="m-4">
                   <div fxFlex fxLayout="column" fxLayoutAlign="center">
                     <div class="my-20 borderTop" fxFlex></div>
-                    <div class="Header" *ngIf="(SelectedRFQStatus | lowercase)!=='awarded'" fxFlex
+                    <!-- <div class="Header" *ngIf="(SelectedRFQStatus | lowercase)!=='awarded'" fxFlex
                       fxLayoutAlign="center">
                       This RFQ is by Auto Reach, to trigger Auto Evaluation please click the button
-                    </div>
+                    </div> -->
                     <div fxFlex class="mt-20" fxLayoutAlign="center">
                       <button *ngIf="(SelectedRFQStatus | lowercase)!=='awarded'" mat-raised-button
                         [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="EvaluateRFQResponse()">
