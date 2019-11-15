@@ -120,6 +120,25 @@ export class RFQVendorComponent implements OnInit {
     this.SelectedRFQ = data;
   }
 
+  GetRowColor(data: RFQHeaderVendorView): string {
+    if (data === this.SelectedRFQ) {
+      return 'highlight';
+    } else {
+      const Today = new Date();
+      if (Today < new Date(data.RFQResponseStartDate)) {
+        return 'jasmineBg';
+      }
+      else if (Today > new Date(data.RFQResponseEndDate)) {
+        return '';
+      }
+      else if (Today >= new Date(data.RFQResponseStartDate) && Today <= new Date(data.RFQResponseEndDate)) {
+        return 'mintGreen';
+      } else {
+        return '';
+      }
+    }
+  }
+
   GoToRFQResponse(): void {
     if (this.SelectedRFQ && this.SelectedRFQ.RFQID) {
       const Today = new Date();
