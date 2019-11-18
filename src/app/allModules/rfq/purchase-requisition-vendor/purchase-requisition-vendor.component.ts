@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationDetails } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { PurchaseRequisition, PurchaseRequisitionView } from 'app/models/rfq.model';
+import { PurchaseRequisition, PurchaseRequisitionView, RFQStatusCount } from 'app/models/rfq.model';
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { RFQService } from 'app/services/rfq.service';
@@ -28,7 +28,7 @@ export class PurchaseRequisitionVendorComponent implements OnInit {
   BGClassName: any;
   PurchaseRequisitionColumns: string[] = ['PurchaseRequisitionID', 'PurchaseDate', 'PurchaseOrganization', 'PurchaseGroup', 'CompanyCode', 'Buyer', 'Station', 'Publishing', 'Response', 'Awarded'];
   PurchaseRequisitionDataSource: MatTableDataSource<PurchaseRequisition>;
-
+  rFQStatusCount: RFQStatusCount;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _rfqService: RFQService,
@@ -40,6 +40,7 @@ export class PurchaseRequisitionVendorComponent implements OnInit {
     this.SelectedPurchaseRequisition = new PurchaseRequisition();
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.rFQStatusCount = new RFQStatusCount();
   }
 
   ngOnInit(): void {
@@ -62,6 +63,16 @@ export class PurchaseRequisitionVendorComponent implements OnInit {
       .subscribe((config) => {
         this.BGClassName = config;
       });
+  }
+  GetRFQStatusCountByVendor(): void {
+    this._rfqService.GetRFQStatusCountByVendor(this.CurrentUserID).subscribe(
+      (data) => {
+        this.rFQStatusCount = data as RFQStatusCount;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
   GetAllCompletedPurchaseRequisitionByVendor(): void {
     this.SelectedPurchaseRequisition = new PurchaseRequisition();

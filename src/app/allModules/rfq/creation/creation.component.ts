@@ -6,7 +6,7 @@ import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '
 import { BehaviorSubject, Observable } from 'rxjs';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { RFQView, RFQItem, RFQItemView, PurchaseRequisitionItem } from 'app/models/rfq.model';
+import { RFQView, RFQItem, RFQItemView, PurchaseRequisitionItem, PurchaseRequisitionStatusCount } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AuthenticationDetails, App, CurrencyMasterView, IncoTermMasterView } from 'app/models/master';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -52,6 +52,7 @@ export class CreationComponent implements OnInit {
   filteredIncoTermOptions: Observable<string[]>;
   isRFQDateError: boolean;
   isRFQResponseDateError: boolean;
+  purchaseRequisitionStatusCount: PurchaseRequisitionStatusCount;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _router: Router,
@@ -90,6 +91,7 @@ export class CreationComponent implements OnInit {
     this.RFQ = new RFQView();
     this.isRFQDateError = false;
     this.isRFQResponseDateError = false;
+    this.purchaseRequisitionStatusCount = new PurchaseRequisitionStatusCount();
   }
 
   ngOnInit(): void {
@@ -126,6 +128,7 @@ export class CreationComponent implements OnInit {
     this.GetAppByName();
     this.GetAllCurrencyMasters();
     this.GetAllIncoTermMasters();
+    this.GetPurchaseRequisitionStatusCount();
     if (this.SelectedRFQStatus.toLocaleLowerCase() === 'open') {
       this.GetPurchaseRequisitionItemsByPRID();
     }
@@ -133,6 +136,17 @@ export class CreationComponent implements OnInit {
       this.GetRFQByPurchaseRequisitionID();
     }
 
+  }
+
+  GetPurchaseRequisitionStatusCount(): void {
+    this._rfqService.GetPurchaseRequisitionStatusCount().subscribe(
+      (data) => {
+        this.purchaseRequisitionStatusCount = data as PurchaseRequisitionStatusCount;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
 
   onKeydown(event): boolean {

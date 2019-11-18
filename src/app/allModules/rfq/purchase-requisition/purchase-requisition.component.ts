@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
-import { PurchaseRequisition, PurchaseRequisitionView } from 'app/models/rfq.model';
+import { PurchaseRequisition, PurchaseRequisitionView, PurchaseRequisitionStatusCount } from 'app/models/rfq.model';
 import { RFQService } from 'app/services/rfq.service';
 import { AuthenticationDetails } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
@@ -29,6 +29,7 @@ export class PurchaseRequisitionComponent implements OnInit {
   BGClassName: any;
   PurchaseRequisitionColumns: string[] = ['PurchaseRequisitionID', 'PurchaseDate', 'PurchaseOrganization', 'PurchaseGroup', 'CompanyCode', 'Buyer', 'State', 'Publishing', 'Response', 'Awarded'];
   PurchaseRequisitionDataSource: MatTableDataSource<PurchaseRequisition>;
+  purchaseRequisitionStatusCount: PurchaseRequisitionStatusCount;
 
   constructor(
     private _fuseConfigService: FuseConfigService,
@@ -41,6 +42,7 @@ export class PurchaseRequisitionComponent implements OnInit {
     this.SelectedPurchaseRequisition = new PurchaseRequisition();
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.purchaseRequisitionStatusCount = new PurchaseRequisitionStatusCount();
   }
 
   ngOnInit(): void {
@@ -56,12 +58,23 @@ export class PurchaseRequisitionComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
+    this.GetPurchaseRequisitionStatusCount();
     this.GetPurchaseRequisitionsByRFQStatus();
     this._fuseConfigService.config
       // .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config) => {
         this.BGClassName = config;
       });
+  }
+  GetPurchaseRequisitionStatusCount(): void {
+    this._rfqService.GetPurchaseRequisitionStatusCount().subscribe(
+      (data) => {
+        this.purchaseRequisitionStatusCount = data as PurchaseRequisitionStatusCount;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
   GetPurchaseRequisitionsByRFQStatus(): void {
     this.SelectedPurchaseRequisition = new PurchaseRequisition();
