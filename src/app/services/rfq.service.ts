@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, Subject } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { AttachmentDetails } from 'app/allModules/orderacknowledgment/orderacknowledgment/orderacknowledgment.component';
-import { RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView, PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQHeaderView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView } from 'app/models/rfq.model';
+import {
+    RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView,
+    PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView, PurchaseRequisitionStatusCount, RFQStatusCount
+} from 'app/models/rfq.model';
 import { Auxiliary, AuxiliaryView } from 'app/models/asn';
 import { Guid } from 'guid-typescript';
 
@@ -15,7 +17,7 @@ import { Guid } from 'guid-typescript';
 export class RFQService {
 
     baseAddress: string;
-    constructor(private _httpClient: HttpClient, private _authService: AuthService) {
+    constructor(private _httpClient: HttpClient, _authService: AuthService) {
         this.baseAddress = _authService.baseAddress;
     }
 
@@ -49,6 +51,10 @@ export class RFQService {
         return this._httpClient.get<PurchaseRequisition[]>(`${this.baseAddress}api/RFQ/GetAllPurchaseRequisitions`)
             .pipe(catchError(this.errorHandler));
     }
+    GetPurchaseRequisitionStatusCount(): Observable<PurchaseRequisitionStatusCount | string> {
+        return this._httpClient.get<PurchaseRequisitionStatusCount>(`${this.baseAddress}api/RFQ/GetPurchaseRequisitionStatusCount`)
+            .pipe(catchError(this.errorHandler));
+    }
     GetPurchaseRequisitionsByRFQStatus(RFQStatus: string): Observable<PurchaseRequisition[] | string> {
         return this._httpClient.get<PurchaseRequisition[]>(`${this.baseAddress}api/RFQ/GetPurchaseRequisitionsByRFQStatus?RFQStatus=${RFQStatus}`)
             .pipe(catchError(this.errorHandler));
@@ -65,12 +71,20 @@ export class RFQService {
         return this._httpClient.get<RFQWithResponseView>(`${this.baseAddress}api/RFQ/GetRFQByIDAndVendor?RFQID=${RFQID}&VendorID=${VendorID}`)
             .pipe(catchError(this.errorHandler));
     }
+    GetRFQStatusCountByBuyer(UserID: Guid): Observable<RFQStatusCount | string> {
+        return this._httpClient.get<RFQStatusCount>(`${this.baseAddress}api/RFQ/GetRFQStatusCountByBuyer?UserID=${UserID}`)
+            .pipe(catchError(this.errorHandler));
+    }
     GetAllCompletedRFQByBuyer(UserID: Guid): Observable<RFQEvaluationView[] | string> {
         return this._httpClient.get<RFQEvaluationView[]>(`${this.baseAddress}api/RFQ/GetAllCompletedRFQByBuyer?UserID=${UserID}`)
             .pipe(catchError(this.errorHandler));
     }
     GetAllCompletedRFQByVendor(UserID: Guid): Observable<RFQHeaderVendorView[] | string> {
         return this._httpClient.get<RFQHeaderVendorView[]>(`${this.baseAddress}api/RFQ/GetAllCompletedRFQByVendor?UserID=${UserID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetRFQStatusCountByVendor(UserID: Guid): Observable<RFQStatusCount | string> {
+        return this._httpClient.get<RFQStatusCount>(`${this.baseAddress}api/RFQ/GetRFQStatusCountByVendor?UserID=${UserID}`)
             .pipe(catchError(this.errorHandler));
     }
     GetAllAllocatedRFQByVendor(UserID: Guid): Observable<RFQHeaderVendorView[] | string> {

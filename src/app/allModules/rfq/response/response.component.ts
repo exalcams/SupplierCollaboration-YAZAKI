@@ -3,7 +3,7 @@ import { AuthenticationDetails, App } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { FormGroup, FormArray, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { RFQView, RFQResponseItemView, RFQResponseView, RFQItemView, RFQHeaderVendorView, RFQWithResponseView } from 'app/models/rfq.model';
+import { RFQView, RFQResponseItemView, RFQResponseView, RFQItemView, RFQHeaderVendorView, RFQWithResponseView, RFQStatusCount } from 'app/models/rfq.model';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RFQService } from 'app/services/rfq.service';
@@ -48,6 +48,7 @@ export class ResponseComponent implements OnInit {
   @ViewChild('fileInput1') fileInput1: ElementRef;
   fileToUpload: File;
   fileToUploadList: File[] = [];
+  rFQStatusCount: RFQStatusCount;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _router: Router,
@@ -76,6 +77,7 @@ export class ResponseComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.RFQ = new RFQWithResponseView();
     this.RFQResponse = new RFQResponseView();
+    this.rFQStatusCount = new RFQStatusCount();
   }
 
   ngOnInit(): void {
@@ -109,6 +111,7 @@ export class ResponseComponent implements OnInit {
       .subscribe((config) => {
         this.BGClassName = config;
       });
+    this.GetRFQStatusCountByVendor();
     this.GetAppByName();
     // this.GetRFQByPurchaseRequisitionID();
     if (this.SelectedRFQID && this.SelectedVendorID) {
@@ -141,6 +144,16 @@ export class ResponseComponent implements OnInit {
       this.RFQResponseFormGroup.get(key).markAsUntouched();
     });
     this.ResetRFQResponseItems();
+  }
+  GetRFQStatusCountByVendor(): void {
+    this._rfqService.GetRFQStatusCountByVendor(this.CurrentUserID).subscribe(
+      (data) => {
+        this.rFQStatusCount = data as RFQStatusCount;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
   ResetRFQResponseItems(): void {
     this.ClearFormArray(this.RFQResponseItemFormArray);

@@ -8,22 +8,21 @@
           <div fxFlex>
             <div class="pt-8">
               <span class="Title">
-                Yet-to-Accept
+                RFQ Yet to Respond
               </span>
             </div>
           </div>
           <div fxFlex fxLayout fxLayoutAlign="center center">
             <div fxFlex="60%">
               <div class="pl-8">
-                <span style="color:white;font-size:28px">24</span>
-              </div>
-              <div style="color:rgba(255, 255, 255, 0.5)">
-                /7 Days
+                <span style="color:white;font-size:28px">
+                  {{rFQStatusCount?.ResponsePending}} / {{rFQStatusCount?.All}}
+                </span>
               </div>
             </div>
             <div fxFlex>
               <div class="pr-4 ra">
-                <img class="img-style" src="assets/images/dashboard/accept.png">
+                <img class="img-style" src="assets/images/rfq/Responded.png">
               </div>
             </div>
           </div>
@@ -33,78 +32,21 @@
           <div fxFlex>
             <div class="pt-8">
               <span class="Title">
-                To-Ship
+                RFQ Responded
               </span>
             </div>
           </div>
           <div fxFlex fxLayout fxLayoutAlign="center center">
             <div fxFlex="60%" style="color:white;">
-              <div>
-                <span style="color:#dddbdb">Open:</span>
-                <span> 4 PO's</span>
-              </div>
-              <div style="margin-top: 11px">
-                <span style="color:#dddbdb">Week:</span>
-                <span> 2Shipment</span>
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{rFQStatusCount?.Responded}} / {{rFQStatusCount?.All}}
+                </span>
               </div>
             </div>
             <div fxFlex>
               <div class="pr-4 ra">
-                <img class="img-style" src="assets/images/dashboard/box-icon.png">
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="borderRight mr-20"></div>
-        <div fxFlex fxLayout="column">
-          <div fxFlex>
-            <div class="pt-8">
-              <span class="Title">
-                In-Transit
-              </span>
-            </div>
-          </div>
-          <div fxFlex fxLayout fxLayoutAlign="center center">
-            <div fxFlex="60%" style="color:white;">
-              <div>
-                <span style="color:#dddbdb">In Transit:</span>
-                <span> 4</span>
-              </div>
-              <div style="margin-top: 11px">
-                <span style="color:#dddbdb">Received:</span>
-                <span> 1</span>
-              </div>
-            </div>
-            <div fxFlex>
-              <div class="pr-4 ra">
-                <img class="img-style" src="assets/images/dashboard/ship.png">
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="borderRight mr-20"></div>
-        <div fxFlex fxLayout="column">
-          <div fxFlex>
-            <div class="pt-8">
-              <span class="Title">
-                Payment
-              </span>
-            </div>
-          </div>
-          <div fxFlex fxLayout fxLayoutAlign="center center">
-            <div fxFlex="60%" style="color:white">
-              <div>
-                <span style="color:#dddbdb">Due:</span>
-                <span> 8</span>
-              </div>
-              <div style="margin-top: 11px">
-                <span style="color:#dddbdb">Received:</span>
-                <span> 2</span>
-              </div>
-            </div>
-            <div fxFlex>
-              <div class="pr-4 ra">
-                <img class="img-style" src="assets/images/dashboard/payment.png">
+                <img class="img-style" src="assets/images/rfq/ResponsePending.png">
               </div>
             </div>
           </div>

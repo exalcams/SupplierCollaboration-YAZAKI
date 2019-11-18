@@ -1,4 +1,5 @@
 import { Guid } from 'guid-typescript';
+import { AwardedDetailsComponent } from 'app/allModules/rfq/awarded-details/awarded-details.component';
 
 export class PurchaseRequisition {
     PurchaseRequisitionID: number;
@@ -307,5 +308,22 @@ export class RFQEvaluationView {
     Title: string;
     Status: string;
     Buyer: string;
+}
+
+export class PurchaseRequisitionStatusCount {
+    All: number;
+    YetToConvert: number;
+    InProgress: number;
+    Allocated: number;
+    Responded: number;
+    Awarded: number;
+}
+
+export class RFQStatusCount {
+    All: number;
+    ResponsePending: number;
+    Responded: number;
+    EvaluationPending: number;
+    Awarded: number;
 }
 

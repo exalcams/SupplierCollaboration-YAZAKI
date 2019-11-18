@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationDetails } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
-import { PurchaseRequisition, PurchaseRequisitionView, RFQHeaderVendorView } from 'app/models/rfq.model';
+import { PurchaseRequisition, PurchaseRequisitionView, RFQHeaderVendorView, RFQStatusCount } from 'app/models/rfq.model';
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { RFQService } from 'app/services/rfq.service';
@@ -31,6 +31,7 @@ export class RFQVendorComponent implements OnInit {
   BGClassName: any;
   RFQColumns: string[] = ['RFQID', 'Title', 'SupplyPlant', 'Currency', 'RFQResponseStartDate', 'IncoTerm', 'RFQResponseEndDate', 'Status', 'RFQResponseStatus'];
   RFQDataSource: MatTableDataSource<RFQHeaderVendorView>;
+  rFQStatusCount: RFQStatusCount;
 
   constructor(
     private _fuseConfigService: FuseConfigService,
@@ -44,6 +45,7 @@ export class RFQVendorComponent implements OnInit {
     this.SelectedRFQ = new RFQHeaderVendorView();
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.rFQStatusCount = new RFQStatusCount();
   }
 
   ngOnInit(): void {
@@ -61,6 +63,7 @@ export class RFQVendorComponent implements OnInit {
       this._router.navigate(['/auth/login']);
     }
     // this.GetAllCompletedPurchaseRequisitionByVendor();
+    this.GetRFQStatusCountByVendor();
     this.GetAllCompletedRFQByVendor();
     this._fuseConfigService.config
       // .pipe(takeUntil(this._unsubscribeAll))
@@ -83,6 +86,16 @@ export class RFQVendorComponent implements OnInit {
   //     }
   //   );
   // }
+  GetRFQStatusCountByVendor(): void {
+    this._rfqService.GetRFQStatusCountByVendor(this.CurrentUserID).subscribe(
+      (data) => {
+        this.rFQStatusCount = data as RFQStatusCount;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   GetAllCompletedRFQByVendor(): void {
     if (this.RFQByVendorStatus === 'Allocated') {
       this.SelectedRFQ = new RFQHeaderVendorView();

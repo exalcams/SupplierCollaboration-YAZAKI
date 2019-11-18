@@ -10,7 +10,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { ShareParameterService } from 'app/services/share-parameter.service';
 import { Router } from '@angular/router';
 import { RFQService } from 'app/services/rfq.service';
-import { RFQAllocationView, RFQEvaluationView, RFQResponseReceivedView, PurchaseRequisitionView } from 'app/models/rfq.model';
+import { RFQAllocationView, RFQEvaluationView, RFQResponseReceivedView, PurchaseRequisitionView, RFQStatusCount } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Guid } from 'guid-typescript';
 
@@ -33,6 +33,7 @@ export class EvaluationComponent implements OnInit {
   RFQResponsesReceived: RFQResponseReceivedView[] = [];
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
+  rFQStatusCount: RFQStatusCount;
 
   constructor(
     private _fuseConfigService: FuseConfigService,
@@ -44,6 +45,7 @@ export class EvaluationComponent implements OnInit {
     this.SelectedRFQ = new RFQEvaluationView();
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.rFQStatusCount = new RFQStatusCount();
   }
 
   ngOnInit(): void {
@@ -63,9 +65,19 @@ export class EvaluationComponent implements OnInit {
     this._fuseConfigService.config.subscribe((config) => {
       this.BGClassName = config;
     });
+    this.GetRFQStatusCountByBuyer();
     this.GetAllCompletedRFQByBuyer();
   }
-
+  GetRFQStatusCountByBuyer(): void {
+    this._rfqService.GetRFQStatusCountByBuyer(this.CurrentUserID).subscribe(
+      (data) => {
+        this.rFQStatusCount = data as RFQStatusCount;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
   GetAllCompletedRFQByBuyer(): void {
     this.IsProgressBarVisibile = true;
     this._rfqService.GetAllCompletedRFQByBuyer(this.CurrentUserID).subscribe(

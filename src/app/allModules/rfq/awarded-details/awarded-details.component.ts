@@ -8,7 +8,7 @@ import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { Router } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { RFQRankView, PurchaseRequisitionView, RFQAwardVendorView } from 'app/models/rfq.model';
+import { RFQRankView, PurchaseRequisitionView, RFQAwardVendorView, RFQStatusCount } from 'app/models/rfq.model';
 import { RFQService } from 'app/services/rfq.service';
 import { ShareParameterService } from 'app/services/share-parameter.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
@@ -36,6 +36,8 @@ export class AwardedDetailsComponent implements OnInit {
   selection = new SelectionModel<RFQRankView>(true, []);
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
+  rFQStatusCount: RFQStatusCount;
+
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _rfqService: RFQService,
@@ -47,6 +49,7 @@ export class AwardedDetailsComponent implements OnInit {
     this.SelectedRFQRank = new RFQRankView();
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
+    this.rFQStatusCount = new RFQStatusCount();
   }
 
   ngOnInit(): void {
@@ -77,6 +80,17 @@ export class AwardedDetailsComponent implements OnInit {
       .subscribe((config) => {
         this.BGClassName = config;
       });
+    this.GetRFQStatusCountByBuyer();
+  }
+  GetRFQStatusCountByBuyer(): void {
+    this._rfqService.GetRFQStatusCountByBuyer(this.CurrentUserID).subscribe(
+      (data) => {
+        this.rFQStatusCount = data as RFQStatusCount;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
 
   GetAwarderedRFQByRFQID(): void {

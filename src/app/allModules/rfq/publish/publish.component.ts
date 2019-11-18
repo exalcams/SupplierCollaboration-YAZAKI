@@ -10,7 +10,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { ShareParameterService } from 'app/services/share-parameter.service';
 import { Router } from '@angular/router';
 import { RFQService } from 'app/services/rfq.service';
-import { RFQAllocationView } from 'app/models/rfq.model';
+import { RFQAllocationView, PurchaseRequisitionStatusCount } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Guid } from 'guid-typescript';
 
@@ -40,7 +40,7 @@ export class PublishComponent implements OnInit {
   selection = new SelectionModel<Vendor>(true, []);
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
-
+  purchaseRequisitionStatusCount: PurchaseRequisitionStatusCount;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _masterService: MasterService,
@@ -63,6 +63,7 @@ export class PublishComponent implements OnInit {
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.conditions = new VendorSearchCondition();
+    this.purchaseRequisitionStatusCount = new PurchaseRequisitionStatusCount();
   }
 
   ngOnInit(): void {
@@ -87,6 +88,7 @@ export class PublishComponent implements OnInit {
       City: [''],
     });
     // this.GetAllVendors();
+    this.GetPurchaseRequisitionStatusCount();
     if (this.SelectedRFQStatus.toLocaleLowerCase() === 'inprogress') {
       this.GetRFQAllocationTempByRFQID();
     }
@@ -120,6 +122,17 @@ export class PublishComponent implements OnInit {
     if (this.vendorDataSource && this.vendorDataSource.data) {
       this.vendorDataSource.data.forEach(row => this.selection.deselect(row));
     }
+  }
+
+  GetPurchaseRequisitionStatusCount(): void {
+    this._rfqService.GetPurchaseRequisitionStatusCount().subscribe(
+      (data) => {
+        this.purchaseRequisitionStatusCount = data as PurchaseRequisitionStatusCount;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
 
   GetAllVendors(): void {
