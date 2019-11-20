@@ -2,80 +2,80 @@
   <div class="top-bg" [ngClass]="BGClassName?.layout?.toolbar?.background"></div>
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
     <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center"
-    fxLayoutGap="10px" fxLayoutGap.xs="10">
-    <div fxLayout class="layoutclass">
-      <div fxFlex fxLayout="column">
-        <div fxFlex>
-          <div class="pt-8">
-            <span class="Title">
-              Yet to convert RFQ
-            </span>
-          </div>
-        </div>
-        <div fxFlex fxLayout fxLayoutAlign="center center">
-          <div fxFlex="60%">
-            <div class="pl-8">
-              <span style="color:white;font-size:28px">
-                {{purchaseRequisitionStatusCount?.YetToConvert}} / {{purchaseRequisitionStatusCount?.All}}
+      fxLayoutGap="10px" fxLayoutGap.xs="10">
+      <div fxLayout class="layoutclass">
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                Yet to convert RFQ
               </span>
             </div>
           </div>
-          <div fxFlex>
-            <div class="pr-4 ra">
-              <img class="img-style" src="assets/images/rfq/YetToConvert.png">
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{purchaseRequisitionStatusCount?.YetToConvert}} / {{purchaseRequisitionStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/YetToConvert.png">
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="borderRight mr-20"></div>
-      <div fxFlex fxLayout="column">
-        <div fxFlex>
-          <div class="pt-8">
-            <span class="Title">
-              RFQ in progress
-            </span>
-          </div>
-        </div>
-        <div fxFlex fxLayout fxLayoutAlign="center center">
-          <div fxFlex="60%" style="color:white;">
-            <div class="pl-8">
-              <span style="color:white;font-size:28px">
-                {{purchaseRequisitionStatusCount?.InProgress}} / {{purchaseRequisitionStatusCount?.All}}
+        <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                RFQ in progress
               </span>
             </div>
           </div>
-          <div fxFlex>
-            <div class="pr-4 ra">
-              <img class="img-style" src="assets/images/rfq/InPrograss.png">
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{purchaseRequisitionStatusCount?.InProgress}} / {{purchaseRequisitionStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/InPrograss.png">
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="borderRight mr-20"></div>
-      <div fxFlex fxLayout="column">
-        <div fxFlex>
-          <div class="pt-8">
-            <span class="Title">
-              RFQ Allocated
-            </span>
-          </div>
-        </div>
-        <div fxFlex fxLayout fxLayoutAlign="center center">
-          <div fxFlex="60%" style="color:white;">
-            <div class="pl-8">
-              <span style="color:white;font-size:28px">
-                {{purchaseRequisitionStatusCount?.Allocated}} / {{purchaseRequisitionStatusCount?.All}}
+        <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                RFQ Allocated
               </span>
             </div>
           </div>
-          <div fxFlex>
-            <div class="pr-4 ra">
-              <img class="img-style" src="assets/images/rfq/Allocated.png">
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{purchaseRequisitionStatusCount?.Allocated}} / {{purchaseRequisitionStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/Allocated.png">
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <!-- <div class="borderRight mr-20"></div>
+        <!-- <div class="borderRight mr-20"></div>
       <div fxFlex fxLayout="column">
         <div fxFlex>
           <div class="pt-8">
@@ -99,14 +99,23 @@
           </div>
         </div>
       </div> -->
+      </div>
     </div>
-  </div>
     <div fxFlex>
       <mat-card class="p-0 mb-16">
         <mat-card-content>
           <div fxLayout="row">
             <div fxFlex="70" class="borderRightClass">
-              <div class="boldClass pt-16 px-24">Supplier Invite</div>
+              <div fxLayout>
+                <div fxFlex class="boldClass pt-16 px-24">Supplier Invite</div>
+                <div fxFlex fxLayoutAlign="end center" class="m-4">
+                  <button *ngIf="(SelectedRFQStatus | lowercase)!=='allocated'"
+                    [style.color]="compStyles?.backgroundColor" (click)="AddVendorClicked()" mat-stroked-button>
+                    <mat-icon *ngIf="IsSearchShow">add_circle_outline</mat-icon>
+                    {{IsSearchShow?'Add vendor':'Go to search'}}
+                  </button>
+                </div>
+              </div>
               <div fxLayout class="borderBottom mt-12"></div>
               <form name="form" [formGroup]="VendorSearchFormGroup">
                 <div fxLayout class="mt-4 pl-24">
@@ -116,6 +125,10 @@
                     </div>
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="VendorCode">
+                      <mat-error *ngIf="VendorSearchFormGroup.get('VendorCode').touched &&
+                      VendorSearchFormGroup.get('VendorCode').hasError('required')">
+                        Vendor code is required
+                      </mat-error>
                     </mat-form-field>
                   </div>
                   <!-- <div fxFlex>
@@ -132,6 +145,10 @@
                     </div>
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="VendorName">
+                      <mat-error *ngIf="VendorSearchFormGroup.get('VendorName').touched &&
+                      VendorSearchFormGroup.get('VendorName').hasError('required')">
+                        Vendor Name is required
+                      </mat-error>
                     </mat-form-field>
                   </div>
                   <div fxFlex>
@@ -140,6 +157,10 @@
                     </div>
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="GSTNumber">
+                      <mat-error *ngIf="VendorSearchFormGroup.get('GSTNumber').touched &&
+                      VendorSearchFormGroup.get('GSTNumber').hasError('required')">
+                        GST Number is required
+                      </mat-error>
                     </mat-form-field>
                   </div>
                 </div>
@@ -150,6 +171,10 @@
                     </div>
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="State">
+                      <mat-error *ngIf="VendorSearchFormGroup.get('State').touched &&
+                      VendorSearchFormGroup.get('State').hasError('required')">
+                        State is required
+                      </mat-error>
                     </mat-form-field>
                   </div>
                   <div fxFlex>
@@ -158,17 +183,45 @@
                     </div>
                     <mat-form-field appearance="outline">
                       <input matInput formControlName="City">
+                      <mat-error *ngIf="VendorSearchFormGroup.get('City').touched &&
+                      VendorSearchFormGroup.get('City').hasError('required')">
+                        City is required
+                      </mat-error>
                     </mat-form-field>
                   </div>
-                  <div fxFlex></div>
+                  <div fxFlex *ngIf="IsSearchShow">
+
+                  </div>
+                  <div fxFlex *ngIf="!IsSearchShow">
+                    <div class="pr-8">
+                      <span style="font-size: 13px;">Email</span>
+                    </div>
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="EmailId">
+                      <mat-error *ngIf="VendorSearchFormGroup.get('EmailId').touched &&
+                      VendorSearchFormGroup.get('EmailId').hasError('required')">
+                        Email id is required
+                      </mat-error>
+                      <mat-error *ngIf="VendorSearchFormGroup.get('EmailId').touched &&
+                      !VendorSearchFormGroup.get('EmailId').hasError('required')&&
+                      VendorSearchFormGroup.get('EmailId').hasError('email')">
+                        Enter valid email address
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
                 </div>
                 <div fxLayout FxLayoutAlign="center">
                   <div fxFlex></div>
                   <div fxFlex class="pl-120">
-                    <button *ngIf="(SelectedRFQStatus | lowercase)!=='allocated'"
+                    <button *ngIf="(SelectedRFQStatus | lowercase)!=='allocated' && IsSearchShow"
                       [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="GetVendorsBasedOnConditions()"
                       class="SearchBtnClass" mat-raised-button>
                       Search
+                    </button>
+                    <button *ngIf="(SelectedRFQStatus | lowercase)!=='allocated' && !IsSearchShow"
+                      [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="SaveVendorsCliked()"
+                      class="SearchBtnClass" mat-raised-button>
+                      Save
                     </button>
                   </div>
                   <div fxFlex></div>
@@ -181,7 +234,7 @@
                   <button *ngIf="(SelectedRFQStatus | lowercase)!=='allocated'"
                     [style.color]="compStyles?.backgroundColor" (click)="AddSelectedVendors()" mat-stroked-button>
                     <mat-icon>add_circle_outline</mat-icon>
-                    Add vendor
+                    Allocate vendor
                   </button>
                 </div>
               </div>

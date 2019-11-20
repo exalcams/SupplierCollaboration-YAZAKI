@@ -142,12 +142,12 @@ export class RFQVendorComponent implements OnInit {
         return 'jasmineBg';
       }
       else if (Today > new Date(data.RFQResponseEndDate)) {
-        return '';
+        return 'expColor';
       }
       else if (Today >= new Date(data.RFQResponseStartDate) && Today <= new Date(data.RFQResponseEndDate)) {
         return 'mintGreen';
       } else {
-        return '';
+        return 'expColor';
       }
     }
   }
