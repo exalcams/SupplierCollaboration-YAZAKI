@@ -277,9 +277,10 @@ export class ResponseComponent implements OnInit {
       TechRating: [RFQItem.TechRating, Validators.required],
     });
     row.disable();
+    row.get('DeliveryDate').enable();
     row.get('Price').enable();
     row.get('Schedule').enable();
-    row.get('DeliveryDate').enable();
+    row.get('SupplierPartNumber').enable();
     row.get('SelfLifeDays').enable();
     this.RFQResponseItemFormArray.push(row);
     this.RFQResponseItemDataSource.next(this.RFQResponseItemFormArray.controls);

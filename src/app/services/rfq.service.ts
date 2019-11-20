@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import {
     RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView,
-    PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView, PurchaseRequisitionStatusCount, RFQStatusCount
+    PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView, PurchaseRequisitionStatusCount, RFQStatusCount, PriorityParameter
 } from 'app/models/rfq.model';
 import { Auxiliary, AuxiliaryView } from 'app/models/asn';
 import { Guid } from 'guid-typescript';
@@ -227,6 +227,11 @@ export class RFQService {
     }
     GetAwarderedRFQByRFQID(RFQID: number): Observable<RFQRankView[] | string> {
         return this._httpClient.get<RFQRankView[]>(`${this.baseAddress}api/RFQ/GetAwarderedRFQByRFQID?RFQID=${RFQID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    GetAllPriorityParameters(): Observable<PriorityParameter[] | string> {
+        return this._httpClient.get<PriorityParameter[]>(`${this.baseAddress}api/RFQ/GetAllPriorityParameters`)
             .pipe(catchError(this.errorHandler));
     }
 }

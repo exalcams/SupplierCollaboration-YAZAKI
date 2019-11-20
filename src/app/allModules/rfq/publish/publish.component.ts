@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource, MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FuseConfigService } from '@fuse/services/config.service';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VendorSearchCondition, Vendor, AuthenticationDetails } from 'app/models/master';
 import { MasterService } from 'app/services/master.service';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
@@ -41,6 +41,7 @@ export class PublishComponent implements OnInit {
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
   purchaseRequisitionStatusCount: PurchaseRequisitionStatusCount;
+  IsSearchShow: boolean;
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _masterService: MasterService,
@@ -64,6 +65,7 @@ export class PublishComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.conditions = new VendorSearchCondition();
     this.purchaseRequisitionStatusCount = new PurchaseRequisitionStatusCount();
+    this.IsSearchShow = true;
   }
 
   ngOnInit(): void {
@@ -86,6 +88,7 @@ export class PublishComponent implements OnInit {
       GSTNumber: [''],
       State: [''],
       City: [''],
+      EmailId: ['']
     });
     // this.GetAllVendors();
     this.GetPurchaseRequisitionStatusCount();
@@ -106,13 +109,15 @@ export class PublishComponent implements OnInit {
         this.compStyles = window.getComputedStyle(backgroundElement);
       });
   }
-
-  ResetControl(): void {
-    this.conditions = new VendorSearchCondition();
+  ResetForm(): void {
     this.VendorSearchFormGroup.reset();
     Object.keys(this.VendorSearchFormGroup.controls).forEach(key => {
       this.VendorSearchFormGroup.get(key).markAsUntouched();
     });
+  }
+  ResetControl(): void {
+    this.ResetForm();
+    this.conditions = new VendorSearchCondition();
     this.SelectedVendorList = [];
     this.ResetCheckbox();
   }
@@ -258,6 +263,58 @@ export class PublishComponent implements OnInit {
   //   }
   // }
 
+  AddVendorClicked(): void {
+    this.IsSearchShow = !this.IsSearchShow;
+    this.ResetForm();
+    if (!this.IsSearchShow) {
+      // this.ResetControl();
+      this.AddValidators();
+    } else {
+      // this.ResetControl();
+      this.RemoveValidators();
+    }
+  }
+  AddValidators(): void {
+    this.VendorSearchFormGroup.get('VendorCode').setValidators([Validators.required]);
+    this.VendorSearchFormGroup.get('VendorCode').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('VendorName').setValidators([Validators.required]);
+    this.VendorSearchFormGroup.get('VendorName').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('GSTNumber').setValidators([Validators.required]);
+    this.VendorSearchFormGroup.get('GSTNumber').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('State').setValidators([Validators.required]);
+    this.VendorSearchFormGroup.get('State').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('City').setValidators([Validators.required]);
+    this.VendorSearchFormGroup.get('City').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('EmailId').setValidators([Validators.required, Validators.email]);
+    this.VendorSearchFormGroup.get('EmailId').updateValueAndValidity();
+  }
+  RemoveValidators(): void {
+    this.VendorSearchFormGroup.get('VendorCode').clearValidators();
+    this.VendorSearchFormGroup.get('VendorCode').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('VendorName').clearValidators();
+    this.VendorSearchFormGroup.get('VendorName').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('GSTNumber').clearValidators();
+    this.VendorSearchFormGroup.get('GSTNumber').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('State').clearValidators();
+    this.VendorSearchFormGroup.get('State').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('City').clearValidators();
+    this.VendorSearchFormGroup.get('City').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('EmailId').clearValidators();
+    this.VendorSearchFormGroup.get('EmailId').updateValueAndValidity();
+  }
+  SaveVendorsCliked(): void {
+    if (this.VendorSearchFormGroup.valid) {
+      const Actiontype = 'Create';
+      const Catagory = 'Vendor';
+      this.OpenConfirmationDialog(Actiontype, Catagory);
+    } else {
+      Object.keys(this.VendorSearchFormGroup.controls).forEach(key => {
+        this.VendorSearchFormGroup.get(key).markAsTouched();
+        this.VendorSearchFormGroup.get(key).markAsDirty();
+      });
+    }
+  }
+
   AddSelectedVendors(): void {
     // if (this.CheckedVendorList && this.CheckedVendorList.length) {
     //   this.CheckedVendorList.forEach(x => {
@@ -325,6 +382,9 @@ export class PublishComponent implements OnInit {
           else if (Actiontype === 'Save') {
             this.CreateRFQAllocationTemp();
           }
+          else if (Actiontype === 'Create') {
+            this.CreateVendor();
+          }
         }
       });
   }
@@ -356,6 +416,31 @@ export class PublishComponent implements OnInit {
         this.notificationSnackBarComponent.openSnackBar('Allocation saved successfully', SnackBarStatus.success);
         this.ResetControl();
         this._router.navigate(['/rfq/pr']);
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
+
+  CreateVendor(): void {
+    const ven = new Vendor();
+    ven.VendorCode = this.VendorSearchFormGroup.get('VendorCode').value;
+    ven.VendorName = this.VendorSearchFormGroup.get('VendorName').value;
+    ven.GSTNumber = this.VendorSearchFormGroup.get('GSTNumber').value;
+    ven.State = this.VendorSearchFormGroup.get('State').value;
+    ven.City = this.VendorSearchFormGroup.get('City').value;
+    ven.EmailId = this.VendorSearchFormGroup.get('EmailId').value;
+    this.IsProgressBarVisibile = true;
+    this._masterService.CreateVendor(ven).subscribe(
+      (data) => {
+        this.IsSearchShow = true;
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar('Vendor created successfully', SnackBarStatus.success);
+        this.ResetForm();
+        this.RemoveValidators();
       },
       (err) => {
         console.error(err);

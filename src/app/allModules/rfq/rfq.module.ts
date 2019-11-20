@@ -59,7 +59,8 @@ import { PurchaseRequisitionComponent } from './purchase-requisition/purchase-re
 import { RFQVendorComponent } from './rfq-vendor/rfq-vendor.component';
 import { AwardedDetailsComponent } from './awarded-details/awarded-details.component';
 import { SharedModule } from 'app/shared/shared-module';
-
+import { ParameterPriorityDialogComponent } from './parameter-priority-dialog/parameter-priority-dialog.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 const routes: Routes = [
     {
         path: 'pr',
@@ -156,6 +157,7 @@ const routes: Routes = [
 
         FormsModule,
         SharedModule,
+        DragDropModule
     ],
     declarations: [
         PurchaseRequisitionComponent,
@@ -166,11 +168,12 @@ const routes: Routes = [
         AwardedDetailsComponent,
         PurchaseRequisitionVendorComponent,
         RFQVendorComponent,
-        ResponseComponent
+        ResponseComponent,
+        ParameterPriorityDialogComponent
     ],
     providers: [],
     entryComponents: [
-        
+        ParameterPriorityDialogComponent
     ]
 })
 export class RFQModule { }

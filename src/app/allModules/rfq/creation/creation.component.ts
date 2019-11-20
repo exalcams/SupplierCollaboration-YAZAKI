@@ -6,7 +6,7 @@ import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '
 import { BehaviorSubject, Observable } from 'rxjs';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { RFQView, RFQItem, RFQItemView, PurchaseRequisitionItem, PurchaseRequisitionStatusCount } from 'app/models/rfq.model';
+import { RFQView, RFQItem, RFQItemView, PurchaseRequisitionItem, PurchaseRequisitionStatusCount, RFQParameterPriority } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AuthenticationDetails, App, CurrencyMasterView, IncoTermMasterView } from 'app/models/master';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -18,6 +18,7 @@ import { ShareParameterService } from 'app/services/share-parameter.service';
 import { Guid } from 'guid-typescript';
 import { AttachmentsDialogComponent } from 'app/shared/attachments-dialog/attachments-dialog.component';
 import { startWith, map } from 'rxjs/operators';
+import { ParameterPriorityDialogComponent } from '../parameter-priority-dialog/parameter-priority-dialog.component';
 
 @Component({
   selector: 'creation',
@@ -53,6 +54,7 @@ export class CreationComponent implements OnInit {
   isRFQDateError: boolean;
   isRFQResponseDateError: boolean;
   purchaseRequisitionStatusCount: PurchaseRequisitionStatusCount;
+  CurrentRFQParameterPriority: RFQParameterPriority[] = [];
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _router: Router,
@@ -379,6 +381,24 @@ export class CreationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
+          // this.SaveRFQ();
+          this.OpenParameterDialog();
+        }
+      });
+  }
+
+  OpenParameterDialog(): void {
+    const dialogConfig: MatDialogConfig = {
+      data: null,
+      panelClass: 'param-priority-dialog'
+    };
+    const dialogRef = this.dialog.open(ParameterPriorityDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+          // this.SaveRFQ();
+          // this.CurrentRFQParameterPriority = result as RFQParameterPriority[];
+          this.RFQ.CurrentRFQParameterPriorities = result as RFQParameterPriority[];
           this.SaveRFQ();
         }
       });

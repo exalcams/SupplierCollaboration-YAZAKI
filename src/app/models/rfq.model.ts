@@ -129,6 +129,29 @@ export class RFQItem {
     ModifiedBy: string;
     IsActive: boolean;
 }
+export class PriorityParameter {
+    ID: number;
+    Parameter: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
+export class RFQParameterPriority {
+    RFQID: number;
+    Parameter: string;
+    Priority: number;
+    PriorityValue: number;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
+
+
+
 export class RFQView {
     PurchaseRequisitionID: number;
     RFQID: number;
@@ -142,6 +165,7 @@ export class RFQView {
     RFQResponseEndDate?: Date;
     Status: string;
     RFQItems: RFQItemView[];
+    CurrentRFQParameterPriorities: RFQParameterPriority[];
     // AutoEvaluation: string;
     // RFQType: string;
     // AwardedVendor: string;
