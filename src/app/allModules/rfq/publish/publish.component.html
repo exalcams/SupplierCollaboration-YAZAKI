@@ -210,6 +210,31 @@
                     </mat-form-field>
                   </div>
                 </div>
+                <div fxLayout class="mb-4 pl-24" *ngIf="!IsSearchShow">
+                  <div fxFlex>
+                    <div class="pr-8">
+                      <span style="font-size: 13px;">Contact number</span>
+                    </div>
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="ContactNumber" pattern="^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$">
+                      <mat-error *ngIf="VendorSearchFormGroup.get('ContactNumber').touched &&
+                      VendorSearchFormGroup.get('ContactNumber').hasError('required')">
+                        Contact Number is required
+                      </mat-error>
+                      <mat-error *ngIf="VendorSearchFormGroup.get('ContactNumber').touched &&
+                      !VendorSearchFormGroup.get('ContactNumber').hasError('required') && 
+                      VendorSearchFormGroup.get('ContactNumber').hasError('pattern')">
+                        Please enter a valid Contact Number
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex>
+
+                  </div>
+                  <div fxFlex>
+
+                  </div>
+                </div>
                 <div fxLayout FxLayoutAlign="center">
                   <div fxFlex></div>
                   <div fxFlex class="pl-120">

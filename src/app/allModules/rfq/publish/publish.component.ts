@@ -88,7 +88,8 @@ export class PublishComponent implements OnInit {
       GSTNumber: [''],
       State: [''],
       City: [''],
-      EmailId: ['']
+      EmailId: [''],
+      ContactNumber: [],
     });
     // this.GetAllVendors();
     this.GetPurchaseRequisitionStatusCount();
@@ -287,6 +288,8 @@ export class PublishComponent implements OnInit {
     this.VendorSearchFormGroup.get('City').updateValueAndValidity();
     this.VendorSearchFormGroup.get('EmailId').setValidators([Validators.required, Validators.email]);
     this.VendorSearchFormGroup.get('EmailId').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('ContactNumber').setValidators([Validators.required]);
+    this.VendorSearchFormGroup.get('ContactNumber').updateValueAndValidity();
   }
   RemoveValidators(): void {
     this.VendorSearchFormGroup.get('VendorCode').clearValidators();
@@ -301,6 +304,8 @@ export class PublishComponent implements OnInit {
     this.VendorSearchFormGroup.get('City').updateValueAndValidity();
     this.VendorSearchFormGroup.get('EmailId').clearValidators();
     this.VendorSearchFormGroup.get('EmailId').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('ContactNumber').clearValidators();
+    this.VendorSearchFormGroup.get('ContactNumber').updateValueAndValidity();
   }
   SaveVendorsCliked(): void {
     if (this.VendorSearchFormGroup.valid) {
@@ -433,6 +438,7 @@ export class PublishComponent implements OnInit {
     ven.State = this.VendorSearchFormGroup.get('State').value;
     ven.City = this.VendorSearchFormGroup.get('City').value;
     ven.EmailId = this.VendorSearchFormGroup.get('EmailId').value;
+    ven.ContactNumber = this.VendorSearchFormGroup.get('ContactNumber').value;
     this.IsProgressBarVisibile = true;
     this._masterService.CreateVendor(ven).subscribe(
       (data) => {

@@ -61,6 +61,9 @@ import { AwardedDetailsComponent } from './awarded-details/awarded-details.compo
 import { SharedModule } from 'app/shared/shared-module';
 import { ParameterPriorityDialogComponent } from './parameter-priority-dialog/parameter-priority-dialog.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { RatingModule } from 'ng-starrating';
+// import { StarRatingModule } from 'angular-star-rating';
+import { TechRatingDialogComponent } from './tech-rating-dialog/tech-rating-dialog.component';
 const routes: Routes = [
     {
         path: 'pr',
@@ -157,7 +160,9 @@ const routes: Routes = [
 
         FormsModule,
         SharedModule,
-        DragDropModule
+        DragDropModule,
+        RatingModule,
+        // StarRatingModule.forRoot()
     ],
     declarations: [
         PurchaseRequisitionComponent,
@@ -169,11 +174,13 @@ const routes: Routes = [
         PurchaseRequisitionVendorComponent,
         RFQVendorComponent,
         ResponseComponent,
-        ParameterPriorityDialogComponent
+        ParameterPriorityDialogComponent,
+        TechRatingDialogComponent
     ],
     providers: [],
     entryComponents: [
-        ParameterPriorityDialogComponent
+        ParameterPriorityDialogComponent,
+        TechRatingDialogComponent
     ]
 })
 export class RFQModule { }

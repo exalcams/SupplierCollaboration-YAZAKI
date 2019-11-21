@@ -36,7 +36,7 @@ export class PurchaseRequisitionItem {
     SelfLifeDays: number;
     NumberOfAttachments: number;
     QuestionerID: string;
-    TechRating: string;
+    TechRating: number;
     CreatedOn: Date;
     CreatedBy: string;
     ModifiedOn?: Date;
@@ -122,7 +122,7 @@ export class RFQItem {
     SelfLifeDays: number;
     NumberOfAttachments: number;
     QuestionerID: string;
-    TechRating: string;
+    TechRating: number;
     CreatedOn: Date;
     CreatedBy: string;
     ModifiedOn?: Date;
@@ -208,7 +208,7 @@ export class RFQItemView {
     SelfLifeDays: number;
     NumberOfAttachments: number;
     AttachmentNames: string[];
-    TechRating: string;
+    TechRating: number;
     APPID: number;
 }
 
@@ -263,7 +263,20 @@ export class RFQResponseItem {
     SupplierPartNumber: string;
     SelfLifeDays: number;
     NumberOfAttachments: number;
-    TechRating: string;
+    TechRating: number;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
+
+export class RFQResponseTechRating {
+    RFQID: number;
+    VendorID: string;
+    ItemID: number;
+    TechRating: number;
+    Comment: string;
     IsActive: boolean;
     CreatedOn: Date;
     CreatedBy: string;
@@ -299,7 +312,7 @@ export class RFQResponseItemView {
     SelfLifeDays: number;
     NumberOfAttachments: number;
     AttachmentNames: string[];
-    TechRating: string;
+    TechRating: number;
     APPID: number;
 }
 
@@ -318,6 +331,7 @@ export class RFQRankView {
     SelfLifeDays: number;
     TotalRank: number;
     BestForItems: string;
+    TechRating: number;
 }
 
 export class RFQAwardVendorView {

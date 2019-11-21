@@ -99,6 +99,7 @@ export class Vendor {
     VendorCode: string;
     VendorName: string;
     EmailId: string;
+    ContactNumber: string;
     GSTNumber: string;
     State: string;
     City: string;
