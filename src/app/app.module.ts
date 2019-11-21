@@ -22,6 +22,7 @@ import { NotificationDialogComponent } from './notifications/notification-dialog
 import { AuthInterceptorService } from './services/auth-interceptor.service';
 import { WINDOW_PROVIDERS } from './window.providers';
 import { AttachmentsDialogComponent } from './shared/attachments-dialog/attachments-dialog.component';
+import { StarRatingModule } from 'angular-star-rating';
 // import { SupportTicketModule } from './allModules/support-ticket/support-ticket.module';
 // import { GateEntryExitModule } from './allModules/gate-entry-exit/gate-entry-exit.module';
 
@@ -107,6 +108,7 @@ const appRoutes: Routes = [
 
         // App modules
         LayoutModule,
+        // StarRatingModule.forRoot()
     ],
     providers: [
         DatePipe,

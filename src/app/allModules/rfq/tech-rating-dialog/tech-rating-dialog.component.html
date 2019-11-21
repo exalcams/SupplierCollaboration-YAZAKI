@@ -1,0 +1,27 @@
+<div class="dialog-content-wrapper normal">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">Technical rating</span>
+      <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <form name="techRatingForm" [formGroup]="techRatingForm" novalidate fxLayout="column" fxFlex>
+      <star-rating [value]="rfqResponseTechRating?.TechRating" checkedcolor="gold" uncheckedcolor="gray" size="24px" readonly="false" (rate)="onRate($event)"></star-rating>
+      <mat-form-field>
+        <input matInput placeholder="Comment" formControlName="Comment" required>
+        <mat-error *ngIf="techRatingForm.get('Comment').hasError('required')">
+          Comment is required
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+
+  <mat-dialog-actions class="m-0 p-16" fxLayoutAlign="space-between center">
+    <button mat-button type="button" (click)="CloseClicked()">Cancel</button>
+    <button mat-button type="button" color="accent" (click)="YesClicked()">Yes</button>
+  </mat-dialog-actions>
+</div>

@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import {
     RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView,
-    PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView, PurchaseRequisitionStatusCount, RFQStatusCount, PriorityParameter
+    PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView, PurchaseRequisitionStatusCount, RFQStatusCount, PriorityParameter, RFQResponseTechRating
 } from 'app/models/rfq.model';
 import { Auxiliary, AuxiliaryView } from 'app/models/asn';
 import { Guid } from 'guid-typescript';
@@ -232,6 +232,21 @@ export class RFQService {
 
     GetAllPriorityParameters(): Observable<PriorityParameter[] | string> {
         return this._httpClient.get<PriorityParameter[]>(`${this.baseAddress}api/RFQ/GetAllPriorityParameters`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    CreateRFQResponseTechRating(rfqResponseTechRating: RFQResponseTechRating): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}api/RFQ/CreateRFQResponseTechRating`,
+            rfqResponseTechRating,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
+    GetRFQResponseTechRatingByVendor(RFQID: number, ItemID: number, VendorID: string): Observable<RFQResponseTechRating| string> {
+        return this._httpClient.get<RFQResponseTechRating>(`${this.baseAddress}api/RFQ/GetRFQResponseTechRatingByVendor?RFQID=${RFQID}&ItemID=${ItemID}&VendorID=${VendorID}`)
             .pipe(catchError(this.errorHandler));
     }
 }
