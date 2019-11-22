@@ -1,0 +1,24 @@
+<div class="dialog-content-wrapper normal">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">Technical ratings</span>
+      <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <mat-card *ngFor="let techrat of rfqResponseTechRatings;let i=index">
+      <div>{{techrat?.CreatedByUser}} <span class="ml-24">{{techrat?.CreatedOn | date}}</span></div>
+      <star-rating [value]="techrat?.TechRating" checkedcolor="gold" uncheckedcolor="gray" size="24px" readonly="true">
+      </star-rating>
+      <div>{{techrat?.Comment}}</div>
+    </mat-card>
+  </div>
+
+  <mat-dialog-actions class="m-0 p-16" fxLayoutAlign="end center">
+    <!-- <button mat-button type="button" (click)="CloseClicked()">Cancel</button> -->
+    <button mat-button type="button" color="accent" (click)="YesClicked()">Close</button>
+  </mat-dialog-actions>
+</div>

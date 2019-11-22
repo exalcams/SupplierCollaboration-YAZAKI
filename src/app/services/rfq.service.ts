@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import {
     RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView,
-    PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView, PurchaseRequisitionStatusCount, RFQStatusCount, PriorityParameter, RFQResponseTechRating
+    PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView, PurchaseRequisitionStatusCount, RFQStatusCount, PriorityParameter, RFQResponseTechRating, RFQResponseTechRatingView
 } from 'app/models/rfq.model';
 import { Auxiliary, AuxiliaryView } from 'app/models/asn';
 import { Guid } from 'guid-typescript';
@@ -130,10 +130,11 @@ export class RFQService {
     }
 
     DownloadRFQItemAttachment(APPID: number, APPNumber: number, AttachmentNumber: number, HeaderNumber: string): Observable<Blob | string> {
-        return this._httpClient.get(`${this.baseAddress}api/RFQ/DownloadRFQItemAttachment?APPID=${APPID}&APPNumber=${APPNumber}&AttachmentNumber=${AttachmentNumber}&HeaderNumber=${HeaderNumber}`, {
-            responseType: 'blob',
-            headers: new HttpHeaders().append('Content-Type', 'application/json')
-        })
+        return this._httpClient.
+            get(`${this.baseAddress}api/RFQ/DownloadRFQItemAttachment?APPID=${APPID}&APPNumber=${APPNumber}&AttachmentNumber=${AttachmentNumber}&HeaderNumber=${HeaderNumber}`, {
+                responseType: 'blob',
+                headers: new HttpHeaders().append('Content-Type', 'application/json')
+            })
             .pipe(catchError(this.errorHandler));
     }
 
@@ -245,8 +246,14 @@ export class RFQService {
             })
             .pipe(catchError(this.errorHandler));
     }
-    GetRFQResponseTechRatingByVendor(RFQID: number, ItemID: number, VendorID: string): Observable<RFQResponseTechRating| string> {
-        return this._httpClient.get<RFQResponseTechRating>(`${this.baseAddress}api/RFQ/GetRFQResponseTechRatingByVendor?RFQID=${RFQID}&ItemID=${ItemID}&VendorID=${VendorID}`)
+    GetRFQResponseTechRatingByApprover(RFQID: number, ItemID: number, VendorID: string, CreatedBy: string): Observable<RFQResponseTechRating | string> {
+        return this._httpClient.get<RFQResponseTechRating>
+            (`${this.baseAddress}api/RFQ/GetRFQResponseTechRatingByApprover?RFQID=${RFQID}&ItemID=${ItemID}&VendorID=${VendorID}&CreatedBy=${CreatedBy}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetRFQResponseTechRatings(RFQID: number, ItemID: number, VendorID: string): Observable<RFQResponseTechRatingView[] | string> {
+        return this._httpClient.get<RFQResponseTechRatingView[]>
+            (`${this.baseAddress}api/RFQ/GetRFQResponseTechRatings?RFQID=${RFQID}&ItemID=${ItemID}&VendorID=${VendorID}`)
             .pipe(catchError(this.errorHandler));
     }
 }

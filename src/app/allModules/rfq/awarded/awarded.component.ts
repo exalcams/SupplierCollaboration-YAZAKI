@@ -8,12 +8,13 @@ import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { Router } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { RFQRankView, PurchaseRequisitionView, RFQAwardVendorView, RFQStatusCount, RFQResponseTechRating } from 'app/models/rfq.model';
+import { RFQRankView, PurchaseRequisitionView, RFQAwardVendorView, RFQStatusCount, RFQResponseTechRating, RFQResponseTechRatingView } from 'app/models/rfq.model';
 import { RFQService } from 'app/services/rfq.service';
 import { ShareParameterService } from 'app/services/share-parameter.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { StarRatingComponent } from 'ng-starrating';
 import { TechRatingDialogComponent } from '../tech-rating-dialog/tech-rating-dialog.component';
+import { TechRatingReviewDialogComponent } from '../tech-rating-review-dialog/tech-rating-review-dialog.component';
 // import { StarRatingComponent } from 'angular-star-rating';
 @Component({
   selector: 'awarded',
@@ -34,7 +35,7 @@ export class AwardedComponent implements OnInit {
   RFQRanks: RFQRankView[] = [];
   SelectedRFQRank: RFQRankView;
   RFQRankDisplayedColumns: string[] =
-    ['VendorName', 'MaterialDescription', 'OrderQuantity', 'UOM', 'DelayDays', 'Schedule', 'Price', 'SelfLifeDays', 'TechRating', 'BestForItems', 'Action'];
+    ['VendorName', 'MaterialDescription', 'OrderQuantity', 'UOM', 'DelayDays', 'Schedule', 'Price', 'SelfLifeDays', 'TechRating', 'BestForItems', 'View', 'Comment'];
   RFQRankDataSource: MatTableDataSource<RFQRankView>;
   selection = new SelectionModel<RFQRankView>(true, []);
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -185,26 +186,35 @@ export class AwardedComponent implements OnInit {
   }
   AssignmentClicked(element: RFQRankView): void {
     let rfqResponseTechRating: RFQResponseTechRating = new RFQResponseTechRating();
-    this._rfqService.GetRFQResponseTechRatingByVendor(element.RFQID, element.ItemID, element.VendorID).subscribe(
+    this._rfqService.GetRFQResponseTechRatingByApprover(element.RFQID, element.ItemID, element.VendorID, this.CurrentUserID.toString()).subscribe(
       (data) => {
         if (data) {
           rfqResponseTechRating = data as RFQResponseTechRating;
         }
+        if (rfqResponseTechRating && rfqResponseTechRating.RFQID) {
+          rfqResponseTechRating.ModifiedBy = this.CurrentUserID.toString();
+          this.OpenTechRationgDialog(rfqResponseTechRating);
+        } else {
+          this.NewRFQResponseTechRating(element, rfqResponseTechRating);
+        }
       },
       (err) => {
         console.error(err);
+        this.NewRFQResponseTechRating(element, rfqResponseTechRating);
       }
     );
-    if (rfqResponseTechRating && rfqResponseTechRating.RFQID) {
-      rfqResponseTechRating.ModifiedBy = this.CurrentUserID.toString();
-    } else {
-      rfqResponseTechRating.RFQID = element.RFQID;
-      rfqResponseTechRating.ItemID = element.ItemID;
-      rfqResponseTechRating.VendorID = element.VendorID;
-      rfqResponseTechRating.TechRating = 0;
-      rfqResponseTechRating.CreatedBy = this.CurrentUserID.toString();
-    }
+  }
 
+  NewRFQResponseTechRating(element: RFQRankView, rfqResponseTechRating: RFQResponseTechRating): void {
+    rfqResponseTechRating.RFQID = element.RFQID;
+    rfqResponseTechRating.ItemID = element.ItemID;
+    rfqResponseTechRating.VendorID = element.VendorID;
+    rfqResponseTechRating.TechRating = 0;
+    rfqResponseTechRating.CreatedBy = this.CurrentUserID.toString();
+    this.OpenTechRationgDialog(rfqResponseTechRating);
+  }
+
+  OpenTechRationgDialog(rfqResponseTechRating: RFQResponseTechRating): void {
     const dialogConfig: MatDialogConfig = {
       data: rfqResponseTechRating,
       panelClass: 'tech-rating-dialog'
@@ -215,19 +225,50 @@ export class AwardedComponent implements OnInit {
         if (result) {
           const re = result as RFQResponseTechRating;
           // console.log(rfqResponseTechRating);
-          this.IsProgressBarVisibile = true;
-          this._rfqService.CreateRFQResponseTechRating(re).subscribe(
-            (data1) => {
-              this.IsProgressBarVisibile = false;
-              this.notificationSnackBarComponent.openSnackBar('Tech rating is updated', SnackBarStatus.success);
-            },
-            (err) => {
-              this.IsProgressBarVisibile = false;
-              console.error(err);
-              this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+          this.CreateRFQResponseTechRating(re);
+        }
+      });
+  }
+  CreateRFQResponseTechRating(rfqResponseTechRating: RFQResponseTechRating): void {
+    this.IsProgressBarVisibile = true;
+    this._rfqService.CreateRFQResponseTechRating(rfqResponseTechRating).subscribe(
+      (data1) => {
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar('Tech rating is updated', SnackBarStatus.success);
+      },
+      (err) => {
+        this.IsProgressBarVisibile = false;
+        console.error(err);
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
 
-            }
-          );
+      }
+    );
+  }
+
+  GetRFQResponseTechRatings(element: RFQRankView): void {
+    this._rfqService.GetRFQResponseTechRatings(element.RFQID, element.ItemID, element.VendorID).subscribe(
+      (data) => {
+        if (data) {
+          const rfqResponseTechRatings = data as RFQResponseTechRatingView[];
+          console.log(rfqResponseTechRatings);
+          this.OpenTechRationgReviewDialog(rfqResponseTechRatings);
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  OpenTechRationgReviewDialog(rfqResponseTechRatings: RFQResponseTechRatingView[]): void {
+    const dialogConfig: MatDialogConfig = {
+      data: rfqResponseTechRatings,
+      panelClass: 'tech-rating-review-dialog'
+    };
+    const dialogRef = this.dialog.open(TechRatingReviewDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+
         }
       });
   }

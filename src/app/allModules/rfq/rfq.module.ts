@@ -64,6 +64,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RatingModule } from 'ng-starrating';
 // import { StarRatingModule } from 'angular-star-rating';
 import { TechRatingDialogComponent } from './tech-rating-dialog/tech-rating-dialog.component';
+import { TechRatingReviewDialogComponent } from './tech-rating-review-dialog/tech-rating-review-dialog.component';
 const routes: Routes = [
     {
         path: 'pr',
@@ -175,12 +176,14 @@ const routes: Routes = [
         RFQVendorComponent,
         ResponseComponent,
         ParameterPriorityDialogComponent,
-        TechRatingDialogComponent
+        TechRatingDialogComponent,
+        TechRatingReviewDialogComponent
     ],
     providers: [],
     entryComponents: [
         ParameterPriorityDialogComponent,
-        TechRatingDialogComponent
+        TechRatingDialogComponent,
+        TechRatingReviewDialogComponent
     ]
 })
 export class RFQModule { }
