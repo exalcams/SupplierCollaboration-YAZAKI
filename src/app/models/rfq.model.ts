@@ -283,6 +283,19 @@ export class RFQResponseTechRating {
     ModifiedOn?: Date;
     ModifiedBy: string;
 }
+export class RFQResponseTechRatingView {
+    RFQID: number;
+    VendorID: string;
+    ItemID: number;
+    TechRating: number;
+    Comment: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    CreatedByUser: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
 export class RFQResponseView {
     PurchaseRequisitionID: number;
     RFQID: number;
