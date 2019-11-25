@@ -29,7 +29,7 @@ export class RFQVendorComponent implements OnInit {
   SelectedRFQ: RFQHeaderVendorView;
   RFQs: RFQHeaderVendorView[];
   BGClassName: any;
-  RFQColumns: string[] = ['RFQID', 'Title', 'SupplyPlant', 'Currency', 'RFQResponseStartDate', 'IncoTerm', 'RFQResponseEndDate', 'Status', 'RFQResponseStatus'];
+  RFQColumns: string[] = ['RFQID', 'Title', 'SupplyPlant', 'Currency', 'RFQResponseStartDate', 'IncoTerm', 'RFQResponseEndDate', 'Status', 'RFQResponseStatus', 'Action'];
   RFQDataSource: MatTableDataSource<RFQHeaderVendorView>;
   rFQStatusCount: RFQStatusCount;
 
@@ -136,7 +136,11 @@ export class RFQVendorComponent implements OnInit {
   GetRowColor(data: RFQHeaderVendorView): string {
     if (data === this.SelectedRFQ) {
       return 'highlight';
-    } else {
+    }
+    else if (data.Status.toLowerCase() === 'awarded') {
+      return 'awardedColor';
+    }
+    else {
       const Today = new Date();
       if (Today < new Date(data.RFQResponseStartDate)) {
         return 'jasmineBg';
@@ -176,6 +180,14 @@ export class RFQVendorComponent implements OnInit {
     }
     if (this.RFQByVendorStatus === 'Responded') {
       this.GetAllCompletedRFQByVendor();
+    }
+  }
+  CreateSupportTicketClicked(element: RFQHeaderVendorView): void {
+    if (element && element.RFQID) {
+      this._shareParameterService.SetRFQID(element.RFQID);
+      this._router.navigate(['/supportTicket']);
+    } else {
+      // this.notificationSnackBarComponent.openSnackBar('Please select the PO ', SnackBarStatus.danger);
     }
   }
 

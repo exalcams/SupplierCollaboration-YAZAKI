@@ -10,7 +10,7 @@
 
   <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
     <mat-card *ngFor="let techrat of rfqResponseTechRatings;let i=index">
-      <div>{{techrat?.CreatedByUser}} <span class="ml-24">{{techrat?.CreatedOn | date}}</span></div>
+      <div>{{techrat?.CreatedByUser}} <span class="ml-24">{{techrat?.CreatedOn | date:'dd/MM/yyyy hh:mm:ss a'}}</span></div>
       <star-rating [value]="techrat?.TechRating" checkedcolor="gold" uncheckedcolor="gray" size="24px" readonly="true">
       </star-rating>
       <div>{{techrat?.Comment}}</div>

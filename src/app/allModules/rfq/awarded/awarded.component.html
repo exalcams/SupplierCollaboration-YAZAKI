@@ -98,15 +98,16 @@
           <mat-divider></mat-divider>
           <div fxLayout="row" class="mt-24">
             <table mat-table [dataSource]="RFQRankDataSource">
-              <!-- <ng-container matColumnDef="Select">
+              <ng-container matColumnDef="Select">
                 <th mat-header-cell *matHeaderCellDef>
                 </th>
                 <td mat-cell *matCellDef="let row">
-                  <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                    [checked]="selection.isSelected(row)">
+                  <mat-checkbox (change)="onChangeChk($event,row)"
+                  [checked]="row.RFQID === SelectedRFQRank?.RFQID && row.ItemID===SelectedRFQRank?.ItemID&&
+                    row.VendorID === SelectedRFQRank?.VendorID">
                   </mat-checkbox>
                 </td>
-              </ng-container> -->
+              </ng-container>
               <ng-container matColumnDef="VendorName">
                 <th mat-header-cell *matHeaderCellDef>Vendor name & Vendor code</th>
                 <td mat-cell *matCellDef="let element">{{element.VendorName }}
@@ -195,7 +196,7 @@
 
               <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
                 *matHeaderRowDef="RFQRankDisplayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: RFQRankDisplayedColumns;" (click)="RowSelected(row)"
+              <tr mat-row *matRowDef="let row; columns: RFQRankDisplayedColumns;"
                 [class.highlight]="row === SelectedRFQRank"></tr>
             </table>
           </div>

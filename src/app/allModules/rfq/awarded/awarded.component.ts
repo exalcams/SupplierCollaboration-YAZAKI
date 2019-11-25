@@ -35,7 +35,7 @@ export class AwardedComponent implements OnInit {
   RFQRanks: RFQRankView[] = [];
   SelectedRFQRank: RFQRankView;
   RFQRankDisplayedColumns: string[] =
-    ['VendorName', 'MaterialDescription', 'OrderQuantity', 'UOM', 'DelayDays', 'Schedule', 'Price', 'SelfLifeDays', 'TechRating', 'BestForItems', 'View', 'Comment'];
+    ['Select', 'VendorName', 'MaterialDescription', 'OrderQuantity', 'UOM', 'DelayDays', 'Schedule', 'Price', 'SelfLifeDays', 'TechRating', 'BestForItems', 'View', 'Comment'];
   RFQRankDataSource: MatTableDataSource<RFQRankView>;
   selection = new SelectionModel<RFQRankView>(true, []);
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -124,7 +124,14 @@ export class AwardedComponent implements OnInit {
   RowSelected(data: RFQRankView): void {
     this.SelectedRFQRank = data;
   }
-
+  onChangeChk($event, data: RFQRankView): void {
+    // $event.source.checked = !$event.source.checked;
+    if ($event.source.checked) {
+      this.SelectedRFQRank = data;
+    } else {
+      this.SelectedRFQRank = null;
+    }
+  }
   FilterValueChange(): void {
     console.log(this.FilterValue);
   }
@@ -235,12 +242,12 @@ export class AwardedComponent implements OnInit {
       (data1) => {
         this.IsProgressBarVisibile = false;
         this.notificationSnackBarComponent.openSnackBar('Tech rating is updated', SnackBarStatus.success);
+        this._router.navigate(['/rfq/evaluation']);
       },
       (err) => {
         this.IsProgressBarVisibile = false;
         console.error(err);
         this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-
       }
     );
   }
@@ -250,8 +257,12 @@ export class AwardedComponent implements OnInit {
       (data) => {
         if (data) {
           const rfqResponseTechRatings = data as RFQResponseTechRatingView[];
-          console.log(rfqResponseTechRatings);
-          this.OpenTechRationgReviewDialog(rfqResponseTechRatings);
+          // console.log(rfqResponseTechRatings);
+          if (rfqResponseTechRatings && rfqResponseTechRatings.length && rfqResponseTechRatings.length > 0) {
+            this.OpenTechRationgReviewDialog(rfqResponseTechRatings);
+          } else {
+            this.notificationSnackBarComponent.openSnackBar('Not yet rated', SnackBarStatus.info);
+          }
         }
       },
       (err) => {
