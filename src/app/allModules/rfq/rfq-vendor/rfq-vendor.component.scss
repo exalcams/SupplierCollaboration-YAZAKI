@@ -1,3 +1,6 @@
+@mixin backgroundColorMixin($color) {
+  background-color: $color !important;
+}
 .Title {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
@@ -54,7 +57,7 @@ td {
   border-color: #082f7d !important;
 }
 .mat-radio-button.mat-accent .mat-radio-inner-circle {
-  background-color: #082f7d !important;
+  @include backgroundColorMixin(#082f7d);
 }
 .ProgressBarPostion1 {
   position: absolute !important;
@@ -62,21 +65,29 @@ td {
   z-index: 1;
   left: 55%;
 }
+
 .highlight {
-  background: lightgray !important;
+  @include backgroundColorMixin(lightgray);
 }
 .boldClass {
   font-weight: bold;
 }
 .jasmineBg {
-  background-color: #FFFFCC !important;
+  @include backgroundColorMixin(#ffffcc);
 }
-.mintGreen{
-  background-color: #D5FFCC !important;
+.mintGreen {
+  @include backgroundColorMixin(#d5ffcc);
 }
-.expColor{
-  background-color: #FF9999 !important;
+.expColor {
+  @include backgroundColorMixin(#ff9999);
 }
-.img-style{
+.awardedColor {
+  @include backgroundColorMixin(gold);
+}
+.img-style {
   height: 60px !important;
+}
+.awarded {
+  font-weight: bold;
+  color: black;
 }

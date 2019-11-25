@@ -10,9 +10,12 @@
 
   <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
     <form name="techRatingForm" [formGroup]="techRatingForm" novalidate fxLayout="column" fxFlex>
-      <star-rating [value]="rfqResponseTechRating?.TechRating" checkedcolor="gold" uncheckedcolor="gray" size="24px" readonly="false" (rate)="onRate($event)"></star-rating>
+      <star-rating [value]="rfqResponseTechRating?.TechRating" checkedcolor="gold" uncheckedcolor="gray" size="24px"
+        readonly="false" (rate)="onRate($event)"></star-rating>
       <mat-form-field class="mt-8">
-        <input matInput placeholder="Comment" formControlName="Comment" required>
+        <!-- <input matInput placeholder="Comment" formControlName="Comment" required> -->
+        <textarea matInput placeholder="Comment" formControlName="Comment" required cdkTextareaAutosize
+          cdkAutosizeMinRows="3"></textarea>
         <mat-error *ngIf="techRatingForm.get('Comment').hasError('required')">
           Comment is required
         </mat-error>

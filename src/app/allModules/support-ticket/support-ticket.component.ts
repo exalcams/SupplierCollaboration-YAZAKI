@@ -50,6 +50,7 @@ export class SupportTicketComponent implements OnInit {
   fileToUploadList: File[] = [];
   SupportTicketAppID: number;
   CurrentPONumber: string;
+  CurrentRFQID: number;
   IsSupportTicketResponseUpdated = false;
   ReferenceValue = 'Ref. ';
   constructor(
@@ -69,6 +70,11 @@ export class SupportTicketComponent implements OnInit {
     if (PON) {
       this.CurrentPONumber = PON;
       this._shareParameterService.SetPONumber('');
+    }
+    const RID = this._shareParameterService.GetRFQID();
+    if (RID) {
+      this.CurrentRFQID = RID;
+      this._shareParameterService.SetRFQID(0);
     }
   }
 
@@ -128,6 +134,7 @@ export class SupportTicketComponent implements OnInit {
   }
   ResetControl(): void {
     this.CurrentPONumber = '';
+    this.CurrentRFQID = 0;
     this.ResetForm();
     this.EnableFormControls(this.SupportTicketFormGroup);
     this.SelectedTicketID = 0;
@@ -145,8 +152,13 @@ export class SupportTicketComponent implements OnInit {
       (data) => {
         if (data) {
           this.AllCategories = data as STCategoryView[];
-          if (this.CurrentUserRole === 'Vendor' && this.CurrentPONumber) {
-            this.InsertSupportTicketPONumber();
+          if (this.CurrentUserRole === 'Vendor') {
+            if (this.CurrentPONumber) {
+              this.InsertSupportTicketPONumber();
+            }
+            if (this.CurrentRFQID && this.CurrentRFQID > 0) {
+              this.InsertSupportTicketRFQID();
+            }
           }
         }
       },
@@ -214,7 +226,11 @@ export class SupportTicketComponent implements OnInit {
           if (this.AllSupportTicketWithEmails.length && this.AllSupportTicketWithEmails.length > 0) {
             if (this.CurrentPONumber) {
               this.InsertSupportTicketPONumber();
-            } else {
+            }
+            else if (this.CurrentRFQID) {
+              this.InsertSupportTicketRFQID();
+            }
+            else {
               if (!this.IsSupportTicketResponseUpdated) {
                 this.LoadSelectedSupportTicket(this.AllSupportTicketWithEmails[0]);
               } else {
@@ -552,6 +568,11 @@ export class SupportTicketComponent implements OnInit {
   InsertSupportTicketPONumber(): void {
     this.SupportTicketFormGroup.get('Category').patchValue('Purchase order');
     this.SupportTicketFormGroup.get('ReferenceNumber').patchValue(this.CurrentPONumber);
+    this.CheckSelectedCategoryValue('Purchase order');
+  }
+  InsertSupportTicketRFQID(): void {
+    this.SupportTicketFormGroup.get('Category').patchValue('RFQ');
+    this.SupportTicketFormGroup.get('ReferenceNumber').patchValue(this.CurrentRFQID);
     this.CheckSelectedCategoryValue('Purchase order');
   }
 

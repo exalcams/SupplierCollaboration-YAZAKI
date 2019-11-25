@@ -117,7 +117,7 @@
           <!-- <mat-card-title fxLayout> -->
           <span fxFlex class="boldClass pt-12 pb-4">Support Ticket</span>
           <div fxFlex fxLayoutAlign="end center" class="p-4 pr-8" *ngIf="CurrentUserRole === 'Vendor'">
-            <button class="mat-mini-fab mat-accent" (click)="AddNewSupportTicket()">
+            <button class="mat-mini-fab" [ngClass]="BGClassName?.layout?.toolbar?.background" (click)="AddNewSupportTicket()">
               <span class="mat-button-wrapper">
                 <mat-icon>add_outline</mat-icon>
               </span>
