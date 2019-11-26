@@ -122,10 +122,14 @@
                   <div *ngFor="let rfqres of RFQResponsesReceived;let i=index;let even = even; let odd=odd" fxFlex="50"
                     fxFlex.xs="100" fxFlex.sm="100" [class.borderRightClass]="even">
                     <div [class.ml-20]="odd" class="py-8">
-                      <span class="mx-4">{{i+1}}.</span>
-                      <span class="BlueHeader">{{rfqres.VendorName}} ({{rfqres.VendorID | removeLeadingZero}})</span>
-                      <span class="mx-12">-</span>
-                      <span class="Header">{{rfqres.TotalPrice}}</span>
+                      <div>
+                        <span class="mx-4">{{i+1}}.</span>
+                        <span class="BlueHeader">{{rfqres.VendorName}} ({{rfqres.VendorID | removeLeadingZero}})</span>
+                        <span class="mx-12">-</span>
+                        <span class="Header">{{rfqres.TotalPrice}}</span>
+                      </div>
+                      <div class="ml-20 mt-4">{{rfqres.EmailId}}</div>
+                      <div class="ml-20 mt-4"><span class="boldClass">GST No : </span> {{rfqres.GSTNumber}}</div>
                     </div>
                   </div>
                 </div>

@@ -102,8 +102,7 @@
                 <th mat-header-cell *matHeaderCellDef>
                 </th>
                 <td mat-cell *matCellDef="let row">
-                  <mat-checkbox (change)="onChangeChk($event,row)"
-                  [checked]="row.RFQID === SelectedRFQRank?.RFQID && row.ItemID===SelectedRFQRank?.ItemID&&
+                  <mat-checkbox (change)="onChangeChk($event,row)" [checked]="row.RFQID === SelectedRFQRank?.RFQID && row.ItemID===SelectedRFQRank?.ItemID&&
                     row.VendorID === SelectedRFQRank?.VendorID">
                   </mat-checkbox>
                 </td>
@@ -161,8 +160,6 @@
                       <span>({{element.TechRating | number : '1.2-2'}})</span>
                     </div>
                   </div>
-                  <!-- <star-rating (ratingChange)="RatingsChange($event,element)" [starType]="'svg'" [rating]="2.63"></star-rating> -->
-                  <!-- <mat-icon class="ml-16">edit</mat-icon> -->
                 </td>
               </ng-container>
 
@@ -175,8 +172,10 @@
                     src="assets/images/alarm-clock.png">
                   <img *ngIf="element.BestForItems.indexOf('Schedule')>-1" class="mr-4" matTooltip="Schedule"
                     src="assets/images/calendar-color.png">
-                  <img *ngIf="element.BestForItems.indexOf('SelfLifeDays')>-1" matTooltip="SelfLifeDays"
-                    src="assets/images/star.png">
+                  <img *ngIf="element.BestForItems.indexOf('SelfLifeDays')>-1" matTooltip="Self life days"
+                    src="assets/images/expiration.png">
+                  <img *ngIf="element.BestForItems.indexOf('TechRating')>-1 && element.TechRating"
+                    matTooltip="Technical ratings" src="assets/images/star.png">
                 </td>
               </ng-container>
 

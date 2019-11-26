@@ -291,7 +291,7 @@ export class DashboardComponent implements OnInit {
                     this.canvasLabels = [];
                     // console.log(this.canvasLabels);
                     this.canvasLabels = this.PODeliveryStatus.Date;
-                    console.log(this.canvasLabels);
+                    // console.log(this.canvasLabels);
                     this.widget5 = {
                         data: {
                             labels: this.canvasLabels,
@@ -468,8 +468,8 @@ export class DashboardComponent implements OnInit {
                     this.AllPOList = <POView[]>data;
                     this.POListDataSource = new MatTableDataSource(this.AllPOList);
                     this.POListDataSource.sort = this.sort;
-                    console.log(this.AllPOList);
-                    console.log(this.POListDataSource.data.length);
+                    // console.log(this.AllPOList);
+                    // console.log(this.POListDataSource.data.length);
                 }
                 this.IsAllPOListCompleted = true;
             },

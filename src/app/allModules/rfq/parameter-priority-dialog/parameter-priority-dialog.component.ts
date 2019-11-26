@@ -46,7 +46,7 @@ export class ParameterPriorityDialogComponent implements OnInit {
         this.AllPriorityParameters = data as PriorityParameter[];
       },
       (err) => {
-        console.log(err);
+        console.error(err);
       }
     );
   }
@@ -69,5 +69,11 @@ export class ParameterPriorityDialogComponent implements OnInit {
     this.matDialogRef.close(null);
   }
 
+  RemovePriority(pp: PriorityParameter): void {
+    const index = this.AllPriorityParameters.indexOf(pp);
+    if (index >= 0) {
+      this.AllPriorityParameters.splice(index, 1);
+    }
+  }
 
 }
