@@ -2,81 +2,81 @@
   <div class="top-bg" [ngClass]="BGClassName?.layout?.toolbar?.background"></div>
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
     <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center"
-    fxLayoutGap="10px" fxLayoutGap.xs="10">
-    <div fxLayout class="layoutclass">
-      <div fxFlex fxLayout="column">
-        <div fxFlex>
-          <div class="pt-8">
-            <span class="Title">
-              RFQ Yet to Respond
-            </span>
-          </div>
-        </div>
-        <div fxFlex fxLayout fxLayoutAlign="center center">
-          <div fxFlex="60%">
-            <div class="pl-8">
-              <span style="color:white;font-size:28px">
-                {{rFQStatusCount?.ResponsePending}} / {{rFQStatusCount?.All}}
+      fxLayoutGap="10px" fxLayoutGap.xs="10">
+      <div fxLayout class="layoutclass">
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                RFQ Yet to Respond
               </span>
             </div>
           </div>
-          <div fxFlex>
-            <div class="pr-4 ra">
-              <img class="img-style" src="assets/images/rfq/Responded.png">
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{rFQStatusCount?.ResponsePending}} / {{rFQStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/Responded.png">
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="borderRight mr-20"></div>
-      <div fxFlex fxLayout="column">
-        <div fxFlex>
-          <div class="pt-8">
-            <span class="Title">
-              RFQ Responded
-            </span>
-          </div>
-        </div>
-        <div fxFlex fxLayout fxLayoutAlign="center center">
-          <div fxFlex="60%" style="color:white;">
-            <div class="pl-8">
-              <span style="color:white;font-size:28px">
-                {{rFQStatusCount?.Responded}} / {{rFQStatusCount?.All}}
+        <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                RFQ Responded
               </span>
             </div>
           </div>
-          <div fxFlex>
-            <div class="pr-4 ra">
-              <img class="img-style" src="assets/images/rfq/ResponsePending.png">
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{rFQStatusCount?.Responded}} / {{rFQStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/ResponsePending.png">
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="borderRight mr-20"></div>
-      <div fxFlex fxLayout="column">
-        <div fxFlex>
-          <div class="pt-8">
-            <span class="Title">
-              RFQ Awarded
-            </span>
-          </div>
-        </div>
-        <div fxFlex fxLayout fxLayoutAlign="center center">
-          <div fxFlex="60%" style="color:white;">
-            <div class="pl-8">
-              <span style="color:white;font-size:28px">
-                {{rFQStatusCount?.Awarded}} / {{rFQStatusCount?.All}}
+        <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                RFQ Awarded
               </span>
             </div>
           </div>
-          <div fxFlex>
-            <div class="pr-4 ra">
-              <img class="img-style" src="assets/images/rfq/Awarded.png">
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{rFQStatusCount?.Awarded}} / {{rFQStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/Awarded.png">
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
     <div fxFlex class="mt-20">
       <mat-card class="my-12 fullHeight">
         <mat-card-content>
@@ -143,23 +143,47 @@
                 <td mat-cell *matCellDef="let element"> {{element.SelfLifeDays}} </td>
               </ng-container>
 
+              <ng-container matColumnDef="TechRating">
+                <th mat-header-cell *matHeaderCellDef>Technical rating</th>
+                <td mat-cell *matCellDef="let element">
+                  <div fxLayout>
+                    <div fxFlex="80">
+                      <star-rating [value]="element.TechRating" checkedcolor="gold" uncheckedcolor="gray" size="20px"
+                        readonly="true"> </star-rating>
+                    </div>
+                    <div fxFlex="20" class="mt-4 ml-4">
+                      <span>({{element.TechRating | number : '1.2-2'}})</span>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
               <ng-container matColumnDef="BestForItems">
                 <th mat-header-cell *matHeaderCellDef>Best For</th>
                 <td mat-cell *matCellDef="let element">
                   <img *ngIf="element.BestForItems.indexOf('Price')>-1" class="mr-4" matTooltip="Price"
                     src="assets/images/money-bag.png">
-                  <img *ngIf="element.BestForItems.indexOf('DelayDays')>-1" class="mr-4" matTooltip="DelayDays"
+                  <img *ngIf="element.BestForItems.indexOf('DelayDays')>-1" class="mr-4" matTooltip="Delay days"
                     src="assets/images/alarm-clock.png">
                   <img *ngIf="element.BestForItems.indexOf('Schedule')>-1" class="mr-4" matTooltip="Schedule"
                     src="assets/images/calendar-color.png">
-                  <img *ngIf="element.BestForItems.indexOf('SelfLifeDays')>-1" matTooltip="SelfLifeDays"
-                    src="assets/images/star.png">
+                  <img *ngIf="element.BestForItems.indexOf('SelfLifeDays')>-1" matTooltip="Self life days"
+                    src="assets/images/expiration.png">
+                  <img *ngIf="element.BestForItems.indexOf('TechRating')>-1 && element.TechRating"
+                    matTooltip="Technical ratings" src="assets/images/star.png">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="View">
+                <th mat-header-cell *matHeaderCellDef>View</th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-icon (click)="GetRFQResponseTechRatings(element)">poll</mat-icon>
                 </td>
               </ng-container>
 
               <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
                 *matHeaderRowDef="RFQRankDisplayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: RFQRankDisplayedColumns;" (click)="RowSelected(row)"
+              <tr mat-row *matRowDef="let row; columns: RFQRankDisplayedColumns;"
                 [class.highlight]="row === SelectedRFQRank"></tr>
             </table>
           </div>

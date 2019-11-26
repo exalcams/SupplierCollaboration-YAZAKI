@@ -89,6 +89,8 @@ export class RFQResponseReceivedView {
     RFQID: number;
     VendorID: string;
     VendorName: string;
+    EmailId: string;
+    GSTNumber: string;
     TotalPrice: number;
 }
 

@@ -8,10 +8,11 @@ import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { Router } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { RFQRankView, PurchaseRequisitionView, RFQAwardVendorView, RFQStatusCount } from 'app/models/rfq.model';
+import { RFQRankView, PurchaseRequisitionView, RFQAwardVendorView, RFQStatusCount, RFQResponseTechRatingView } from 'app/models/rfq.model';
 import { RFQService } from 'app/services/rfq.service';
 import { ShareParameterService } from 'app/services/share-parameter.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
+import { TechRatingReviewDialogComponent } from '../tech-rating-review-dialog/tech-rating-review-dialog.component';
 
 @Component({
   selector: 'awarded-details',
@@ -31,7 +32,7 @@ export class AwardedDetailsComponent implements OnInit {
   SelectedRFQID: number;
   RFQRanks: RFQRankView[] = [];
   SelectedRFQRank: RFQRankView;
-  RFQRankDisplayedColumns: string[] = ['MaterialDescription', 'OrderQuantity', 'UOM', 'DelayDays', 'Schedule', 'Price', 'SelfLifeDays', 'BestForItems'];
+  RFQRankDisplayedColumns: string[] = ['MaterialDescription', 'OrderQuantity', 'UOM', 'DelayDays', 'Schedule', 'Price', 'SelfLifeDays', 'TechRating', 'BestForItems', 'View'];
   RFQRankDataSource: MatTableDataSource<RFQRankView>;
   selection = new SelectionModel<RFQRankView>(true, []);
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -124,6 +125,38 @@ export class AwardedDetailsComponent implements OnInit {
   ResetCheckbox(): void {
     this.selection.clear();
     this.RFQRankDataSource.data.forEach(row => this.selection.deselect(row));
+  }
+
+  GetRFQResponseTechRatings(element: RFQRankView): void {
+    this._rfqService.GetRFQResponseTechRatings(element.RFQID, element.ItemID, element.VendorID).subscribe(
+      (data) => {
+        if (data) {
+          const rfqResponseTechRatings = data as RFQResponseTechRatingView[];
+          // console.log(rfqResponseTechRatings);
+          if (rfqResponseTechRatings && rfqResponseTechRatings.length && rfqResponseTechRatings.length > 0) {
+            this.OpenTechRationgReviewDialog(rfqResponseTechRatings);
+          } else {
+            this.notificationSnackBarComponent.openSnackBar('Not yet rated', SnackBarStatus.info);
+          }
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  OpenTechRationgReviewDialog(rfqResponseTechRatings: RFQResponseTechRatingView[]): void {
+    const dialogConfig: MatDialogConfig = {
+      data: rfqResponseTechRatings,
+      panelClass: 'tech-rating-review-dialog'
+    };
+    const dialogRef = this.dialog.open(TechRatingReviewDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+
+        }
+      });
   }
 }
 

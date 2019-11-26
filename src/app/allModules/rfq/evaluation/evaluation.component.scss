@@ -117,9 +117,12 @@ body.theme-default .mat-radio-button.mat-accent .mat-radio-inner-circle {
   z-index: 1;
   left: 55%;
 }
-.Header {
-  text-decoration: underline;
+.boldClass {
   font-weight: bold;
+}
+.Header {
+  @extend .boldClass;
+  text-decoration: underline;
 }
 .BlueHeader {
   @extend .Header;
