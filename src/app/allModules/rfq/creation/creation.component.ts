@@ -42,7 +42,8 @@ export class CreationComponent implements OnInit {
   SelectedRFQStatus = '';
   RFQ: RFQView;
   BGClassName: any;
-  RFQItemsColumns: string[] = ['ItemID', 'MaterialDescription', 'OrderQuantity', 'UOM', 'ExpectedDeliveryDate', 'DelayDays', 'Schedule', 'Price', 'SupplierPartNumber', 'SelfLifeDays', 'Attachment', 'TechRating'];
+  RFQItemsColumns: string[] =
+    ['ItemID', 'MaterialDescription', 'OrderQuantity', 'UOM', 'ExpectedDeliveryDate', 'DelayDays', 'Schedule', 'Price', 'SupplierPartNumber', 'SelfLifeDays', 'Attachment', 'TechRating', 'Notes'];
   RFQItemAppID: number;
   @ViewChild('fileInput1') fileInput1: ElementRef;
   fileToUpload: File;
@@ -192,6 +193,7 @@ export class CreationComponent implements OnInit {
       NumberOfAttachments: [''],
       AttachmentNames: [[]],
       TechRating: ['', Validators.required],
+      Notes: ['', Validators.required],
     });
     this.RFQItemFormArray.push(row);
     // row.get('NumberOfAttachments').disable();
@@ -270,12 +272,16 @@ export class CreationComponent implements OnInit {
   }
 
   private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.CurrencyList.filter(option => option.toLowerCase().includes(filterValue));
+    if (value) {
+      const filterValue = value.toLowerCase();
+      return this.CurrencyList.filter(option => option.toLowerCase().includes(filterValue));
+    }
   }
   private _filter1(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.IncoTermList.filter(option => option.toLowerCase().includes(filterValue));
+    if (value) {
+      const filterValue = value.toLowerCase();
+      return this.IncoTermList.filter(option => option.toLowerCase().includes(filterValue));
+    }
   }
 
   AddRFQItem(): void {
@@ -531,6 +537,7 @@ export class CreationComponent implements OnInit {
       rfq.NumberOfAttachments = x.get('NumberOfAttachments').value ? x.get('NumberOfAttachments').value : 0;
       rfq.AttachmentNames = x.get('AttachmentNames').value;
       rfq.TechRating = x.get('TechRating').value;
+      rfq.Notes = x.get('Notes').value;
       rfq.APPID = this.RFQItemAppID;
       this.RFQ.RFQItems.push(rfq);
     });
@@ -571,8 +578,10 @@ export class CreationComponent implements OnInit {
       NumberOfAttachments: [''],
       AttachmentNames: [[]],
       TechRating: [prItem.TechRating, Validators.required],
+      Notes: ['', Validators.required],
     });
     row.disable();
+    row.get('Notes').enable();
     this.RFQItemFormArray.push(row);
     this.RFQItemDataSource.next(this.RFQItemFormArray.controls);
     // return row;
@@ -593,6 +602,7 @@ export class CreationComponent implements OnInit {
       NumberOfAttachments: [rFQItem.NumberOfAttachments],
       AttachmentNames: [rFQItem.AttachmentNames],
       TechRating: [rFQItem.TechRating, Validators.required],
+      Notes: [rFQItem.Notes, Validators.required],
     });
     this.RFQItemFormArray.push(row);
     this.RFQItemDataSource.next(this.RFQItemFormArray.controls);

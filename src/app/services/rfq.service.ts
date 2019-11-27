@@ -95,6 +95,10 @@ export class RFQService {
         return this._httpClient.get<RFQHeaderVendorView[]>(`${this.baseAddress}api/RFQ/GetAllRespondedRFQByVendor?UserID=${UserID}`)
             .pipe(catchError(this.errorHandler));
     }
+    GetAllArchivedRFQByVendor(UserID: Guid): Observable<RFQHeaderVendorView[] | string> {
+        return this._httpClient.get<RFQHeaderVendorView[]>(`${this.baseAddress}api/RFQ/GetAllArchivedRFQByVendor?UserID=${UserID}`)
+            .pipe(catchError(this.errorHandler));
+    }
     GetRFQResponseReceivedByRFQID(RFQID: number): Observable<RFQResponseReceivedView[] | string> {
         return this._httpClient.get<RFQResponseReceivedView[]>(`${this.baseAddress}api/RFQ/GetRFQResponseReceivedByRFQID?RFQID=${RFQID}`)
             .pipe(catchError(this.errorHandler));
@@ -168,6 +172,16 @@ export class RFQService {
             .pipe(catchError(this.errorHandler));
     }
 
+    ArchiveSelectedRFQs(RFQs: RFQHeaderVendorView[]): Observable<any> {
+        return this._httpClient.post<any>(`${this.baseAddress}api/RFQ/ArchiveSelectedRFQs`,
+            RFQs,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json'
+                })
+            })
+            .pipe(catchError(this.errorHandler));
+    }
 
     CreateRFQResponse(RFQResponse: RFQResponseView): Observable<any> {
         return this._httpClient.post<any>(`${this.baseAddress}api/RFQ/CreateRFQResponse`,

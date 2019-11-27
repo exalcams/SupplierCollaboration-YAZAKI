@@ -158,6 +158,23 @@
                 <mat-datepicker #picker3></mat-datepicker>
               </mat-form-field>
             </div>
+            <div fxLayout="row wrap" fxLayoutAlign="start">
+              <div fxFlex="10" class="pt-8 pr-8" fxLayoutAlign="end start">
+                <span style="font-size: 13px;">Contact number</span>
+                <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('ContactNumber').touched && 
+                RFQResponseFormGroup.get('ContactNumber').hasError('required')">
+                  *
+                </span>
+                <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('ContactNumber').touched && 
+                !RFQResponseFormGroup.get('ContactNumber').hasError('required') && 
+                RFQResponseFormGroup.get('ContactNumber').hasError('pattern')">
+                  *
+                </span>
+              </div>
+              <mat-form-field appearance="outline" fxFlex="20">
+                <input matInput formControlName="ContactNumber" pattern="^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$">
+              </mat-form-field>
+            </div>
             <div class="mt-16 m-8">
               <strong class="sub-Title">Auto Evalution RFQ's</strong>
               <!-- <div fxLayout="row">
@@ -168,12 +185,22 @@
                   </div>
                 </div> -->
             </div>
-            <table mat-table [dataSource]="RFQResponseItemDataSource" class="mat-elevation-z8"
+            <table mat-table [dataSource]="RFQResponseItemDataSource" class="mat-elevation-z8 mr-12"
               formArrayName="RFQResponseItems">
               <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
                 *matHeaderRowDef="RFQResponseItemsColumns">
               </tr>
               <tr mat-row *matRowDef="let row;let i = index; columns: RFQResponseItemsColumns;"></tr>
+
+              <ng-container matColumnDef="Select">
+                  <th mat-header-cell *matHeaderCellDef>
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (change)="onChangeChk($event,row)"
+                      [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
 
               <ng-container matColumnDef="ItemID">
                 <th mat-header-cell *matHeaderCellDef> Item </th>
@@ -193,6 +220,19 @@
                   <span class="pl-4 errorClass"
                     *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('MaterialDescription').touched && 
                 RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('MaterialDescription').hasError('required')">
+                    *
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Manufacturer">
+                <th mat-header-cell *matHeaderCellDef> Manufacturer </th>
+                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                  <mat-form-field appearance="outline" style="min-width:100px;max-width:110px">
+                    <input matInput formControlName="Manufacturer">
+                  </mat-form-field>
+                  <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Manufacturer').touched && 
+                RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Manufacturer').hasError('required')">
                     *
                   </span>
                 </td>
@@ -224,7 +264,7 @@
               <ng-container matColumnDef="DeliveryDate">
                 <th mat-header-cell *matHeaderCellDef>Delivery Date</th>
                 <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <mat-form-field appearance="outline" style="min-width:110px;max-width:120px">
+                  <mat-form-field appearance="outline" style="min-width:100px;max-width:110px">
                     <input matInput [matDatepicker]="picker21" (click)="picker21.open()" (keydown)="onKeydown($event)"
                       [min]="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ExpectedDeliveryDate').value"
                       (dateChange)="DateSelected($event,row)" formControlName="DeliveryDate">
@@ -266,7 +306,7 @@
               <ng-container matColumnDef="Price">
                 <th mat-header-cell *matHeaderCellDef> Price </th>
                 <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <mat-form-field appearance="outline" style="min-width:110px;max-width:120px">
+                  <mat-form-field appearance="outline" style="min-width:50px;max-width:70px">
                     <input matInput formControlName="Price">
                   </mat-form-field>
                   <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Price').touched && 
@@ -276,10 +316,23 @@
                 </td>
               </ng-container>
 
+              <ng-container matColumnDef="PaymentTerms">
+                <th mat-header-cell *matHeaderCellDef> Payment terms </th>
+                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                  <mat-form-field appearance="outline" style="min-width:100px;max-width:110px">
+                    <input matInput formControlName="PaymentTerms">
+                  </mat-form-field>
+                  <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('PaymentTerms').touched && 
+                RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('PaymentTerms').hasError('required')">
+                    *
+                  </span>
+                </td>
+              </ng-container>
+
               <ng-container matColumnDef="SupplierPartNumber">
                 <th mat-header-cell *matHeaderCellDef> SupplierPart No. </th>
                 <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <mat-form-field appearance="outline" style="min-width:110px;max-width:120px">
+                  <mat-form-field appearance="outline" style="min-width:100px;max-width:110px">
                     <input matInput formControlName="SupplierPartNumber">
                   </mat-form-field>
                   <span class="pl-4 errorClass"
@@ -334,18 +387,32 @@
                   </span>
                 </td>
               </ng-container>
-            </table>
 
-            <div fxLayout="row">
-              <div fxFlex class="mt-12" align="end">
-                <button *ngIf="(SelectedRFQStatus | lowercase)!=='awarded'"
-                  [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
-                  (click)="ValidateRFQResponse()">
-                  Respond
-                </button>
-              </div>
-            </div>
+              <ng-container matColumnDef="Notes">
+                <th mat-header-cell *matHeaderCellDef> Notes </th>
+                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                  <input matInput formControlName="Notes">
+                  <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Notes').touched && 
+                RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Notes').hasError('required')">
+                    *
+                  </span>
+                </td>
+              </ng-container>
+            </table>
           </form>
+          <div fxLayout="row" class="mt-12">
+            <div>
+              <mat-checkbox [(ngModel)]="TermsAnContionStatus">
+              </mat-checkbox>
+              I have read and agree to the <a (click)="OpenTermsAndCondtionsDialog()">terms and condition</a>
+            </div>
+            <div fxFlex align="end">
+              <button *ngIf="(SelectedRFQStatus | lowercase)!=='awarded'&&TermsAnContionStatus"
+                [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button (click)="ValidateRFQResponse()">
+                Respond
+              </button>
+            </div>
+          </div>
         </mat-card-content>
       </mat-card>
       <mat-progress-spinner *ngIf="IsProgressBarVisibile" class="ProgressBarPostion1" color="accent"
