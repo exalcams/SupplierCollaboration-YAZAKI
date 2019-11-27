@@ -16,6 +16,8 @@ import { Auxiliary, AuxiliaryView } from 'app/models/asn';
 import { Location, DatePipe } from '@angular/common';
 import { Guid } from 'guid-typescript';
 import { AttachmentsDialogComponent } from 'app/shared/attachments-dialog/attachments-dialog.component';
+import { TermsAndConditionsDialogComponent } from '../terms-and-conditions-dialog/terms-and-conditions-dialog.component';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-response',
@@ -41,14 +43,16 @@ export class ResponseComponent implements OnInit {
   RFQ: RFQWithResponseView;
   RFQResponse: RFQResponseView;
   BGClassName: any;
-  RFQResponseItemsColumns: string[] = ['ItemID', 'MaterialDescription', 'OrderQuantity', 'UOM', 'DeliveryDate', 'DelayDays', 'Schedule',
-    'Price', 'SupplierPartNumber', 'SelfLifeDays', 'Attachment', 'TechRating'];
+  RFQResponseItemsColumns: string[] = ['Select', 'ItemID', 'MaterialDescription', 'Manufacturer', 'OrderQuantity', 'UOM', 'DeliveryDate', 'DelayDays', 'Schedule',
+    'Price', 'PaymentTerms', 'SupplierPartNumber', 'SelfLifeDays', 'Attachment', 'TechRating', 'Notes'];
   RFQResponseItemAppID: number;
   RFQItemAppID: number;
   @ViewChild('fileInput1') fileInput1: ElementRef;
   fileToUpload: File;
   fileToUploadList: File[] = [];
   rFQStatusCount: RFQStatusCount;
+  TermsAnContionStatus = false;
+  selection = new SelectionModel<RFQResponseItemView>(true, []);
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _router: Router,
@@ -103,6 +107,7 @@ export class ResponseComponent implements OnInit {
       IncoTerm: ['', Validators.required],
       RFQEndDate: ['', Validators.required],
       RFQResponseEndDate: ['', Validators.required],
+      ContactNumber: ['', Validators.required],
       RFQResponseItems: this.RFQResponseItemFormArray
       // CreatedBy: ['', Validators.required]
     });
@@ -119,18 +124,37 @@ export class ResponseComponent implements OnInit {
     }
   }
   AddRFQResponseItemFormGroup(): void {
+    // const row = this._formBuilder.group({
+    //   ItemID: ['', Validators.required],
+    //   MaterialDescription: ['', Validators.required],
+    //   Manufacturer: ['', Validators.required],
+    //   OrderQuantity: ['', Validators.required],
+    //   DelayDays: ['', Validators.required],
+    //   UOM: ['', Validators.required],
+    //   Price: ['', Validators.required],
+    //   PaymentTerms: ['', Validators.required],
+    //   SupplierPartNumber: ['', Validators.required],
+    //   Schedule: ['', Validators.required],
+    //   NumberOfAttachments: [''],
+    //   AttachmentNames: [[]],
+    //   TechRating: ['', Validators.required],
+    //   Notes: ['', Validators.required],
+    // });
     const row = this._formBuilder.group({
-      ItemID: ['', Validators.required],
-      MaterialDescription: ['', Validators.required],
-      OrderQuantity: ['', Validators.required],
-      DelayDays: ['', Validators.required],
-      UOM: ['', Validators.required],
-      Price: ['', Validators.required],
-      SupplierPartNumber: ['', Validators.required],
-      Schedule: ['', Validators.required],
+      ItemID: [''],
+      MaterialDescription: [''],
+      Manufacturer: [''],
+      OrderQuantity: [''],
+      DelayDays: [''],
+      UOM: [''],
+      Price: [''],
+      PaymentTerms: [''],
+      SupplierPartNumber: [''],
+      Schedule: [''],
       NumberOfAttachments: [''],
       AttachmentNames: [[]],
-      TechRating: ['', Validators.required],
+      TechRating: [''],
+      Notes: [''],
     });
     this.RFQResponseItemFormArray.push(row);
     // row.get('NumberOfAttachments').disable();
@@ -228,6 +252,7 @@ export class ResponseComponent implements OnInit {
         if (this.RFQ) {
           this.InsertRFQHeaderValues();
           this.RFQResponseFormGroup.disable();
+          this.RFQResponseFormGroup.get('ContactNumber').enable();
           if (this.RFQ.RFQResponseItems && this.RFQ.RFQResponseItems.length) {
             this.ClearFormArray(this.RFQResponseItemFormArray);
             this.RFQ.RFQResponseItems.forEach((x, i) => {
@@ -255,30 +280,36 @@ export class ResponseComponent implements OnInit {
       RFQResponseStartDate: this.RFQ.RFQResponseStartDate,
       IncoTerm: this.RFQ.IncoTerm,
       RFQEndDate: this.RFQ.RFQEndDate,
-      RFQResponseEndDate: this.RFQ.RFQResponseEndDate
+      RFQResponseEndDate: this.RFQ.RFQResponseEndDate,
+      ContactNumber: this.RFQ.ContactNumber,
     });
   }
 
   InsertRFQResponseItemsFormGroup(RFQItem: RFQResponseItemView): void {
     const row = this._formBuilder.group({
-      ItemID: [RFQItem.ItemID, Validators.required],
-      MaterialDescription: [RFQItem.MaterialDescription, Validators.required],
-      OrderQuantity: [RFQItem.OrderQuantity, Validators.required],
-      DelayDays: [RFQItem.DelayDays, Validators.required],
-      UOM: [RFQItem.UOM, Validators.required],
-      Price: [RFQItem.Price, Validators.required],
-      Schedule: [RFQItem.Schedule, Validators.required],
-      ExpectedDeliveryDate: [RFQItem.ExpectedDeliveryDate, Validators.required],
-      DeliveryDate: [RFQItem.DeliveryDate, Validators.required],
-      SelfLifeDays: [RFQItem.SelfLifeDays, Validators.required],
+      ItemID: [RFQItem.ItemID],
+      MaterialDescription: [RFQItem.MaterialDescription],
+      Manufacturer: [RFQItem.Manufacturer],
+      OrderQuantity: [RFQItem.OrderQuantity],
+      DelayDays: [RFQItem.DelayDays],
+      UOM: [RFQItem.UOM],
+      Price: [RFQItem.Price],
+      PaymentTerms: [RFQItem.PaymentTerms],
+      Schedule: [RFQItem.Schedule],
+      ExpectedDeliveryDate: [RFQItem.ExpectedDeliveryDate],
+      DeliveryDate: [RFQItem.DeliveryDate],
+      SelfLifeDays: [RFQItem.SelfLifeDays],
       NumberOfAttachments: [RFQItem.NumberOfAttachments],
       AttachmentNames: [RFQItem.AttachmentNames],
-      SupplierPartNumber: [RFQItem.SupplierPartNumber, Validators.required],
-      TechRating: [RFQItem.TechRating, Validators.required],
+      SupplierPartNumber: [RFQItem.SupplierPartNumber],
+      TechRating: [RFQItem.TechRating],
+      Notes: [RFQItem.Notes],
     });
     row.disable();
+    row.get('Manufacturer').enable();
     row.get('DeliveryDate').enable();
     row.get('Price').enable();
+    row.get('PaymentTerms').enable();
     row.get('Schedule').enable();
     row.get('SupplierPartNumber').enable();
     row.get('SelfLifeDays').enable();
@@ -323,24 +354,52 @@ export class ResponseComponent implements OnInit {
   }
 
   ValidateRFQResponse(): void {
-    // this.RFQResponseFormGroup.enable();
-    if (this.RFQResponseFormGroup.valid) {
-      if (this.RFQ.RFQResponseStatus.toLocaleLowerCase() === 'responded') {
-        // const Actiontype = 'Update';
-        // const Catagory = 'RFQ Response';
-        const Actiontype = 'Response';
-        const Catagory = 'RFQ';
-        this.OpenConfirmationDialog(Actiontype, Catagory);
+    if (this.selection.selected && this.selection.selected.length && this.selection.selected.length > 0) {
+      // this.RFQResponseFormGroup.enable();
+      this.AddValidatorToFormArray();
+      if (this.RFQResponseFormGroup.valid) {
+        if (this.RFQ.RFQResponseStatus.toLocaleLowerCase() === 'responded') {
+          // const Actiontype = 'Update';
+          // const Catagory = 'RFQ Response';
+          const Actiontype = 'Response';
+          const Catagory = 'RFQ';
+          this.OpenConfirmationDialog(Actiontype, Catagory);
+        } else {
+          // const Actiontype = 'Create';
+          // const Catagory = 'RFQ Response';
+          const Actiontype = 'Response';
+          const Catagory = 'RFQ';
+          this.OpenConfirmationDialog(Actiontype, Catagory);
+        }
       } else {
-        // const Actiontype = 'Create';
-        // const Catagory = 'RFQ Response';
-        const Actiontype = 'Response';
-        const Catagory = 'RFQ';
-        this.OpenConfirmationDialog(Actiontype, Catagory);
+        this.ShowValidationErrors();
       }
     } else {
-      this.ShowValidationErrors();
+      this.notificationSnackBarComponent.openSnackBar('Please select atleast one item', SnackBarStatus.danger);
     }
+
+  }
+
+  AddValidatorToFormArray(): void {
+    const RFQResponseItemsFormArray = this.RFQResponseFormGroup.get('RFQResponseItems') as FormArray;
+    RFQResponseItemsFormArray.controls.forEach((x, i) => {
+      const ItemID = x.get('ItemID').value;
+      const index = this.selection.selected.findIndex(y => y.ItemID === ItemID);
+      if (index >= 0) {
+        x.get('Manufacturer').setValidators([Validators.required]);
+        x.get('Manufacturer').updateValueAndValidity();
+        x.get('DeliveryDate').setValidators([Validators.required]);
+        x.get('DeliveryDate').updateValueAndValidity();
+        x.get('Schedule').setValidators([Validators.required]);
+        x.get('Schedule').updateValueAndValidity();
+        x.get('Price').setValidators([Validators.required]);
+        x.get('Price').updateValueAndValidity();
+        x.get('SupplierPartNumber').setValidators([Validators.required]);
+        x.get('SupplierPartNumber').updateValueAndValidity();
+        x.get('SelfLifeDays').setValidators([Validators.required]);
+        x.get('SelfLifeDays').updateValueAndValidity();
+      }
+    });
   }
 
   ShowValidationErrors(): void {
@@ -410,6 +469,7 @@ export class ResponseComponent implements OnInit {
     // this.RFQResponse.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
     this.RFQResponse.RFQID = this.RFQ.RFQID;
     this.RFQResponse.VendorID = this.SelectedVendorID;
+    this.RFQResponse.ContactNumber = this.RFQResponseFormGroup.get('ContactNumber').value;
     this.RFQResponse.UserID = this.authenticationDetails.userID;
   }
 
@@ -420,10 +480,12 @@ export class ResponseComponent implements OnInit {
       const rfq: RFQResponseItemView = new RFQResponseItemView();
       rfq.ItemID = x.get('ItemID').value;
       rfq.MaterialDescription = x.get('MaterialDescription').value;
+      rfq.Manufacturer = x.get('Manufacturer').value;
       rfq.OrderQuantity = x.get('OrderQuantity').value;
       rfq.DelayDays = x.get('DelayDays').value;
       rfq.UOM = x.get('UOM').value;
       rfq.Price = x.get('Price').value;
+      rfq.PaymentTerms = x.get('PaymentTerms').value;
       rfq.SupplierPartNumber = x.get('SupplierPartNumber').value;
       rfq.Schedule = x.get('Schedule').value;
       rfq.ExpectedDeliveryDate = x.get('ExpectedDeliveryDate').value;
@@ -432,6 +494,7 @@ export class ResponseComponent implements OnInit {
       rfq.NumberOfAttachments = x.get('NumberOfAttachments').value;
       rfq.AttachmentNames = x.get('AttachmentNames').value;
       rfq.TechRating = x.get('TechRating').value;
+      rfq.Notes = x.get('Notes').value;
       rfq.APPID = this.RFQResponseItemAppID;
       this.RFQResponse.RFQResponseItems.push(rfq);
     });
@@ -533,4 +596,21 @@ export class ResponseComponent implements OnInit {
   //     }
   //   );
   // }
+  OpenTermsAndCondtionsDialog(): void {
+    const dialogConfig: MatDialogConfig = {
+      panelClass: 'terms-conditions-dialog'
+    };
+    const dialogRef = this.dialog.open(TermsAndConditionsDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+
+        }
+      });
+  }
+
+  onChangeChk($event, data: RFQResponseItemView): void {
+    // $event.source.checked = !$event.source.checked;
+    this.selection.toggle(data);
+  }
 }

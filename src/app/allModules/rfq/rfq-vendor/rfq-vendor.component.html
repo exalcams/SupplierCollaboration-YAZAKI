@@ -68,20 +68,28 @@
             </mat-card-title>
           </mat-card-header> -->
         <mat-card-content>
-          <div fxLayout="row">
-            <div fxFlex="1 1 Auto" class="boldClass">Supplier response</div>
-            <div fxFlex="1 1 Auto">
+          <div fxLayout="row wrap">
+            <div fxFlex="25" class="boldClass">Supplier response</div>
+            <div fxFlex="50">
               <mat-radio-group aria-label="Select an option" [(ngModel)]="RFQByVendorStatus"
                 (change)="RFQByVendorStatusChange()">
                 <mat-radio-button value="Allocated" class="borderRightClass mr-24 pr-24">Allocated</mat-radio-button>
                 <mat-radio-button value="Responded" class="mr-24 pr-24">Responded</mat-radio-button>
+                <mat-radio-button value="Archived" class="mr-24 pr-24">Archived</mat-radio-button>
               </mat-radio-group>
             </div>
-            <div fxFlex align="end" class="pb-8">
-              <button [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
-                (click)="GoToRFQResponse()">
-                Respond
-              </button>
+            <div fxFlex="25" align="end" fxLayout class="pb-8">
+              <div fxFlex>
+                <button class="warn" mat-raised-button (click)="ArchiveSelectedRFQClicked()">
+                  Archive
+                </button>
+              </div>
+              <div fxFlex>
+                <button [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button
+                  (click)="GoToRFQResponse()">
+                  Respond
+                </button>
+              </div>
             </div>
           </div>
           <!-- <div fxLayout="row">
@@ -96,6 +104,19 @@
           <div fxLayout="row" class="mt-24">
             <div fxFlex="100">
               <table mat-table [dataSource]="RFQDataSource">
+                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="RFQColumns">
+                </tr>
+                <tr [ngClass]="GetRowColor(row)" mat-row *matRowDef="let row; columns: RFQColumns;"></tr>
+                
+                <ng-container matColumnDef="Select">
+                  <th mat-header-cell *matHeaderCellDef>
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <mat-checkbox *ngIf="RFQByVendorStatus === 'Allocated'" (change)="onChangeChk($event,row)"
+                      [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
 
                 <ng-container matColumnDef="RFQID">
                   <th mat-header-cell *matHeaderCellDef>RFQ ID</th>
@@ -164,10 +185,6 @@
                   </td>
                 </ng-container>
 
-                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="RFQColumns">
-                </tr>
-                <tr [ngClass]="GetRowColor(row)" mat-row *matRowDef="let row; columns: RFQColumns;"
-                  (click)="RowSelected(row)" [class.highlight]="row === SelectedRFQ"></tr>
               </table>
               <div *ngIf="!RFQs?.length">
                 <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>

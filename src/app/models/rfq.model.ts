@@ -107,6 +107,7 @@ export class RFQHeaderVendorView {
     RFQResponseEndDate?: Date;
     Status: string;
     RFQResponseStatus: string;
+    CreatedBy: string;
     IsActive: boolean;
 }
 export class RFQItem {
@@ -125,6 +126,7 @@ export class RFQItem {
     NumberOfAttachments: number;
     QuestionerID: string;
     TechRating: number;
+    Notes: string;
     CreatedOn: Date;
     CreatedBy: string;
     ModifiedOn?: Date;
@@ -165,6 +167,7 @@ export class RFQView {
     IncoTerm: string;
     RFQEndDate?: Date;
     RFQResponseEndDate?: Date;
+    ContactNumber: string;
     Status: string;
     RFQItems: RFQItemView[];
     CurrentRFQParameterPriorities: RFQParameterPriority[];
@@ -190,6 +193,7 @@ export class RFQWithResponseView {
     IncoTerm: string;
     RFQEndDate?: Date;
     RFQResponseEndDate?: Date;
+    ContactNumber: string;
     Status: string;
     RFQResponseStatus: string;
     RFQResponseItems: RFQResponseItemView[];
@@ -211,6 +215,7 @@ export class RFQItemView {
     NumberOfAttachments: number;
     AttachmentNames: string[];
     TechRating: number;
+    Notes: string;
     APPID: number;
 }
 
@@ -244,6 +249,7 @@ export class RFQAllocationView {
 export class RFQResponseHeader {
     RFQID: number;
     VendorID: string;
+    ContactNumber: string;
     IsActive: boolean;
     CreatedOn: Date;
     CreatedBy: string;
@@ -256,16 +262,19 @@ export class RFQResponseItem {
     ItemID: number;
     MaterialCode: string;
     MaterialDescription: string;
+    Manufacturer: string;
     OrderQuantity: number;
     UOM: string;
     DeliveryDate?: Date;
     DelayDays: number;
     Schedule: number;
     Price: number;
+    PaymentTerms: string;
     SupplierPartNumber: string;
     SelfLifeDays: number;
     NumberOfAttachments: number;
     TechRating: number;
+    Notes: string;
     IsActive: boolean;
     CreatedOn: Date;
     CreatedBy: string;
@@ -302,6 +311,7 @@ export class RFQResponseView {
     PurchaseRequisitionID: number;
     RFQID: number;
     VendorID: string;
+    ContactNumber: string;
     UserID: Guid;
     RFQResponseItems: RFQResponseItemView[];
     IsActive: boolean;
@@ -316,6 +326,7 @@ export class RFQResponseItemView {
     ItemID: number;
     MaterialCode: string;
     MaterialDescription: string;
+    Manufacturer: string;
     OrderQuantity: number;
     UOM: string;
     ExpectedDeliveryDate?: Date;
@@ -323,11 +334,13 @@ export class RFQResponseItemView {
     DelayDays: number;
     Schedule: number;
     Price: number;
+    PaymentTerms: string;
     SupplierPartNumber: string;
     SelfLifeDays: number;
     NumberOfAttachments: number;
     AttachmentNames: string[];
     TechRating: number;
+    Notes: string;
     APPID: number;
 }
 

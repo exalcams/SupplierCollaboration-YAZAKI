@@ -9,6 +9,7 @@ import { ShareParameterService } from 'app/services/share-parameter.service';
 import { Router } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { Guid } from 'guid-typescript';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'rfq-vendor',
@@ -28,11 +29,12 @@ export class RFQVendorComponent implements OnInit {
   // PurchaseRequisitions: PurchaseRequisition[];
   SelectedRFQ: RFQHeaderVendorView;
   RFQs: RFQHeaderVendorView[];
+  SelectedRFQList: RFQHeaderVendorView[];
   BGClassName: any;
-  RFQColumns: string[] = ['RFQID', 'Title', 'SupplyPlant', 'Currency', 'RFQResponseStartDate', 'IncoTerm', 'RFQResponseEndDate', 'Status', 'RFQResponseStatus', 'Action'];
+  RFQColumns: string[] = ['Select', 'RFQID', 'Title', 'SupplyPlant', 'Currency', 'RFQResponseStartDate', 'IncoTerm', 'RFQResponseEndDate', 'Status', 'RFQResponseStatus', 'Action'];
   RFQDataSource: MatTableDataSource<RFQHeaderVendorView>;
   rFQStatusCount: RFQStatusCount;
-
+  selection = new SelectionModel<RFQHeaderVendorView>(true, []);
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _rfqService: RFQService,
@@ -70,6 +72,7 @@ export class RFQVendorComponent implements OnInit {
       .subscribe((config) => {
         this.BGClassName = config;
       });
+    this.ResetValues();
   }
   // GetAllCompletedPurchaseRequisitionByVendor(): void {
   //   this.SelectedPurchaseRequisition = new PurchaseRequisition();
@@ -86,6 +89,16 @@ export class RFQVendorComponent implements OnInit {
   //     }
   //   );
   // }
+  ResetValues(): void {
+    this.SelectedRFQList = [];
+    this.ResetCheckbox();
+  }
+  ResetCheckbox(): void {
+    this.selection.clear();
+    if (this.RFQDataSource && this.RFQDataSource.data) {
+      this.RFQDataSource.data.forEach(row => this.selection.deselect(row));
+    }
+  }
   GetRFQStatusCountByVendor(): void {
     this._rfqService.GetRFQStatusCountByVendor(this.CurrentUserID).subscribe(
       (data) => {
@@ -127,7 +140,36 @@ export class RFQVendorComponent implements OnInit {
         }
       );
     }
+    if (this.RFQByVendorStatus === 'Archived') {
+      this.SelectedRFQ = new RFQHeaderVendorView();
+      this.IsProgressBarVisibile = true;
+      this._rfqService.GetAllArchivedRFQByVendor(this.CurrentUserID).subscribe(
+        (data) => {
+          this.RFQs = data as RFQHeaderVendorView[];
+          this.RFQDataSource = new MatTableDataSource(this.RFQs);
+          this.IsProgressBarVisibile = false;
+        },
+        (err) => {
+          console.error(err);
+          this.IsProgressBarVisibile = false;
+        }
+      );
+    }
   }
+  onChangeChk($event, data: RFQHeaderVendorView): void {
+    // $event.source.checked = !$event.source.checked;
+    this.selection.toggle(data);
+    if ($event.source.checked) {
+      this.SelectedRFQ = data;
+    } else {
+      if (this.selection.selected && this.selection.selected.length && this.selection.selected.length > 0) {
+        this.SelectedRFQ = this.selection.selected[this.selection.selected.length - 1];
+      } else {
+        this.SelectedRFQ = null;
+      }
+    }
+  }
+
 
   RowSelected(data: RFQHeaderVendorView): void {
     this.SelectedRFQ = data;
@@ -170,7 +212,7 @@ export class RFQVendorComponent implements OnInit {
         });
       }
     } else {
-      this.notificationSnackBarComponent.openSnackBar('Please select a purchase requisition', SnackBarStatus.danger);
+      this.notificationSnackBarComponent.openSnackBar('Please select a RFQ', SnackBarStatus.danger);
     }
   }
 
@@ -181,6 +223,9 @@ export class RFQVendorComponent implements OnInit {
     if (this.RFQByVendorStatus === 'Responded') {
       this.GetAllCompletedRFQByVendor();
     }
+    if (this.RFQByVendorStatus === 'Archived') {
+      this.GetAllCompletedRFQByVendor();
+    }
   }
   CreateSupportTicketClicked(element: RFQHeaderVendorView): void {
     if (element && element.RFQID) {
@@ -189,6 +234,40 @@ export class RFQVendorComponent implements OnInit {
     } else {
       // this.notificationSnackBarComponent.openSnackBar('Please select the PO ', SnackBarStatus.danger);
     }
+  }
+
+  ArchiveSelectedRFQClicked(): void {
+    if (this.selection && this.selection.selected.length) {
+      this.selection.selected.forEach(x => {
+        const index = this.SelectedRFQList.findIndex(y => y.RFQID === x.RFQID);
+        if (index < 0) {
+          x.CreatedBy = this.CurrentUserID.toString();
+          this.SelectedRFQList.push(x);
+        }
+      });
+      this.ArchiveSelectedRFQs();
+    } else {
+      this.notificationSnackBarComponent.openSnackBar('no items selected', SnackBarStatus.warning);
+    }
+
+  }
+
+  ArchiveSelectedRFQs(): void {
+    this.IsProgressBarVisibile = true;
+    this._rfqService.ArchiveSelectedRFQs(this.SelectedRFQList).subscribe(
+      (data) => {
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar('Selected RFQs are archived successfully', SnackBarStatus.success);
+        this.ResetValues();
+        this.GetAllCompletedRFQByVendor();
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+
+      }
+    );
   }
 
 }

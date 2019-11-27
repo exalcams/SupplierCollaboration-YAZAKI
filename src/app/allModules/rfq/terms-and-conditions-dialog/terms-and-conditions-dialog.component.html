@@ -1,0 +1,36 @@
+<div class="dialog-content-wrapper normal">
+  <mat-toolbar class="mat-accent m-0">
+    <mat-toolbar-row fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="title dialog-title">Terms and conditions</span>
+      <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content class="p-24 m-0" fusePerfectScrollbar>
+    <mat-card>
+      <p>This is a Request for Quotations only. Issuance of this RFQ does not in any way obligate Chemonics, the New
+        Justice Program, or USAID to make an award or pay for costs incurred by potential offerors in the preparation
+        and submission of an offer</p>
+      <p>This solicitation is subject to Exalca's standard terms and conditions. Any resultant award will be governed
+        by these terms and conditions; a copy of the full terms and conditions is available upon request. Please note
+        the following terms and conditions will apply:
+      </p>
+      <mat-list role="list">
+        <mat-list-item role="listitem">a) Exalca's standard payment terms are net 30 days after receipt and acceptance
+          of any commodities or deliverables.</mat-list-item>
+        <mat-list-item role="listitem">b) Payment will only be issued to the entity submitting the offer in response
+          to this RFQ and identified in the resulting award; payment will not be issued to a third party</mat-list-item>
+        <mat-list-item role="listitem">c) Any award resulting from this RFQ will be firm fixed price, in the form of a
+          purchase order</mat-list-item>
+        <mat-list-item role="listitem">d) Any international air or ocean transportation or shipping carried out under
+          any award resulting from this RFQ must take place on U.S.-flag carriers/vessels.</mat-list-item>
+      </mat-list>
+    </mat-card>
+  </div>
+
+  <mat-dialog-actions class="m-0 p-16" fxLayoutAlign="end center">
+    <button mat-button type="button" color="accent" (click)="YesClicked()">Close</button>
+  </mat-dialog-actions>
+</div>

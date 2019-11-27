@@ -65,6 +65,7 @@ import { RatingModule } from 'ng-starrating';
 // import { StarRatingModule } from 'angular-star-rating';
 import { TechRatingDialogComponent } from './tech-rating-dialog/tech-rating-dialog.component';
 import { TechRatingReviewDialogComponent } from './tech-rating-review-dialog/tech-rating-review-dialog.component';
+import { TermsAndConditionsDialogComponent } from './terms-and-conditions-dialog/terms-and-conditions-dialog.component';
 const routes: Routes = [
     {
         path: 'pr',
@@ -177,13 +178,15 @@ const routes: Routes = [
         ResponseComponent,
         ParameterPriorityDialogComponent,
         TechRatingDialogComponent,
-        TechRatingReviewDialogComponent
+        TechRatingReviewDialogComponent,
+        TermsAndConditionsDialogComponent
     ],
     providers: [],
     entryComponents: [
         ParameterPriorityDialogComponent,
         TechRatingDialogComponent,
-        TechRatingReviewDialogComponent
+        TechRatingReviewDialogComponent,
+        TermsAndConditionsDialogComponent
     ]
 })
 export class RFQModule { }
