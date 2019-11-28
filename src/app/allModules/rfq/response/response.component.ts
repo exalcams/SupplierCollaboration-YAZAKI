@@ -43,7 +43,7 @@ export class ResponseComponent implements OnInit {
   RFQ: RFQWithResponseView;
   RFQResponse: RFQResponseView;
   BGClassName: any;
-  RFQResponseItemsColumns: string[] = ['Select', 'ItemID', 'MaterialDescription', 'Manufacturer', 'OrderQuantity', 'UOM', 'DeliveryDate', 'DelayDays', 'Schedule',
+  RFQResponseItemsColumns: string[] = ['IsResponded', 'ItemID', 'MaterialDescription', 'Manufacturer', 'OrderQuantity', 'UOM', 'DeliveryDate', 'DelayDays', 'Schedule',
     'Price', 'PaymentTerms', 'SupplierPartNumber', 'SelfLifeDays', 'Attachment', 'TechRating', 'Notes'];
   RFQResponseItemAppID: number;
   RFQItemAppID: number;
@@ -52,7 +52,7 @@ export class ResponseComponent implements OnInit {
   fileToUploadList: File[] = [];
   rFQStatusCount: RFQStatusCount;
   TermsAnContionStatus = false;
-  selection = new SelectionModel<RFQResponseItemView>(true, []);
+  selection = new SelectionModel<AbstractControl>(true, []);
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _router: Router,
@@ -108,6 +108,7 @@ export class ResponseComponent implements OnInit {
       RFQEndDate: ['', Validators.required],
       RFQResponseEndDate: ['', Validators.required],
       ContactNumber: ['', Validators.required],
+      BankGuarantee: [false],
       RFQResponseItems: this.RFQResponseItemFormArray
       // CreatedBy: ['', Validators.required]
     });
@@ -253,6 +254,7 @@ export class ResponseComponent implements OnInit {
           this.InsertRFQHeaderValues();
           this.RFQResponseFormGroup.disable();
           this.RFQResponseFormGroup.get('ContactNumber').enable();
+          this.RFQResponseFormGroup.get('BankGuarantee').enable();
           if (this.RFQ.RFQResponseItems && this.RFQ.RFQResponseItems.length) {
             this.ClearFormArray(this.RFQResponseItemFormArray);
             this.RFQ.RFQResponseItems.forEach((x, i) => {
@@ -282,6 +284,7 @@ export class ResponseComponent implements OnInit {
       RFQEndDate: this.RFQ.RFQEndDate,
       RFQResponseEndDate: this.RFQ.RFQResponseEndDate,
       ContactNumber: this.RFQ.ContactNumber,
+      BankGuarantee: this.RFQ.BankGuarantee,
     });
   }
 
@@ -304,8 +307,10 @@ export class ResponseComponent implements OnInit {
       SupplierPartNumber: [RFQItem.SupplierPartNumber],
       TechRating: [RFQItem.TechRating],
       Notes: [RFQItem.Notes],
+      IsResponded: [RFQItem.IsResponded],
     });
     row.disable();
+    row.get('IsResponded').enable();
     row.get('Manufacturer').enable();
     row.get('DeliveryDate').enable();
     row.get('Price').enable();
@@ -381,24 +386,23 @@ export class ResponseComponent implements OnInit {
   }
 
   AddValidatorToFormArray(): void {
-    const RFQResponseItemsFormArray = this.RFQResponseFormGroup.get('RFQResponseItems') as FormArray;
-    RFQResponseItemsFormArray.controls.forEach((x, i) => {
-      const ItemID = x.get('ItemID').value;
-      const index = this.selection.selected.findIndex(y => y.ItemID === ItemID);
-      if (index >= 0) {
-        x.get('Manufacturer').setValidators([Validators.required]);
-        x.get('Manufacturer').updateValueAndValidity();
-        x.get('DeliveryDate').setValidators([Validators.required]);
-        x.get('DeliveryDate').updateValueAndValidity();
-        x.get('Schedule').setValidators([Validators.required]);
-        x.get('Schedule').updateValueAndValidity();
-        x.get('Price').setValidators([Validators.required]);
-        x.get('Price').updateValueAndValidity();
-        x.get('SupplierPartNumber').setValidators([Validators.required]);
-        x.get('SupplierPartNumber').updateValueAndValidity();
-        x.get('SelfLifeDays').setValidators([Validators.required]);
-        x.get('SelfLifeDays').updateValueAndValidity();
-      }
+    const RFQResponseItemsFormArray = this.selection.selected as AbstractControl[];
+    RFQResponseItemsFormArray.forEach((xy, i) => {
+      const x = xy as FormGroup;
+      x.get('Manufacturer').setValidators([Validators.required]);
+      x.get('Manufacturer').updateValueAndValidity();
+      x.get('DeliveryDate').setValidators([Validators.required]);
+      x.get('DeliveryDate').updateValueAndValidity();
+      x.get('Schedule').setValidators([Validators.required]);
+      x.get('Schedule').updateValueAndValidity();
+      x.get('Price').setValidators([Validators.required]);
+      x.get('Price').updateValueAndValidity();
+      x.get('PaymentTerms').setValidators([Validators.required]);
+      x.get('PaymentTerms').updateValueAndValidity();
+      x.get('SupplierPartNumber').setValidators([Validators.required]);
+      x.get('SupplierPartNumber').updateValueAndValidity();
+      x.get('SelfLifeDays').setValidators([Validators.required]);
+      x.get('SelfLifeDays').updateValueAndValidity();
     });
   }
 
@@ -470,6 +474,7 @@ export class ResponseComponent implements OnInit {
     this.RFQResponse.RFQID = this.RFQ.RFQID;
     this.RFQResponse.VendorID = this.SelectedVendorID;
     this.RFQResponse.ContactNumber = this.RFQResponseFormGroup.get('ContactNumber').value;
+    this.RFQResponse.BankGuarantee = this.RFQResponseFormGroup.get('BankGuarantee').value;
     this.RFQResponse.UserID = this.authenticationDetails.userID;
   }
 
@@ -478,6 +483,7 @@ export class ResponseComponent implements OnInit {
     const RFQResponseItemsFormArray = this.RFQResponseFormGroup.get('RFQResponseItems') as FormArray;
     RFQResponseItemsFormArray.controls.forEach((x, i) => {
       const rfq: RFQResponseItemView = new RFQResponseItemView();
+      rfq.IsResponded = x.get('IsResponded').value;
       rfq.ItemID = x.get('ItemID').value;
       rfq.MaterialDescription = x.get('MaterialDescription').value;
       rfq.Manufacturer = x.get('Manufacturer').value;
@@ -609,7 +615,7 @@ export class ResponseComponent implements OnInit {
       });
   }
 
-  onChangeChk($event, data: RFQResponseItemView): void {
+  onChangeChk($event, data: AbstractControl): void {
     // $event.source.checked = !$event.source.checked;
     this.selection.toggle(data);
   }
