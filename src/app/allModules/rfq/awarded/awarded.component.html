@@ -98,7 +98,7 @@
           <mat-divider></mat-divider>
           <div fxLayout="row" class="mt-24">
             <table mat-table [dataSource]="RFQRankDataSource">
-              <ng-container matColumnDef="Select">
+              <!-- <ng-container matColumnDef="Select">
                 <th mat-header-cell *matHeaderCellDef>
                 </th>
                 <td mat-cell *matCellDef="let row">
@@ -106,97 +106,45 @@
                     row.VendorID === SelectedRFQRank?.VendorID">
                   </mat-checkbox>
                 </td>
-              </ng-container>
-              <ng-container matColumnDef="VendorName">
-                <th mat-header-cell *matHeaderCellDef>Vendor name & Vendor code</th>
-                <td mat-cell *matCellDef="let element">{{element.VendorName }}
-                  ({{element.VendorID | removeLeadingZero}})</td>
-              </ng-container>
-
-              <ng-container matColumnDef="MaterialDescription">
-                <th mat-header-cell *matHeaderCellDef>Item Description</th>
-                <td mat-cell *matCellDef="let element"> {{element.MaterialDescription}} </td>
+              </ng-container> -->
+              <ng-container matColumnDef="Parameter">
+                <th mat-header-cell *matHeaderCellDef>Parameter</th>
+                <td mat-cell *matCellDef="let element"> {{element.Parameter}} </td>
               </ng-container>
 
-              <ng-container matColumnDef="OrderQuantity">
-                <th mat-header-cell *matHeaderCellDef>Quantity</th>
-                <td mat-cell *matCellDef="let element"> {{element.OrderQuantity}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="UOM">
-                <th mat-header-cell *matHeaderCellDef>UOM</th>
-                <td mat-cell *matCellDef="let element"> {{element.UOM}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="DelayDays">
-                <th mat-header-cell *matHeaderCellDef>Delay Days</th>
-                <td mat-cell *matCellDef="let element"> {{element.DelayDays}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Schedule">
-                <th mat-header-cell *matHeaderCellDef>Schedule</th>
-                <td mat-cell *matCellDef="let element"> {{element.Schedule}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Price">
-                <th mat-header-cell *matHeaderCellDef>Price</th>
-                <td mat-cell *matCellDef="let element"> {{element.Price}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="SelfLifeDays">
-                <th mat-header-cell *matHeaderCellDef>Self Life Days</th>
-                <td mat-cell *matCellDef="let element"> {{element.SelfLifeDays}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="TechRating">
-                <th mat-header-cell *matHeaderCellDef>Technical rating</th>
-                <td mat-cell *matCellDef="let element">
-                  <div fxLayout>
-                    <div fxFlex="80">
-                      <star-rating [value]="element.TechRating" checkedcolor="gold" uncheckedcolor="gray" size="20px"
-                        readonly="true"> </star-rating>
-                    </div>
-                    <div fxFlex="20" class="mt-4 ml-4">
-                      <span>({{element.TechRating | number : '1.2-2'}})</span>
-                    </div>
-                  </div>
+              <ng-container matColumnDef="VendorID1">
+                <th mat-header-cell *matHeaderCellDef>Vendor 1</th>
+                <td mat-cell *matCellDef="let element" (click)="VendorClicked(element.VendorID1)"
+                  [class.highlight]="SelectedVendor&&element.VendorID1 === SelectedVendor">
+                  <span *ngIf="element.VendorID1"> {{element.VendorName1}} ({{element.VendorID1 | removeLeadingZero}}) -
+                    <span class="boldClass mx-4">{{element.VendorValue1}} </span>
+                  </span>
                 </td>
               </ng-container>
 
-              <ng-container matColumnDef="BestForItems">
-                <th mat-header-cell *matHeaderCellDef>Best For</th>
-                <td mat-cell *matCellDef="let element">
-                  <img *ngIf="element.BestForItems.indexOf('Price')>-1" class="mr-4" matTooltip="Price"
-                    src="assets/images/money-bag.png">
-                  <img *ngIf="element.BestForItems.indexOf('DelayDays')>-1" class="mr-4" matTooltip="DelayDays"
-                    src="assets/images/alarm-clock.png">
-                  <img *ngIf="element.BestForItems.indexOf('Schedule')>-1" class="mr-4" matTooltip="Schedule"
-                    src="assets/images/calendar-color.png">
-                  <img *ngIf="element.BestForItems.indexOf('SelfLifeDays')>-1" matTooltip="Self life days"
-                    src="assets/images/expiration.png">
-                  <img *ngIf="element.BestForItems.indexOf('TechRating')>-1 && element.TechRating"
-                    matTooltip="Technical ratings" src="assets/images/star.png">
+              <ng-container matColumnDef="VendorID2">
+                <th mat-header-cell *matHeaderCellDef>Vendor 2</th>
+                <td mat-cell *matCellDef="let element" (click)="VendorClicked(element.VendorID2)"
+                  [class.highlight]="SelectedVendor&&element.VendorID2 === SelectedVendor">
+                  <span *ngIf="element.VendorID2"> {{element.VendorName2}} ({{element.VendorID2 | removeLeadingZero}}) -
+                    <span class="boldClass mx-4">{{element.VendorValue2}} </span>
+                  </span>
                 </td>
               </ng-container>
 
-              <ng-container matColumnDef="View">
-                <th mat-header-cell *matHeaderCellDef>View</th>
-                <td mat-cell *matCellDef="let element">
-                  <mat-icon (click)="GetRFQResponseTechRatings(element)">poll</mat-icon>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="Comment">
-                <th mat-header-cell *matHeaderCellDef>Comment</th>
-                <td mat-cell *matCellDef="let element">
-                  <mat-icon (click)="AssignmentClicked(element)">comment</mat-icon>
+              <ng-container matColumnDef="VendorID3">
+                <th mat-header-cell *matHeaderCellDef>Vendor 3</th>
+                <td mat-cell *matCellDef="let element" (click)="VendorClicked(element.VendorID3)"
+                  [class.highlight]="SelectedVendor&&element.VendorID3 === SelectedVendor">
+                  <span *ngIf="element.VendorID3"> {{element.VendorName3}} ({{element.VendorID3 | removeLeadingZero}}) -
+                    <span class="boldClass mx-4">{{element.VendorValue3}} </span>
+                  </span>
                 </td>
               </ng-container>
 
               <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
                 *matHeaderRowDef="RFQRankDisplayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: RFQRankDisplayedColumns;"
-                [class.highlight]="row === SelectedRFQRank"></tr>
+              <tr mat-row *matRowDef="let row; columns: RFQRankDisplayedColumns;"></tr>
             </table>
           </div>
         </mat-card-content>

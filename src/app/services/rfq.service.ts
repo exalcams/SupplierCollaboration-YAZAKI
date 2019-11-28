@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import {
     RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView,
-    PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView, PurchaseRequisitionStatusCount, RFQStatusCount, PriorityParameter, RFQResponseTechRating, RFQResponseTechRatingView
+    PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView, PurchaseRequisitionStatusCount, RFQStatusCount, PriorityParameter, RFQResponseTechRating, RFQResponseTechRatingView, RFQVendorRank
 } from 'app/models/rfq.model';
 import { Auxiliary, AuxiliaryView } from 'app/models/asn';
 import { Guid } from 'guid-typescript';
@@ -225,8 +225,8 @@ export class RFQService {
 
     }
 
-    GetRFQRanksByRFQID(RFQID: number): Observable<RFQRankView[] | string> {
-        return this._httpClient.get<RFQRankView[]>(`${this.baseAddress}api/RFQ/GetRFQRanksByRFQID?RFQID=${RFQID}`)
+    GetRFQRanksByRFQID(RFQID: number): Observable<RFQVendorRank[] | string> {
+        return this._httpClient.get<RFQVendorRank[]>(`${this.baseAddress}api/RFQ/GetRFQRanksByRFQID?RFQID=${RFQID}`)
             .pipe(catchError(this.errorHandler));
     }
 

@@ -168,6 +168,7 @@ export class RFQView {
     RFQEndDate?: Date;
     RFQResponseEndDate?: Date;
     ContactNumber: string;
+    BankGuarantee: boolean;
     Status: string;
     RFQItems: RFQItemView[];
     CurrentRFQParameterPriorities: RFQParameterPriority[];
@@ -194,6 +195,7 @@ export class RFQWithResponseView {
     RFQEndDate?: Date;
     RFQResponseEndDate?: Date;
     ContactNumber: string;
+    BankGuarantee: boolean;
     Status: string;
     RFQResponseStatus: string;
     RFQResponseItems: RFQResponseItemView[];
@@ -250,6 +252,7 @@ export class RFQResponseHeader {
     RFQID: number;
     VendorID: string;
     ContactNumber: string;
+    BankGuarantee: boolean;
     IsActive: boolean;
     CreatedOn: Date;
     CreatedBy: string;
@@ -275,6 +278,7 @@ export class RFQResponseItem {
     NumberOfAttachments: number;
     TechRating: number;
     Notes: string;
+    IsResponded: boolean;
     IsActive: boolean;
     CreatedOn: Date;
     CreatedBy: string;
@@ -312,6 +316,7 @@ export class RFQResponseView {
     RFQID: number;
     VendorID: string;
     ContactNumber: string;
+    BankGuarantee: boolean;
     UserID: Guid;
     RFQResponseItems: RFQResponseItemView[];
     IsActive: boolean;
@@ -341,6 +346,7 @@ export class RFQResponseItemView {
     AttachmentNames: string[];
     TechRating: number;
     Notes: string;
+    IsResponded: boolean;
     APPID: number;
 }
 
@@ -391,5 +397,19 @@ export class RFQStatusCount {
     Responded: number;
     EvaluationPending: number;
     Awarded: number;
+}
+
+export class RFQVendorRank {
+    RFQID: number;
+    Parameter: string;
+    VendorID1: string;
+    VendorName1: string;
+    VendorValue1: number;
+    VendorID2: string;
+    VendorName2: string;
+    VendorValue2: number;
+    VendorID3: string;
+    VendorName3: string;
+    VendorValue3: number;
 }
 

@@ -8,7 +8,7 @@ import { Guid } from 'guid-typescript';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { Router } from '@angular/router';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { RFQRankView, PurchaseRequisitionView, RFQAwardVendorView, RFQStatusCount, RFQResponseTechRating, RFQResponseTechRatingView } from 'app/models/rfq.model';
+import { RFQRankView, PurchaseRequisitionView, RFQAwardVendorView, RFQStatusCount, RFQResponseTechRating, RFQResponseTechRatingView, RFQVendorRank } from 'app/models/rfq.model';
 import { RFQService } from 'app/services/rfq.service';
 import { ShareParameterService } from 'app/services/share-parameter.service';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
@@ -32,12 +32,13 @@ export class AwardedComponent implements OnInit {
   FilterValue: string;
   SelectedPurchaseRequisition: PurchaseRequisitionView;
   SelectedRFQID: number;
-  RFQRanks: RFQRankView[] = [];
-  SelectedRFQRank: RFQRankView;
+  RFQRanks: RFQVendorRank[] = [];
+  SelectedRFQRank: RFQVendorRank;
+  SelectedVendor: string;
   RFQRankDisplayedColumns: string[] =
-    ['Select', 'VendorName', 'MaterialDescription', 'OrderQuantity', 'UOM', 'DelayDays', 'Schedule', 'Price', 'SelfLifeDays', 'TechRating', 'BestForItems', 'View', 'Comment'];
-  RFQRankDataSource: MatTableDataSource<RFQRankView>;
-  selection = new SelectionModel<RFQRankView>(true, []);
+    ['Parameter', 'VendorID1', 'VendorID2', 'VendorID3'];
+  RFQRankDataSource: MatTableDataSource<RFQVendorRank>;
+  selection = new SelectionModel<RFQVendorRank>(true, []);
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
   rFQStatusCount: RFQStatusCount;
@@ -50,7 +51,8 @@ export class AwardedComponent implements OnInit {
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
   ) {
-    this.SelectedRFQRank = new RFQRankView();
+    this.SelectedRFQRank = new RFQVendorRank();
+    this.SelectedVendor = '';
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.rFQStatusCount = new RFQStatusCount();
@@ -109,7 +111,7 @@ export class AwardedComponent implements OnInit {
     this._rfqService.GetRFQRanksByRFQID(this.SelectedRFQID).subscribe(
       (data) => {
         if (data) {
-          this.RFQRanks = data as RFQRankView[];
+          this.RFQRanks = data as RFQVendorRank[];
           this.RFQRankDataSource = new MatTableDataSource(this.RFQRanks);
         }
         this.IsProgressBarVisibile = false;
@@ -121,10 +123,10 @@ export class AwardedComponent implements OnInit {
     );
   }
 
-  RowSelected(data: RFQRankView): void {
+  RowSelected(data: RFQVendorRank): void {
     this.SelectedRFQRank = data;
   }
-  onChangeChk($event, data: RFQRankView): void {
+  onChangeChk($event, data: RFQVendorRank): void {
     // $event.source.checked = !$event.source.checked;
     if ($event.source.checked) {
       this.SelectedRFQRank = data;
@@ -132,6 +134,11 @@ export class AwardedComponent implements OnInit {
       this.SelectedRFQRank = null;
     }
   }
+
+  VendorClicked(VendorID: string): void {
+    this.SelectedVendor = VendorID;
+  }
+
   FilterValueChange(): void {
     console.log(this.FilterValue);
   }
@@ -143,12 +150,12 @@ export class AwardedComponent implements OnInit {
 
   SaveClicked(): void {
     // if (this.selection && this.selection.selected.length) {
-    if (this.SelectedRFQRank && this.SelectedRFQRank.RFQID) {
+    if (this.SelectedVendor) {
       const Actiontype = 'Award';
       const Catagory = 'vendor';
       this.OpenConfirmationDialog(Actiontype, Catagory);
     } else {
-      this.notificationSnackBarComponent.openSnackBar('no items selected', SnackBarStatus.warning);
+      this.notificationSnackBarComponent.openSnackBar('no vendor selected', SnackBarStatus.warning);
     }
   }
   OpenConfirmationDialog(Actiontype: string, Catagory: string): void {
@@ -168,8 +175,8 @@ export class AwardedComponent implements OnInit {
   }
   AwardSelectedVendor(): void {
     const RFQAwardVendor: RFQAwardVendorView = new RFQAwardVendorView();
-    RFQAwardVendor.RFQID = this.SelectedRFQRank.RFQID;
-    RFQAwardVendor.VendorID = this.SelectedRFQRank.VendorID;
+    RFQAwardVendor.RFQID = this.SelectedRFQID;
+    RFQAwardVendor.VendorID = this.SelectedVendor;
     RFQAwardVendor.ModifiedBy = this.CurrentUserID.toString();
     this.IsProgressBarVisibile = true;
     this._rfqService.AwardSelectedVendor(RFQAwardVendor).subscribe(
