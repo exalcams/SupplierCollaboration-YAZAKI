@@ -128,7 +128,7 @@ export class AwardedDetailsComponent implements OnInit {
   }
 
   GetRFQResponseTechRatings(element: RFQRankView): void {
-    this._rfqService.GetRFQResponseTechRatings(element.RFQID, element.ItemID, element.VendorID).subscribe(
+    this._rfqService.GetRFQResponseTechRatings(element.RFQID, element.VendorID).subscribe(
       (data) => {
         if (data) {
           const rfqResponseTechRatings = data as RFQResponseTechRatingView[];

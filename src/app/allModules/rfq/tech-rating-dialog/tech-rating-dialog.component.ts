@@ -40,7 +40,7 @@ export class TechRatingDialogComponent implements OnInit {
   }
 
   onRate($event: { oldValue: number, newValue: number, starRating: StarRatingComponent }): void {
-    console.log($event.newValue);
+    // console.log($event.newValue);
     this.rfqResponseTechRating.TechRating = $event.newValue;
   }
 
