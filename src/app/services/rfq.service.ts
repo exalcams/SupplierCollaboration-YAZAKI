@@ -225,8 +225,8 @@ export class RFQService {
 
     }
 
-    GetRFQRanksByRFQID(RFQID: number): Observable<RFQVendorRank[] | string> {
-        return this._httpClient.get<RFQVendorRank[]>(`${this.baseAddress}api/RFQ/GetRFQRanksByRFQID?RFQID=${RFQID}`)
+    GetRFQRanksByRFQID(RFQID: number, CreatedBy: string): Observable<RFQVendorRank[] | string> {
+        return this._httpClient.get<RFQVendorRank[]>(`${this.baseAddress}api/RFQ/GetRFQRanksByRFQID?RFQID=${RFQID}&CreatedBy=${CreatedBy}`)
             .pipe(catchError(this.errorHandler));
     }
 
@@ -250,9 +250,9 @@ export class RFQService {
             .pipe(catchError(this.errorHandler));
     }
 
-    CreateRFQResponseTechRating(rfqResponseTechRating: RFQResponseTechRating): Observable<any> {
+    CreateRFQResponseTechRating(rfqResponseTechRatings: RFQResponseTechRating[]): Observable<any> {
         return this._httpClient.post<any>(`${this.baseAddress}api/RFQ/CreateRFQResponseTechRating`,
-            rfqResponseTechRating,
+            rfqResponseTechRatings,
             {
                 headers: new HttpHeaders({
                     'Content-Type': 'application/json'
@@ -260,14 +260,14 @@ export class RFQService {
             })
             .pipe(catchError(this.errorHandler));
     }
-    GetRFQResponseTechRatingByApprover(RFQID: number, ItemID: number, VendorID: string, CreatedBy: string): Observable<RFQResponseTechRating | string> {
+    GetRFQResponseTechRatingByApprover(RFQID: number, CreatedBy: string): Observable<RFQResponseTechRating | string> {
         return this._httpClient.get<RFQResponseTechRating>
-            (`${this.baseAddress}api/RFQ/GetRFQResponseTechRatingByApprover?RFQID=${RFQID}&ItemID=${ItemID}&VendorID=${VendorID}&CreatedBy=${CreatedBy}`)
+            (`${this.baseAddress}api/RFQ/GetRFQResponseTechRatingByApprover?RFQID=${RFQID}&CreatedBy=${CreatedBy}`)
             .pipe(catchError(this.errorHandler));
     }
-    GetRFQResponseTechRatings(RFQID: number, ItemID: number, VendorID: string): Observable<RFQResponseTechRatingView[] | string> {
+    GetRFQResponseTechRatings(RFQID: number, VendorID: string): Observable<RFQResponseTechRatingView[] | string> {
         return this._httpClient.get<RFQResponseTechRatingView[]>
-            (`${this.baseAddress}api/RFQ/GetRFQResponseTechRatings?RFQID=${RFQID}&ItemID=${ItemID}&VendorID=${VendorID}`)
+            (`${this.baseAddress}api/RFQ/GetRFQResponseTechRatings?RFQID=${RFQID}&VendorID=${VendorID}`)
             .pipe(catchError(this.errorHandler));
     }
 }

@@ -75,3 +75,7 @@ td img {
 .boldClass {
   font-weight: bold;
 }
+.HeaderClass{
+  @extend .boldClass;
+  text-decoration: underline;
+}

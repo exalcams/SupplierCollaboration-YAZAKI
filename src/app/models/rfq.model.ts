@@ -289,7 +289,9 @@ export class RFQResponseItem {
 export class RFQResponseTechRating {
     RFQID: number;
     VendorID: string;
-    ItemID: number;
+    VendorName: string;
+    // ItemID: number;
+    Occurance: number;
     TechRating: number;
     Comment: string;
     IsActive: boolean;
@@ -301,7 +303,9 @@ export class RFQResponseTechRating {
 export class RFQResponseTechRatingView {
     RFQID: number;
     VendorID: string;
-    ItemID: number;
+    VendorName: string;
+    // ItemID: number;
+    Occurance: number;
     TechRating: number;
     Comment: string;
     IsActive: boolean;
@@ -402,6 +406,7 @@ export class RFQStatusCount {
 export class RFQVendorRank {
     RFQID: number;
     Parameter: string;
+    Currency: string;
     VendorID1: string;
     VendorName1: string;
     VendorValue1: number;
@@ -411,5 +416,11 @@ export class RFQVendorRank {
     VendorID3: string;
     VendorName3: string;
     VendorValue3: number;
+    RFQResponseTechRatingViewList: RFQResponseTechRatingView[];
+}
+export class VendorOccurance {
+    VendorID: string;
+    VendorName: string;
+    Occurance: number;
 }
 

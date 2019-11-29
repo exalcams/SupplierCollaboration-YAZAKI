@@ -15,6 +15,8 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 import { StarRatingComponent } from 'ng-starrating';
 import { TechRatingDialogComponent } from '../tech-rating-dialog/tech-rating-dialog.component';
 import { TechRatingReviewDialogComponent } from '../tech-rating-review-dialog/tech-rating-review-dialog.component';
+import { BehaviorSubject } from 'rxjs';
+import { AbstractControl, FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 // import { StarRatingComponent } from 'angular-star-rating';
 @Component({
   selector: 'awarded',
@@ -28,16 +30,21 @@ export class AwardedComponent implements OnInit {
   MenuItems: string[];
   CurrentUserName: string;
   CurrentUserID: Guid;
+  CurrentUserRole: string;
   BGClassName: any;
   FilterValue: string;
   SelectedPurchaseRequisition: PurchaseRequisitionView;
   SelectedRFQID: number;
   RFQRanks: RFQVendorRank[] = [];
-  SelectedRFQRank: RFQVendorRank;
+  RFQResponseTechRatingViewList: RFQResponseTechRatingView[] = [];
   SelectedVendor: string;
   RFQRankDisplayedColumns: string[] =
     ['Parameter', 'VendorID1', 'VendorID2', 'VendorID3'];
   RFQRankDataSource: MatTableDataSource<RFQVendorRank>;
+  RFQResponseTechRatingsColumns: string[] = ['VendorID', 'VendorName', 'TechRating', 'Comment'];
+  RFQResponseTechRatingDataSource = new BehaviorSubject<AbstractControl[]>([]);
+  RFQResponseTechRatingFormGroup: FormGroup;
+  RFQResponseTechRatingsFormArray: FormArray = this._formBuilder.array([]);
   selection = new SelectionModel<RFQVendorRank>(true, []);
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
@@ -48,10 +55,10 @@ export class AwardedComponent implements OnInit {
     private _rfqService: RFQService,
     private _shareParameterService: ShareParameterService,
     private _router: Router,
+    private _formBuilder: FormBuilder,
     public snackBar: MatSnackBar,
     private dialog: MatDialog,
   ) {
-    this.SelectedRFQRank = new RFQVendorRank();
     this.SelectedVendor = '';
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
@@ -64,6 +71,7 @@ export class AwardedComponent implements OnInit {
       this.authenticationDetails = JSON.parse(retrievedObject) as AuthenticationDetails;
       this.CurrentUserName = this.authenticationDetails.userName;
       this.CurrentUserID = this.authenticationDetails.userID;
+      this.CurrentUserRole = this.authenticationDetails.userRole;
       this.MenuItems = this.authenticationDetails.menuItemNames.split(',');
       if (this.MenuItems.indexOf('RFQAwarded') < 0) {
         this.notificationSnackBarComponent.openSnackBar('You do not have permission to visit this page', SnackBarStatus.danger);
@@ -72,6 +80,11 @@ export class AwardedComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
+
+    this.RFQResponseTechRatingFormGroup = this._formBuilder.group({
+      RFQResponseTechRatings: this.RFQResponseTechRatingsFormArray
+    });
+
     this.SelectedPurchaseRequisition = this._shareParameterService.GetPurchaseRequisition();
     if (!this.SelectedPurchaseRequisition) {
       this._router.navigate(['/rfq/evaluation']);
@@ -95,6 +108,23 @@ export class AwardedComponent implements OnInit {
       });
   }
 
+  ResetControl(): void {
+    this.RFQResponseTechRatingFormGroup.reset();
+    Object.keys(this.RFQResponseTechRatingFormGroup.controls).forEach(key => {
+      this.RFQResponseTechRatingFormGroup.get(key).markAsUntouched();
+    });
+    this.ResetRFQResponseTechRatings();
+  }
+  ResetRFQResponseTechRatings(): void {
+    this.ClearFormArray(this.RFQResponseTechRatingsFormArray);
+    this.RFQResponseTechRatingDataSource.next(this.RFQResponseTechRatingsFormArray.controls);
+  }
+  ClearFormArray = (formArray: FormArray) => {
+    while (formArray.length !== 0) {
+      formArray.removeAt(0);
+    }
+  }
+
   GetRFQStatusCountByBuyer(): void {
     this._rfqService.GetRFQStatusCountByBuyer(this.CurrentUserID).subscribe(
       (data) => {
@@ -108,10 +138,20 @@ export class AwardedComponent implements OnInit {
 
   GetRFQRanksByRFQID(): void {
     this.IsProgressBarVisibile = true;
-    this._rfqService.GetRFQRanksByRFQID(this.SelectedRFQID).subscribe(
+    this._rfqService.GetRFQRanksByRFQID(this.SelectedRFQID, this.CurrentUserID.toString()).subscribe(
       (data) => {
         if (data) {
           this.RFQRanks = data as RFQVendorRank[];
+          this.RFQRanks.forEach(x => {
+            if (x.RFQResponseTechRatingViewList && x.RFQResponseTechRatingViewList.length && x.RFQResponseTechRatingViewList.length > 0) {
+              this.RFQResponseTechRatingViewList = x.RFQResponseTechRatingViewList;
+            }
+          });
+          if (this.RFQResponseTechRatingViewList.length > 0) {
+            this.RFQResponseTechRatingViewList.forEach(x => {
+              this.InsertRFQResponsesFormGroup(x);
+            });
+          }
           this.RFQRankDataSource = new MatTableDataSource(this.RFQRanks);
         }
         this.IsProgressBarVisibile = false;
@@ -123,16 +163,15 @@ export class AwardedComponent implements OnInit {
     );
   }
 
-  RowSelected(data: RFQVendorRank): void {
-    this.SelectedRFQRank = data;
-  }
-  onChangeChk($event, data: RFQVendorRank): void {
-    // $event.source.checked = !$event.source.checked;
-    if ($event.source.checked) {
-      this.SelectedRFQRank = data;
-    } else {
-      this.SelectedRFQRank = null;
-    }
+  InsertRFQResponsesFormGroup(rfqResponseTechRatingView: RFQResponseTechRatingView): void {
+    const row = this._formBuilder.group({
+      VendorID: [rfqResponseTechRatingView.VendorID],
+      VendorName: [rfqResponseTechRatingView.VendorName],
+      TechRating: [rfqResponseTechRatingView.TechRating],
+      Comment: [rfqResponseTechRatingView.Comment],
+    });
+    this.RFQResponseTechRatingsFormArray.push(row);
+    this.RFQResponseTechRatingDataSource.next(this.RFQResponseTechRatingsFormArray.controls);
   }
 
   VendorClicked(VendorID: string): void {
@@ -147,8 +186,13 @@ export class AwardedComponent implements OnInit {
     this.selection.clear();
     this.RFQRankDataSource.data.forEach(row => this.selection.deselect(row));
   }
-
   SaveClicked(): void {
+    const Actiontype = 'Save';
+    const Catagory = 'ratings';
+    this.OpenConfirmationDialog(Actiontype, Catagory);
+  }
+
+  SaveAndAssignClicked(): void {
     // if (this.selection && this.selection.selected.length) {
     if (this.SelectedVendor) {
       const Actiontype = 'Award';
@@ -169,7 +213,12 @@ export class AwardedComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          this.AwardSelectedVendor();
+          if (Actiontype === 'Award') {
+            this.AwardSelectedVendor();
+          }
+          else if (Actiontype === 'Save') {
+            this.CreateRFQResponseTechRating();
+          }
         }
       });
   }
@@ -194,13 +243,51 @@ export class AwardedComponent implements OnInit {
     );
   }
 
-  onRate($event: { oldValue: number, newValue: number, starRating: StarRatingComponent }, element: RFQRankView): void {
+  CreateRFQResponseTechRating(): void {
+    this.GetRFQResponseTechRatingValues();
+    this.IsProgressBarVisibile = true;
+    this._rfqService.CreateRFQResponseTechRating(this.RFQResponseTechRatingViewList).subscribe(
+      (data1) => {
+        this.IsProgressBarVisibile = false;
+        this.notificationSnackBarComponent.openSnackBar('Tech rating is updated', SnackBarStatus.success);
+        // this._router.navigate(['/rfq/evaluation']);
+        this.ResetControl();
+        this.GetRFQRanksByRFQID();
+      },
+      (err) => {
+        this.IsProgressBarVisibile = false;
+        console.error(err);
+        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
+      }
+    );
+  }
+
+  onRate($event: { oldValue: number, newValue: number, starRating: StarRatingComponent }, index: number): void {
     // console.log($event.newValue);
+    const RFQResponseTechRatingss = this.RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings') as FormArray;
+    RFQResponseTechRatingss.controls[index].get('TechRating').patchValue($event.newValue);
     // console.log(element);
   }
+
+  GetRFQResponseTechRatingValues(): void {
+    this.RFQResponseTechRatingViewList = [];
+    const RFQResponseTechRatingss = this.RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings') as FormArray;
+    RFQResponseTechRatingss.controls.forEach((x, i) => {
+      const rfq: RFQResponseTechRatingView = new RFQResponseTechRatingView();
+      rfq.RFQID = this.SelectedRFQID;
+      rfq.VendorID = x.get('VendorID').value;
+      rfq.VendorName = x.get('VendorName').value;
+      rfq.TechRating = x.get('TechRating').value;
+      rfq.Comment = x.get('Comment').value;
+      rfq.CreatedBy = this.CurrentUserID.toString();
+      rfq.CreatedByUser = this.CurrentUserName.toString();
+      this.RFQResponseTechRatingViewList.push(rfq);
+    });
+  }
+
   AssignmentClicked(element: RFQRankView): void {
     let rfqResponseTechRating: RFQResponseTechRating = new RFQResponseTechRating();
-    this._rfqService.GetRFQResponseTechRatingByApprover(element.RFQID, element.ItemID, element.VendorID, this.CurrentUserID.toString()).subscribe(
+    this._rfqService.GetRFQResponseTechRatingByApprover(element.RFQID, this.CurrentUserID.toString()).subscribe(
       (data) => {
         if (data) {
           rfqResponseTechRating = data as RFQResponseTechRating;
@@ -221,7 +308,7 @@ export class AwardedComponent implements OnInit {
 
   NewRFQResponseTechRating(element: RFQRankView, rfqResponseTechRating: RFQResponseTechRating): void {
     rfqResponseTechRating.RFQID = element.RFQID;
-    rfqResponseTechRating.ItemID = element.ItemID;
+    // rfqResponseTechRating.ItemID = element.ItemID;
     rfqResponseTechRating.VendorID = element.VendorID;
     rfqResponseTechRating.TechRating = 0;
     rfqResponseTechRating.CreatedBy = this.CurrentUserID.toString();
@@ -239,28 +326,14 @@ export class AwardedComponent implements OnInit {
         if (result) {
           const re = result as RFQResponseTechRating;
           // console.log(rfqResponseTechRating);
-          this.CreateRFQResponseTechRating(re);
+          // this.CreateRFQResponseTechRating(re);
         }
       });
   }
-  CreateRFQResponseTechRating(rfqResponseTechRating: RFQResponseTechRating): void {
-    this.IsProgressBarVisibile = true;
-    this._rfqService.CreateRFQResponseTechRating(rfqResponseTechRating).subscribe(
-      (data1) => {
-        this.IsProgressBarVisibile = false;
-        this.notificationSnackBarComponent.openSnackBar('Tech rating is updated', SnackBarStatus.success);
-        this._router.navigate(['/rfq/evaluation']);
-      },
-      (err) => {
-        this.IsProgressBarVisibile = false;
-        console.error(err);
-        this.notificationSnackBarComponent.openSnackBar(err instanceof Object ? 'Something went wrong' : err, SnackBarStatus.danger);
-      }
-    );
-  }
+
 
   GetRFQResponseTechRatings(element: RFQRankView): void {
-    this._rfqService.GetRFQResponseTechRatings(element.RFQID, element.ItemID, element.VendorID).subscribe(
+    this._rfqService.GetRFQResponseTechRatings(element.RFQID, element.VendorID).subscribe(
       (data) => {
         if (data) {
           const rfqResponseTechRatings = data as RFQResponseTechRatingView[];

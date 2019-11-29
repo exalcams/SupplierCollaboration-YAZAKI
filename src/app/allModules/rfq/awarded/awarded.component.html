@@ -90,8 +90,9 @@
               </mat-radio-group>
             </div>
             <div fxFlex align="end" class="pb-8">
-              <button [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button (click)="SaveClicked()">
-                Save & Asign
+              <button *ngIf="(CurrentUserRole | lowercase)==='procurement approver'"
+                [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button (click)="SaveAndAssignClicked()">
+                Save & Assign
               </button>
             </div>
           </div>
@@ -116,9 +117,25 @@
                 <th mat-header-cell *matHeaderCellDef>Vendor 1</th>
                 <td mat-cell *matCellDef="let element" (click)="VendorClicked(element.VendorID1)"
                   [class.highlight]="SelectedVendor&&element.VendorID1 === SelectedVendor">
-                  <span *ngIf="element.VendorID1"> {{element.VendorName1}} ({{element.VendorID1 | removeLeadingZero}}) -
-                    <span class="boldClass mx-4">{{element.VendorValue1}} </span>
-                  </span>
+                  <div fxLayout *ngIf="element.VendorID1">
+                    <div fxFlex *ngIf="(element.Parameter | lowercase)!=='technical ratings'">
+                      {{element.VendorName1}} ({{element.VendorID1 | removeLeadingZero}}) -
+                      <span class="boldClass mx-4">{{element.VendorValue1}}</span>
+                      <span class="boldClass" *ngIf="element.Parameter.includes('day')">days</span>
+                      <span class="boldClass"
+                        *ngIf="(element.Parameter | lowercase).includes('price')">{{element.Currency}}</span>
+                    </div>
+                    <div *ngIf="(element.Parameter | lowercase)==='technical ratings'">
+                      {{element.VendorName1}}({{element.VendorID1 | removeLeadingZero}}) -
+                    </div>
+                    <div *ngIf="(element.Parameter | lowercase)==='technical ratings'">
+                      <span class="boldClass mx-4">{{element.VendorValue1}}</span>
+                    </div>
+                    <div class="mx-4" fxFlex="1 1 auto" *ngIf="(element.Parameter | lowercase)==='technical ratings'">
+                      <star-rating [value]="element.VendorValue1" checkedcolor="gold" uncheckedcolor="gray" size="12px"
+                        readonly="true"> </star-rating>
+                    </div>
+                  </div>
                 </td>
               </ng-container>
 
@@ -126,9 +143,25 @@
                 <th mat-header-cell *matHeaderCellDef>Vendor 2</th>
                 <td mat-cell *matCellDef="let element" (click)="VendorClicked(element.VendorID2)"
                   [class.highlight]="SelectedVendor&&element.VendorID2 === SelectedVendor">
-                  <span *ngIf="element.VendorID2"> {{element.VendorName2}} ({{element.VendorID2 | removeLeadingZero}}) -
-                    <span class="boldClass mx-4">{{element.VendorValue2}} </span>
-                  </span>
+                  <div fxLayout *ngIf="element.VendorID2">
+                    <div fxFlex *ngIf="(element.Parameter | lowercase)!=='technical ratings'">
+                      {{element.VendorName2}}({{element.VendorID2 | removeLeadingZero}}) -
+                      <span class="boldClass mx-4">{{element.VendorValue2}}</span>
+                      <span class="boldClass" *ngIf="element.Parameter.includes('day')">days</span>
+                      <span class="boldClass"
+                        *ngIf="(element.Parameter | lowercase).includes('price')">{{element.Currency}}</span>
+                    </div>
+                    <div *ngIf="(element.Parameter | lowercase)==='technical ratings'">
+                      {{element.VendorName2}}({{element.VendorID2 | removeLeadingZero}}) -
+                    </div>
+                    <div *ngIf="(element.Parameter | lowercase)==='technical ratings'">
+                      <span class="boldClass mx-4">{{element.VendorValue2}}</span>
+                    </div>
+                    <div class="mx-4" fxFlex="1 1 auto" *ngIf="(element.Parameter | lowercase)==='technical ratings'">
+                      <star-rating [value]="element.VendorValue2" checkedcolor="gold" uncheckedcolor="gray" size="12px"
+                        readonly="true"> </star-rating>
+                    </div>
+                  </div>
                 </td>
               </ng-container>
 
@@ -136,9 +169,25 @@
                 <th mat-header-cell *matHeaderCellDef>Vendor 3</th>
                 <td mat-cell *matCellDef="let element" (click)="VendorClicked(element.VendorID3)"
                   [class.highlight]="SelectedVendor&&element.VendorID3 === SelectedVendor">
-                  <span *ngIf="element.VendorID3"> {{element.VendorName3}} ({{element.VendorID3 | removeLeadingZero}}) -
-                    <span class="boldClass mx-4">{{element.VendorValue3}} </span>
-                  </span>
+                  <div fxLayout *ngIf="element.VendorID3">
+                    <div fxFlex *ngIf="(element.Parameter | lowercase)!=='technical ratings'">
+                      {{element.VendorName3}} ({{element.VendorID3 | removeLeadingZero}}) -
+                      <span class="boldClass mx-4">{{element.VendorValue3}}</span>
+                      <span class="boldClass" *ngIf="element.Parameter.includes('day')">days</span>
+                      <span class="boldClass"
+                        *ngIf="(element.Parameter | lowercase).includes('price')">{{element.Currency}}</span>
+                    </div>
+                    <div *ngIf="(element.Parameter | lowercase)==='technical ratings'">
+                      {{element.VendorName1}}({{element.VendorID3 | removeLeadingZero}}) -
+                    </div>
+                    <div *ngIf="(element.Parameter | lowercase)==='technical ratings'">
+                      <span class="boldClass mx-4">{{element.VendorValue3}}</span>
+                    </div>
+                    <div class="mx-4" fxFlex="1 1 auto" *ngIf="(element.Parameter | lowercase)==='technical ratings'">
+                      <star-rating [value]="element.VendorValue3" checkedcolor="gold" uncheckedcolor="gray" size="12px"
+                        readonly="true"> </star-rating>
+                    </div>
+                  </div>
                 </td>
               </ng-container>
 
@@ -146,6 +195,90 @@
                 *matHeaderRowDef="RFQRankDisplayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: RFQRankDisplayedColumns;"></tr>
             </table>
+          </div>
+          <div class="HeaderClass mt-12">Supplier ratings</div>
+          <div fxLayout="row" class="mt-4">
+            <form fxFlex name="form" [formGroup]="RFQResponseTechRatingFormGroup">
+              <table mat-table [dataSource]="RFQResponseTechRatingDataSource" class="mat-elevation-z8"
+                formArrayName="RFQResponseTechRatings">
+                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
+                  *matHeaderRowDef="RFQResponseTechRatingsColumns">
+                </tr>
+                <tr mat-row *matRowDef="let row;let i = index; columns: RFQResponseTechRatingsColumns;"></tr>
+
+                <ng-container matColumnDef="VendorID">
+                  <th mat-header-cell *matHeaderCellDef> Vendor ID </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <input matInput formControlName="VendorID">
+                    <span class="pl-4 errorClass"
+                      *ngIf="RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('VendorID').touched && 
+                  RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('VendorID').hasError('required')">
+                      *
+                    </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="VendorName">
+                  <th mat-header-cell *matHeaderCellDef> Vendor Name </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <input matInput formControlName="VendorName">
+                    <span class="pl-4 errorClass"
+                      *ngIf="RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('VendorName').touched && 
+                  RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('VendorName').hasError('required')">
+                      *
+                    </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="TechRating">
+                  <th mat-header-cell *matHeaderCellDef> Tech Rating </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <div fxLayout>
+                      <div fxFlex="80">
+                        <star-rating (rate)="onRate($event,index)"
+                          [value]="RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('TechRating').value"
+                          checkedcolor="gold" uncheckedcolor="gray" size="20px" 
+                          [readonly]="(CurrentUserRole | lowercase)==='procurement approver'"> </star-rating>
+                      </div>
+                      <div fxFlex="20" class="mt-4 ml-4">
+                        <span>({{RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('TechRating').value | number : '1.2-2'}})</span>
+                      </div>
+                    </div>
+                    <!-- <mat-form-field appearance="outline">
+                      <input matInput formControlName="TechRating">
+                    </mat-form-field>
+                    <span class="pl-4 errorClass"
+                      *ngIf="RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('TechRating').touched && 
+                  RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('TechRating').hasError('required')">
+                      *
+                    </span> -->
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Comment">
+                  <th mat-header-cell *matHeaderCellDef> Comment </th>
+                  <td mat-cell style="width: 240px;" *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <mat-form-field appearance="outline">
+                      <textarea cdkTextareaAutosize cdkAutosizeMinRows="3" matInput
+                        formControlName="Comment"></textarea>
+                    </mat-form-field>
+                    <span class="pl-4 errorClass"
+                      *ngIf="RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('Comment').touched && 
+                  RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('Comment').hasError('required')">
+                      *
+                    </span>
+                  </td>
+                </ng-container>
+              </table>
+            </form>
+          </div>
+          <div fxLayout class="mt-12">
+            <div fxFlex align="end" class="pb-8">
+              <button *ngIf="(CurrentUserRole | lowercase)==='procurement reviewer'"
+                [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button (click)="SaveClicked()">
+                Save
+              </button>
+            </div>
           </div>
         </mat-card-content>
       </mat-card>
