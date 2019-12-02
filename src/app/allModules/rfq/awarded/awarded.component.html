@@ -96,7 +96,7 @@
               </button>
             </div>
           </div>
-          <mat-divider></mat-divider>
+          <mat-divider [class.mt-4]="(CurrentUserRole | lowercase)==='procurement reviewer'"></mat-divider>
           <div fxLayout="row" class="mt-24">
             <table mat-table [dataSource]="RFQRankDataSource">
               <!-- <ng-container matColumnDef="Select">
@@ -135,6 +135,9 @@
                       <star-rating [value]="element.VendorValue1" checkedcolor="gold" uncheckedcolor="gray" size="12px"
                         readonly="true"> </star-rating>
                     </div>
+                    <div fxFlex *ngIf="(element.Parameter | lowercase)==='technical ratings'">
+                      <mat-icon (click)="GetRFQResponseTechRatings(element.VendorID1)">assessment</mat-icon>
+                    </div>
                   </div>
                 </td>
               </ng-container>
@@ -161,6 +164,9 @@
                       <star-rating [value]="element.VendorValue2" checkedcolor="gold" uncheckedcolor="gray" size="12px"
                         readonly="true"> </star-rating>
                     </div>
+                    <div fxFlex *ngIf="(element.Parameter | lowercase)==='technical ratings'">
+                      <mat-icon (click)="GetRFQResponseTechRatings(element.VendorID2)">assessment</mat-icon>
+                    </div>
                   </div>
                 </td>
               </ng-container>
@@ -178,7 +184,7 @@
                         *ngIf="(element.Parameter | lowercase).includes('price')">{{element.Currency}}</span>
                     </div>
                     <div *ngIf="(element.Parameter | lowercase)==='technical ratings'">
-                      {{element.VendorName1}}({{element.VendorID3 | removeLeadingZero}}) -
+                      {{element.VendorName3}}({{element.VendorID3 | removeLeadingZero}}) -
                     </div>
                     <div *ngIf="(element.Parameter | lowercase)==='technical ratings'">
                       <span class="boldClass mx-4">{{element.VendorValue3}}</span>
@@ -186,6 +192,9 @@
                     <div class="mx-4" fxFlex="1 1 auto" *ngIf="(element.Parameter | lowercase)==='technical ratings'">
                       <star-rating [value]="element.VendorValue3" checkedcolor="gold" uncheckedcolor="gray" size="12px"
                         readonly="true"> </star-rating>
+                    </div>
+                    <div fxFlex *ngIf="(element.Parameter | lowercase)==='technical ratings'">
+                      <mat-icon (click)="GetRFQResponseTechRatings(element.VendorID3)">assessment</mat-icon>
                     </div>
                   </div>
                 </td>
@@ -196,8 +205,8 @@
               <tr mat-row *matRowDef="let row; columns: RFQRankDisplayedColumns;"></tr>
             </table>
           </div>
-          <div class="HeaderClass mt-12">Supplier ratings</div>
-          <div fxLayout="row" class="mt-4">
+          <div class="HeaderClass mt-12" *ngIf="(CurrentUserRole | lowercase)!=='procurement approver'">Supplier ratings</div>
+          <div fxLayout="row" class="mt-4" *ngIf="(CurrentUserRole | lowercase)!=='procurement approver'">
             <form fxFlex name="form" [formGroup]="RFQResponseTechRatingFormGroup">
               <table mat-table [dataSource]="RFQResponseTechRatingDataSource" class="mat-elevation-z8"
                 formArrayName="RFQResponseTechRatings">
@@ -209,7 +218,7 @@
                 <ng-container matColumnDef="VendorID">
                   <th mat-header-cell *matHeaderCellDef> Vendor ID </th>
                   <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                    <input matInput formControlName="VendorID">
+                    <input matInput formControlName="VendorID" readonly>
                     <span class="pl-4 errorClass"
                       *ngIf="RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('VendorID').touched && 
                   RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('VendorID').hasError('required')">
@@ -221,7 +230,7 @@
                 <ng-container matColumnDef="VendorName">
                   <th mat-header-cell *matHeaderCellDef> Vendor Name </th>
                   <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                    <input matInput formControlName="VendorName">
+                    <input matInput formControlName="VendorName" readonly>
                     <span class="pl-4 errorClass"
                       *ngIf="RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('VendorName').touched && 
                   RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('VendorName').hasError('required')">
@@ -237,7 +246,7 @@
                       <div fxFlex="80">
                         <star-rating (rate)="onRate($event,index)"
                           [value]="RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('TechRating').value"
-                          checkedcolor="gold" uncheckedcolor="gray" size="20px" 
+                          checkedcolor="gold" uncheckedcolor="gray" size="20px"
                           [readonly]="(CurrentUserRole | lowercase)==='procurement approver'"> </star-rating>
                       </div>
                       <div fxFlex="20" class="mt-4 ml-4">
@@ -259,8 +268,8 @@
                   <th mat-header-cell *matHeaderCellDef> Comment </th>
                   <td mat-cell style="width: 240px;" *matCellDef="let row; let index = index" [formGroupName]="index">
                     <mat-form-field appearance="outline">
-                      <textarea cdkTextareaAutosize cdkAutosizeMinRows="3" matInput
-                        formControlName="Comment"></textarea>
+                      <textarea cdkTextareaAutosize cdkAutosizeMinRows="3" matInput formControlName="Comment"
+                        [readonly]="(CurrentUserRole | lowercase)==='procurement approver'"></textarea>
                     </mat-form-field>
                     <span class="pl-4 errorClass"
                       *ngIf="RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings').controls[index].get('Comment').touched && 

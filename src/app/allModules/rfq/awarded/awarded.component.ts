@@ -137,6 +137,7 @@ export class AwardedComponent implements OnInit {
   }
 
   GetRFQRanksByRFQID(): void {
+    this.RFQResponseTechRatingViewList = [];
     this.IsProgressBarVisibile = true;
     this._rfqService.GetRFQRanksByRFQID(this.SelectedRFQID, this.CurrentUserID.toString()).subscribe(
       (data) => {
@@ -270,10 +271,11 @@ export class AwardedComponent implements OnInit {
   }
 
   GetRFQResponseTechRatingValues(): void {
-    this.RFQResponseTechRatingViewList = [];
+    // this.RFQResponseTechRatingViewList = [];
     const RFQResponseTechRatingss = this.RFQResponseTechRatingFormGroup.get('RFQResponseTechRatings') as FormArray;
     RFQResponseTechRatingss.controls.forEach((x, i) => {
-      const rfq: RFQResponseTechRatingView = new RFQResponseTechRatingView();
+      const VendId = x.get('VendorID').value;
+      const rfq = this.RFQResponseTechRatingViewList.find(y => y.VendorID === VendId);
       rfq.RFQID = this.SelectedRFQID;
       rfq.VendorID = x.get('VendorID').value;
       rfq.VendorName = x.get('VendorName').value;
@@ -281,7 +283,7 @@ export class AwardedComponent implements OnInit {
       rfq.Comment = x.get('Comment').value;
       rfq.CreatedBy = this.CurrentUserID.toString();
       rfq.CreatedByUser = this.CurrentUserName.toString();
-      this.RFQResponseTechRatingViewList.push(rfq);
+      // this.RFQResponseTechRatingViewList.push(rfq);
     });
   }
 
@@ -332,8 +334,8 @@ export class AwardedComponent implements OnInit {
   }
 
 
-  GetRFQResponseTechRatings(element: RFQRankView): void {
-    this._rfqService.GetRFQResponseTechRatings(element.RFQID, element.VendorID).subscribe(
+  GetRFQResponseTechRatings(VendorID:any): void {
+    this._rfqService.GetRFQResponseTechRatings(this.SelectedRFQID, VendorID).subscribe(
       (data) => {
         if (data) {
           const rfqResponseTechRatings = data as RFQResponseTechRatingView[];
