@@ -41,7 +41,7 @@ export class AwardedComponent implements OnInit {
   RFQRankDisplayedColumns: string[] =
     ['Parameter', 'VendorID1', 'VendorID2', 'VendorID3'];
   RFQRankDataSource: MatTableDataSource<RFQVendorRank>;
-  RFQResponseTechRatingsColumns: string[] = ['VendorID', 'VendorName', 'TechRating', 'Comment'];
+  RFQResponseTechRatingsColumns: string[] = ['VendorID', 'TechRating', 'Comment'];
   RFQResponseTechRatingDataSource = new BehaviorSubject<AbstractControl[]>([]);
   RFQResponseTechRatingFormGroup: FormGroup;
   RFQResponseTechRatingsFormArray: FormArray = this._formBuilder.array([]);
@@ -168,6 +168,8 @@ export class AwardedComponent implements OnInit {
     const row = this._formBuilder.group({
       VendorID: [rfqResponseTechRatingView.VendorID],
       VendorName: [rfqResponseTechRatingView.VendorName],
+      EmailId: [rfqResponseTechRatingView.EmailId],
+      GSTNumber: [rfqResponseTechRatingView.GSTNumber],
       TechRating: [rfqResponseTechRatingView.TechRating],
       Comment: [rfqResponseTechRatingView.Comment],
     });
@@ -279,6 +281,8 @@ export class AwardedComponent implements OnInit {
       rfq.RFQID = this.SelectedRFQID;
       rfq.VendorID = x.get('VendorID').value;
       rfq.VendorName = x.get('VendorName').value;
+      rfq.EmailId = x.get('EmailId').value;
+      rfq.GSTNumber = x.get('GSTNumber').value;
       rfq.TechRating = x.get('TechRating').value;
       rfq.Comment = x.get('Comment').value;
       rfq.CreatedBy = this.CurrentUserID.toString();
@@ -334,7 +338,7 @@ export class AwardedComponent implements OnInit {
   }
 
 
-  GetRFQResponseTechRatings(VendorID:any): void {
+  GetRFQResponseTechRatings(VendorID: any): void {
     this._rfqService.GetRFQResponseTechRatings(this.SelectedRFQID, VendorID).subscribe(
       (data) => {
         if (data) {

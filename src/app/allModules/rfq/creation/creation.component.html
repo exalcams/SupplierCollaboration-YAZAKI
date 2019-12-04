@@ -370,13 +370,14 @@
                       <mat-icon style="cursor: pointer;" (click)="fileInput1.click()">attach_file</mat-icon>
                     </button>
                   </mat-form-field> -->
-                  <mat-icon [ngClass]="RFQFormGroup.enabled?'CursorPointer':'AttachIconDisable'"
+                  <mat-icon [matBadge]="RFQFormGroup.get('RFQItems').controls[index].get('NumberOfAttachments')?.value" matBadgeColor="accent"
+                  [ngClass]="RFQFormGroup.enabled?'CursorPointer':'AttachIconDisable'"
                     (click)="RFQFormGroup.enabled?fileInput1.click():false">attach_file
                   </mat-icon>
-                  <span *ngIf="RFQFormGroup.get('RFQItems').controls[index].get('NumberOfAttachments')?.value"
+                  <!-- <span *ngIf="RFQFormGroup.get('RFQItems').controls[index].get('NumberOfAttachments')?.value"
                     [style.color]="RFQFormGroup.enabled?'inherit':'rgba(0, 0, 0, 0.38)'">
                     ({{RFQFormGroup.get('RFQItems').controls[index].get('NumberOfAttachments')?.value}})
-                  </span>
+                  </span> -->
                   <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput($event,index)" />
                   <mat-icon *ngIf="RFQFormGroup.get('RFQItems').controls[index].get('NumberOfAttachments')?.value"
                     (click)="GetRFQItemAttachments(index)">image</mat-icon>

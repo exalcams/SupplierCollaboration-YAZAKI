@@ -107,7 +107,9 @@ export class ResponseComponent implements OnInit {
       IncoTerm: ['', Validators.required],
       RFQEndDate: ['', Validators.required],
       RFQResponseEndDate: ['', Validators.required],
-      ContactNumber: ['', Validators.required],
+      Name: [''],
+      Email: ['', Validators.email],
+      ContactNumber: [''],
       BankGuarantee: [false],
       RFQResponseItems: this.RFQResponseItemFormArray
       // CreatedBy: ['', Validators.required]
@@ -253,6 +255,8 @@ export class ResponseComponent implements OnInit {
         if (this.RFQ) {
           this.InsertRFQHeaderValues();
           this.RFQResponseFormGroup.disable();
+          this.RFQResponseFormGroup.get('Name').enable();
+          this.RFQResponseFormGroup.get('Email').enable();
           this.RFQResponseFormGroup.get('ContactNumber').enable();
           this.RFQResponseFormGroup.get('BankGuarantee').enable();
           if (this.RFQ.RFQResponseItems && this.RFQ.RFQResponseItems.length) {
@@ -283,6 +287,8 @@ export class ResponseComponent implements OnInit {
       IncoTerm: this.RFQ.IncoTerm,
       RFQEndDate: this.RFQ.RFQEndDate,
       RFQResponseEndDate: this.RFQ.RFQResponseEndDate,
+      Name: this.RFQ.Name,
+      Email: this.RFQ.Email,
       ContactNumber: this.RFQ.ContactNumber,
       BankGuarantee: this.RFQ.BankGuarantee,
     });
@@ -320,6 +326,9 @@ export class ResponseComponent implements OnInit {
     row.get('SelfLifeDays').enable();
     this.RFQResponseItemFormArray.push(row);
     this.RFQResponseItemDataSource.next(this.RFQResponseItemFormArray.controls);
+    if (RFQItem.IsResponded) {
+      this.selection.toggle(row);
+    }
     // return row;
   }
 
@@ -473,6 +482,8 @@ export class ResponseComponent implements OnInit {
     // this.RFQResponse.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
     this.RFQResponse.RFQID = this.RFQ.RFQID;
     this.RFQResponse.VendorID = this.SelectedVendorID;
+    this.RFQResponse.Name = this.RFQResponseFormGroup.get('Name').value;
+    this.RFQResponse.Email = this.RFQResponseFormGroup.get('Email').value;
     this.RFQResponse.ContactNumber = this.RFQResponseFormGroup.get('ContactNumber').value;
     this.RFQResponse.BankGuarantee = this.RFQResponseFormGroup.get('BankGuarantee').value;
     this.RFQResponse.UserID = this.authenticationDetails.userID;

@@ -150,6 +150,7 @@ const routes: Routes = [
         MatToolbarModule,
         MatTooltipModule,
         MatTreeModule,
+        MatBadgeModule,
 
         NgxChartsModule,
 
