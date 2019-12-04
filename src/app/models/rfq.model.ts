@@ -167,6 +167,8 @@ export class RFQView {
     IncoTerm: string;
     RFQEndDate?: Date;
     RFQResponseEndDate?: Date;
+    Name: string;
+    Email: string;
     ContactNumber: string;
     BankGuarantee: boolean;
     Status: string;
@@ -194,6 +196,8 @@ export class RFQWithResponseView {
     IncoTerm: string;
     RFQEndDate?: Date;
     RFQResponseEndDate?: Date;
+    Name: string;
+    Email: string;
     ContactNumber: string;
     BankGuarantee: boolean;
     Status: string;
@@ -251,6 +255,8 @@ export class RFQAllocationView {
 export class RFQResponseHeader {
     RFQID: number;
     VendorID: string;
+    Name: string;
+    Email: string;
     ContactNumber: string;
     BankGuarantee: boolean;
     IsActive: boolean;
@@ -304,6 +310,8 @@ export class RFQResponseTechRatingView {
     RFQID: number;
     VendorID: string;
     VendorName: string;
+    EmailId: string;
+    GSTNumber: string;
     // ItemID: number;
     Occurance: number;
     TechRating: number;
@@ -319,6 +327,8 @@ export class RFQResponseView {
     PurchaseRequisitionID: number;
     RFQID: number;
     VendorID: string;
+    Name: string;
+    Email: string;
     ContactNumber: string;
     BankGuarantee: boolean;
     UserID: Guid;
@@ -399,6 +409,7 @@ export class RFQStatusCount {
     All: number;
     ResponsePending: number;
     Responded: number;
+    Archived: number;
     EvaluationPending: number;
     Awarded: number;
 }

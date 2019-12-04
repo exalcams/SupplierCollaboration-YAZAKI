@@ -51,6 +51,30 @@
             </div>
           </div>
         </div>
+        <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                RFQ Archived
+              </span>
+            </div>
+          </div>
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{rFQStatusCount?.Archived}} / {{rFQStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/Archived.png">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div fxFlex class="mt-20">
@@ -160,6 +184,23 @@
             </div>
             <div fxLayout="row wrap" fxLayoutAlign="start">
               <div fxFlex="10" class="pt-8 pr-8" fxLayoutAlign="end start">
+                <span style="font-size: 13px;">Name</span>
+              </div>
+              <mat-form-field appearance="outline" fxFlex="20">
+                <input matInput formControlName="Name">
+              </mat-form-field>
+              <div fxFlex="10" class="pt-8 pr-8" fxLayoutAlign="end start">
+                <span style="font-size: 13px;">Email</span>
+                <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('Email').touched && 
+                  RFQResponseFormGroup.get('Email').hasError('email')">
+                  *
+                </span>
+              </div>
+              <mat-form-field appearance="outline" fxFlex="25">
+                <input matInput formControlName="Email">
+              </mat-form-field>
+
+              <div fxFlex="10" class="pt-8 pr-8" fxLayoutAlign="end start">
                 <span style="font-size: 13px;">Contact number</span>
                 <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('ContactNumber').touched && 
                 RFQResponseFormGroup.get('ContactNumber').hasError('required')">
@@ -171,7 +212,7 @@
                   *
                 </span>
               </div>
-              <mat-form-field appearance="outline" fxFlex="20">
+              <mat-form-field appearance="outline" fxFlex="25">
                 <input matInput formControlName="ContactNumber" pattern="^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$">
               </mat-form-field>
               <div fxFlex="10" class="pt-8 pr-8" fxLayoutAlign="end start">
@@ -196,219 +237,233 @@
                   </div>
                 </div> -->
             </div>
-            <table mat-table [dataSource]="RFQResponseItemDataSource" class="mat-elevation-z8 mr-12"
-              formArrayName="RFQResponseItems">
-              <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
-                *matHeaderRowDef="RFQResponseItemsColumns">
-              </tr>
-              <tr mat-row *matRowDef="let row;let i = index; columns: RFQResponseItemsColumns;"></tr>
+            <div style="overflow-x:auto;overflow-y: hidden;">
+              <table mat-table [dataSource]="RFQResponseItemDataSource" class="mat-elevation-z8 mr-12"
+                formArrayName="RFQResponseItems">
+                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
+                  *matHeaderRowDef="RFQResponseItemsColumns">
+                </tr>
+                <tr mat-row *matRowDef="let row;let i = index; columns: RFQResponseItemsColumns;"></tr>
 
-              <ng-container matColumnDef="IsResponded">
-                <th mat-header-cell *matHeaderCellDef>
-                </th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <mat-checkbox formControlName="IsResponded" (change)="onChangeChk($event,row)" [checked]="selection.isSelected(row)">
-                  </mat-checkbox>
-                </td>
-              </ng-container>
+                <ng-container matColumnDef="IsResponded">
+                  <th mat-header-cell *matHeaderCellDef>
+                  </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <mat-checkbox formControlName="IsResponded" (change)="onChangeChk($event,row)"
+                      [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="ItemID">
-                <th mat-header-cell *matHeaderCellDef> Item </th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <input matInput formControlName="ItemID">
-                  <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').touched && 
+                <ng-container matColumnDef="ItemID">
+                  <th mat-header-cell *matHeaderCellDef> Item </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <input matInput formControlName="ItemID">
+                    <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').touched && 
                 RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
+                      *
+                    </span>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="MaterialDescription">
-                <th mat-header-cell *matHeaderCellDef> Material Description </th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <input matInput formControlName="MaterialDescription">
-                  <span class="pl-4 errorClass"
-                    *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('MaterialDescription').touched && 
+                <ng-container matColumnDef="MaterialDescription">
+                  <th mat-header-cell *matHeaderCellDef> Material Description </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <input matInput formControlName="MaterialDescription">
+                    <span class="pl-4 errorClass"
+                      *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('MaterialDescription').touched && 
                 RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('MaterialDescription').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
+                      *
+                    </span>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="Manufacturer">
-                <th mat-header-cell *matHeaderCellDef> Manufacturer </th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <mat-form-field appearance="outline" style="min-width:100px;max-width:110px">
-                    <input matInput formControlName="Manufacturer">
-                  </mat-form-field>
-                  <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Manufacturer').touched && 
+                <ng-container matColumnDef="Manufacturer">
+                  <th mat-header-cell *matHeaderCellDef> Manufacturer </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <mat-form-field appearance="outline" style="min-width:100px;max-width:110px">
+                      <input matInput formControlName="Manufacturer">
+                    </mat-form-field>
+                    <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Manufacturer').touched && 
                 RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Manufacturer').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
+                      *
+                    </span>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="OrderQuantity">
-                <th mat-header-cell *matHeaderCellDef> Order Qty. </th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <input matInput formControlName="OrderQuantity">
-                  <span class="pl-4 errorClass"
-                    *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('OrderQuantity').touched && 
+                <ng-container matColumnDef="OrderQuantity">
+                  <th mat-header-cell *matHeaderCellDef> Order Qty. </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <input matInput formControlName="OrderQuantity">
+                    <span class="pl-4 errorClass"
+                      *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('OrderQuantity').touched && 
                 RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('OrderQuantity').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
+                      *
+                    </span>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="UOM">
-                <th mat-header-cell *matHeaderCellDef> UOM </th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <input matInput formControlName="UOM">
-                  <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('UOM').touched && 
+                <ng-container matColumnDef="UOM">
+                  <th mat-header-cell *matHeaderCellDef> UOM </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <input matInput formControlName="UOM">
+                    <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('UOM').touched && 
                 RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('UOM').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
+                      *
+                    </span>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="DeliveryDate">
-                <th mat-header-cell *matHeaderCellDef>Delivery Date</th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <mat-form-field appearance="outline" style="min-width:100px;max-width:110px">
-                    <input matInput [matDatepicker]="picker21" (click)="picker21.open()" (keydown)="onKeydown($event)"
-                      [min]="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ExpectedDeliveryDate').value"
-                      (dateChange)="DateSelected($event,row)" formControlName="DeliveryDate">
-                    <!-- <mat-datepicker-toggle matSuffix [for]="picker21"></mat-datepicker-toggle> -->
-                    <mat-datepicker #picker21></mat-datepicker>
-                  </mat-form-field>
-                  <span class="pl-4 errorClass"
-                    *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('DeliveryDate').touched && 
+                <ng-container matColumnDef="DeliveryDate">
+                  <th mat-header-cell *matHeaderCellDef>Delivery Date</th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <mat-form-field appearance="outline" style="min-width:100px;max-width:110px">
+                      <input matInput [matDatepicker]="picker21" (click)="picker21.open()" (keydown)="onKeydown($event)"
+                        [min]="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ExpectedDeliveryDate').value"
+                        (dateChange)="DateSelected($event,row)" formControlName="DeliveryDate">
+                      <!-- <mat-datepicker-toggle matSuffix [for]="picker21"></mat-datepicker-toggle> -->
+                      <mat-datepicker #picker21></mat-datepicker>
+                    </mat-form-field>
+                    <span class="pl-4 errorClass"
+                      *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('DeliveryDate').touched && 
                   RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('DeliveryDate').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
+                      *
+                    </span>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="DelayDays">
-                <th mat-header-cell *matHeaderCellDef> DelayDays </th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <input matInput formControlName="DelayDays">
-                  <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('DelayDays').touched && 
+                <ng-container matColumnDef="DelayDays">
+                  <th mat-header-cell *matHeaderCellDef> DelayDays </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <input matInput formControlName="DelayDays">
+                    <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('DelayDays').touched && 
                 RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('DelayDays').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
+                      *
+                    </span>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="Schedule">
-                <th mat-header-cell *matHeaderCellDef>Schedule</th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <mat-form-field appearance="outline" style="min-width:50px;max-width:70px">
-                    <input matInput formControlName="Schedule">
-                  </mat-form-field>
-                  <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Schedule').touched && 
+                <ng-container matColumnDef="Schedule">
+                  <th mat-header-cell *matHeaderCellDef>Schedule</th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <mat-form-field appearance="outline" style="min-width:50px;max-width:70px">
+                      <input matInput formControlName="Schedule" pattern="^[1-9]\d*$">
+                    </mat-form-field>
+                    <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Schedule').touched && 
                 RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Schedule').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
+                      *
+                    </span>
+                    <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Schedule').touched && 
+                  !RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Schedule').hasError('required')&&
+                  RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Schedule').hasError('pattern')">
+                      *
+                    </span>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="Price">
-                <th mat-header-cell *matHeaderCellDef> Price </th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <mat-form-field appearance="outline" style="min-width:50px;max-width:70px">
-                    <input matInput formControlName="Price">
-                  </mat-form-field>
-                  <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Price').touched && 
+                <ng-container matColumnDef="Price">
+                  <th mat-header-cell *matHeaderCellDef> Price </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <mat-form-field appearance="outline" style="min-width:50px;max-width:70px">
+                      <input matInput formControlName="Price">
+                    </mat-form-field>
+                    <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Price').touched && 
                 RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Price').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
+                      *
+                    </span>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="PaymentTerms">
-                <th mat-header-cell *matHeaderCellDef> Payment terms </th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <mat-form-field appearance="outline" style="min-width:100px;max-width:110px">
-                    <input matInput formControlName="PaymentTerms">
-                  </mat-form-field>
-                  <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('PaymentTerms').touched && 
+                <ng-container matColumnDef="PaymentTerms">
+                  <th mat-header-cell *matHeaderCellDef> Payment terms </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <mat-form-field appearance="outline" style="min-width:100px;max-width:110px">
+                      <input matInput formControlName="PaymentTerms">
+                    </mat-form-field>
+                    <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('PaymentTerms').touched && 
                 RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('PaymentTerms').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
+                      *
+                    </span>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="SupplierPartNumber">
-                <th mat-header-cell *matHeaderCellDef> SupplierPart No. </th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <mat-form-field appearance="outline" style="min-width:100px;max-width:110px">
-                    <input matInput formControlName="SupplierPartNumber">
-                  </mat-form-field>
-                  <span class="pl-4 errorClass"
-                    *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('SupplierPartNumber').touched && 
+                <ng-container matColumnDef="SupplierPartNumber">
+                  <th mat-header-cell *matHeaderCellDef> SupplierPart No. </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <mat-form-field appearance="outline" style="min-width:100px;max-width:110px">
+                      <input matInput formControlName="SupplierPartNumber">
+                    </mat-form-field>
+                    <span class="pl-4 errorClass"
+                      *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('SupplierPartNumber').touched && 
                 RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('SupplierPartNumber').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
+                      *
+                    </span>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="SelfLifeDays">
-                <th mat-header-cell *matHeaderCellDef>Self Life Days</th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <mat-form-field appearance="outline" style="min-width:50px;max-width:70px">
-                    <input matInput formControlName="SelfLifeDays">
-                  </mat-form-field>
-                  <span class="pl-4 errorClass"
-                    *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('SelfLifeDays').touched && 
+                <ng-container matColumnDef="SelfLifeDays">
+                  <th mat-header-cell *matHeaderCellDef>Self Life Days</th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <mat-form-field appearance="outline" style="min-width:50px;max-width:70px">
+                      <input matInput formControlName="SelfLifeDays" pattern="^[1-9]\d*$">
+                    </mat-form-field>
+                    <span class="pl-4 errorClass"
+                      *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('SelfLifeDays').touched && 
                     RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('SelfLifeDays').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
+                      *
+                    </span>
+                    <span class="pl-4 errorClass"
+                      *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('SelfLifeDays').touched && 
+                  !RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('SelfLifeDays').hasError('required')&&
+                  RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('SelfLifeDays').hasError('pattern')">
+                      *
+                    </span>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="Attachment">
-                <th mat-header-cell *matHeaderCellDef>Attachment</th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <mat-icon
-                    [ngClass]="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').enabled?'CursorPointer':'AttachIconDisable'"
-                    (click)="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').enabled?fileInput1.click():false">
-                    attach_file
-                  </mat-icon>
-                  <span
-                    *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value"
-                    [style.color]="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').enabled?'inherit':'rgba(0, 0, 0, 0.38)'">
-                    ({{RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value}})
-                  </span>
-                  <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput($event,index)" />
-                  <mat-icon
-                    *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value"
-                    (click)="GetRFQItemAttachments(index)">image</mat-icon>
-                </td>
-              </ng-container>
+                <ng-container matColumnDef="Attachment">
+                  <th mat-header-cell *matHeaderCellDef>Attachment</th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <mat-icon
+                      [ngClass]="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').enabled?'CursorPointer':'AttachIconDisable'"
+                      (click)="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').enabled?fileInput1.click():false">
+                      attach_file
+                    </mat-icon>
+                    <span
+                      *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value"
+                      [style.color]="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').enabled?'inherit':'rgba(0, 0, 0, 0.38)'">
+                      ({{RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value}})
+                    </span>
+                    <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput($event,index)" />
+                    <mat-icon
+                      *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value"
+                      (click)="GetRFQItemAttachments(index)">image</mat-icon>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="TechRating">
-                <th mat-header-cell *matHeaderCellDef> Tech Rating </th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <input matInput formControlName="TechRating">
-                  <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('TechRating').touched && 
+                <ng-container matColumnDef="TechRating">
+                  <th mat-header-cell *matHeaderCellDef> Tech Rating </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <input matInput formControlName="TechRating">
+                    <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('TechRating').touched && 
                 RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('TechRating').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
+                      *
+                    </span>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="Notes">
-                <th mat-header-cell *matHeaderCellDef> Notes </th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <input matInput formControlName="Notes">
-                  <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Notes').touched && 
+                <ng-container matColumnDef="Notes">
+                  <th mat-header-cell *matHeaderCellDef> Notes </th>
+                  <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
+                    <input matInput formControlName="Notes">
+                    <span class="pl-4 errorClass" *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Notes').touched && 
                 RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('Notes').hasError('required')">
-                    *
-                  </span>
-                </td>
-              </ng-container>
-            </table>
+                      *
+                    </span>
+                  </td>
+                </ng-container>
+              </table>
+            </div>
           </form>
           <div fxLayout="row" class="mt-12">
             <div>
