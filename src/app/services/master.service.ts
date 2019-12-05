@@ -4,7 +4,7 @@ import { Observable, throwError, Subject } from 'rxjs';
 import { _MatChipListMixinBase } from '@angular/material';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
-import { MenuApp, RoleWithMenuApp, UserWithRole, UserNotification, UserPreference, App, Vendor, VendorSearchCondition, VendorView, CurrencyMaster, CurrencyMasterView, IncoTermMaster, IncoTermMasterView } from 'app/models/master';
+import { MenuApp, RoleWithMenuApp, UserWithRole, UserNotification, UserPreference, App, Vendor, VendorSearchCondition, VendorView, CurrencyMaster, CurrencyMasterView, IncoTermMaster, IncoTermMasterView, PlantMaster, PlantMasterView } from 'app/models/master';
 import { Guid } from 'guid-typescript';
 
 @Injectable({
@@ -388,7 +388,7 @@ export class MasterService {
   }
 
   GetAllIncoTermMasters(): Observable<IncoTermMasterView[] | string> {
-    return this._httpClient.get<IncoTermMaster[]>(`${this.baseAddress}api/Master/GetAllIncoTermMasters`)
+    return this._httpClient.get<IncoTermMasterView[]>(`${this.baseAddress}api/Master/GetAllIncoTermMasters`)
       .pipe(catchError(this.errorHandler));
   }
 
@@ -405,6 +405,45 @@ export class MasterService {
 
   DeleteIncoTermMaster(app: IncoTermMaster): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeleteIncoTermMaster`,
+      app,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  // PlantMaster
+  CreatePlantMaster(app: PlantMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreatePlantMaster`,
+      app,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  GetAllPlantMasters(): Observable<PlantMasterView[] | string> {
+    return this._httpClient.get<PlantMasterView[]>(`${this.baseAddress}api/Master/GetAllPlantMasters`)
+      .pipe(catchError(this.errorHandler));
+  }
+
+  UpdatePlantMaster(app: PlantMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/UpdatePlantMaster`,
+      app,
+      {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        })
+      })
+      .pipe(catchError(this.errorHandler));
+  }
+
+  DeletePlantMaster(app: PlantMaster): Observable<any> {
+    return this._httpClient.post<any>(`${this.baseAddress}api/Master/DeletePlantMaster`,
       app,
       {
         headers: new HttpHeaders({

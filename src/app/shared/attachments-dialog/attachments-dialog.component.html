@@ -12,7 +12,8 @@
     <div fxLayout *ngFor="let dat of data">
       <div fxFlex="70" class="p-8">{{dat.AttachmentName}}</div>
       <div fxFlex="30" class="p-8">
-        <button mat-button (click)="DownloadRFQItemAttachment(dat)">Download</button>
+        <mat-icon (click)="DownloadRFQItemAttachment(dat)">get_app</mat-icon>
+        <!-- <button mat-button (click)="DownloadRFQItemAttachment(dat)">Download</button> -->
       </div>
     </div>
   </div>
