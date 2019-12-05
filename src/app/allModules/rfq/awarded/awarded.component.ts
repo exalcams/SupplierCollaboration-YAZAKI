@@ -38,6 +38,7 @@ export class AwardedComponent implements OnInit {
   RFQRanks: RFQVendorRank[] = [];
   RFQResponseTechRatingViewList: RFQResponseTechRatingView[] = [];
   SelectedVendor: string;
+  SelectedVendorName: string;
   RFQRankDisplayedColumns: string[] =
     ['Parameter', 'VendorID1', 'VendorID2', 'VendorID3'];
   RFQRankDataSource: MatTableDataSource<RFQVendorRank>;
@@ -60,6 +61,7 @@ export class AwardedComponent implements OnInit {
     private dialog: MatDialog,
   ) {
     this.SelectedVendor = '';
+    this.SelectedVendorName = '';
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.rFQStatusCount = new RFQStatusCount();
@@ -177,7 +179,8 @@ export class AwardedComponent implements OnInit {
     this.RFQResponseTechRatingDataSource.next(this.RFQResponseTechRatingsFormArray.controls);
   }
 
-  VendorClicked(VendorID: string): void {
+  VendorClicked(VendorName: string, VendorID: string): void {
+    this.SelectedVendorName = VendorName;
     this.SelectedVendor = VendorID;
   }
 
@@ -198,8 +201,8 @@ export class AwardedComponent implements OnInit {
   SaveAndAssignClicked(): void {
     // if (this.selection && this.selection.selected.length) {
     if (this.SelectedVendor) {
-      const Actiontype = 'Award';
-      const Catagory = 'vendor';
+      const Actiontype = 'award';
+      const Catagory = `vendor ${this.SelectedVendorName}(${this.SelectedVendor}) for RFQ ${this.SelectedRFQID}`;
       this.OpenConfirmationDialog(Actiontype, Catagory);
     } else {
       this.notificationSnackBarComponent.openSnackBar('no vendor selected', SnackBarStatus.warning);
@@ -216,7 +219,7 @@ export class AwardedComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          if (Actiontype === 'Award') {
+          if (Actiontype === 'award') {
             this.AwardSelectedVendor();
           }
           else if (Actiontype === 'Save') {

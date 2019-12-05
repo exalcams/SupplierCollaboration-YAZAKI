@@ -8,7 +8,7 @@ import { NotificationSnackBarComponent } from 'app/notifications/notification-sn
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
 import { RFQView, RFQItem, RFQItemView, PurchaseRequisitionItem, PurchaseRequisitionStatusCount, RFQParameterPriority } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
-import { AuthenticationDetails, App, CurrencyMasterView, IncoTermMasterView } from 'app/models/master';
+import { AuthenticationDetails, App, CurrencyMasterView, IncoTermMasterView, PlantMasterView } from 'app/models/master';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RFQService } from 'app/services/rfq.service';
 import { Location } from '@angular/common';
@@ -43,7 +43,8 @@ export class CreationComponent implements OnInit {
   RFQ: RFQView;
   BGClassName: any;
   RFQItemsColumns: string[] =
-    ['ItemID', 'MaterialDescription', 'OrderQuantity', 'UOM', 'ExpectedDeliveryDate', 'DelayDays', 'Schedule', 'Price', 'SupplierPartNumber', 'SelfLifeDays', 'Attachment', 'TechRating', 'Notes'];
+    ['ItemID', 'MaterialDescription', 'OrderQuantity', 'UOM', 'ExpectedDeliveryDate', 'DelayDays',
+      'Schedule', 'Price', 'SupplierPartNumber', 'SelfLifeDays', 'Attachment', 'TechRating', 'Notes'];
   RFQItemAppID: number;
   @ViewChild('fileInput1') fileInput1: ElementRef;
   fileToUpload: File;
@@ -52,6 +53,8 @@ export class CreationComponent implements OnInit {
   filteredCurrencyOptions: Observable<string[]>;
   IncoTermList: string[];
   filteredIncoTermOptions: Observable<string[]>;
+  PlantList: PlantMasterView[];
+  filteredPlantOptions: Observable<PlantMasterView[]>;
   isRFQDateError: boolean;
   isRFQResponseDateError: boolean;
   purchaseRequisitionStatusCount: PurchaseRequisitionStatusCount;
@@ -129,6 +132,7 @@ export class CreationComponent implements OnInit {
         this.BGClassName = config;
       });
     this.GetAppByName();
+    this.GetAllPlantMasters();
     this.GetAllCurrencyMasters();
     this.GetAllIncoTermMasters();
     this.GetPurchaseRequisitionStatusCount();
@@ -271,6 +275,25 @@ export class CreationComponent implements OnInit {
     );
   }
 
+  GetAllPlantMasters(): void {
+    this._masterService.GetAllPlantMasters().subscribe(
+      (data) => {
+        const dat = data as PlantMasterView[];
+        if (dat && dat.length && dat.length > 0) {
+          this.PlantList = dat;
+          this.filteredPlantOptions = this.RFQFormGroup.get('SupplyPlant').valueChanges
+            .pipe(
+              startWith(''),
+              map(value => this._filter2(value))
+            );
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
   private _filter(value: string): string[] {
     if (value) {
       const filterValue = value.toLowerCase();
@@ -281,6 +304,15 @@ export class CreationComponent implements OnInit {
     if (value) {
       const filterValue = value.toLowerCase();
       return this.IncoTermList.filter(option => option.toLowerCase().includes(filterValue));
+    }
+  }
+
+  private _filter2(value: string): PlantMasterView[] {
+    if (value) {
+      const filterValue = value.toLowerCase();
+
+      return this.PlantList.filter(o =>
+        Object.keys(o).some(k => o[k].toString().toLowerCase().includes(filterValue.toLowerCase())));
     }
   }
 
@@ -316,18 +348,7 @@ export class CreationComponent implements OnInit {
     }
   }
 
-  handleFileInput(evt, index: number): void {
-    if (evt.target.files && evt.target.files.length > 0) {
-      this.fileToUpload = evt.target.files[0];
-      this.fileToUploadList.push(this.fileToUpload);
-      const OldValue = +this.RFQItemFormArray.controls[index].get('NumberOfAttachments').value;
-      this.RFQItemFormArray.controls[index].get('NumberOfAttachments').patchValue(OldValue + 1);
-      const AttNames = this.RFQItemFormArray.controls[index].get('AttachmentNames').value as string[];
-      AttNames.push(this.fileToUpload.name);
-      this.RFQItemFormArray.controls[index].get('AttachmentNames').patchValue(AttNames);
-    }
-    // console.log(index);
-  }
+
 
   SubmitRFQDetails(): void {
     // this.RFQResponseFormGroup.enable();
@@ -652,6 +673,19 @@ export class CreationComponent implements OnInit {
     );
   }
 
+  handleFileInput(evt, index: number): void {
+    if (evt.target.files && evt.target.files.length > 0) {
+      this.fileToUpload = evt.target.files[0];
+      this.fileToUploadList.push(this.fileToUpload);
+      const OldValue = +this.RFQItemFormArray.controls[index].get('NumberOfAttachments').value;
+      this.RFQItemFormArray.controls[index].get('NumberOfAttachments').patchValue(OldValue + 1);
+      const AttNames = this.RFQItemFormArray.controls[index].get('AttachmentNames').value as string[];
+      AttNames.push(this.fileToUpload.name);
+      this.RFQItemFormArray.controls[index].get('AttachmentNames').patchValue(AttNames);
+    }
+    // console.log(index);
+  }
+
   GetRFQItemAttachments(index: number): void {
     const RFQItemsFormArray = this.RFQFormGroup.get('RFQItems') as FormArray;
     const APPNumber: number = RFQItemsFormArray.controls[index].get('ItemID').value;
@@ -669,13 +703,13 @@ export class CreationComponent implements OnInit {
         aux.SelectedRFQStatus = 'open';
         dat.push(aux);
       });
-      this.OpenForgetPasswordLinkDialog(dat);
+      this.OpenAttachmentsDialog(dat);
     } else {
       this._rfqService.GetRFQItemAttachments(this.RFQItemAppID, APPNumber, this.RFQ.RFQID.toString()).subscribe(
         (data) => {
           if (data) {
             const dat = data as AuxiliaryView[];
-            this.OpenForgetPasswordLinkDialog(dat);
+            this.OpenAttachmentsDialog(dat);
           }
         },
         (err) => {
@@ -685,7 +719,7 @@ export class CreationComponent implements OnInit {
     }
   }
 
-  OpenForgetPasswordLinkDialog(data: AuxiliaryView[]): void {
+  OpenAttachmentsDialog(data: AuxiliaryView[]): void {
     const dialogConfig: MatDialogConfig = {
       data: data,
       panelClass: 'attachment-dialog'

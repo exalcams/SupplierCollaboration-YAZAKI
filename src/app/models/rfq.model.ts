@@ -412,6 +412,9 @@ export class RFQStatusCount {
     Archived: number;
     EvaluationPending: number;
     Awarded: number;
+    WithInValidity: number;
+    OveredValidity: number;
+    UpcomingValidity: number;
 }
 
 export class RFQVendorRank {

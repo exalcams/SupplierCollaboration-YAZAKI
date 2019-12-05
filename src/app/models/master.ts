@@ -135,6 +135,11 @@ export class CurrencyMaster {
     ModifiedOn?: Date;
     ModifiedBy: string;
 }
+export class CurrencyMasterView {
+    ID: number;
+    CurrencyCode: string;
+    Description: string;
+}
 export class IncoTermMaster {
     ID: number;
     IncoTermCode: string;
@@ -145,15 +150,40 @@ export class IncoTermMaster {
     ModifiedOn?: Date;
     ModifiedBy: string;
 }
-export class CurrencyMasterView {
-    ID: number;
-    CurrencyCode: string;
-    Description: string;
-}
 export class IncoTermMasterView {
     ID: number;
     IncoTermCode: string;
     Description: string;
+}
+export class PlantMaster {
+    ID: number;
+    Plant: string;
+    Name: string;
+    Name2: string;
+    StreetAndHouseNumber: string;
+    Address: string;
+    PostalCode: string;
+    Area: string;
+    City: string;
+    State: string;
+    CountryKey: string;
+    PurchaseOrganization: string;
+    SalesOrganization: string;
+    DistributionChannel: string;
+    IsActive: boolean;
+    CreatedOn: Date;
+    CreatedBy: string;
+    ModifiedOn?: Date;
+    ModifiedBy: string;
+}
+export class PlantMasterView {
+    ID: number;
+    Plant: string;
+    Name: string;
+    Area: string;
+    City: string;
+    State: string;
+    CountryKey: string;
 }
 
 

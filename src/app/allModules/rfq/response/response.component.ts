@@ -375,12 +375,20 @@ export class ResponseComponent implements OnInit {
         if (this.RFQ.RFQResponseStatus.toLocaleLowerCase() === 'responded') {
           // const Actiontype = 'Update';
           // const Catagory = 'RFQ Response';
+          const BankGuaranteeValue = this.RFQResponseFormGroup.get('BankGuarantee').value;
+          if (!BankGuaranteeValue) {
+            this.notificationSnackBarComponent.openSnackBar('Bank Guarantee is not selected', SnackBarStatus.warning);
+          }
           const Actiontype = 'Response';
           const Catagory = 'RFQ';
           this.OpenConfirmationDialog(Actiontype, Catagory);
         } else {
           // const Actiontype = 'Create';
           // const Catagory = 'RFQ Response';
+          const BankGuaranteeValue = this.RFQResponseFormGroup.get('BankGuarantee').value;
+          if (!BankGuaranteeValue) {
+            this.notificationSnackBarComponent.openSnackBar('Bank Guarantee is not selected', SnackBarStatus.warning);
+          }
           const Actiontype = 'Response';
           const Catagory = 'RFQ';
           this.OpenConfirmationDialog(Actiontype, Catagory);
@@ -402,7 +410,7 @@ export class ResponseComponent implements OnInit {
       x.get('Manufacturer').updateValueAndValidity();
       x.get('DeliveryDate').setValidators([Validators.required]);
       x.get('DeliveryDate').updateValueAndValidity();
-      x.get('Schedule').setValidators([Validators.required]);
+      x.get('Schedule').setValidators([Validators.required, Validators.pattern('[1-9][0-9]*')]);
       x.get('Schedule').updateValueAndValidity();
       x.get('Price').setValidators([Validators.required]);
       x.get('Price').updateValueAndValidity();
@@ -410,7 +418,7 @@ export class ResponseComponent implements OnInit {
       x.get('PaymentTerms').updateValueAndValidity();
       x.get('SupplierPartNumber').setValidators([Validators.required]);
       x.get('SupplierPartNumber').updateValueAndValidity();
-      x.get('SelfLifeDays').setValidators([Validators.required]);
+      x.get('SelfLifeDays').setValidators([Validators.required, Validators.pattern('[1-9][0-9]*')]);
       x.get('SelfLifeDays').updateValueAndValidity();
     });
   }

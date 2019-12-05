@@ -115,7 +115,7 @@
 
               <ng-container matColumnDef="VendorID1">
                 <th mat-header-cell *matHeaderCellDef>Vendor 1</th>
-                <td mat-cell *matCellDef="let element" (click)="VendorClicked(element.VendorID1)"
+                <td mat-cell *matCellDef="let element" (click)="VendorClicked(element.VendorName1,element.VendorID1)"
                   [class.highlight]="SelectedVendor&&element.VendorID1 === SelectedVendor">
                   <div fxLayout *ngIf="element.VendorID1">
                     <div fxFlex *ngIf="(element.Parameter | lowercase)!=='technical ratings'">
@@ -144,7 +144,7 @@
 
               <ng-container matColumnDef="VendorID2">
                 <th mat-header-cell *matHeaderCellDef>Vendor 2</th>
-                <td mat-cell *matCellDef="let element" (click)="VendorClicked(element.VendorID2)"
+                <td mat-cell *matCellDef="let element" (click)="VendorClicked(element.VendorName2,element.VendorID2)"
                   [class.highlight]="SelectedVendor&&element.VendorID2 === SelectedVendor">
                   <div fxLayout *ngIf="element.VendorID2">
                     <div fxFlex *ngIf="(element.Parameter | lowercase)!=='technical ratings'">
@@ -173,7 +173,7 @@
 
               <ng-container matColumnDef="VendorID3">
                 <th mat-header-cell *matHeaderCellDef>Vendor 3</th>
-                <td mat-cell *matCellDef="let element" (click)="VendorClicked(element.VendorID3)"
+                <td mat-cell *matCellDef="let element" (click)="VendorClicked(element.VendorName3,element.VendorID3)"
                   [class.highlight]="SelectedVendor&&element.VendorID3 === SelectedVendor">
                   <div fxLayout *ngIf="element.VendorID3">
                     <div fxFlex *ngIf="(element.Parameter | lowercase)!=='technical ratings'">

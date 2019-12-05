@@ -120,9 +120,20 @@ export class LoginComponent implements OnInit, OnDestroy {
                     );
                     this.IsProgressBarVisibile = false;
                     localStorage.setItem('authorizationData', JSON.stringify(data));
+                    const dat = data as AuthenticationDetails;
                     this.UpdateMenu();
                     this.notificationSnackBarComponent.openSnackBar('Logged in successfully', SnackBarStatus.success);
-                    this._router.navigate(['dashboard']);
+                    if (dat.userRole.toLowerCase() === 'procurement approver') {
+                        this._router.navigate(['rfq/evaluation']);
+                    }
+                    else if (dat.userRole.toLowerCase() === 'procurement executive') {
+                        this._router.navigate(['rfq/pr']);
+                    }
+                    else if (dat.userRole.toLowerCase() === 'procurement reviewer') {
+                        this._router.navigate(['rfq/evaluation']);
+                    } else {
+                        this._router.navigate(['dashboard']);
+                    }
                 },
                 err => {
                     this.IsProgressBarVisibile = false;

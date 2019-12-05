@@ -8,7 +8,7 @@
           <div fxFlex>
             <div class="pt-8">
               <span class="Title">
-                RFQ Yet to Respond
+                Yet to Respond
               </span>
             </div>
           </div>
@@ -32,7 +32,7 @@
           <div fxFlex>
             <div class="pt-8">
               <span class="Title">
-                RFQ Responded
+                Responded
               </span>
             </div>
           </div>
@@ -56,7 +56,7 @@
           <div fxFlex>
             <div class="pt-8">
               <span class="Title">
-                RFQ Archived
+                Archived
               </span>
             </div>
           </div>
@@ -71,6 +71,78 @@
             <div fxFlex>
               <div class="pr-4 ra">
                 <img class="img-style" src="assets/images/rfq/Archived.png">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                RFQ In Validity
+              </span>
+            </div>
+          </div>
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{rFQStatusCount?.WithInValidity}} / {{rFQStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/InPrograss.png">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                Validity upcoming
+              </span>
+            </div>
+          </div>
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{rFQStatusCount?.UpcomingValidity}} / {{rFQStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/YetToConvert.png">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                Validity overed
+              </span>
+            </div>
+          </div>
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{rFQStatusCount?.OveredValidity}} / {{rFQStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/ResponsePending.png">
               </div>
             </div>
           </div>
@@ -425,17 +497,19 @@
                   <th mat-header-cell *matHeaderCellDef>Attachment</th>
                   <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                     <mat-icon
+                      [matBadge]="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value"
+                      matBadgeColor="accent"
                       [ngClass]="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').enabled?'CursorPointer':'AttachIconDisable'"
                       (click)="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').enabled?fileInput1.click():false">
                       attach_file
                     </mat-icon>
-                    <span
+                    <!-- <span
                       *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value"
                       [style.color]="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('ItemID').enabled?'inherit':'rgba(0, 0, 0, 0.38)'">
                       ({{RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value}})
-                    </span>
+                    </span> -->
                     <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput($event,index)" />
-                    <mat-icon
+                    <mat-icon class="ml-8"
                       *ngIf="RFQResponseFormGroup.get('RFQResponseItems').controls[index].get('NumberOfAttachments')?.value"
                       (click)="GetRFQItemAttachments(index)">image</mat-icon>
                   </td>
