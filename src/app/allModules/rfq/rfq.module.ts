@@ -66,6 +66,9 @@ import { RatingModule } from 'ng-starrating';
 import { TechRatingDialogComponent } from './tech-rating-dialog/tech-rating-dialog.component';
 import { TechRatingReviewDialogComponent } from './tech-rating-review-dialog/tech-rating-review-dialog.component';
 import { TermsAndConditionsDialogComponent } from './terms-and-conditions-dialog/terms-and-conditions-dialog.component';
+import { CKEditorModule } from 'ngx-ckeditor';
+import { NotesDialogComponent } from './notes-dialog/notes-dialog.component';
+
 const routes: Routes = [
     {
         path: 'pr',
@@ -165,7 +168,8 @@ const routes: Routes = [
         SharedModule,
         DragDropModule,
         RatingModule,
-        // StarRatingModule.forRoot()
+        // StarRatingModule.forRoot(),
+        CKEditorModule
     ],
     declarations: [
         PurchaseRequisitionComponent,
@@ -180,14 +184,16 @@ const routes: Routes = [
         ParameterPriorityDialogComponent,
         TechRatingDialogComponent,
         TechRatingReviewDialogComponent,
-        TermsAndConditionsDialogComponent
+        TermsAndConditionsDialogComponent,
+        NotesDialogComponent
     ],
     providers: [],
     entryComponents: [
         ParameterPriorityDialogComponent,
         TechRatingDialogComponent,
         TechRatingReviewDialogComponent,
-        TermsAndConditionsDialogComponent
+        TermsAndConditionsDialogComponent,
+        NotesDialogComponent
     ]
 })
 export class RFQModule { }

@@ -19,7 +19,7 @@ import { Guid } from 'guid-typescript';
 import { AttachmentsDialogComponent } from 'app/shared/attachments-dialog/attachments-dialog.component';
 import { startWith, map } from 'rxjs/operators';
 import { ParameterPriorityDialogComponent } from '../parameter-priority-dialog/parameter-priority-dialog.component';
-
+import { NotesDialogComponent } from '../notes-dialog/notes-dialog.component';
 @Component({
   selector: 'creation',
   templateUrl: './creation.component.html',
@@ -43,8 +43,8 @@ export class CreationComponent implements OnInit {
   RFQ: RFQView;
   BGClassName: any;
   RFQItemsColumns: string[] =
-    ['ItemID', 'MaterialDescription', 'OrderQuantity', 'UOM', 'ExpectedDeliveryDate', 'DelayDays',
-      'Schedule', 'Price', 'SupplierPartNumber', 'SelfLifeDays', 'Attachment', 'TechRating', 'Notes'];
+    ['ItemID', 'MaterialDescription', 'OrderQuantity', 'UOM', 'ExpectedDeliveryDate',
+      'Schedule', 'Price', 'Attachment', 'TechRating', 'Notes'];
   RFQItemAppID: number;
   @ViewChild('fileInput1') fileInput1: ElementRef;
   fileToUpload: File;
@@ -59,6 +59,7 @@ export class CreationComponent implements OnInit {
   isRFQResponseDateError: boolean;
   purchaseRequisitionStatusCount: PurchaseRequisitionStatusCount;
   CurrentRFQParameterPriority: RFQParameterPriority[] = [];
+  public editorValue: string = '';
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _router: Router,
@@ -348,7 +349,25 @@ export class CreationComponent implements OnInit {
     }
   }
 
+  MenuBookClicked(index: number): void {
+    console.log(index);
+    this.OpenNotesDialog();
+  }
 
+  OpenNotesDialog(): void {
+    const dialogConfig: MatDialogConfig = {
+      data: null,
+      panelClass: 'notes-dialog'
+    };
+    const dialogRef = this.dialog.open(NotesDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      result => {
+        if (result) {
+          console.log(result);
+        }
+      });
+
+  }
 
   SubmitRFQDetails(): void {
     // this.RFQResponseFormGroup.enable();
@@ -559,6 +578,21 @@ export class CreationComponent implements OnInit {
       rfq.AttachmentNames = x.get('AttachmentNames').value;
       rfq.TechRating = x.get('TechRating').value;
       rfq.Notes = x.get('Notes').value;
+      // if (this.SelectedRFQStatus.toLocaleLowerCase() === 'open') {
+      //   const selectedItem = this.PurchaseRequestionItems.filter(y => y.ItemID === rfq.ItemID)[0];
+      //   if (selectedItem) {
+      //     rfq.DelayDays = selectedItem.DelayDays;
+      //     rfq.SupplierPartNumber = selectedItem.SupplierPartNumber;
+      //     rfq.SelfLifeDays = selectedItem.SelfLifeDays;
+      //   }
+      // } else {
+      //   const selectedItem = this.RFQ.RFQItems.filter(y => y.ItemID === rfq.ItemID)[0];
+      //   if (selectedItem) {
+      //     rfq.DelayDays = selectedItem.DelayDays;
+      //     rfq.SupplierPartNumber = selectedItem.SupplierPartNumber;
+      //     rfq.SelfLifeDays = selectedItem.SelfLifeDays;
+      //   }
+      // }
       rfq.APPID = this.RFQItemAppID;
       this.RFQ.RFQItems.push(rfq);
     });

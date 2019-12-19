@@ -271,10 +271,19 @@ export class LoginComponent implements OnInit, OnDestroy {
         //     });
         // }
         if (this.MenuItems.indexOf('PurchaseRequisition') >= 0) {
-            this.subChildren2.push({
-                id: 'pr',
-                title: 'PR to RFQ',
+            // this.subChildren2.push({
+            //     id: 'pr',
+            //     title: 'PR to RFQ',
+            //     type: 'item',
+            //     url: '/rfq/pr'
+            // });
+            this.children.push({
+                id: 'rfq',
+                title: 'RFx',
+                // translate: 'NAV.DASHBOARDS',
                 type: 'item',
+                icon: 'paymentReport',
+                isSvgIcon: true,
                 url: '/rfq/pr'
             });
         }
@@ -297,10 +306,19 @@ export class LoginComponent implements OnInit, OnDestroy {
         // }
 
         if (this.MenuItems.indexOf('RFQEvaluation') >= 0) {
-            this.subChildren2.push({
-                id: 'evaluation',
-                title: 'Evaluation',
+            // this.subChildren2.push({
+            //     id: 'evaluation',
+            //     title: 'Evaluation',
+            //     type: 'item',
+            //     url: '/rfq/evaluation'
+            // });
+            this.children.push({
+                id: 'rfq',
+                title: 'RFx',
+                // translate: 'NAV.DASHBOARDS',
                 type: 'item',
+                icon: 'paymentReport',
+                isSvgIcon: true,
                 url: '/rfq/evaluation'
             });
         }
@@ -314,12 +332,21 @@ export class LoginComponent implements OnInit, OnDestroy {
         //     });
         // }
         if (this.MenuItems.indexOf('RFQVendor') >= 0) {
-            this.subChildren2.push({
-                id: 'rfqvendor',
-                title: 'Awaiting RFQ',
+            this.children.push({
+                id: 'rfq',
+                title: 'RFx',
+                // translate: 'NAV.DASHBOARDS',
                 type: 'item',
+                icon: 'paymentReport',
+                isSvgIcon: true,
                 url: '/rfq/rfqvendor'
             });
+            // this.subChildren2.push({
+            //     id: 'rfqvendor',
+            //     title: 'Awaiting RFQ',
+            //     type: 'item',
+            //     url: '/rfq/rfqvendor'
+            // });
         }
         // if (this.MenuItems.indexOf('RFQResponse') >= 0) {
         //     this.subChildren2.push({
@@ -329,25 +356,25 @@ export class LoginComponent implements OnInit, OnDestroy {
         //         url: '/rfq/response'
         //     });
         // }
-        if (
-            this.MenuItems.indexOf('PurchaseRequisition') >= 0 ||
-            this.MenuItems.indexOf('RFQCreation') >= 0 ||
-            this.MenuItems.indexOf('RFQPublish') >= 0 ||
-            this.MenuItems.indexOf('RFQEvaluation') >= 0 ||
-            this.MenuItems.indexOf('RFQAwareded') >= 0 ||
-            this.MenuItems.indexOf('RFQVendor') >= 0 ||
-            this.MenuItems.indexOf('RFQResponse') >= 0
-        ) {
-            this.children.push({
-                id: 'rfq',
-                title: 'RFQ',
-                // translate: 'NAV.DASHBOARDS',
-                type: 'collapsable',
-                icon: 'paymentReport',
-                isSvgIcon: true,
-                children: this.subChildren2
-            });
-        }
+        // if (
+        //     this.MenuItems.indexOf('PurchaseRequisition') >= 0 ||
+        //     this.MenuItems.indexOf('RFQCreation') >= 0 ||
+        //     this.MenuItems.indexOf('RFQPublish') >= 0 ||
+        //     this.MenuItems.indexOf('RFQEvaluation') >= 0 ||
+        //     this.MenuItems.indexOf('RFQAwareded') >= 0 ||
+        //     this.MenuItems.indexOf('RFQVendor') >= 0 ||
+        //     this.MenuItems.indexOf('RFQResponse') >= 0
+        // ) {
+        //     this.children.push({
+        //         id: 'rfq',
+        //         title: 'RFQ',
+        //         // translate: 'NAV.DASHBOARDS',
+        //         type: 'collapsable',
+        //         icon: 'paymentReport',
+        //         isSvgIcon: true,
+        //         children: this.subChildren2
+        //     });
+        // }
         if (this.MenuItems.indexOf('VendorAssignment') >= 0) {
             this.subChildren3.push({
                 id: 'vendorAssignment',

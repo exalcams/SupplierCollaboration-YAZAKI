@@ -65,3 +65,31 @@
     </div>
 
 </div>
+<div class="navbar-top" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
+
+    <div class="logo">
+            <img class="logo-icon" style="height: 34px; width: 34px" src="assets/images/logos/ExalcaLogo_arrow.png">
+            <strong class="logo-text secondary-text" style="font-size: 25px;margin-left: 17px;color: white !important">exalca</strong>
+            
+    <!-- <span style="color: white;margin-left: 25px">Applications</span> -->
+        <!-- <img class="logo-icon" src="assets/images/logos/ExalcaLogoWhite.png"> -->
+        <!-- <span class="logo-text secondary-text">FUSE</span>
+        <span class="logo-text secondary-text">Exalca</span> -->
+    </div>
+
+
+    <div class="buttons">
+
+        <button mat-icon-button class="toggle-sidebar-folded" (click)="toggleSidebarFolded()" fxHide.lt-lg>
+            <!-- <img *ngIf="isShowIcon" style="height:20px" src="assets/images/dashboard/double_back.png"> -->
+            <img  style="height:20px" src="assets/images/dashboard/menu-copy.png">
+        </button>
+
+        <button mat-icon-button class="toggle-sidebar-opened" (click)="toggleSidebarOpened()" fxHide.gt-md>
+            <!-- <mat-icon class="secondary-text">arrow_back</mat-icon> -->
+            <img style="height:20px" src="assets/images/dashboard/double_back.png">
+        </button>
+
+    </div>
+
+</div>

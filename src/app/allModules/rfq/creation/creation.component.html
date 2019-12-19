@@ -310,7 +310,7 @@
                 </td>
               </ng-container>
 
-              <ng-container matColumnDef="DelayDays">
+              <!-- <ng-container matColumnDef="DelayDays">
                 <th mat-header-cell *matHeaderCellDef> Delay Days </th>
                 <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                   <input matInput formControlName="DelayDays">
@@ -319,7 +319,7 @@
                     *
                   </span>
                 </td>
-              </ng-container>
+              </ng-container> -->
 
               <ng-container matColumnDef="Schedule">
                 <th mat-header-cell *matHeaderCellDef>Schedule</th>
@@ -344,7 +344,7 @@
                 </td>
               </ng-container>
 
-              <ng-container matColumnDef="SupplierPartNumber">
+              <!-- <ng-container matColumnDef="SupplierPartNumber">
                 <th mat-header-cell *matHeaderCellDef> Supplier Part No. </th>
                 <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                   <input matInput formControlName="SupplierPartNumber">
@@ -353,9 +353,9 @@
                     *
                   </span>
                 </td>
-              </ng-container>
+              </ng-container> -->
 
-              <ng-container matColumnDef="SelfLifeDays">
+              <!-- <ng-container matColumnDef="SelfLifeDays">
                 <th mat-header-cell *matHeaderCellDef> Self Life Days </th>
                 <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                   <input matInput formControlName="SelfLifeDays">
@@ -364,7 +364,7 @@
                     *
                   </span>
                 </td>
-              </ng-container>
+              </ng-container> -->
 
 
               <ng-container matColumnDef="Attachment">
@@ -416,12 +416,13 @@
 
               <ng-container matColumnDef="Notes">
                 <th mat-header-cell *matHeaderCellDef> Notes </th>
-                <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
-                  <input matInput formControlName="Notes">
+                <td mat-cell *matCellDef="let row; let index = index">
+                  <mat-icon (click)="MenuBookClicked(index)">menu_book</mat-icon>
+                  <!-- <input matInput formControlName="Notes">
                   <span class="pl-4 errorClass" *ngIf="RFQFormGroup.get('RFQItems').controls[index].get('Notes').touched && 
               RFQFormGroup.get('RFQItems').controls[index].get('Notes').hasError('required')">
                     *
-                  </span>
+                  </span> -->
                 </td>
               </ng-container>
             </table>
