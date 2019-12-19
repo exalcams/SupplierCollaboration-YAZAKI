@@ -1,0 +1,35 @@
+@import "src/@fuse/scss/fuse";
+
+.notes-dialog {
+  @include media-breakpoint("xs") {
+    width: 100%;
+  }
+
+  @include media-breakpoint-up("sm") {
+    width: 90%;
+  }
+  .mat-radio-button {
+    margin: 0 5px;
+  }
+  .mat-dialog-container {
+    padding: 0;
+    // border-radius: 10px;
+  }
+
+  .dialog-content-wrapper {
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .disabledClass {
+    color: rgba(0, 0, 0, 0.38);
+  }
+
+  .inline-editor-box {
+    height: 200px;
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 15px;
+  }
+}

@@ -103,6 +103,7 @@ export class Vendor {
     GSTNumber: string;
     State: string;
     City: string;
+    AccountGroup: string;
     Plant: string;
     Type: string;
     IsActive: boolean;
@@ -123,6 +124,7 @@ export class VendorSearchCondition {
     GSTNumber: string;
     State: string;
     City: string;
+    AccountGroup: string;
 }
 
 export class CurrencyMaster {

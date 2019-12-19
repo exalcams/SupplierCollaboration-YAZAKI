@@ -35,7 +35,7 @@ export class PublishComponent implements OnInit {
   CheckedVendorList: Vendor[] = [];
   BGClassName: any;
   compStyles: CSSStyleDeclaration;
-  vendorDisplayedColumns: string[] = ['select', 'VendorCode', 'VendorName', 'GSTNumber', 'City', 'State'];
+  vendorDisplayedColumns: string[] = ['select', 'VendorCode', 'VendorName', 'GSTNumber', 'City', 'State', 'AccountGroup'];
   vendorDataSource: MatTableDataSource<Vendor>;
   selection = new SelectionModel<Vendor>(true, []);
   notificationSnackBarComponent: NotificationSnackBarComponent;
@@ -88,6 +88,7 @@ export class PublishComponent implements OnInit {
       GSTNumber: [''],
       State: [''],
       City: [''],
+      AccountGroup: [''],
       EmailId: [''],
       ContactNumber: [],
     });
@@ -250,6 +251,7 @@ export class PublishComponent implements OnInit {
       this.conditions.GSTNumber = this.VendorSearchFormGroup.get('GSTNumber').value;
       this.conditions.State = this.VendorSearchFormGroup.get('State').value;
       this.conditions.City = this.VendorSearchFormGroup.get('City').value;
+      this.conditions.AccountGroup = this.VendorSearchFormGroup.get('AccountGroup').value;
       this._masterService.GetVendorsBasedOnConditions(this.conditions).subscribe(
         (data) => {
           this.VendorList = data as Vendor[];
@@ -295,8 +297,8 @@ export class PublishComponent implements OnInit {
     }
   }
   AddValidators(): void {
-    this.VendorSearchFormGroup.get('VendorCode').setValidators([Validators.required]);
-    this.VendorSearchFormGroup.get('VendorCode').updateValueAndValidity();
+    // this.VendorSearchFormGroup.get('VendorCode').setValidators([Validators.required]);
+    // this.VendorSearchFormGroup.get('VendorCode').updateValueAndValidity();
     this.VendorSearchFormGroup.get('VendorName').setValidators([Validators.required]);
     this.VendorSearchFormGroup.get('VendorName').updateValueAndValidity();
     this.VendorSearchFormGroup.get('GSTNumber').setValidators([Validators.required]);
@@ -305,6 +307,8 @@ export class PublishComponent implements OnInit {
     this.VendorSearchFormGroup.get('State').updateValueAndValidity();
     this.VendorSearchFormGroup.get('City').setValidators([Validators.required]);
     this.VendorSearchFormGroup.get('City').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('AccountGroup').setValidators([Validators.required]);
+    this.VendorSearchFormGroup.get('AccountGroup').updateValueAndValidity();
     this.VendorSearchFormGroup.get('EmailId').setValidators([Validators.required, Validators.email]);
     this.VendorSearchFormGroup.get('EmailId').updateValueAndValidity();
     this.VendorSearchFormGroup.get('ContactNumber').setValidators([Validators.required]);
@@ -321,6 +325,8 @@ export class PublishComponent implements OnInit {
     this.VendorSearchFormGroup.get('State').updateValueAndValidity();
     this.VendorSearchFormGroup.get('City').clearValidators();
     this.VendorSearchFormGroup.get('City').updateValueAndValidity();
+    this.VendorSearchFormGroup.get('AccountGroup').clearValidators();
+    this.VendorSearchFormGroup.get('AccountGroup').updateValueAndValidity();
     this.VendorSearchFormGroup.get('EmailId').clearValidators();
     this.VendorSearchFormGroup.get('EmailId').updateValueAndValidity();
     this.VendorSearchFormGroup.get('ContactNumber').clearValidators();
@@ -458,6 +464,7 @@ export class PublishComponent implements OnInit {
     ven.City = this.VendorSearchFormGroup.get('City').value;
     ven.EmailId = this.VendorSearchFormGroup.get('EmailId').value;
     ven.ContactNumber = this.VendorSearchFormGroup.get('ContactNumber').value;
+    ven.AccountGroup = this.VendorSearchFormGroup.get('AccountGroup').value;
     this.IsProgressBarVisibile = true;
     this._masterService.CreateVendor(ven).subscribe(
       (data) => {
@@ -492,17 +499,21 @@ export class PublishComponent implements OnInit {
   }
 
   isAllSelected(): boolean {
-    // const numSelected = this.selection.selected.length;
-    // const numRows = this.vendorDataSource.data.length;
-    // return numSelected === numRows;
-    return true;
+    if (this.selection && this.vendorDataSource) {
+      const numSelected = this.selection.selected.length;
+      const numRows = this.vendorDataSource.data.length;
+      return numSelected === numRows;
+    }
+    // return true;
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle(): void {
-    // this.isAllSelected() ?
-    //   this.selection.clear() :
-    //   this.vendorDataSource.data.forEach(row => this.selection.select(row));
+    if (this.vendorDataSource) {
+      this.isAllSelected() ?
+        this.selection.clear() :
+        this.vendorDataSource.data.forEach(row => this.selection.select(row));
+    }
   }
 
   /** The label for the checkbox on the passed row */
