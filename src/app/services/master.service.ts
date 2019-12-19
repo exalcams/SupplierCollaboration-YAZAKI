@@ -181,6 +181,11 @@ export class MasterService {
       .pipe(catchError(this.errorHandler));
   }
 
+  GetVendorsBasedOnMaterial(RFQID: number): Observable<Vendor[] | string> {
+    return this._httpClient.get<Vendor[]>(`${this.baseAddress}api/Master/GetVendorsBasedOnMaterial?RFQID=${RFQID}`)
+      .pipe(catchError(this.errorHandler));
+  }
+
   // Role
   CreateRole(role: RoleWithMenuApp): Observable<any> {
     return this._httpClient.post<any>(`${this.baseAddress}api/Master/CreateRole`,

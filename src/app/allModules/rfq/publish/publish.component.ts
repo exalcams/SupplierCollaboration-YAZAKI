@@ -92,6 +92,7 @@ export class PublishComponent implements OnInit {
       ContactNumber: [],
     });
     // this.GetAllVendors();
+    this.GetVendorsBasedOnMaterial();
     this.GetPurchaseRequisitionStatusCount();
     if (this.SelectedRFQStatus.toLocaleLowerCase() === 'inprogress') {
       this.GetRFQAllocationTempByRFQID();
@@ -144,6 +145,24 @@ export class PublishComponent implements OnInit {
   GetAllVendors(): void {
     this.IsProgressBarVisibile = true;
     this._masterService.GetAllVendors().subscribe(
+      (data) => {
+        this.VendorList = data as Vendor[];
+        // this.VendorList.forEach(x => {
+        //   x.VendorCode = x.VendorCode.replace(/^0+/, '');
+        // });
+        this.vendorDataSource = new MatTableDataSource(this.VendorList);
+        this.IsProgressBarVisibile = false;
+      },
+      (err) => {
+        console.error(err);
+        this.IsProgressBarVisibile = false;
+      }
+    );
+  }
+
+  GetVendorsBasedOnMaterial(): void {
+    this.IsProgressBarVisibile = true;
+    this._masterService.GetVendorsBasedOnMaterial(this.SelectedRFQID).subscribe(
       (data) => {
         this.VendorList = data as Vendor[];
         // this.VendorList.forEach(x => {
