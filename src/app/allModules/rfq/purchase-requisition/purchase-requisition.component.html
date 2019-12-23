@@ -3,12 +3,12 @@
   <div class="center" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="10">
     <div [ngClass]="BGClassName?.layout?.toolbar?.background" fxLayout="column" fxLayoutAlign="center"
       fxLayoutGap="10px" fxLayoutGap.xs="10">
-      <div fxLayout class="layoutclass">
+      <div fxLayout class="layoutclass mt-12">
         <div fxFlex fxLayout="column">
           <div fxFlex>
             <div class="pt-8">
               <span class="Title">
-                Yet to convert RFQ
+                To be released
               </span>
             </div>
           </div>
@@ -27,7 +27,7 @@
             </div>
           </div>
         </div>
-        <div class="borderRight mr-20"></div>
+        <!-- <div class="borderRight mr-20"></div>
         <div fxFlex fxLayout="column">
           <div fxFlex>
             <div class="pt-8">
@@ -46,17 +46,17 @@
             </div>
             <div fxFlex>
               <div class="pr-4 ra">
-                <img class="img-style" src="assets/images/rfq/InPrograss.png">
+                <img class="img-style" src="assets/images/rfq/InProcess.png">
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="borderRight mr-20"></div>
         <div fxFlex fxLayout="column">
           <div fxFlex>
             <div class="pt-8">
               <span class="Title">
-                RFQ Allocated
+                Allocated
               </span>
             </div>
           </div>
@@ -80,6 +80,55 @@
           <div fxFlex>
             <div class="pt-8">
               <span class="Title">
+                Responded
+              </span>
+            </div>
+          </div>
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{purchaseRequisitionStatusCount?.Responded}} / {{purchaseRequisitionStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/Responded.png">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                Awarded
+              </span>
+            </div>
+          </div>
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{purchaseRequisitionStatusCount?.Awarded}} / {{purchaseRequisitionStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/Awarded.png">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
                 Responded / Awarded
               </span>
             </div>
@@ -98,7 +147,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div fxFlex class="mt-20">

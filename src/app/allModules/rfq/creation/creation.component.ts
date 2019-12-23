@@ -6,7 +6,7 @@ import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '
 import { BehaviorSubject, Observable } from 'rxjs';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { RFQView, RFQItem, RFQItemView, PurchaseRequisitionItem, PurchaseRequisitionStatusCount, RFQParameterPriority } from 'app/models/rfq.model';
+import { RFQView, RFQItem, RFQItemView, PurchaseRequisitionItem, PurchaseRequisitionStatusCount, RFQParameterPriority, PriorityParameter } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AuthenticationDetails, App, CurrencyMasterView, IncoTermMasterView, PlantMasterView } from 'app/models/master';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -20,6 +20,7 @@ import { AttachmentsDialogComponent } from 'app/shared/attachments-dialog/attach
 import { startWith, map } from 'rxjs/operators';
 import { ParameterPriorityDialogComponent } from '../parameter-priority-dialog/parameter-priority-dialog.component';
 import { NotesDialogComponent } from '../notes-dialog/notes-dialog.component';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 @Component({
   selector: 'creation',
   templateUrl: './creation.component.html',
@@ -59,6 +60,9 @@ export class CreationComponent implements OnInit {
   isRFQResponseDateError: boolean;
   purchaseRequisitionStatusCount: PurchaseRequisitionStatusCount;
   CurrentRFQParameterPriority: RFQParameterPriority[] = [];
+  AllPriorityParameters: PriorityParameter[] = [];
+  AllDisabledPriorityParameters: PriorityParameter[] = [];
+
   public editorValue: string = '';
   constructor(
     private _fuseConfigService: FuseConfigService,
@@ -143,7 +147,45 @@ export class CreationComponent implements OnInit {
     else {
       this.GetRFQByPurchaseRequisitionID();
     }
+    this.GetAllPriorityParameters();
+  }
 
+  GetAllPriorityParameters(): void {
+    this._rfqService.GetAllPriorityParameters().subscribe(
+      (data) => {
+        this.AllPriorityParameters = data as PriorityParameter[];
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  drop(event: CdkDragDrop<string[]>): void {
+    moveItemInArray(this.AllPriorityParameters, event.previousIndex, event.currentIndex);
+  }
+
+  RemovePriority(pp: PriorityParameter): void {
+    pp.IsActive = false;
+    const index = this.AllPriorityParameters.indexOf(pp);
+    if (index >= 0) {
+      const RemovedItem = this.AllPriorityParameters.splice(index, 1)[0];
+      this.AllDisabledPriorityParameters.push(RemovedItem);
+      // this.AllPriorityParameters.push(this.AllPriorityParameters.splice(index, 1)[0]);
+    }
+  }
+  AddPriority(pp: PriorityParameter): void {
+    pp.IsActive = true;
+    const index = this.AllDisabledPriorityParameters.indexOf(pp);
+    if (index >= 0) {
+      const RemovedItem = this.AllDisabledPriorityParameters.splice(index, 1)[0];
+      this.AllPriorityParameters.push(RemovedItem);
+      // const ActivePriorities = this.AllPriorityParameters.filter(x => x.IsActive);
+      // if (ActivePriorities.length <= 0) {
+      //   this.AllPriorityParameters.splice(0, 0, RemovedItem);
+      // } else {
+      //   this.AllPriorityParameters.splice(ActivePriorities.length, 0, RemovedItem);
+      // }
+    }
   }
 
   GetPurchaseRequisitionStatusCount(): void {
@@ -206,6 +248,7 @@ export class CreationComponent implements OnInit {
   }
 
   ResetControl(): void {
+    this.RFQ.CurrentRFQParameterPriorities = [];
     this.RFQ = new RFQView();
     this.RFQFormGroup.reset();
     Object.keys(this.RFQFormGroup.controls).forEach(key => {
@@ -351,10 +394,10 @@ export class CreationComponent implements OnInit {
 
   MenuBookClicked(index: number): void {
     console.log(index);
-    this.OpenNotesDialog();
+    this.OpenNotesDialog(index);
   }
 
-  OpenNotesDialog(): void {
+  OpenNotesDialog(index: number): void {
     const dialogConfig: MatDialogConfig = {
       data: null,
       panelClass: 'notes-dialog'
@@ -363,10 +406,11 @@ export class CreationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          console.log(result);
+          // console.log(result);
+          const RFQItemsFormArray = this.RFQFormGroup.get('RFQItems') as FormArray;
+          RFQItemsFormArray.controls[index].get('Notes').patchValue(result);
         }
       });
-
   }
 
   SubmitRFQDetails(): void {
@@ -427,8 +471,8 @@ export class CreationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       result => {
         if (result) {
-          // this.SaveRFQ();
-          this.OpenParameterDialog();
+          this.SaveRFQ();
+          // this.OpenParameterDialog();
         }
       });
   }
@@ -451,6 +495,7 @@ export class CreationComponent implements OnInit {
   }
 
   SaveRFQ(): void {
+    // this.RFQ.CurrentRFQParameterPriorities = this.AllPriorityParameters;
     if (this.RFQ.RFQID) {
       this.UpdateRFQ();
     } else {
@@ -463,6 +508,7 @@ export class CreationComponent implements OnInit {
     this.RFQ.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
     this.GetRFQHeaderValues();
     this.GetRFQItemValues();
+    this.GetRFQParameterPriority();
     this.RFQ.ModifiedBy = this.CurrentUserID.toString();
     this._rfqService.UpdateRFQ(this.RFQ).subscribe(
       (data) => {
@@ -507,6 +553,7 @@ export class CreationComponent implements OnInit {
     this.RFQ.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
     this.GetRFQHeaderValues();
     this.GetRFQItemValues();
+    this.GetRFQParameterPriority();
     this.RFQ.CreatedBy = this.CurrentUserID.toString();
     this._rfqService.CreateRFQ(this.RFQ).subscribe(
       (data) => {
@@ -596,6 +643,22 @@ export class CreationComponent implements OnInit {
       rfq.APPID = this.RFQItemAppID;
       this.RFQ.RFQItems.push(rfq);
     });
+  }
+
+  GetRFQParameterPriority(): void {
+    this.RFQ.CurrentRFQParameterPriorities = [];
+    const ActivePriorities = this.AllPriorityParameters.filter(x => x.IsActive);
+    const len = ActivePriorities.length;
+    if (len > 0) {
+      ActivePriorities.forEach((pp, i) => {
+        const t: RFQParameterPriority = new RFQParameterPriority();
+        t.Parameter = pp.Parameter;
+        t.Priority = i + 1;
+        t.PriorityValue = len - i;
+        t.CreatedBy = this.CurrentUserID.toString();
+        this.RFQ.CurrentRFQParameterPriorities.push(t);
+      });
+    }
   }
 
   GoToAllocateRFQ(): void {
