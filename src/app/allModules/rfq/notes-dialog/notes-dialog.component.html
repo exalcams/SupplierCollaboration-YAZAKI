@@ -12,7 +12,7 @@
     <form name="notesForm" [formGroup]="notesForm" novalidate fxLayout="column" fxFlex>
       <div fxLayout fxLayoutAlign="center">
         <!-- <mat-form-field class="mt-8"> -->
-        <ck-editor name="editor1" (change)="onChange($event)" formControlName="Notes" skin="moono-lisa" language="en" 
+        <ck-editor name="editor1" formControlName="Notes" skin="moono-lisa" language="en" 
         [fullPage]="true">
         </ck-editor>
         <!-- </mat-form-field> -->

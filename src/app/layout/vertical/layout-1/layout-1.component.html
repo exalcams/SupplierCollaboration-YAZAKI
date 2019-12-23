@@ -9,9 +9,9 @@
 <div id="main">
 
     <!-- TOOLBAR: Above -->
-    <ng-container *ngIf="fuseConfig.layout.toolbar.position === 'above'">
+    <!-- <ng-container *ngIf="fuseConfig.layout.toolbar.position === 'above'">
         <ng-container *ngTemplateOutlet="toolbar"></ng-container>
-    </ng-container>
+    </ng-container> -->
     <!-- / TOOLBAR: Above -->
 
     <div id="container-1" class="container">
@@ -25,18 +25,18 @@
         <div id="container-2" class="container">
 
             <!-- TOOLBAR: Below fixed -->
-            <ng-container *ngIf="fuseConfig.layout.toolbar.position === 'below-fixed'">
+            <!-- <ng-container *ngIf="fuseConfig.layout.toolbar.position === 'below-fixed'">
                 <ng-container *ngTemplateOutlet="toolbar"></ng-container>
-            </ng-container>
+            </ng-container> -->
             <!-- / TOOLBAR: Below fixed -->
 
             <div id="container-3" class="container" fusePerfectScrollbar
                  [fusePerfectScrollbarOptions]="{suppressScrollX: true, updateOnRouteChange : true}">
 
                 <!-- TOOLBAR: Below static -->
-                <ng-container *ngIf="fuseConfig.layout.toolbar.position === 'below-static'">
+                <!-- <ng-container *ngIf="fuseConfig.layout.toolbar.position === 'below-static'">
                     <ng-container *ngTemplateOutlet="toolbar"></ng-container>
-                </ng-container>
+                </ng-container> -->
                 <!-- / TOOLBAR: Below static -->
 
                 <!-- CONTENT -->
@@ -94,11 +94,11 @@
 <!-- ----------------------------------------------------------------------------------------------------- -->
 
 <!-- TOOLBAR -->
-<ng-template #toolbar>
+<!-- <ng-template #toolbar>
     <toolbar *ngIf="!fuseConfig.layout.toolbar.hidden"
              [ngClass]="fuseConfig.layout.toolbar.customBackgroundColor === true ? fuseConfig.layout.toolbar.position + ' ' + fuseConfig.layout.toolbar.background : fuseConfig.layout.toolbar.position">
     </toolbar>
-</ng-template>
+</ng-template> -->
 <!-- / TOOLBAR -->
 
 <!-- FOOTER -->

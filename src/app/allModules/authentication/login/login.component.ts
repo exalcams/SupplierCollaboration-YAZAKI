@@ -282,7 +282,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 title: 'RFx',
                 // translate: 'NAV.DASHBOARDS',
                 type: 'item',
-                icon: 'paymentReport',
+                icon: 'RFxIcon',
                 isSvgIcon: true,
                 url: '/rfq/pr'
             });
@@ -317,7 +317,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 title: 'RFx',
                 // translate: 'NAV.DASHBOARDS',
                 type: 'item',
-                icon: 'paymentReport',
+                icon: 'RFxIcon',
                 isSvgIcon: true,
                 url: '/rfq/evaluation'
             });
@@ -337,7 +337,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 title: 'RFx',
                 // translate: 'NAV.DASHBOARDS',
                 type: 'item',
-                icon: 'paymentReport',
+                icon: 'RFxIcon',
                 isSvgIcon: true,
                 url: '/rfq/rfqvendor'
             });
@@ -418,8 +418,8 @@ export class LoginComponent implements OnInit, OnDestroy {
                 title: 'Support Ticket',
                 translate: 'NAV.SAMPLE.TITLE',
                 type: 'item',
-                icon: 'assignment',
-                isSvgIcon: false,
+                icon: 'SupportTicketIcon',
+                isSvgIcon: true,
                 url: '/supportTicket'
             });
         }
