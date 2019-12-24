@@ -240,7 +240,7 @@ export class CreationComponent implements OnInit {
       NumberOfAttachments: [''],
       AttachmentNames: [[]],
       TechRating: ['', Validators.required],
-      Notes: ['', Validators.required],
+      Notes: [''],
     });
     this.RFQItemFormArray.push(row);
     // row.get('NumberOfAttachments').disable();
@@ -696,7 +696,7 @@ export class CreationComponent implements OnInit {
       NumberOfAttachments: [''],
       AttachmentNames: [[]],
       TechRating: [prItem.TechRating, Validators.required],
-      Notes: ['', Validators.required],
+      Notes: [''],
     });
     row.disable();
     row.get('Notes').enable();
