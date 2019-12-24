@@ -27,7 +27,8 @@ export class PurchaseRequisitionComponent implements OnInit {
   SelectedPurchaseRequisition: PurchaseRequisition;
   PurchaseRequisitions: PurchaseRequisition[];
   BGClassName: any;
-  PurchaseRequisitionColumns: string[] = ['PurchaseRequisitionID', 'PurchaseDate', 'PurchaseOrganization', 'PurchaseGroup', 'CompanyCode', 'Buyer', 'State', 'Publishing', 'Response', 'Awarded'];
+  // PurchaseRequisitionColumns: string[] = ['PurchaseRequisitionID', 'PurchaseDate', 'PurchaseOrganization', 'PurchaseGroup', 'CompanyCode', 'Buyer', 'State', 'Publishing', 'Response', 'Awarded'];
+  PurchaseRequisitionColumns: string[] = ['PurchaseRequisitionID', 'PurchaseDate', 'PurchaseOrganization', 'PurchaseGroup', 'CompanyCode', 'Buyer', 'RFQStatus'];
   PurchaseRequisitionDataSource: MatTableDataSource<PurchaseRequisition>;
   purchaseRequisitionStatusCount: PurchaseRequisitionStatusCount;
 

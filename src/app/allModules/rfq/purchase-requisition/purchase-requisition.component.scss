@@ -28,6 +28,9 @@ table {
     padding-left: 8px !important;
     padding-right: 8px !important;
     border: 1px solid #1b56ca !important;
+    img {
+      height: 30px !important;
+    }
     // border-right: 1px solid #1b56ca;
   }
   tr {
@@ -62,9 +65,9 @@ td {
   z-index: 1;
   left: 55%;
 }
-.highlight{
+.highlight {
   background: lightgray !important;
 }
-.img-style{
+.img-style {
   height: 60px !important;
 }
