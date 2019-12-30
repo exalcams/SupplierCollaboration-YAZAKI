@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import {
     RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView,
-    PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView, PurchaseRequisitionStatusCount, RFQStatusCount, PriorityParameter, RFQResponseTechRating, RFQResponseTechRatingView, RFQVendorRank
+    PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView, PurchaseRequisitionStatusCount, RFQStatusCount, PriorityParameter, RFQResponseTechRating, RFQResponseTechRatingView, RFQVendorRank, RFQHeader
 } from 'app/models/rfq.model';
 import { Auxiliary, AuxiliaryView } from 'app/models/asn';
 import { Guid } from 'guid-typescript';
@@ -67,8 +67,16 @@ export class RFQService {
         return this._httpClient.get<RFQView>(`${this.baseAddress}api/RFQ/GetRFQByPurchaseRequisitionID?PurchaseRequisitionID=${PurchaseRequisitionID}`)
             .pipe(catchError(this.errorHandler));
     }
+    GetRFQByRFQID(RFQID: number): Observable<RFQView | string> {
+        return this._httpClient.get<RFQView>(`${this.baseAddress}api/RFQ/GetRFQByRFQID?RFQID=${RFQID}`)
+            .pipe(catchError(this.errorHandler));
+    }
     GetRFQByIDAndVendor(RFQID: number, VendorID: string): Observable<RFQWithResponseView | string> {
         return this._httpClient.get<RFQWithResponseView>(`${this.baseAddress}api/RFQ/GetRFQByIDAndVendor?RFQID=${RFQID}&VendorID=${VendorID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetRFQStatusCount(): Observable<RFQStatusCount | string> {
+        return this._httpClient.get<RFQStatusCount>(`${this.baseAddress}api/RFQ/GetRFQStatusCount`)
             .pipe(catchError(this.errorHandler));
     }
     GetRFQStatusCountByBuyer(UserID: Guid): Observable<RFQStatusCount | string> {
@@ -106,6 +114,10 @@ export class RFQService {
 
     GetAllCompletedPurchaseRequisitionByVendor(UserID: Guid): Observable<PurchaseRequisition[] | string> {
         return this._httpClient.get<PurchaseRequisition[]>(`${this.baseAddress}api/RFQ/GetAllCompletedPurchaseRequisitionByVendor?UserID=${UserID}`)
+            .pipe(catchError(this.errorHandler));
+    }
+    GetRFQByStatus(Status: string): Observable<RFQHeader[] | string> {
+        return this._httpClient.get<RFQHeader[]>(`${this.baseAddress}api/RFQ/GetRFQByStatus?Status=${Status}`)
             .pipe(catchError(this.errorHandler));
     }
     AddRFQAttachment(auxiliary: Auxiliary, selectedFiles: File[]): Observable<any> {
@@ -247,6 +259,11 @@ export class RFQService {
 
     GetAllPriorityParameters(): Observable<PriorityParameter[] | string> {
         return this._httpClient.get<PriorityParameter[]>(`${this.baseAddress}api/RFQ/GetAllPriorityParameters`)
+            .pipe(catchError(this.errorHandler));
+    }
+
+    GetRFQParameterPriorityByRFQID(RFQID: number): Observable<PriorityParameter[] | string> {
+        return this._httpClient.get<PriorityParameter[]>(`${this.baseAddress}api/RFQ/GetRFQParameterPriorityByRFQID?RFQID=${RFQID}`)
             .pipe(catchError(this.errorHandler));
     }
 

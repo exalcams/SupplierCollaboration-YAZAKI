@@ -201,7 +201,7 @@
           <div fxLayout="row" class="mt-24">
             <div fxFlex="100">
               <table mat-table [dataSource]="RFQDataSource">
-                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row *matHeaderRowDef="RFQColumns">
+                <tr class="tableHeadBg" mat-header-row *matHeaderRowDef="RFQColumns">
                 </tr>
                 <tr [ngClass]="GetRowColor(row)" mat-row *matRowDef="let row; columns: RFQColumns;"></tr>
 

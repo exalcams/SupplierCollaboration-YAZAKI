@@ -6,7 +6,7 @@ import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl } from '
 import { BehaviorSubject, Observable } from 'rxjs';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
 import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notification-snackbar-status-enum';
-import { RFQView, RFQItem, RFQItemView, PurchaseRequisitionItem, PurchaseRequisitionStatusCount, RFQParameterPriority, PriorityParameter } from 'app/models/rfq.model';
+import { RFQView, RFQItem, RFQItemView, PurchaseRequisitionItem, PurchaseRequisitionStatusCount, RFQParameterPriority, PriorityParameter, RFQStatusCount } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { AuthenticationDetails, App, CurrencyMasterView, IncoTermMasterView, PlantMasterView } from 'app/models/master';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -40,6 +40,7 @@ export class CreationComponent implements OnInit {
   RFQItemFormArray: FormArray = this._formBuilder.array([]);
   RFQItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
   SelectedPurchaseRequisitionID: number;
+  SelectedRFQID: number;
   SelectedRFQStatus = '';
   RFQ: RFQView;
   BGClassName: any;
@@ -58,7 +59,7 @@ export class CreationComponent implements OnInit {
   filteredPlantOptions: Observable<PlantMasterView[]>;
   isRFQDateError: boolean;
   isRFQResponseDateError: boolean;
-  purchaseRequisitionStatusCount: PurchaseRequisitionStatusCount;
+  rfqStatusCount: RFQStatusCount;
   CurrentRFQParameterPriority: RFQParameterPriority[] = [];
   AllPriorityParameters: PriorityParameter[] = [];
   AllDisabledPriorityParameters: PriorityParameter[] = [];
@@ -88,6 +89,7 @@ export class CreationComponent implements OnInit {
     // console.log(CurrentPurchaseRequisition);
     if (CurrentPurchaseRequisition) {
       this.SelectedPurchaseRequisitionID = CurrentPurchaseRequisition.PurchaseRequisitionID;
+      this.SelectedRFQID = CurrentPurchaseRequisition.RFQID;
       this.SelectedRFQStatus = CurrentPurchaseRequisition.RFQStatus;
     } else {
       this._router.navigate(['/rfq/pr']);
@@ -102,7 +104,7 @@ export class CreationComponent implements OnInit {
     this.RFQ = new RFQView();
     this.isRFQDateError = false;
     this.isRFQResponseDateError = false;
-    this.purchaseRequisitionStatusCount = new PurchaseRequisitionStatusCount();
+    this.rfqStatusCount = new RFQStatusCount();
   }
 
   ngOnInit(): void {
@@ -140,20 +142,37 @@ export class CreationComponent implements OnInit {
     this.GetAllPlantMasters();
     this.GetAllCurrencyMasters();
     this.GetAllIncoTermMasters();
-    this.GetPurchaseRequisitionStatusCount();
+    this.GetRFQStatusCount();
+    // if (this.SelectedRFQStatus.toLocaleLowerCase() === 'open') {
+    //   this.GetPurchaseRequisitionItemsByPRID();
+    // }
+    // else {
+    //   this.GetRFQByPurchaseRequisitionID();
+    // }
+    this.GetRFQByRFQID();
     if (this.SelectedRFQStatus.toLocaleLowerCase() === 'open') {
-      this.GetPurchaseRequisitionItemsByPRID();
+      this.GetAllPriorityParameters();
+    } else {
+      this.GetRFQParameterPriorityByRFQID();
     }
-    else {
-      this.GetRFQByPurchaseRequisitionID();
-    }
-    this.GetAllPriorityParameters();
   }
 
   GetAllPriorityParameters(): void {
     this._rfqService.GetAllPriorityParameters().subscribe(
       (data) => {
         this.AllPriorityParameters = data as PriorityParameter[];
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+  GetRFQParameterPriorityByRFQID(): void {
+    this._rfqService.GetRFQParameterPriorityByRFQID(this.SelectedRFQID).subscribe(
+      (data) => {
+        this.AllPriorityParameters = data as PriorityParameter[];
+        this.AllDisabledPriorityParameters = this.AllPriorityParameters.filter(x => !x.IsActive);
+        this.AllPriorityParameters = this.AllPriorityParameters.filter(x => x.IsActive);
       },
       (err) => {
         console.error(err);
@@ -188,10 +207,10 @@ export class CreationComponent implements OnInit {
     }
   }
 
-  GetPurchaseRequisitionStatusCount(): void {
-    this._rfqService.GetPurchaseRequisitionStatusCount().subscribe(
+  GetRFQStatusCount(): void {
+    this._rfqService.GetRFQStatusCount().subscribe(
       (data) => {
-        this.purchaseRequisitionStatusCount = data as PurchaseRequisitionStatusCount;
+        this.rfqStatusCount = data as RFQStatusCount;
       },
       (err) => {
         console.error(err);
@@ -512,11 +531,11 @@ export class CreationComponent implements OnInit {
     this.RFQ.ModifiedBy = this.CurrentUserID.toString();
     this._rfqService.UpdateRFQ(this.RFQ).subscribe(
       (data) => {
-        const TransID = data as number;
-        this.RFQ.RFQID = TransID;
+        // const TransID = data as number;
+        this.RFQ.RFQID = this.SelectedRFQID;
         const aux = new Auxiliary();
         aux.APPID = this.RFQItemAppID;
-        aux.HeaderNumber = TransID.toString();
+        aux.HeaderNumber = this.SelectedRFQID.toString();
         aux.CreatedBy = this.CurrentUserID.toString();
         if (this.fileToUploadList && this.fileToUploadList.length) {
           this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
@@ -551,17 +570,18 @@ export class CreationComponent implements OnInit {
   CreateRFQ(): void {
     this.IsProgressBarVisibile = true;
     this.RFQ.PurchaseRequisitionID = this.SelectedPurchaseRequisitionID;
+    this.RFQ.RFQID = this.SelectedRFQID;
     this.GetRFQHeaderValues();
     this.GetRFQItemValues();
     this.GetRFQParameterPriority();
     this.RFQ.CreatedBy = this.CurrentUserID.toString();
     this._rfqService.CreateRFQ(this.RFQ).subscribe(
       (data) => {
-        const TransID = data as number;
-        this.RFQ.RFQID = TransID;
+        // const TransID = data as number;
+        this.RFQ.RFQID = this.SelectedRFQID;
         const aux = new Auxiliary();
         aux.APPID = this.RFQItemAppID;
-        aux.HeaderNumber = TransID.toString();
+        aux.HeaderNumber = this.SelectedRFQID.toString();
         aux.CreatedBy = this.CurrentUserID.toString();
         if (this.fileToUploadList && this.fileToUploadList.length) {
           this._rfqService.AddRFQAttachment(aux, this.fileToUploadList).subscribe(
@@ -604,6 +624,9 @@ export class CreationComponent implements OnInit {
     this.RFQ.IncoTerm = this.RFQFormGroup.get('IncoTerm').value;
     this.RFQ.RFQEndDate = this.RFQFormGroup.get('RFQEndDate').value;
     this.RFQ.RFQResponseEndDate = this.RFQFormGroup.get('RFQResponseEndDate').value;
+    if (this.SelectedRFQStatus.toLocaleLowerCase() === 'open') {
+      this.RFQ.Status = 'InProgress';
+    }
   }
 
   GetRFQItemValues(): void {
@@ -688,11 +711,11 @@ export class CreationComponent implements OnInit {
       OrderQuantity: [prItem.OrderQuantity, Validators.required],
       UOM: [prItem.UOM, Validators.required],
       ExpectedDeliveryDate: [prItem.ExpectedDeliveryDate, Validators.required],
-      DelayDays: [prItem.DelayDays, Validators.required],
+      DelayDays: [prItem.DelayDays],
       Schedule: [prItem.Schedule, Validators.required],
       Price: [prItem.Price, Validators.required],
-      SupplierPartNumber: [prItem.SupplierPartNumber, Validators.required],
-      SelfLifeDays: [prItem.SelfLifeDays, Validators.required],
+      SupplierPartNumber: [prItem.SupplierPartNumber],
+      SelfLifeDays: [prItem.SelfLifeDays],
       NumberOfAttachments: [''],
       AttachmentNames: [[]],
       TechRating: [prItem.TechRating, Validators.required],
@@ -712,16 +735,18 @@ export class CreationComponent implements OnInit {
       OrderQuantity: [rFQItem.OrderQuantity, Validators.required],
       UOM: [rFQItem.UOM, Validators.required],
       ExpectedDeliveryDate: [rFQItem.ExpectedDeliveryDate, Validators.required],
-      DelayDays: [rFQItem.DelayDays, Validators.required],
+      DelayDays: [rFQItem.DelayDays],
       Schedule: [rFQItem.Schedule, Validators.required],
       Price: [rFQItem.Price, Validators.required],
-      SupplierPartNumber: [rFQItem.SupplierPartNumber, Validators.required],
-      SelfLifeDays: [rFQItem.SelfLifeDays, Validators.required],
+      SupplierPartNumber: [rFQItem.SupplierPartNumber],
+      SelfLifeDays: [rFQItem.SelfLifeDays],
       NumberOfAttachments: [rFQItem.NumberOfAttachments],
       AttachmentNames: [rFQItem.AttachmentNames],
       TechRating: [rFQItem.TechRating, Validators.required],
       Notes: [rFQItem.Notes, Validators.required],
     });
+    row.disable();
+    row.get('Notes').enable();
     this.RFQItemFormArray.push(row);
     this.RFQItemDataSource.next(this.RFQItemFormArray.controls);
     // return row;
@@ -769,6 +794,33 @@ export class CreationComponent implements OnInit {
       }
     );
   }
+
+  GetRFQByRFQID(): void {
+    this._rfqService.GetRFQByRFQID(this.SelectedRFQID).subscribe(
+      (data) => {
+        this.RFQ = data as RFQView;
+        if (this.RFQ) {
+          this.InsertRFQHeaderValues();
+          if (this.RFQ.RFQItems && this.RFQ.RFQItems.length) {
+            this.ClearFormArray(this.RFQItemFormArray);
+            this.RFQ.RFQItems.forEach((x, i) => {
+              this.InsertRFQItemsFormGroup(x);
+            });
+          } else {
+            this.ResetRFQItems();
+          }
+          if (this.SelectedRFQStatus.toLocaleLowerCase() !== 'open') {
+            this.RFQFormGroup.disable();
+          }
+        }
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+
 
   handleFileInput(evt, index: number): void {
     if (evt.target.files && evt.target.files.length > 0) {

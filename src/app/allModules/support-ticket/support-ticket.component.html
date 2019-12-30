@@ -161,7 +161,7 @@
                 </div>
               </div>
             </div>
-            <div fxFlex="33" style="height: 55vh" *ngIf="SelectedTicketID" class="m-4 borderRightClass side-bar">
+            <div fxFlex="33" style="height: 65vh" *ngIf="SelectedTicketID" class="m-4 borderRightClass side-bar">
               <div class="sidenav-content" fusePerfectScrollbar fxFlex>
                 <div fxLayout fxLayoutAlign="center" class="m-4"
                   *ngFor="let ven of SelectedSupportTicketResponses;let i=index;let last = last">
@@ -251,8 +251,8 @@
                 </div>
               </div>
             </div>
-            <div fxFlex="33" style="height: 55vh" *ngIf="!SelectedTicketID" class="m-4 borderRightClass"></div>
-            <div fxFlex="33.9" class="m-4 pb-12 side-bar" style="height: 55vh">
+            <div fxFlex="33" style="height: 65vh" *ngIf="!SelectedTicketID" class="m-4 borderRightClass"></div>
+            <div fxFlex="33.9" class="m-4 pb-12 side-bar" style="height: 65vh">
               <div class="sidenav-content" fusePerfectScrollbar fxFlex>
                 <form name="form" [formGroup]="SupportTicketFormGroup">
                   <div fxLayout>
@@ -364,7 +364,7 @@
                 </div>
               </div>
             </div>
-            <div fxFlex="0.1" style="height: 55vh"></div>
+            <div fxFlex="0.1" style="height: 65vh"></div>
           </div>
         </mat-card-content>
       </mat-card>

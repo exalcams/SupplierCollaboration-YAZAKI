@@ -46,6 +46,12 @@ export class PurchaseRequisitionItem {
 
 export class RFQHeader {
     RFQID: number;
+    RFQDate: Date;
+    PurchaseOrganization: string;
+    PurchaseGroup: string;
+    CompanyCode: string;
+    Buyer: string;
+    State: string;
     Title: string;
     SupplyPlant: string;
     Currency: string;
@@ -54,6 +60,7 @@ export class RFQHeader {
     IncoTerm: string;
     RFQEndDate?: Date;
     RFQResponseEndDate?: Date;
+    RFQStatus: string;
     Status: string;
     AutoEvaluation: string;
     RFQType: string;
@@ -407,6 +414,9 @@ export class PurchaseRequisitionStatusCount {
 
 export class RFQStatusCount {
     All: number;
+    YetToConvert: number;
+    InProgress: number;
+    Allocated: number;
     ResponsePending: number;
     Responded: number;
     Archived: number;

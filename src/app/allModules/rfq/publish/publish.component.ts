@@ -10,7 +10,7 @@ import { SnackBarStatus } from 'app/notifications/notification-snack-bar/notific
 import { ShareParameterService } from 'app/services/share-parameter.service';
 import { Router } from '@angular/router';
 import { RFQService } from 'app/services/rfq.service';
-import { RFQAllocationView, PurchaseRequisitionStatusCount } from 'app/models/rfq.model';
+import { RFQAllocationView, PurchaseRequisitionStatusCount, RFQStatusCount } from 'app/models/rfq.model';
 import { NotificationDialogComponent } from 'app/notifications/notification-dialog/notification-dialog.component';
 import { Guid } from 'guid-typescript';
 
@@ -42,6 +42,8 @@ export class PublishComponent implements OnInit {
   IsProgressBarVisibile: boolean;
   purchaseRequisitionStatusCount: PurchaseRequisitionStatusCount;
   IsSearchShow: boolean;
+  rfqStatusCount: RFQStatusCount;
+
   constructor(
     private _fuseConfigService: FuseConfigService,
     private _masterService: MasterService,
@@ -65,6 +67,7 @@ export class PublishComponent implements OnInit {
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
     this.conditions = new VendorSearchCondition();
     this.purchaseRequisitionStatusCount = new PurchaseRequisitionStatusCount();
+    this.rfqStatusCount = new RFQStatusCount();
     this.IsSearchShow = true;
   }
 
@@ -94,7 +97,8 @@ export class PublishComponent implements OnInit {
     });
     // this.GetAllVendors();
     this.GetVendorsBasedOnMaterial();
-    this.GetPurchaseRequisitionStatusCount();
+    // this.GetPurchaseRequisitionStatusCount();
+    this.GetRFQStatusCount();
     if (this.SelectedRFQStatus.toLocaleLowerCase() === 'inprogress') {
       this.GetRFQAllocationTempByRFQID();
     }
@@ -136,6 +140,17 @@ export class PublishComponent implements OnInit {
     this._rfqService.GetPurchaseRequisitionStatusCount().subscribe(
       (data) => {
         this.purchaseRequisitionStatusCount = data as PurchaseRequisitionStatusCount;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  GetRFQStatusCount(): void {
+    this._rfqService.GetRFQStatusCount().subscribe(
+      (data) => {
+        this.rfqStatusCount = data as RFQStatusCount;
       },
       (err) => {
         console.error(err);
