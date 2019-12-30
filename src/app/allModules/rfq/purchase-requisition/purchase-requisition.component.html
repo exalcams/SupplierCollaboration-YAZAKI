@@ -16,7 +16,7 @@
             <div fxFlex="60%">
               <div class="pl-8">
                 <span style="color:white;font-size:28px">
-                  {{purchaseRequisitionStatusCount?.YetToConvert}} / {{purchaseRequisitionStatusCount?.All}}
+                  {{rfqStatusCount?.YetToConvert}} / {{rfqStatusCount?.All}}
                 </span>
               </div>
             </div>
@@ -40,7 +40,7 @@
             <div fxFlex="60%" style="color:white;">
               <div class="pl-8">
                 <span style="color:white;font-size:28px">
-                  {{purchaseRequisitionStatusCount?.InProgress}} / {{purchaseRequisitionStatusCount?.All}}
+                  {{rfqStatusCount?.InProgress}} / {{rfqStatusCount?.All}}
                 </span>
               </div>
             </div>
@@ -64,7 +64,7 @@
             <div fxFlex="60%" style="color:white;">
               <div class="pl-8">
                 <span style="color:white;font-size:28px">
-                  {{purchaseRequisitionStatusCount?.Allocated}} / {{purchaseRequisitionStatusCount?.All}}
+                  {{rfqStatusCount?.Allocated}} / {{rfqStatusCount?.All}}
                 </span>
               </div>
             </div>
@@ -88,7 +88,7 @@
             <div fxFlex="60%" style="color:white;">
               <div class="pl-8">
                 <span style="color:white;font-size:28px">
-                  {{purchaseRequisitionStatusCount?.Responded}} / {{purchaseRequisitionStatusCount?.All}}
+                  {{rfqStatusCount?.Responded}} / {{rfqStatusCount?.All}}
                 </span>
               </div>
             </div>
@@ -112,7 +112,7 @@
             <div fxFlex="60%" style="color:white;">
               <div class="pl-8">
                 <span style="color:white;font-size:28px">
-                  {{purchaseRequisitionStatusCount?.Awarded}} / {{purchaseRequisitionStatusCount?.All}}
+                  {{rfqStatusCount?.Awarded}} / {{rfqStatusCount?.All}}
                 </span>
               </div>
             </div>
@@ -137,7 +137,7 @@
             <div fxFlex="60%" style="color:white;">
               <div class="pl-8">
                 <span style="color:white;font-size:28px">
-                  {{purchaseRequisitionStatusCount?.Responded}} / {{purchaseRequisitionStatusCount?.Awarded}}
+                  {{rfqStatusCount?.Responded}} / {{rfqStatusCount?.Awarded}}
                 </span>
               </div>
             </div>
@@ -186,16 +186,16 @@
           <div fxLayout="row" class="mt-24">
             <div fxFlex="100">
 
-              <table mat-table [dataSource]="PurchaseRequisitionDataSource">
+              <table mat-table [dataSource]="RFQDataSource">
 
-                <ng-container matColumnDef="PurchaseRequisitionID">
+                <ng-container matColumnDef="RFQID">
                   <th mat-header-cell *matHeaderCellDef>RFQ</th>
-                  <td mat-cell *matCellDef="let element">{{element.PurchaseRequisitionID}}</td>
+                  <td mat-cell *matCellDef="let element">{{element.RFQID}}</td>
                 </ng-container>
 
-                <ng-container matColumnDef="PurchaseDate">
+                <ng-container matColumnDef="RFQDate">
                   <th mat-header-cell *matHeaderCellDef>Date</th>
-                  <td mat-cell *matCellDef="let element"> {{element.PurchaseDate | date:'dd-MM-yyyy hh:mm:ss a'}} </td>
+                  <td mat-cell *matCellDef="let element"> {{element.RFQDate | date:'dd-MM-yyyy hh:mm:ss a'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="PurchaseOrganization">
@@ -218,18 +218,18 @@
                   <td mat-cell *matCellDef="let element"> {{element.Buyer}} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="RFQStatus">
+                <ng-container matColumnDef="Status">
                   <th mat-header-cell *matHeaderCellDef>Status</th>
                   <td mat-cell *matCellDef="let element">
-                    <img *ngIf="(element.RFQStatus | lowercase)==='open'" class="mr-4" matTooltip="To be released"
+                    <img *ngIf="(element.Status | lowercase)==='open'" class="mr-4" matTooltip="To be released"
                       src="assets/images/rfq/YetToConvert.png">
-                    <img *ngIf="(element.RFQStatus | lowercase)==='inprogress'" class="mr-4" matTooltip="Awarded"
+                    <img *ngIf="(element.Status | lowercase)==='inprogress'" class="mr-4" matTooltip="In progress"
                       src="assets/images/rfq/InProcess.png">
-                    <img *ngIf="(element.RFQStatus | lowercase)==='allocated'" class="mr-4" matTooltip="Allocated"
+                    <img *ngIf="(element.Status | lowercase)==='allocated'" class="mr-4" matTooltip="Allocated"
                       src="assets/images/rfq/Allocated.png">
-                    <img *ngIf="(element.RFQStatus | lowercase)==='responded'" class="mr-4" matTooltip="Responded"
+                    <img *ngIf="(element.Status | lowercase)==='responded'" class="mr-4" matTooltip="Responded"
                       src="assets/images/rfq/Responded.png">
-                    <img *ngIf="(element.RFQStatus | lowercase)==='awarded'" class="mr-4" matTooltip="Awarded"
+                    <img *ngIf="(element.Status | lowercase)==='awarded'" class="mr-4" matTooltip="Awarded"
                       src="assets/images/rfq/Awarded.png">
                   </td>
                 </ng-container>
@@ -254,12 +254,12 @@
                   <td mat-cell *matCellDef="let element"> {{element.Awarded}} </td>
                 </ng-container> -->
 
-                <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
-                  *matHeaderRowDef="PurchaseRequisitionColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: PurchaseRequisitionColumns;" (click)="RowSelected(row)"
-                  [class.highlight]="row === SelectedPurchaseRequisition"></tr>
+                <tr class="tableHeadBg" mat-header-row
+                  *matHeaderRowDef="RFQColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: RFQColumns;" (click)="RowSelected(row)"
+                  [class.highlight]="row === SelectedRFQ"></tr>
               </table>
-              <div *ngIf="!PurchaseRequisitions?.length">
+              <div *ngIf="!RFQs?.length">
                 <mat-icon style="color: #1b56ca;margin-top: 10px;margin-left: 70px">info</mat-icon>
                 <span style="margin-left: 10px;">The table does not contain any data</span>
               </div>

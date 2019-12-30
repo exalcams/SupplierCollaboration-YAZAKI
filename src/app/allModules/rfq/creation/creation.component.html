@@ -16,7 +16,7 @@
             <div fxFlex="60%">
               <div class="pl-8">
                 <span style="color:white;font-size:28px">
-                  {{purchaseRequisitionStatusCount?.YetToConvert}} / {{purchaseRequisitionStatusCount?.All}}
+                  {{rfqStatusCount?.YetToConvert}} / {{rfqStatusCount?.All}}
                 </span>
               </div>
             </div>
@@ -40,7 +40,7 @@
             <div fxFlex="60%" style="color:white;">
               <div class="pl-8">
                 <span style="color:white;font-size:28px">
-                  {{purchaseRequisitionStatusCount?.InProgress}} / {{purchaseRequisitionStatusCount?.All}}
+                  {{rfqStatusCount?.InProgress}} / {{rfqStatusCount?.All}}
                 </span>
               </div>
             </div>
@@ -64,7 +64,7 @@
             <div fxFlex="60%" style="color:white;">
               <div class="pl-8">
                 <span style="color:white;font-size:28px">
-                  {{purchaseRequisitionStatusCount?.Allocated}} / {{purchaseRequisitionStatusCount?.All}}
+                  {{rfqStatusCount?.Allocated}} / {{rfqStatusCount?.All}}
                 </span>
               </div>
             </div>
@@ -88,7 +88,7 @@
             <div fxFlex="60%" style="color:white;">
               <div class="pl-8">
                 <span style="color:white;font-size:28px">
-                  {{purchaseRequisitionStatusCount?.Responded}} / {{purchaseRequisitionStatusCount?.All}}
+                  {{rfqStatusCount?.Responded}} / {{rfqStatusCount?.All}}
                 </span>
               </div>
             </div>
@@ -112,7 +112,7 @@
             <div fxFlex="60%" style="color:white;">
               <div class="pl-8">
                 <span style="color:white;font-size:28px">
-                  {{purchaseRequisitionStatusCount?.Awarded}} / {{purchaseRequisitionStatusCount?.All}}
+                  {{rfqStatusCount?.Awarded}} / {{rfqStatusCount?.All}}
                 </span>
               </div>
             </div>
@@ -137,7 +137,7 @@
             <div fxFlex="60%" style="color:white;">
               <div class="pl-8">
                 <span style="color:white;font-size:28px">
-                  {{purchaseRequisitionStatusCount?.Responded}} / {{purchaseRequisitionStatusCount?.Awarded}}
+                  {{rfqStatusCount?.Responded}} / {{rfqStatusCount?.Awarded}}
                 </span>
               </div>
             </div>
@@ -153,7 +153,7 @@
     <div fxFlex class="mt-20">
       <mat-card class="mb-16">
         <mat-card-header>
-          <mat-card-title><strong>REQ ID : {{SelectedPurchaseRequisitionID}}</strong>
+          <mat-card-title><strong>RFQ ID : {{SelectedRFQID}}</strong>
           </mat-card-title>
         </mat-card-header>
         <!-- <mat-divider style="margin-left: -25px" [inset]="true"></mat-divider> -->
@@ -286,7 +286,7 @@
               </div>
             </div>
             <table mat-table [dataSource]="RFQItemDataSource" class="mat-elevation-z8" formArrayName="RFQItems">
-              <tr [ngClass]="BGClassName?.layout?.toolbar?.background" mat-header-row
+              <tr class="tableHeadBg" mat-header-row
                 *matHeaderRowDef="RFQItemsColumns">
               </tr>
               <tr mat-row *matRowDef="let row;let i = index; columns: RFQItemsColumns;"></tr>
@@ -303,7 +303,7 @@
               </ng-container>
 
               <ng-container matColumnDef="MaterialDescription">
-                <th mat-header-cell *matHeaderCellDef> Material Description </th>
+                <th mat-header-cell *matHeaderCellDef> Material Des. </th>
                 <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                   <input matInput formControlName="MaterialDescription">
                   <span class="pl-4 errorClass" *ngIf="RFQFormGroup.get('RFQItems').controls[index].get('MaterialDescription').touched && 
@@ -336,7 +336,7 @@
               </ng-container>
 
               <ng-container matColumnDef="ExpectedDeliveryDate">
-                <th mat-header-cell *matHeaderCellDef>Exp. Delivery Date</th>
+                <th mat-header-cell *matHeaderCellDef>Exp. Del. Dt.</th>
                 <td mat-cell *matCellDef="let row; let index = index" [formGroupName]="index">
                   <input matInput [matDatepicker]="picker21" (click)="picker21.open()"
                     formControlName="ExpectedDeliveryDate">

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfigService } from '@fuse/services/config.service';
-import { PurchaseRequisition, PurchaseRequisitionView, PurchaseRequisitionStatusCount } from 'app/models/rfq.model';
+import { PurchaseRequisition, PurchaseRequisitionView, PurchaseRequisitionStatusCount, RFQHeader, RFQStatusCount } from 'app/models/rfq.model';
 import { RFQService } from 'app/services/rfq.service';
 import { AuthenticationDetails } from 'app/models/master';
 import { NotificationSnackBarComponent } from 'app/notifications/notification-snack-bar/notification-snack-bar.component';
@@ -24,13 +24,13 @@ export class PurchaseRequisitionComponent implements OnInit {
   notificationSnackBarComponent: NotificationSnackBarComponent;
   IsProgressBarVisibile: boolean;
   RFQStatus: string;
-  SelectedPurchaseRequisition: PurchaseRequisition;
-  PurchaseRequisitions: PurchaseRequisition[];
+  SelectedRFQ: RFQHeader;
+  RFQs: RFQHeader[];
   BGClassName: any;
-  // PurchaseRequisitionColumns: string[] = ['PurchaseRequisitionID', 'PurchaseDate', 'PurchaseOrganization', 'PurchaseGroup', 'CompanyCode', 'Buyer', 'State', 'Publishing', 'Response', 'Awarded'];
-  PurchaseRequisitionColumns: string[] = ['PurchaseRequisitionID', 'PurchaseDate', 'PurchaseOrganization', 'PurchaseGroup', 'CompanyCode', 'Buyer', 'RFQStatus'];
-  PurchaseRequisitionDataSource: MatTableDataSource<PurchaseRequisition>;
-  purchaseRequisitionStatusCount: PurchaseRequisitionStatusCount;
+  // RFQColumns: string[] = ['PurchaseRequisitionID', 'PurchaseDate', 'PurchaseOrganization', 'PurchaseGroup', 'CompanyCode', 'Buyer', 'State', 'Publishing', 'Response', 'Awarded'];
+  RFQColumns: string[] = ['RFQID', 'RFQDate', 'PurchaseOrganization', 'PurchaseGroup', 'CompanyCode', 'Buyer', 'Status'];
+  RFQDataSource: MatTableDataSource<RFQHeader>;
+  rfqStatusCount: RFQStatusCount;
 
   constructor(
     private _fuseConfigService: FuseConfigService,
@@ -40,10 +40,10 @@ export class PurchaseRequisitionComponent implements OnInit {
     public snackBar: MatSnackBar
   ) {
     this.RFQStatus = 'Open';
-    this.SelectedPurchaseRequisition = new PurchaseRequisition();
+    this.SelectedRFQ = new RFQHeader();
     this.IsProgressBarVisibile = false;
     this.notificationSnackBarComponent = new NotificationSnackBarComponent(this.snackBar);
-    this.purchaseRequisitionStatusCount = new PurchaseRequisitionStatusCount();
+    this.rfqStatusCount = new RFQStatusCount();
   }
 
   ngOnInit(): void {
@@ -59,31 +59,31 @@ export class PurchaseRequisitionComponent implements OnInit {
     } else {
       this._router.navigate(['/auth/login']);
     }
-    this.GetPurchaseRequisitionStatusCount();
-    this.GetPurchaseRequisitionsByRFQStatus();
+    this.GetRFQStatusCount();
+    this.GetRFQByStatus();
     this._fuseConfigService.config
       // .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config) => {
         this.BGClassName = config;
       });
   }
-  GetPurchaseRequisitionStatusCount(): void {
-    this._rfqService.GetPurchaseRequisitionStatusCount().subscribe(
+  GetRFQStatusCount(): void {
+    this._rfqService.GetRFQStatusCount().subscribe(
       (data) => {
-        this.purchaseRequisitionStatusCount = data as PurchaseRequisitionStatusCount;
+        this.rfqStatusCount = data as RFQStatusCount;
       },
       (err) => {
         console.error(err);
       }
     );
   }
-  GetPurchaseRequisitionsByRFQStatus(): void {
-    this.SelectedPurchaseRequisition = new PurchaseRequisition();
+  GetRFQByStatus(): void {
+    this.SelectedRFQ = new RFQHeader();
     this.IsProgressBarVisibile = true;
-    this._rfqService.GetPurchaseRequisitionsByRFQStatus(this.RFQStatus).subscribe(
+    this._rfqService.GetRFQByStatus(this.RFQStatus).subscribe(
       (data) => {
-        this.PurchaseRequisitions = data as PurchaseRequisition[];
-        this.PurchaseRequisitionDataSource = new MatTableDataSource(this.PurchaseRequisitions);
+        this.RFQs = data as RFQHeader[];
+        this.RFQDataSource = new MatTableDataSource(this.RFQs);
         this.IsProgressBarVisibile = false;
       },
       (err) => {
@@ -93,25 +93,25 @@ export class PurchaseRequisitionComponent implements OnInit {
     );
   }
   RFQStatusChange(): void {
-    this.GetPurchaseRequisitionsByRFQStatus();
+    this.GetRFQByStatus();
   }
 
-  RowSelected(data: PurchaseRequisition): void {
-    this.SelectedPurchaseRequisition = data;
+  RowSelected(data: RFQHeader): void {
+    this.SelectedRFQ = data;
   }
 
   CreateRFQClicked(): void {
-    if (this.SelectedPurchaseRequisition && this.SelectedPurchaseRequisition.PurchaseRequisitionID) {
+    if (this.SelectedRFQ && this.SelectedRFQ.RFQID) {
       const PurchaseRequisition1: PurchaseRequisitionView = new PurchaseRequisitionView();
-      PurchaseRequisition1.PurchaseRequisitionID = this.SelectedPurchaseRequisition.PurchaseRequisitionID;
-      PurchaseRequisition1.RFQStatus = this.SelectedPurchaseRequisition.RFQStatus;
+      PurchaseRequisition1.RFQID = this.SelectedRFQ.RFQID;
+      PurchaseRequisition1.RFQStatus = this.SelectedRFQ.Status;
 
       this._shareParameterService.SetPurchaseRequisition(PurchaseRequisition1);
       this._router.navigate(['/rfq/creation'], {
         // queryParams:
         // {
-        //   id: this.SelectedPurchaseRequisition.PurchaseRequisitionID,
-        //   status: this.SelectedPurchaseRequisition.RFQStatus
+        //   id: this.SelectedRFQ.PurchaseRequisitionID,
+        //   status: this.SelectedRFQ.RFQStatus
         // },
         // skipLocationChange: true
       });
