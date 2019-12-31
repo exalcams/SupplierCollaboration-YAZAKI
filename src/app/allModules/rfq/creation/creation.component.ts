@@ -63,7 +63,13 @@ export class CreationComponent implements OnInit {
   CurrentRFQParameterPriority: RFQParameterPriority[] = [];
   AllPriorityParameters: PriorityParameter[] = [];
   AllDisabledPriorityParameters: PriorityParameter[] = [];
-
+  items = [
+    'Carrots',
+    'Tomatoes',
+    'Onions',
+    'Apples',
+    'Avocados'
+  ];
   public editorValue: string = '';
   constructor(
     private _fuseConfigService: FuseConfigService,
@@ -161,6 +167,7 @@ export class CreationComponent implements OnInit {
     this._rfqService.GetAllPriorityParameters().subscribe(
       (data) => {
         this.AllPriorityParameters = data as PriorityParameter[];
+        this.items = this.AllPriorityParameters.map(x => x.Parameter);
       },
       (err) => {
         console.error(err);
@@ -171,6 +178,7 @@ export class CreationComponent implements OnInit {
     this._rfqService.GetRFQParameterPriorityByRFQID(this.SelectedRFQID).subscribe(
       (data) => {
         this.AllPriorityParameters = data as PriorityParameter[];
+        this.items = this.AllPriorityParameters.map(x => x.Parameter);
         this.AllDisabledPriorityParameters = this.AllPriorityParameters.filter(x => !x.IsActive);
         this.AllPriorityParameters = this.AllPriorityParameters.filter(x => x.IsActive);
       },
@@ -180,7 +188,15 @@ export class CreationComponent implements OnInit {
     );
   }
   drop(event: CdkDragDrop<string[]>): void {
-    moveItemInArray(this.AllPriorityParameters, event.previousIndex, event.currentIndex);
+    if (this.SelectedRFQStatus.toLocaleLowerCase() === 'open') {
+      moveItemInArray(this.AllPriorityParameters, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
+    }
+    // moveItemInArray(this.AllPriorityParameters, event.previousIndex, event.currentIndex);
   }
 
   RemovePriority(pp: PriorityParameter): void {
@@ -412,13 +428,15 @@ export class CreationComponent implements OnInit {
   }
 
   MenuBookClicked(index: number): void {
-    console.log(index);
-    this.OpenNotesDialog(index);
+    // console.log(index);
+    const RFQItemsFormArray = this.RFQFormGroup.get('RFQItems') as FormArray;
+    const Notess = RFQItemsFormArray.controls[index].get('Notes').value;
+    this.OpenNotesDialog(index, Notess);
   }
 
-  OpenNotesDialog(index: number): void {
+  OpenNotesDialog(index: number, Notess: any): void {
     const dialogConfig: MatDialogConfig = {
-      data: null,
+      data: Notess,
       panelClass: 'notes-dialog'
     };
     const dialogRef = this.dialog.open(NotesDialogComponent, dialogConfig);
@@ -743,7 +761,7 @@ export class CreationComponent implements OnInit {
       NumberOfAttachments: [rFQItem.NumberOfAttachments],
       AttachmentNames: [rFQItem.AttachmentNames],
       TechRating: [rFQItem.TechRating, Validators.required],
-      Notes: [rFQItem.Notes, Validators.required],
+      Notes: [rFQItem.Notes],
     });
     row.disable();
     row.get('Notes').enable();
