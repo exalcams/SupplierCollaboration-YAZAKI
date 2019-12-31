@@ -26,7 +26,8 @@ export class NotesDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    console.log(this.data);
+    this.notesForm.get('Notes').patchValue(this.data);
   }
 
   public onChange(event): void {

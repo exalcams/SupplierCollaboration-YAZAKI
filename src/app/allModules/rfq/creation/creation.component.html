@@ -286,8 +286,7 @@
               </div>
             </div>
             <table mat-table [dataSource]="RFQItemDataSource" class="mat-elevation-z8" formArrayName="RFQItems">
-              <tr class="tableHeadBg" mat-header-row
-                *matHeaderRowDef="RFQItemsColumns">
+              <tr class="tableHeadBg" mat-header-row *matHeaderRowDef="RFQItemsColumns">
               </tr>
               <tr mat-row *matRowDef="let row;let i = index; columns: RFQItemsColumns;"></tr>
 
@@ -538,19 +537,20 @@
                 <div class="h2 UnderLine mx-12 my-4 mt-8 pt-8">Evalution Criteria</div>
                 <div class="h4 mx-12 my-4">Drag to change the order</div>
 
-                <div *ngIf="AllPriorityParameters && AllPriorityParameters.length"
-                 cdkDropList class="example-list mx-12" (cdkDropListDropped)="drop($event)">
+                <div *ngIf="AllPriorityParameters && AllPriorityParameters.length" cdkDropList
+                  class="example-list mx-12" (cdkDropListDropped)="drop($event)">
                   <div class="my-8 example-box" *ngFor="let pp of AllPriorityParameters; let i=index" cdkDrag>
                     <span>{{i+1}}. {{pp.Parameter}}</span>
-                    <mat-icon (click)="RemovePriority(pp)">delete</mat-icon>
+                    <mat-icon (click)="SelectedRFQStatus==='Open'?RemovePriority(pp):false">delete
+                    </mat-icon>
                   </div>
                 </div>
 
                 <div *ngIf="AllDisabledPriorityParameters && AllDisabledPriorityParameters.length"
-                class="example-list mx-12">
+                  class="example-list mx-12">
                   <div class="my-8 example-box GrayBg" *ngFor="let pp of AllDisabledPriorityParameters; let i=index">
                     <span>{{pp.Parameter}}</span>
-                    <mat-icon (click)="AddPriority(pp)">add</mat-icon>
+                    <mat-icon (click)="SelectedRFQStatus==='Open'?AddPriority(pp):false">add</mat-icon>
                   </div>
                 </div>
 

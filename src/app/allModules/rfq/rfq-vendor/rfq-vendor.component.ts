@@ -31,7 +31,8 @@ export class RFQVendorComponent implements OnInit {
   RFQs: RFQHeaderVendorView[];
   SelectedRFQList: RFQHeaderVendorView[];
   BGClassName: any;
-  RFQColumns: string[] = ['Select', 'RFQID', 'Title', 'SupplyPlant', 'Currency', 'RFQResponseStartDate', 'IncoTerm', 'RFQResponseEndDate', 'Status', 'RFQResponseStatus', 'Action'];
+  RFQColumns: string[] = ['Select', 'RFQID', 'Title', 'SupplyPlant', 'Currency', 'RFQResponseStartDate', 'RFQResponseStartTime',
+    'IncoTerm', 'RFQResponseEndDate', 'RFQResponseEndTime', 'Status', 'RFQResponseStatus', 'Action'];
   RFQDataSource: MatTableDataSource<RFQHeaderVendorView>;
   rFQStatusCount: RFQStatusCount;
   selection = new SelectionModel<RFQHeaderVendorView>(true, []);

@@ -35,7 +35,7 @@ export class ResponseComponent implements OnInit {
   RFQResponseItemFormGroup: FormGroup;
   RFQResponseItemFormArray: FormArray = this._formBuilder.array([]);
   RFQResponseItemDataSource: MatTableDataSource<RFQResponseItemView>;
-  RFQResponseItemsColumns: string[] = ['IsResponded', 'ItemID', 'MaterialDescription', 'OrderQuantity', 'UOM', 'Action'];
+  RFQResponseItemsColumns: string[] = ['IsResponded', 'ItemID', 'MaterialDescription', 'OrderQuantity', 'UOM', 'Attachment', 'Action'];
   selection = new SelectionModel<RFQResponseItemView>(true, []);
   // RFQResponseItemDataSource = new BehaviorSubject<AbstractControl[]>([]);
   VendorID: string;
@@ -660,9 +660,9 @@ export class ResponseComponent implements OnInit {
       }
     );
   }
-  GetRFQItemAttachments(index: number): void {
-    const RFQItemsFormArray = this.RFQResponseFormGroup.get('RFQResponseItems') as FormArray;
-    const APPNumber: number = RFQItemsFormArray.controls[index].get('ItemID').value;
+  GetRFQItemAttachments(APPNumber: number): void {
+    // const RFQItemsFormArray = this.RFQResponseFormGroup.get('RFQResponseItems') as FormArray;
+    // const APPNumber: number = RFQItemsFormArray.controls[index].get('ItemID').value;
     this._rfqService.GetRFQItemAttachments(this.RFQItemAppID, APPNumber, this.RFQ.RFQID.toString()).subscribe(
       (data) => {
         if (data) {
