@@ -114,7 +114,7 @@ input[disabled] {
   background: white;
   font-size: 14px;
 }
-.GrayBg{
+.GrayBg {
   background-color: #dddddd !important;
 }
 .cdk-drag-preview {
@@ -146,4 +146,7 @@ input[disabled] {
 }
 .UnderLine {
   text-decoration: underline;
+}
+.flexClass {
+  display: flex;
 }

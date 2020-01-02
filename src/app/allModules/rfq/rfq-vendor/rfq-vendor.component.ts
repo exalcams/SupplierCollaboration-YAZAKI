@@ -32,7 +32,7 @@ export class RFQVendorComponent implements OnInit {
   SelectedRFQList: RFQHeaderVendorView[];
   BGClassName: any;
   RFQColumns: string[] = ['Select', 'RFQID', 'Title', 'SupplyPlant', 'Currency', 'RFQResponseStartDate', 'RFQResponseStartTime',
-    'IncoTerm', 'RFQResponseEndDate', 'RFQResponseEndTime', 'Status', 'RFQResponseStatus', 'Action'];
+    'IncoTerm', 'RFQResponseEndDate', 'RFQResponseEndTime', 'Status', 'Action'];
   RFQDataSource: MatTableDataSource<RFQHeaderVendorView>;
   rFQStatusCount: RFQStatusCount;
   selection = new SelectionModel<RFQHeaderVendorView>(true, []);
@@ -156,6 +156,21 @@ export class RFQVendorComponent implements OnInit {
         }
       );
     }
+    if (this.RFQByVendorStatus === 'Expired') {
+      this.SelectedRFQ = new RFQHeaderVendorView();
+      this.IsProgressBarVisibile = true;
+      this._rfqService.GetAllExpiredRFQByVendor(this.CurrentUserID).subscribe(
+        (data) => {
+          this.RFQs = data as RFQHeaderVendorView[];
+          this.RFQDataSource = new MatTableDataSource(this.RFQs);
+          this.IsProgressBarVisibile = false;
+        },
+        (err) => {
+          console.error(err);
+          this.IsProgressBarVisibile = false;
+        }
+      );
+    }
   }
   onChangeChk($event, data: RFQHeaderVendorView): void {
     // $event.source.checked = !$event.source.checked;
@@ -177,24 +192,27 @@ export class RFQVendorComponent implements OnInit {
   }
 
   GetRowColor(data: RFQHeaderVendorView): string {
-    if (data === this.SelectedRFQ) {
-      return 'highlight';
-    }
-    else if (data.Status.toLowerCase() === 'awarded') {
-      return 'awardedColor';
-    }
-    else {
-      const Today = new Date();
-      if (Today < new Date(data.RFQResponseStartDate)) {
-        return 'jasmineBg';
+    if (data) {
+      // if (data === this.SelectedRFQ) {
+      //   return 'highlight';
+      // }
+      // else 
+      if (data.Status.toLowerCase() === 'awarded') {
+        return 'awardedColor';
       }
-      else if (Today > new Date(data.RFQResponseEndDate)) {
-        return 'expColor';
-      }
-      else if (Today >= new Date(data.RFQResponseStartDate) && Today <= new Date(data.RFQResponseEndDate)) {
-        return 'mintGreen';
-      } else {
-        return 'expColor';
+      else {
+        const Today = new Date();
+        if (Today < new Date(data.RFQResponseStartDate)) {
+          return 'jasmineBg';
+        }
+        else if (Today > new Date(data.RFQResponseEndDate)) {
+          return 'expColor';
+        }
+        else if (Today >= new Date(data.RFQResponseStartDate) && Today <= new Date(data.RFQResponseEndDate)) {
+          return 'mintGreen';
+        } else {
+          return 'expColor';
+        }
       }
     }
   }
@@ -206,7 +224,7 @@ export class RFQVendorComponent implements OnInit {
         this.notificationSnackBarComponent.openSnackBar('Validity is not yet started', SnackBarStatus.danger);
       }
       else if (Today > new Date(this.SelectedRFQ.RFQResponseEndDate)) {
-        this.notificationSnackBarComponent.openSnackBar('Validity date is already over', SnackBarStatus.danger);
+        this.notificationSnackBarComponent.openSnackBar('Validity is already over', SnackBarStatus.danger);
       } else {
         this._shareParameterService.SetRFQHeaderVendor(this.SelectedRFQ);
         this._router.navigate(['/rfq/response'], {
@@ -218,15 +236,16 @@ export class RFQVendorComponent implements OnInit {
   }
 
   RFQByVendorStatusChange(): void {
-    if (this.RFQByVendorStatus === 'Allocated') {
-      this.GetAllCompletedRFQByVendor();
-    }
-    if (this.RFQByVendorStatus === 'Responded') {
-      this.GetAllCompletedRFQByVendor();
-    }
-    if (this.RFQByVendorStatus === 'Archived') {
-      this.GetAllCompletedRFQByVendor();
-    }
+    // if (this.RFQByVendorStatus === 'Allocated') {
+    //   this.GetAllCompletedRFQByVendor();
+    // }
+    // if (this.RFQByVendorStatus === 'Responded') {
+    //   this.GetAllCompletedRFQByVendor();
+    // }
+    // if (this.RFQByVendorStatus === 'Archived') {
+    //   this.GetAllCompletedRFQByVendor();
+    // }
+    this.GetAllCompletedRFQByVendor();
   }
   CreateSupportTicketClicked(element: RFQHeaderVendorView): void {
     if (element && element.RFQID) {

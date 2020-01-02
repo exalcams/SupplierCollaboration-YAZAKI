@@ -51,7 +51,55 @@
             </div>
           </div>
         </div>
-        <!-- <div class="borderRight mr-20"></div>
+        <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                Expired
+              </span>
+            </div>
+          </div>
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{rFQStatusCount?.OveredValidity}} / {{rFQStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/Allocated.png">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                Archived
+              </span>
+            </div>
+          </div>
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{rFQStatusCount?.Archived}} / {{rFQStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/Archived.png">
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="borderRight mr-20"></div>
         <div fxFlex fxLayout="column">
           <div fxFlex>
             <div class="pt-8">
@@ -123,29 +171,6 @@
             </div>
           </div>
         </div> -->
-        <div class="borderRight mr-20"></div>
-        <div fxFlex fxLayout="column">
-          <div fxFlex>
-            <div class="pt-8">
-              <span class="Title">
-                Expired
-              </span>
-            </div>
-          </div>
-          <div fxFlex fxLayout fxLayoutAlign="center center">
-            <div fxFlex="60%" style="color:white;">
-              <div class="pl-8">
-                <span style="color:white;font-size:28px">
-                  {{rFQStatusCount?.OveredValidity}} / {{rFQStatusCount?.All}}
-                </span>
-              </div>
-            </div>
-            <div fxFlex>
-              <div class="pr-4 ra">
-                <img class="img-style" src="assets/images/rfq/Allocated.png">
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -165,12 +190,14 @@
           </mat-card-header> -->
         <mat-card-content>
           <div fxLayout="row wrap">
-            <div fxFlex="25" class="boldClass">Supplier response</div>
-            <div fxFlex="50">
+            <!-- <div fxFlex="25" class="boldClass">Supplier response</div> -->
+            <div fxFlex="5"></div>
+            <div fxFlex="70">
               <mat-radio-group aria-label="Select an option" [(ngModel)]="RFQByVendorStatus"
                 (change)="RFQByVendorStatusChange()">
                 <mat-radio-button value="Allocated" class="borderRightClass mr-24 pr-24">Allocated</mat-radio-button>
-                <mat-radio-button value="Responded" class="mr-24 pr-24">Responded</mat-radio-button>
+                <mat-radio-button value="Responded" class="borderRightClass mr-24 pr-24">Responded</mat-radio-button>
+                <mat-radio-button value="Expired" class="borderRightClass mr-24 pr-24">Expired</mat-radio-button>
                 <mat-radio-button value="Archived" class="mr-24 pr-24">Archived</mat-radio-button>
               </mat-radio-group>
             </div>
@@ -182,8 +209,8 @@
                 </button>
               </div>
               <div fxFlex>
-                <button *ngIf="RFQByVendorStatus !== 'Archived'" [ngClass]="BGClassName?.layout?.toolbar?.background"
-                  mat-raised-button (click)="GoToRFQResponse()">
+                <button *ngIf="RFQByVendorStatus !== 'Archived' && RFQByVendorStatus !== 'Expired'"
+                  [ngClass]="BGClassName?.layout?.toolbar?.background" mat-raised-button (click)="GoToRFQResponse()">
                   Respond
                 </button>
               </div>
@@ -197,15 +224,15 @@
               </button>
             </div>
           </div> -->
-          <mat-divider></mat-divider>
+          <mat-divider [class.mt-8]="RFQByVendorStatus === 'Archived' || RFQByVendorStatus === 'Expired'"></mat-divider>
           <div fxLayout="row" class="mt-24">
             <div fxFlex="100">
               <table mat-table [dataSource]="RFQDataSource">
                 <tr class="tableHeadBg" mat-header-row
-                  *matHeaderRowDef="['h1', 'h2','h3','h4','h5','h6','h7','h8','h9','h10','h11']"></tr>
+                  *matHeaderRowDef="['h1', 'h2','h3','h4','h5','h6','h7','h8','h9','h11']"></tr>
                 <tr class="tableHeadBg" mat-header-row *matHeaderRowDef="RFQColumns">
                 </tr>
-                <tr [ngClass]="GetRowColor(row)" mat-row *matRowDef="let row; columns: RFQColumns;"></tr>
+                <tr mat-row *matRowDef="let row; columns: RFQColumns;"></tr>
 
                 <ng-container matColumnDef="h1">
                   <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2"></th>
@@ -220,7 +247,7 @@
                 </ng-container>
 
                 <ng-container matColumnDef="h4">
-                  <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">SupplyPlant</th>
+                  <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">Plant</th>
                 </ng-container>
 
                 <ng-container matColumnDef="h5">
@@ -243,9 +270,9 @@
                   <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">Status</th>
                 </ng-container>
 
-                <ng-container matColumnDef="h10">
+                <!-- <ng-container matColumnDef="h10">
                   <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">Res. Status</th>
-                </ng-container>
+                </ng-container> -->
 
                 <ng-container matColumnDef="h11">
                   <th mat-header-cell *matHeaderCellDef [attr.rowspan]="2">Action</th>
@@ -262,7 +289,7 @@
 
                 <ng-container matColumnDef="RFQID">
                   <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}">RFQ ID</th>
-                  <td mat-cell *matCellDef="let element">{{element.RFQID}}</td>
+                  <td [ngClass]="GetRowColor(element)" mat-cell *matCellDef="let element">{{element.RFQID}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="Title">
@@ -330,10 +357,10 @@
                   </td>
                 </ng-container>
 
-                <ng-container matColumnDef="RFQResponseStatus">
+                <!-- <ng-container matColumnDef="RFQResponseStatus">
                   <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}">Res. Status</th>
                   <td mat-cell *matCellDef="let element"> {{element.RFQResponseStatus}} </td>
-                </ng-container>
+                </ng-container> -->
 
                 <ng-container matColumnDef="Action">
                   <th mat-header-cell *matHeaderCellDef [ngStyle]="{'display': 'none'}">Action</th>
