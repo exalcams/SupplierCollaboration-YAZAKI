@@ -65,6 +65,7 @@
     "ngx-ckeditor": "8.0.0",
     "ngx-color-picker": "6.6.0",
     "ngx-cookie-service": "1.0.10",
+    "ngx-material-timepicker": "3.3.1",
     "perfect-scrollbar": "1.4.0",
     "prismjs": "1.15.0",
     "rxjs": "6.2.2",

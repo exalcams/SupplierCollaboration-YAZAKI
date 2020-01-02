@@ -11,7 +11,7 @@ import { NotificationDialogComponent } from 'app/notifications/notification-dial
 import { AuthenticationDetails, App, CurrencyMasterView, IncoTermMasterView, PlantMasterView } from 'app/models/master';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RFQService } from 'app/services/rfq.service';
-import { Location } from '@angular/common';
+import { Location, DatePipe } from '@angular/common';
 import { Auxiliary, AuxiliaryView } from 'app/models/asn';
 import { MasterService } from 'app/services/master.service';
 import { ShareParameterService } from 'app/services/share-parameter.service';
@@ -21,6 +21,7 @@ import { startWith, map } from 'rxjs/operators';
 import { ParameterPriorityDialogComponent } from '../parameter-priority-dialog/parameter-priority-dialog.component';
 import { NotesDialogComponent } from '../notes-dialog/notes-dialog.component';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import * as moment from 'moment';
 @Component({
   selector: 'creation',
   templateUrl: './creation.component.html',
@@ -76,6 +77,7 @@ export class CreationComponent implements OnInit {
     private _router: Router,
     private route: ActivatedRoute,
     private _location: Location,
+    private _datePipe: DatePipe,
     private _rfqService: RFQService,
     private _shareParameterService: ShareParameterService,
     private _masterService: MasterService,
@@ -132,13 +134,18 @@ export class CreationComponent implements OnInit {
       SupplyPlant: ['', Validators.required],
       Currency: ['', Validators.required],
       RFQStartDate: ['', Validators.required],
+      RFQStartDateTime: ['', Validators.required],
       RFQResponseStartDate: ['', Validators.required],
+      RFQResponseStartDateTime: ['', Validators.required],
       IncoTerm: ['', Validators.required],
       RFQEndDate: ['', Validators.required],
+      RFQEndDateTime: ['', Validators.required],
       RFQResponseEndDate: ['', Validators.required],
+      RFQResponseEndDateTime: ['', Validators.required],
       RFQItems: this.RFQItemFormArray
       // CreatedBy: ['', Validators.required]
     });
+    // this.SetDefaultTime();
     this._fuseConfigService.config
       // .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((config) => {
@@ -161,6 +168,13 @@ export class CreationComponent implements OnInit {
     } else {
       this.GetRFQParameterPriorityByRFQID();
     }
+  }
+
+  SetDefaultTime(): void {
+    this.RFQFormGroup.get('RFQStartDateTime').patchValue('12:00 AM');
+    this.RFQFormGroup.get('RFQResponseStartDateTime').patchValue('12:00 AM');
+    this.RFQFormGroup.get('RFQEndDateTime').patchValue('12:00 AM');
+    this.RFQFormGroup.get('RFQResponseEndDateTime').patchValue('12:00 AM');
   }
 
   GetAllPriorityParameters(): void {
@@ -244,6 +258,7 @@ export class CreationComponent implements OnInit {
   }
 
   RFQDateSelected(): void {
+    this.RFQDateCalculation();
     const FROMDATEVAL = this.RFQFormGroup.get('RFQStartDate').value as Date;
     const TODATEVAL = this.RFQFormGroup.get('RFQEndDate').value as Date;
     if (FROMDATEVAL && TODATEVAL && FROMDATEVAL > TODATEVAL) {
@@ -253,6 +268,7 @@ export class CreationComponent implements OnInit {
     }
   }
   RFQResponseDateSelected(): void {
+    this.RFQResponseDateCalculation();
     const FROMDATEVAL = this.RFQFormGroup.get('RFQResponseStartDate').value as Date;
     const TODATEVAL = this.RFQFormGroup.get('RFQResponseEndDate').value as Date;
     if (FROMDATEVAL && TODATEVAL && FROMDATEVAL > TODATEVAL) {
@@ -262,9 +278,68 @@ export class CreationComponent implements OnInit {
     }
   }
 
+  RFQDateCalculation(): void {
+    const FR = this.RFQFormGroup.get('RFQStartDate').value;
+    if (FR) {
+      const FROMDATEVAL = new Date(FR);
+      const FROMDATETimeVAL = this.RFQFormGroup.get('RFQStartDateTime').value;
+      if (FROMDATEVAL && FROMDATETimeVAL) {
+        const FROMDATETimeVAL1 = moment(FROMDATETimeVAL, 'h:mm:ss a').format('YYYY/MM/DD H:mm:ss');
+        if (FROMDATETimeVAL1) {
+          const FROMDATETimeVAL2 = new Date(FROMDATETimeVAL1);
+          FROMDATEVAL.setHours(FROMDATETimeVAL2.getHours(), FROMDATETimeVAL2.getMinutes(), FROMDATETimeVAL2.getSeconds());
+          this.RFQFormGroup.get('RFQStartDate').patchValue(FROMDATEVAL);
+        }
+      }
+    }
+    const TOD = this.RFQFormGroup.get('RFQEndDate').value;
+    if (TOD) {
+      const TODATEVAL = new Date(TOD);
+      const TODATETimeVAL = this.RFQFormGroup.get('RFQEndDateTime').value;
+      if (TODATEVAL && TODATETimeVAL) {
+        const TODATETimeVAL1 = moment(TODATETimeVAL, 'h:mm:ss a').format('YYYY/MM/DD H:mm:ss');
+        if (TODATETimeVAL1) {
+          const TODATETimeVAL2 = new Date(TODATETimeVAL1);
+          TODATEVAL.setHours(TODATETimeVAL2.getHours(), TODATETimeVAL2.getMinutes(), TODATETimeVAL2.getSeconds());
+          this.RFQFormGroup.get('RFQEndDate').patchValue(TODATEVAL);
+        }
+      }
+    }
+  }
+
+  RFQResponseDateCalculation(): void {
+    const FR = this.RFQFormGroup.get('RFQResponseStartDate').value;
+    if (FR) {
+      const FROMDATEVAL = new Date(FR);
+      const FROMDATETimeVAL = this.RFQFormGroup.get('RFQResponseStartDateTime').value;
+      if (FROMDATEVAL && FROMDATETimeVAL) {
+        const FROMDATETimeVAL1 = moment(FROMDATETimeVAL, 'h:mm:ss a').format('YYYY/MM/DD H:mm:ss');
+        if (FROMDATETimeVAL1) {
+          const FROMDATETimeVAL2 = new Date(FROMDATETimeVAL1);
+          FROMDATEVAL.setHours(FROMDATETimeVAL2.getHours(), FROMDATETimeVAL2.getMinutes(), FROMDATETimeVAL2.getSeconds());
+          this.RFQFormGroup.get('RFQResponseStartDate').patchValue(FROMDATEVAL);
+        }
+      }
+    }
+    const TOD = this.RFQFormGroup.get('RFQResponseEndDate').value;
+    if (TOD) {
+      const TODATEVAL = new Date(TOD);
+      const TODATETimeVAL = this.RFQFormGroup.get('RFQResponseEndDateTime').value as Date;
+      if (TODATEVAL && TODATETimeVAL) {
+        const TODATETimeVAL1 = moment(TODATETimeVAL, 'h:mm:ss a').format('YYYY/MM/DD H:mm:ss');
+        if (TODATETimeVAL1) {
+          const TODATETimeVAL2 = new Date(TODATETimeVAL1);
+          TODATEVAL.setHours(TODATETimeVAL2.getHours(), TODATETimeVAL2.getMinutes(), TODATETimeVAL2.getSeconds());
+          this.RFQFormGroup.get('RFQResponseEndDate').patchValue(TODATEVAL);
+        }
+      }
+    }
+  }
+
   AddRFQItemFormGroup(): void {
     const row = this._formBuilder.group({
       ItemID: ['', Validators.required],
+      MaterialCode: ['', Validators.required],
       MaterialDescription: ['', Validators.required],
       OrderQuantity: ['', Validators.required],
       DelayDays: ['', Validators.required],
@@ -634,6 +709,8 @@ export class CreationComponent implements OnInit {
   }
 
   GetRFQHeaderValues(): void {
+    this.RFQDateCalculation();
+    this.RFQResponseDateCalculation();
     this.RFQ.Title = this.RFQFormGroup.get('Title').value;
     this.RFQ.SupplyPlant = this.RFQFormGroup.get('SupplyPlant').value;
     this.RFQ.Currency = this.RFQFormGroup.get('Currency').value;
@@ -653,6 +730,7 @@ export class CreationComponent implements OnInit {
     RFQItemsFormArray.controls.forEach((x, i) => {
       const rfq: RFQItemView = new RFQItemView();
       rfq.ItemID = x.get('ItemID').value;
+      rfq.MaterialCode = x.get('MaterialCode').value;
       rfq.MaterialDescription = x.get('MaterialDescription').value;
       rfq.OrderQuantity = x.get('OrderQuantity').value;
       rfq.UOM = x.get('UOM').value;
@@ -720,11 +798,26 @@ export class CreationComponent implements OnInit {
       RFQEndDate: this.RFQ.RFQEndDate,
       RFQResponseEndDate: this.RFQ.RFQResponseEndDate
     });
+    if (this.SelectedRFQStatus.toLocaleLowerCase() === 'open') {
+      this.SetDefaultTime();
+    } else {
+      this.RFQFormGroup.get('RFQStartDateTime').patchValue(
+        this._datePipe.transform(this.RFQ.RFQStartDate, 'hh:mm:ss a'));
+      this.RFQFormGroup.get('RFQEndDateTime').patchValue(
+        this._datePipe.transform(this.RFQ.RFQEndDate, 'h:mm:ss a'));
+      this.RFQFormGroup.get('RFQResponseStartDateTime').patchValue(
+        this._datePipe.transform(this.RFQ.RFQResponseStartDate, 'h:mm:ss a'));
+      this.RFQFormGroup.get('RFQResponseEndDateTime').patchValue(
+        this._datePipe.transform(this.RFQ.RFQResponseEndDate, 'h:mm:ss a'));
+    }
   }
+
+
 
   InsertPurchaseRequisitionItemsFormGroup(prItem: PurchaseRequisitionItem): void {
     const row = this._formBuilder.group({
       ItemID: [prItem.ItemID, Validators.required],
+      MaterialCode: [prItem.MaterialCode],
       MaterialDescription: [prItem.MaterialDescription, Validators.required],
       OrderQuantity: [prItem.OrderQuantity, Validators.required],
       UOM: [prItem.UOM, Validators.required],
@@ -749,6 +842,7 @@ export class CreationComponent implements OnInit {
   InsertRFQItemsFormGroup(rFQItem: RFQItemView): void {
     const row = this._formBuilder.group({
       ItemID: [rFQItem.ItemID, Validators.required],
+      MaterialCode: [rFQItem.MaterialCode],
       MaterialDescription: [rFQItem.MaterialDescription, Validators.required],
       OrderQuantity: [rFQItem.OrderQuantity, Validators.required],
       UOM: [rFQItem.UOM, Validators.required],
@@ -898,5 +992,9 @@ export class CreationComponent implements OnInit {
 
         }
       });
+  }
+
+  Test(): void {
+    alert('Called');
   }
 }

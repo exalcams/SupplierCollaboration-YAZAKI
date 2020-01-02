@@ -51,7 +51,55 @@
             </div>
           </div>
         </div>
-        <!-- <div class="borderRight mr-20"></div>
+        <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                Expired
+              </span>
+            </div>
+          </div>
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{rFQStatusCount?.OveredValidity}} / {{rFQStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/Allocated.png">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="borderRight mr-20"></div>
+        <div fxFlex fxLayout="column">
+          <div fxFlex>
+            <div class="pt-8">
+              <span class="Title">
+                Archived
+              </span>
+            </div>
+          </div>
+          <div fxFlex fxLayout fxLayoutAlign="center center">
+            <div fxFlex="60%" style="color:white;">
+              <div class="pl-8">
+                <span style="color:white;font-size:28px">
+                  {{rFQStatusCount?.Archived}} / {{rFQStatusCount?.All}}
+                </span>
+              </div>
+            </div>
+            <div fxFlex>
+              <div class="pr-4 ra">
+                <img class="img-style" src="assets/images/rfq/Archived.png">
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="borderRight mr-20"></div>
         <div fxFlex fxLayout="column">
           <div fxFlex>
             <div class="pt-8">
@@ -123,29 +171,6 @@
             </div>
           </div>
         </div> -->
-        <div class="borderRight mr-20"></div>
-        <div fxFlex fxLayout="column">
-          <div fxFlex>
-            <div class="pt-8">
-              <span class="Title">
-                Expired
-              </span>
-            </div>
-          </div>
-          <div fxFlex fxLayout fxLayoutAlign="center center">
-            <div fxFlex="60%" style="color:white;">
-              <div class="pl-8">
-                <span style="color:white;font-size:28px">
-                  {{rFQStatusCount?.OveredValidity}} / {{rFQStatusCount?.All}}
-                </span>
-              </div>
-            </div>
-            <div fxFlex>
-              <div class="pr-4 ra">
-                <img class="img-style" src="assets/images/rfq/Allocated.png">
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -371,7 +396,8 @@
                       attach_file
                     </mat-icon>
                     <!-- <input hidden type="file" #fileInput1 id="file" (change)="handleFileInput($event,index)" /> -->
-                    <mat-icon class="ml-8" *ngIf="element.NumberOfAttachments" (click)="GetRFQItemAttachments(element.ItemID)">
+                    <mat-icon class="ml-8" *ngIf="element.NumberOfAttachments"
+                      (click)="GetRFQItemAttachments(element.ItemID)">
                       image</mat-icon>
                     <!-- <mat-icon (click)="FillItemDetails(element)">edit</mat-icon> -->
                   </td>

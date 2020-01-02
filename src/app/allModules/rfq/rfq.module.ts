@@ -68,6 +68,7 @@ import { TechRatingReviewDialogComponent } from './tech-rating-review-dialog/tec
 import { TermsAndConditionsDialogComponent } from './terms-and-conditions-dialog/terms-and-conditions-dialog.component';
 import { CKEditorModule } from 'ngx-ckeditor';
 import { NotesDialogComponent } from './notes-dialog/notes-dialog.component';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 const routes: Routes = [
     {
@@ -169,7 +170,8 @@ const routes: Routes = [
         DragDropModule,
         RatingModule,
         // StarRatingModule.forRoot(),
-        CKEditorModule
+        CKEditorModule,
+        NgxMaterialTimepickerModule
     ],
     declarations: [
         PurchaseRequisitionComponent,

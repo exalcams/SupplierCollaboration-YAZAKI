@@ -210,25 +210,47 @@
               RFQFormGroup.get('RFQStartDate').hasError('required')">
                   *
                 </span>
+                <span class="pl-4 errorClass" *ngIf="RFQFormGroup.get('RFQStartDateTime').touched && 
+              RFQFormGroup.get('RFQStartDateTime').hasError('required')">
+                  *
+                </span>
               </div>
-              <mat-form-field appearance="outline" fxFlex="25">
+              <mat-form-field appearance="outline" fxFlex="13">
                 <input matInput [matDatepicker]="picker" formControlName="RFQStartDate" (keydown)="onKeydown($event)"
                   (dateChange)="RFQDateSelected()">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
+
+              <mat-form-field appearance="outline" fxFlex="12" class="pl-4">
+                <input matInput [ngxTimepicker]="pickert1" formControlName="RFQStartDateTime" [disableClick]="true"
+                  readonly>
+                <ngx-material-timepicker-toggle matSuffix [for]="pickert1"></ngx-material-timepicker-toggle>
+                <ngx-material-timepicker #pickert1 (closed)="RFQDateSelected()"></ngx-material-timepicker>
+              </mat-form-field>
+
               <div fxFlex="10" class="pt-8 pr-8 pl-8" fxLayoutAlign="end start">
                 <span style="font-size: 13px;">Validity start date</span>
                 <span class="pl-4 errorClass" *ngIf="RFQFormGroup.get('RFQResponseStartDate').touched && 
               RFQFormGroup.get('RFQResponseStartDate').hasError('required')">
                   *
                 </span>
+                <span class="pl-4 errorClass" *ngIf="RFQFormGroup.get('RFQResponseStartDateTime').touched && 
+                RFQFormGroup.get('RFQResponseStartDateTime').hasError('required')">
+                  *
+                </span>
               </div>
-              <mat-form-field appearance="outline" fxFlex="25">
+              <mat-form-field appearance="outline" fxFlex="13">
                 <input matInput [matDatepicker]="picker1" formControlName="RFQResponseStartDate"
                   (keydown)="onKeydown($event)" (dateChange)="RFQResponseDateSelected()">
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex="12" class="pl-4">
+                <input matInput [ngxTimepicker]="pickert2" formControlName="RFQResponseStartDateTime"
+                  [disableClick]="true" readonly>
+                <ngx-material-timepicker-toggle matSuffix [for]="pickert2"></ngx-material-timepicker-toggle>
+                <ngx-material-timepicker #pickert2 (closed)="RFQResponseDateSelected()"></ngx-material-timepicker>
               </mat-form-field>
             </div>
             <div fxLayout="row" fxLayoutAlign="start">
@@ -254,8 +276,12 @@
                 RFQFormGroup.get('RFQEndDate').hasError('required')">
                   *
                 </span>
+                <span class="pl-4 errorClass" *ngIf="RFQFormGroup.get('RFQEndDateTime').touched && 
+                RFQFormGroup.get('RFQEndDateTime').hasError('required')">
+                  *
+                </span>
               </div>
-              <div fxFlex="25" fxLayout="column">
+              <div fxFlex="13" fxLayout="column">
                 <mat-form-field appearance="outline" fxFlex>
                   <input matInput [matDatepicker]="picker2" formControlName="RFQEndDate" (keydown)="onKeydown($event)"
                     (dateChange)="RFQDateSelected()">
@@ -266,14 +292,24 @@
                   Closing date should not less than Opening date
                 </span>
               </div>
+              <mat-form-field appearance="outline" fxFlex="12" class="pl-4">
+                <input matInput [ngxTimepicker]="pickert3" formControlName="RFQEndDateTime" [disableClick]="true"
+                  readonly>
+                <ngx-material-timepicker-toggle matSuffix [for]="pickert3"></ngx-material-timepicker-toggle>
+                <ngx-material-timepicker #pickert3 (closed)="RFQDateSelected()"></ngx-material-timepicker>
+              </mat-form-field>
               <div fxFlex="10" class="pt-8 pr-8 pl-8" fxLayoutAlign="end start">
                 <span style="font-size: 13px;">Validity end date</span>
                 <span class="pl-4 errorClass" *ngIf="RFQFormGroup.get('RFQResponseEndDate').touched && 
                 RFQFormGroup.get('RFQResponseEndDate').hasError('required')">
                   *
                 </span>
+                <span class="pl-4 errorClass" *ngIf="RFQFormGroup.get('RFQResponseEndDateTime').touched && 
+                RFQFormGroup.get('RFQResponseEndDateTime').hasError('required')">
+                  *
+                </span>
               </div>
-              <div fxFlex="25" fxLayout="column">
+              <div fxFlex="13" fxLayout="column">
                 <mat-form-field appearance="outline">
                   <input matInput [matDatepicker]="picker3" formControlName="RFQResponseEndDate"
                     (keydown)="onKeydown($event)" (dateChange)="RFQResponseDateSelected()">
@@ -284,6 +320,12 @@
                   Validity end date should not less than start date
                 </span>
               </div>
+              <mat-form-field appearance="outline" fxFlex="12" class="pl-4">
+                <input matInput [ngxTimepicker]="pickert4" formControlName="RFQResponseEndDateTime"
+                  [disableClick]="true" readonly>
+                <ngx-material-timepicker-toggle matSuffix [for]="pickert4"></ngx-material-timepicker-toggle>
+                <ngx-material-timepicker #pickert4 (closed)="RFQResponseDateSelected()"></ngx-material-timepicker>
+              </mat-form-field>
             </div>
             <table mat-table [dataSource]="RFQItemDataSource" class="mat-elevation-z8" formArrayName="RFQItems">
               <tr class="tableHeadBg" mat-header-row *matHeaderRowDef="RFQItemsColumns">
