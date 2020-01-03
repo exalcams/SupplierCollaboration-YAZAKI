@@ -99,6 +99,7 @@ export class RFQResponseReceivedView {
     EmailId: string;
     GSTNumber: string;
     TotalPrice: number;
+    Currency: string;
 }
 
 export class RFQHeaderVendorView {
@@ -383,6 +384,7 @@ export class RFQRankView {
     DelayDays: number;
     Schedule: number;
     Price: number;
+    Currency: string;
     SelfLifeDays: number;
     TotalRank: number;
     BestForItems: string;

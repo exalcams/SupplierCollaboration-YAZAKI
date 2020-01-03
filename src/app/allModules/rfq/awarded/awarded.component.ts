@@ -185,7 +185,7 @@ export class AwardedComponent implements OnInit {
   }
 
   FilterValueChange(): void {
-    console.log(this.FilterValue);
+    // console.log(this.FilterValue);
   }
 
   ResetCheckbox(): void {

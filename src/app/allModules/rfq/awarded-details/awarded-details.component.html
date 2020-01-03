@@ -81,9 +81,9 @@
       <mat-card class="my-12 fullHeight">
         <mat-card-content>
           <div fxLayout="row">
-            <div fxFlex="30" class="boldClass">
+            <!-- <div fxFlex="30" class="boldClass">
               <span>Purchase requisition : {{SelectedPurchaseRequisition?.PurchaseRequisitionID}}</span>
-            </div>
+            </div> -->
             <div fxFlex="25" class="boldClass">
               <span>RFQ ID : {{SelectedPurchaseRequisition?.RFQID}}</span>
             </div>
@@ -135,7 +135,7 @@
 
               <ng-container matColumnDef="Price">
                 <th mat-header-cell *matHeaderCellDef>Price</th>
-                <td mat-cell *matCellDef="let element"> {{element.Price}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.Price}} {{element.Currency}}</td>
               </ng-container>
 
               <ng-container matColumnDef="SelfLifeDays">
@@ -181,8 +181,7 @@
                 </td>
               </ng-container>
 
-              <tr class="tableHeadBg" mat-header-row
-                *matHeaderRowDef="RFQRankDisplayedColumns"></tr>
+              <tr class="tableHeadBg" mat-header-row *matHeaderRowDef="RFQRankDisplayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: RFQRankDisplayedColumns;"
                 [class.highlight]="row === SelectedRFQRank"></tr>
             </table>

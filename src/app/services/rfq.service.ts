@@ -6,7 +6,9 @@ import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
 import {
     RFQView, PurchaseRequisition, RFQAllocationView, RFQResponseView,
-    PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQResponseReceivedView, RFQRankView, RFQAwardVendorView, RFQEvaluationView, PurchaseRequisitionStatusCount, RFQStatusCount, PriorityParameter, RFQResponseTechRating, RFQResponseTechRatingView, RFQVendorRank, RFQHeader
+    PurchaseRequisitionItem, RFQHeaderVendorView, RFQWithResponseView, RFQResponseReceivedView, 
+    RFQRankView, RFQAwardVendorView, RFQEvaluationView, PurchaseRequisitionStatusCount, RFQStatusCount, 
+    PriorityParameter, RFQResponseTechRating, RFQResponseTechRatingView, RFQVendorRank, RFQHeader
 } from 'app/models/rfq.model';
 import { Auxiliary, AuxiliaryView } from 'app/models/asn';
 import { Guid } from 'guid-typescript';

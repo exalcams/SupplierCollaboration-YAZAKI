@@ -86,7 +86,7 @@ td {
   @include backgroundColorMixin(#ff9999);
 }
 .awardedColor {
-  @include backgroundColorMixin(gold);
+  @include backgroundColorMixin(#d4af37);
 }
 .img-style {
   height: 60px !important;
