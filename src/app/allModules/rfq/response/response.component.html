@@ -477,9 +477,14 @@
                     RFQResponseItemFormGroup.get('Price').hasError('required')">
                         *
                       </span>
+                      <span class="pl-4 errorClass" *ngIf="RFQResponseItemFormGroup.get('Price').touched && 
+                      !RFQResponseItemFormGroup.get('Price').hasError('required')&&
+                      RFQResponseItemFormGroup.get('Price').hasError('pattern')">
+                        *
+                      </span>
                     </div>
                     <mat-form-field appearance="outline" fxFlex="30">
-                      <input matInput formControlName="Price">
+                      <input matInput formControlName="Price" pattern="^[1-9]\d*$">
                     </mat-form-field>
                     <div fxFlex="20" class="pt-8 pr-8" fxLayoutAlign="end start">
                       <span style="font-size: 13px;">Payment Terms</span>
