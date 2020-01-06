@@ -344,7 +344,7 @@ export class ResponseComponent implements OnInit {
     this.RFQResponseItemFormGroup.patchValue({
       Manufacturer: RFQItem.Manufacturer,
       ExpectedDeliveryDate: RFQItem.ExpectedDeliveryDate,
-      DeliveryDate: RFQItem.ExpectedDeliveryDate,
+      DeliveryDate: RFQItem.DeliveryDate,
       DelayDays: RFQItem.DelayDays,
       Schedule: RFQItem.Schedule,
       Price: RFQItem.Price,
